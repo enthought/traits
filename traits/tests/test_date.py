@@ -43,6 +43,15 @@ class HasDateTraits(HasStrictTraits):
     #: Datetime instances allowed
     datetime_allowed = Date(allow_datetime=True)
 
+    #: None prohibited
+    none_prohibited = Date(allow_none=False)
+
+    #: None allowed
+    none_allowed = Date(allow_none=True)
+
+    #: Strictly a non-None non-datetime date
+    strict = Date(allow_datetime=False, allow_none=False)
+
 
 class TestDate(unittest.TestCase):
     def test_default(self):
@@ -62,7 +71,7 @@ class TestDate(unittest.TestCase):
         with self.assertRaises(TraitError) as exception_context:
             obj.simple_date = "1975-2-13"
         message = str(exception_context.exception)
-        self.assertIn("must be a date or None", message)
+        self.assertIn("must be a date or None, but", message)
 
     def test_assign_datetime(self):
         # By default, datetime instances are permitted.
@@ -77,6 +86,7 @@ class TestDate(unittest.TestCase):
         # allow_none=False in the trait definition does not work as expected.
         # (Ref: enthought/traits#495)
         obj = HasDateTraits(simple_date=UNIX_EPOCH)
+        self.assertIsNotNone(obj.simple_date)
         obj.simple_date = None
         self.assertIsNone(obj.simple_date)
 
@@ -86,13 +96,33 @@ class TestDate(unittest.TestCase):
         with self.assertRaises(TraitError) as exception_context:
             obj.datetime_prohibited = test_datetime
         message = str(exception_context.exception)
-        self.assertIn("must be a non-datetime date or None", message)
+        self.assertIn("must be a non-datetime date or None, but", message)
 
     def test_allow_datetime_true(self):
         test_datetime = datetime.datetime(1975, 2, 13)
         obj = HasDateTraits()
         obj.datetime_allowed = test_datetime
         self.assertEqual(obj.datetime_allowed, test_datetime)
+
+    def test_allow_none_false(self):
+        obj = HasDateTraits(none_prohibited=UNIX_EPOCH)
+        with self.assertRaises(TraitError) as exception_context:
+            obj.none_prohibited = None
+        message = str(exception_context.exception)
+        self.assertIn("must be a date, but", message)
+
+    def test_allow_none_true(self):
+        obj = HasDateTraits(none_allowed=UNIX_EPOCH)
+        self.assertIsNotNone(obj.none_allowed)
+        obj.none_allowed = None
+        self.assertIsNone(obj.none_allowed)
+
+    def test_allow_none_false_allow_datetime_false(self):
+        obj = HasDateTraits(strict=UNIX_EPOCH)
+        with self.assertRaises(TraitError) as exception_context:
+            obj.strict = None
+        message = str(exception_context.exception)
+        self.assertIn("must be a non-datetime date, but", message)
 
     @requires_traitsui
     def test_get_editor(self):
