@@ -9,7 +9,7 @@
 # Thanks for using Enthought open source!
 
 """
-Tests for the Date trait type.
+Tests for the Datetime trait type.
 """
 
 import datetime
@@ -66,19 +66,14 @@ class TestDatetime(unittest.TestCase):
         self.assertIn("must be a datetime or None, but", message)
 
     def test_assign_date(self):
-        test_date = datetime.date(1975, 2, 13)
         obj = HasDatetimeTraits()
         with self.assertRaises(TraitError) as exception_context:
-            obj.simple_datetime = test_date
+            obj.simple_datetime = datetime.date(1975, 2, 13)
         message = str(exception_context.exception)
         self.assertIn("must be a datetime or None, but", message)
         self.assertIsNone(obj.simple_datetime)
 
     def test_assign_none(self):
-        # This is a test for the current behaviour. There may be an argument
-        # for optionally disallowing None. Note that specifying
-        # allow_none=False in the trait definition does not work as expected.
-        # (Ref: enthought/traits#495)
         obj = HasDatetimeTraits(simple_datetime=UNIX_EPOCH)
         self.assertIsNotNone(obj.simple_datetime)
         obj.simple_datetime = None
