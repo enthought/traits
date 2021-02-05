@@ -31,10 +31,10 @@ class HasDatetimeTraits(HasStrictTraits):
     #: Simple case - no default, no parameters, no metadata
     simple_datetime = Datetime()
 
-    #: Date with default
+    #: Datetime with default
     epoch = Datetime(UNIX_EPOCH)
 
-    #: Date with default provided via keyword.
+    #: Datetime with default provided via keyword.
     alternative_epoch = Datetime(default_value=NT_EPOCH)
 
     #: None prohibited
