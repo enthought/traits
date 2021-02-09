@@ -3429,7 +3429,10 @@ class BaseInstance(BaseClass):
         return (dvt, dv)
 
     def clone(self, default_value=NoDefaultSpecified, **metadata):
-        """ pass """
+        """ Copy, optionally modifying default value and metadata. """
+
+        # We extend the base class method in order to ensure that "allow_none"
+        # is handled in the same way that it's handled in the initializer.
         allow_none = metadata.pop("allow_none", None)
         clone_of_self = super().clone(default_value=default_value, **metadata)
         if allow_none is not None:
