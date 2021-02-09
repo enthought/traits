@@ -4254,18 +4254,29 @@ class Date(TraitType):
     allow_datetime : bool, optional
         If ``False``, instances of ``datetime.datetime`` are not valid
         values for this Trait. The default is ``True``.
+    allow_none : bool, optional
+        If ``False``, it's not permitted to assign ``None`` to this trait.
+        The default is ``True``.
     **metadata: dict
         Additional metadata.
     """
 
-    def __init__(self, default_value=None, *, allow_datetime=True, **metadata):
+    def __init__(
+        self,
+        default_value=None,
+        *,
+        allow_datetime=True,
+        allow_none=True,
+        **metadata,
+    ):
         super().__init__(default_value, **metadata)
         self.allow_datetime = allow_datetime
+        self.allow_none = allow_none
 
     def validate(self, object, name, value):
         """ Check that the given value is valid date for this trait.
         """
-        if value is None:
+        if value is None and self.allow_none:
             return value
         if isinstance(value, datetime.date):
             if self.allow_datetime or not isinstance(value, datetime.datetime):
@@ -4277,10 +4288,9 @@ class Date(TraitType):
         """
         Return text description of this trait.
         """
-        if self.allow_datetime:
-            return "a date or None"
-        else:
-            return "a non-datetime date or None"
+        datetime_qualifier = "" if self.allow_datetime else " non-datetime"
+        none_qualifier = " or None" if self.allow_none else ""
+        return f"a{datetime_qualifier} date{none_qualifier}"
 
     def create_editor(self):
         """ Create default editor factory for this trait.
