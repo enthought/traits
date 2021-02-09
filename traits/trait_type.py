@@ -281,6 +281,11 @@ class TraitType(BaseTraitHandler):
             A dictionary of metadata names and corresponding values as
             arbitrary keyword arguments.
 
+        Returns
+        -------
+        clone : TraitType
+            Clone of self.
+
         """
         if "parent" not in metadata:
             metadata["parent"] = self

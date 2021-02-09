@@ -81,10 +81,6 @@ class TestDate(unittest.TestCase):
         self.assertEqual(obj.simple_date, test_datetime)
 
     def test_assign_none(self):
-        # This is a test for the current behaviour. There may be an argument
-        # for optionally disallowing None. Note that specifying
-        # allow_none=False in the trait definition does not work as expected.
-        # (Ref: enthought/traits#495)
         obj = HasDateTraits(simple_date=UNIX_EPOCH)
         self.assertIsNotNone(obj.simple_date)
         obj.simple_date = None
