@@ -221,6 +221,10 @@ class ETSConfigTestCase(unittest.TestCase):
         self.ETSConfig.toolkit = "qt4"
         self.assertEqual(self.ETSConfig.kiva_backend, "image")
 
+    def test_default_backend_for_qt5_toolkit(self):
+        self.ETSConfig.toolkit = "qt"
+        self.assertEqual(self.ETSConfig.kiva_backend, "image")
+
     def test_toolkit_explicit_kiva_backend(self):
         self.ETSConfig.toolkit = "wx.celiagg"
         self.assertEqual(self.ETSConfig.kiva_backend, "celiagg")

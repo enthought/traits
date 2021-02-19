@@ -314,7 +314,7 @@ class ETSConfig(object):
                     self._kiva_backend = (
                         "quartz" if sys.platform == "darwin" else "image"
                     )
-                elif self.toolkit == "qt4":
+                elif self.toolkit.startswith("qt"):
                     self._kiva_backend = "image"
                 else:
                     self._kiva_backend = "image"
