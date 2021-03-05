@@ -623,8 +623,6 @@ class Date(_TraitType[_OptionalDate, _OptionalDate]):
 _OptionalDatetime = Optional[datetime.datetime]
 
 class Datetime(_TraitType[_OptionalDatetime, _OptionalDatetime]):
-
-    # simplified signature
     def __init__(
             self,
             default_value: datetime.datetime = ...,
@@ -638,8 +636,6 @@ class Datetime(_TraitType[_OptionalDatetime, _OptionalDatetime]):
 _OptionalTime = Optional[datetime.time]
 
 class Time(_TraitType[_OptionalTime, _OptionalTime]):
-
-    # simplified signature
     def __init__(
             self,
             default_value: datetime.time = ...,
