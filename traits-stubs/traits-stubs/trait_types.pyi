@@ -635,7 +635,7 @@ class Datetime(_TraitType[_OptionalDatetime, _OptionalDatetime]):
         ...
 
 
-_OptionalDatetime = Optional[datetime.time]
+_OptionalTime = Optional[datetime.time]
 
 class Time(_TraitType[_OptionalTime, _OptionalTime]):
 
