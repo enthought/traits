@@ -9,16 +9,16 @@
 # Thanks for using Enthought open source!
 
 import datetime
-from traits.api import HasTraits, Datetime, Int
+
+from traits.api import Datetime, HasTraits
 
 
 class TestClass(HasTraits):
     t = Datetime()
-    x = Int()
 
 
 obj = TestClass()
-obj.t = "sometime-string"
+obj.t = "sometime-string"  # E: assignment
 obj.t = datetime.datetime.now()
 
 obj.t = 9  # E: assignment
