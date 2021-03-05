@@ -18,7 +18,7 @@ have a lot of boilerplate.  In our original example, the code copies all of
 the ``__init__`` arguments to corresponding attributes before doing any
 real work::
 
-    def __init__(self, filename, sample_id, date_aquired, operator,
+    def __init__(self, filename, sample_id, date_acquired, operator,
                  scan_size=(1e-5, 1e-5)):
         # initialize the primary attributes
         self.filename = filename
