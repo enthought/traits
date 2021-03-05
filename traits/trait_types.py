@@ -21,6 +21,7 @@ import re
 import sys
 from types import FunctionType, MethodType, ModuleType
 import uuid
+import warnings
 
 from .constants import DefaultValue, TraitKind, ValidateTrait
 from .trait_base import (
@@ -4261,6 +4262,11 @@ class Date(TraitType):
     by default instances of :class:`datetime.datetime` are also permitted.
     Use ``Date(allow_datetime=False)`` to exclude this possibility.
 
+    .. deprecated:: 6.3.0
+        In the future, :cls:`datetime.datetime` instances will not be valid
+        values for this trait type unless "allow_datetime=True" is explicitly
+        given.
+
     Parameters
     ----------
     default_value : datetime.date, optional
@@ -4268,7 +4274,11 @@ class Date(TraitType):
         default is ``None``.
     allow_datetime : bool, optional
         If ``False``, instances of ``datetime.datetime`` are not valid
-        values for this Trait. The default is ``True``.
+        values for this Trait. If ``True``, ``datetime.datetime`` instances
+        are explicitly permitted. If this argument is not given,
+        ``datetime.datetime`` instances will be accepted, but a
+        ``DeprecationWarning`` will be issued; in some future version of
+        Traits, ``datetime.datetime`` instances will not be permitted.
     allow_none : bool, optional
         If ``False``, it's not permitted to assign ``None`` to this trait.
         The default is ``True``.
@@ -4280,7 +4290,7 @@ class Date(TraitType):
         self,
         default_value=None,
         *,
-        allow_datetime=True,
+        allow_datetime=None,
         allow_none=True,
         **metadata,
     ):
@@ -4291,11 +4301,28 @@ class Date(TraitType):
     def validate(self, object, name, value):
         """ Check that the given value is valid date for this trait.
         """
-        if value is None and self.allow_none:
-            return value
-        if isinstance(value, datetime.date):
-            if self.allow_datetime or not isinstance(value, datetime.datetime):
+        if value is None:
+            if self.allow_none:
                 return value
+
+        elif isinstance(value, datetime.datetime):
+            if self.allow_datetime:
+                return value
+            elif self.allow_datetime is None:
+                warnings.warn(
+                    (
+                        "In the future, datetime.datetime instances will no "
+                        "longer be accepted by this trait type. To accept "
+                        "datetimes and silence this warning, use "
+                        "Date(allow_datetime=True) or Union(Datetime, Date)."
+                    ),
+                    DeprecationWarning,
+                    stacklevel=2,
+                )
+                return value
+
+        elif isinstance(value, datetime.date):
+            return value
 
         self.error(object, name, value)
 
@@ -4303,7 +4330,10 @@ class Date(TraitType):
         """
         Return text description of this trait.
         """
-        datetime_qualifier = "" if self.allow_datetime else " non-datetime"
+        if self.allow_datetime or self.allow_datetime is None:
+            datetime_qualifier = ""
+        else:
+            datetime_qualifier = " non-datetime"
         none_qualifier = " or None" if self.allow_none else ""
         return f"a{datetime_qualifier} date{none_qualifier}"
 

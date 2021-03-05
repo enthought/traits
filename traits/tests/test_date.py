@@ -73,20 +73,13 @@ class TestDate(unittest.TestCase):
         message = str(exception_context.exception)
         self.assertIn("must be a date or None, but", message)
 
-    def test_assign_datetime(self):
-        # By default, datetime instances are permitted.
-        test_datetime = datetime.datetime(1975, 2, 13)
-        obj = HasDateTraits()
-        obj.simple_date = test_datetime
-        self.assertEqual(obj.simple_date, test_datetime)
-
     def test_assign_none(self):
         obj = HasDateTraits(simple_date=UNIX_EPOCH)
         self.assertIsNotNone(obj.simple_date)
         obj.simple_date = None
         self.assertIsNone(obj.simple_date)
 
-    def test_allow_datetime_false(self):
+    def test_assign_datetime_with_allow_datetime_false(self):
         test_datetime = datetime.datetime(1975, 2, 13)
         obj = HasDateTraits()
         with self.assertRaises(TraitError) as exception_context:
@@ -94,11 +87,30 @@ class TestDate(unittest.TestCase):
         message = str(exception_context.exception)
         self.assertIn("must be a non-datetime date or None, but", message)
 
-    def test_allow_datetime_true(self):
+    def test_assign_datetime_with_allow_datetime_true(self):
         test_datetime = datetime.datetime(1975, 2, 13)
         obj = HasDateTraits()
         obj.datetime_allowed = test_datetime
         self.assertEqual(obj.datetime_allowed, test_datetime)
+
+    def test_assign_datetime_with_allow_datetime_not_given(self):
+        # For traits where "allow_datetime" is not specified, a
+        # DeprecationWarning should be issued on assignment of datetime.
+        test_datetime = datetime.datetime(1975, 2, 13)
+        obj = HasDateTraits()
+        with self.assertWarns(DeprecationWarning) as warnings_cm:
+            # Note: the warning depends on the type, not the value; this case
+            # should warn even though the time component of the datetime is
+            # zero.
+            obj.simple_date = test_datetime
+        self.assertEqual(obj.simple_date, test_datetime)
+
+        _, _, this_module = __name__.rpartition(".")
+        self.assertIn(this_module, warnings_cm.filename)
+        self.assertIn(
+            "datetime instances will no longer be accepted",
+            str(warnings_cm.warning),
+        )
 
     def test_allow_none_false(self):
         obj = HasDateTraits(none_prohibited=UNIX_EPOCH)
