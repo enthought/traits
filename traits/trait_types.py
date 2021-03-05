@@ -4315,7 +4315,7 @@ class Date(TraitType):
                 warnings.warn(
                     (
                         "In the future, None will no longer be accepted by "
-                        "this trait type. To accept None and silence this "
+                        "this trait type. To allow None and silence this "
                         "warning, use Date(allow_none=True)."
                     ),
                     DeprecationWarning,
