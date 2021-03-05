@@ -4267,6 +4267,10 @@ class Date(TraitType):
         values for this trait type unless "allow_datetime=True" is explicitly
         given.
 
+    .. deprecated:: 6.3.0
+        In the future, ``None`` will not be a valid value for this trait type
+        unless "allow_none=True" is explicitly given.
+
     Parameters
     ----------
     default_value : datetime.date, optional
@@ -4281,7 +4285,10 @@ class Date(TraitType):
         Traits, ``datetime.datetime`` instances will not be permitted.
     allow_none : bool, optional
         If ``False``, it's not permitted to assign ``None`` to this trait.
-        The default is ``True``.
+        If ``True``, ``None`` instances are permitted. If this argument is
+        not given, ``None`` instances will be accepted but a
+        ``DeprecationWarning`` will be issued; in some future verison of
+        Traits, ``None`` may no longer be permitted.
     **metadata: dict
         Additional metadata.
     """
@@ -4291,7 +4298,7 @@ class Date(TraitType):
         default_value=None,
         *,
         allow_datetime=None,
-        allow_none=True,
+        allow_none=None,
         **metadata,
     ):
         super().__init__(default_value, **metadata)
@@ -4303,6 +4310,17 @@ class Date(TraitType):
         """
         if value is None:
             if self.allow_none:
+                return value
+            elif self.allow_none is None:
+                warnings.warn(
+                    (
+                        "In the future, None will no longer be accepted by "
+                        "this trait type. To accept None and silence this "
+                        "warning, use Date(allow_none=True)."
+                    ),
+                    DeprecationWarning,
+                    stacklevel=2,
+                )
                 return value
 
         elif isinstance(value, datetime.datetime):
@@ -4334,7 +4352,12 @@ class Date(TraitType):
             datetime_qualifier = ""
         else:
             datetime_qualifier = " non-datetime"
-        none_qualifier = " or None" if self.allow_none else ""
+
+        if self.allow_none or self.allow_none is None:
+            none_qualifier = " or None"
+        else:
+            none_qualifier = ""
+
         return f"a{datetime_qualifier} date{none_qualifier}"
 
     def create_editor(self):
