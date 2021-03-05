@@ -44,7 +44,7 @@ class HasTimeTraits(HasStrictTraits):
     none_allowed = Time(allow_none=True)
 
 
-class TestDatetime(unittest.TestCase):
+class TestTime(unittest.TestCase):
     def test_default(self):
         obj = HasTimeTraits()
         self.assertEqual(obj.simple_time, None)
