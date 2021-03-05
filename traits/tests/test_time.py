@@ -73,20 +73,28 @@ class TestDatetime(unittest.TestCase):
         self.assertIn("must be a time or None, but", message)
         self.assertIsNone(obj.simple_time)
 
-    def test_assign_none(self):
+    def test_assign_none_with_allow_none_not_given(self):
         obj = HasTimeTraits(simple_time=UNIX_EPOCH)
         self.assertIsNotNone(obj.simple_time)
-        obj.simple_time = None
+        with self.assertWarns(DeprecationWarning) as warnings_cm:
+            obj.simple_time = None
         self.assertIsNone(obj.simple_time)
 
-    def test_allow_none_false(self):
+        _, _, this_module = __name__.rpartition(".")
+        self.assertIn(this_module, warnings_cm.filename)
+        self.assertIn(
+            "None will no longer be accepted",
+            str(warnings_cm.warning),
+        )
+
+    def test_assign_none_with_allow_none_false(self):
         obj = HasTimeTraits(none_prohibited=UNIX_EPOCH)
         with self.assertRaises(TraitError) as exception_context:
             obj.none_prohibited = None
         message = str(exception_context.exception)
         self.assertIn("must be a time, but", message)
 
-    def test_allow_none_true(self):
+    def test_assign_none_with_allow_none_true(self):
         obj = HasTimeTraits(none_allowed=UNIX_EPOCH)
         self.assertIsNotNone(obj.none_allowed)
         obj.none_allowed = None

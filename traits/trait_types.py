@@ -4366,12 +4366,152 @@ class Date(TraitType):
         return date_editor()
 
 
-#: A trait type for datetime.datetime instances.
-Datetime = BaseInstance(datetime.datetime, editor=datetime_editor)
+class Datetime(TraitType):
+    """ A trait type whose value must be a datetime.
+
+    The value must be an instance of :class:`datetime.datetime`.
+
+    .. deprecated:: 6.3.0
+        In the future, ``None`` will not be a valid value for this trait type
+        unless "allow_none=True" is explicitly given.
+
+    Parameters
+    ----------
+    default_value : datetime.datetime, optional
+        The default value for this trait. If no default is provided, the
+        default is ``None``.
+    allow_none : bool, optional
+        If ``False``, it's not permitted to assign ``None`` to this trait.
+        If ``True``, ``None`` instances are permitted. If this argument is
+        not given, ``None`` instances will be accepted but a
+        ``DeprecationWarning`` will be issued; in some future verison of
+        Traits, ``None`` may no longer be permitted.
+    **metadata: dict
+        Additional metadata.
+    """
+
+    def __init__(
+        self,
+        default_value=None,
+        *,
+        allow_none=None,
+        **metadata,
+    ):
+        super().__init__(default_value, **metadata)
+        self.allow_none = allow_none
+
+    def validate(self, object, name, value):
+        """ Check that the given value is valid datetime for this trait.
+        """
+        if value is None:
+            if self.allow_none:
+                return value
+            elif self.allow_none is None:
+                warnings.warn(
+                    (
+                        "In the future, None will no longer be accepted by "
+                        "this trait type. To allow None and silence this "
+                        "warning, use Datetime(allow_none=True)."
+                    ),
+                    DeprecationWarning,
+                    stacklevel=2,
+                )
+                return value
+
+        elif isinstance(value, datetime.datetime):
+            return value
+
+        self.error(object, name, value)
+
+    def info(self):
+        """
+        Return text description of this trait.
+        """
+        if self.allow_none or self.allow_none is None:
+            none_qualifier = " or None"
+        else:
+            none_qualifier = ""
+
+        return f"a datetime{none_qualifier}"
+
+    def create_editor(self):
+        """ Create default editor factory for this trait.
+        """
+        return datetime_editor()
 
 
-#: A trait type for datetime.time instances.
-Time = BaseInstance(datetime.time, editor=time_editor)
+class Time(TraitType):
+    """ A trait type whose value must be a time.
+
+    The value must be an instance of :class:`datetime.time`.
+
+    .. deprecated:: 6.3.0
+        In the future, ``None`` will not be a valid value for this trait type
+        unless "allow_none=True" is explicitly given.
+
+    Parameters
+    ----------
+    default_value : datetime.time, optional
+        The default value for this trait. If no default is provided, the
+        default is ``None``.
+    allow_none : bool, optional
+        If ``False``, it's not permitted to assign ``None`` to this trait.
+        If ``True``, ``None`` instances are permitted. If this argument is
+        not given, ``None`` instances will be accepted but a
+        ``DeprecationWarning`` will be issued; in some future verison of
+        Traits, ``None`` may no longer be permitted.
+    **metadata: dict
+        Additional metadata.
+    """
+
+    def __init__(
+        self,
+        default_value=None,
+        *,
+        allow_none=None,
+        **metadata,
+    ):
+        super().__init__(default_value, **metadata)
+        self.allow_none = allow_none
+
+    def validate(self, object, name, value):
+        """ Check that the given value is valid time for this trait.
+        """
+        if value is None:
+            if self.allow_none:
+                return value
+            elif self.allow_none is None:
+                warnings.warn(
+                    (
+                        "In the future, None will no longer be accepted by "
+                        "this trait type. To allow None and silence this "
+                        "warning, use Time(allow_none=True)."
+                    ),
+                    DeprecationWarning,
+                    stacklevel=2,
+                )
+                return value
+
+        elif isinstance(value, datetime.time):
+            return value
+
+        self.error(object, name, value)
+
+    def info(self):
+        """
+        Return text description of this trait.
+        """
+        if self.allow_none or self.allow_none is None:
+            none_qualifier = " or None"
+        else:
+            none_qualifier = ""
+
+        return f"a time{none_qualifier}"
+
+    def create_editor(self):
+        """ Create default editor factory for this trait.
+        """
+        return time_editor()
 
 
 # Predefined, reusable trait instances
