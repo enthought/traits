@@ -620,23 +620,31 @@ class Date(_TraitType[_OptionalDate, _OptionalDate]):
         ...
 
 
-class Datetime(_BaseInstance[datetime.datetime]):
+_OptionalDatetime = Optional[datetime.datetime]
+
+class Datetime(_TraitType[_OptionalDatetime, _OptionalDatetime]):
 
     # simplified signature
     def __init__(
             self,
             default_value: datetime.datetime = ...,
+            *,
+            allow_none: bool = ...,
             **metadata: _Any,
     ) -> None:
         ...
 
 
-class Time(_BaseInstance[datetime.time]):
+_OptionalDatetime = Optional[datetime.time]
+
+class Time(_TraitType[_OptionalTime, _OptionalTime]):
 
     # simplified signature
     def __init__(
             self,
             default_value: datetime.time = ...,
+            *,
+            allow_none: bool = ...,
             **metadata: _Any,
     ) -> None:
         ...
