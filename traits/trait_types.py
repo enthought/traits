@@ -4263,7 +4263,7 @@ class Date(TraitType):
     Use ``Date(allow_datetime=False)`` to exclude this possibility.
 
     .. deprecated:: 6.3.0
-        In the future, :cls:`datetime.datetime` instances will not be valid
+        In the future, :class:`datetime.datetime` instances will not be valid
         values for this trait type unless "allow_datetime=True" is explicitly
         given.
 
