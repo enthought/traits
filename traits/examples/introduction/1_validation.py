@@ -64,7 +64,7 @@ There is an ``Instance`` trait type for values which are instances of a
 Python class.  Traits also provides a rich set of trait types that cover
 many common data types, for example:
 
-- we can use a ``Date`` trait type for the date_aquired
+- we can use a ``Date`` trait type for the date_acquired
 - we can specify that the scan size is not just a tuple, but a pair of
   floating point values by specifying ``Tuple(Float, Float)``.
 - we can use a ``File`` trait for the filename, and we can require that the
@@ -76,7 +76,7 @@ Everything else can remain unchanged in the class, and it will still work as
 expected, however just as with regular Python classes, we need to remember
 to call ``super()`` in the ``__init__`` method::
 
-    def __init__(self, filename, sample_id, date_aquired, operator,
+    def __init__(self, filename, sample_id, date_acquired, operator,
                  scan_size=(1e-5, 1e-5)):
         super().__init__()
 

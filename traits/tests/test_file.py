@@ -19,6 +19,8 @@ from traits.testing.optional_dependencies import requires_traitsui
 class ExampleModel(HasTraits):
     file_name = File(exists=True)
 
+    new_file_name = File(exists=False)
+
 
 class FastExampleModel(HasTraits):
     file_name = File()
@@ -65,6 +67,18 @@ class FileTestCase(unittest.TestCase):
     def test_fast(self):
         example_model = FastExampleModel(file_name=__file__)
         example_model.path = "."
+
+    def test_info_text(self):
+        example_model = ExampleModel()
+        with self.assertRaises(TraitError) as exc_cm:
+            example_model.file_name = 47
+        self.assertIn("a string or os.PathLike object", str(exc_cm.exception))
+        self.assertIn("referring to an existing file", str(exc_cm.exception))
+
+        with self.assertRaises(TraitError) as exc_cm:
+            example_model.new_file_name = 47
+        self.assertIn("a string or os.PathLike object", str(exc_cm.exception))
+        self.assertNotIn("exist", str(exc_cm.exception))
 
 
 class TestCreateEditor(unittest.TestCase):
