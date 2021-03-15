@@ -4339,7 +4339,8 @@ class Date(TraitType):
                         "In the future, datetime.datetime instances will no "
                         "longer be accepted by this trait type. To accept "
                         "datetimes and silence this warning, use "
-                        "Date(allow_datetime=True) or Union(Datetime, Date)."
+                        "Date(allow_datetime=True) or "
+                        "Union(Datetime(), Date())."
                     ),
                     DeprecationWarning,
                     stacklevel=2,
