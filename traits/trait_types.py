@@ -1360,9 +1360,6 @@ class BaseFile(BaseStr):
         not.
     """
 
-    #: A description of the type of value this trait accepts:
-    info_text = "a filename or object implementing the os.PathLike interface"
-
     def __init__(
         self,
         value="",
@@ -1399,6 +1396,13 @@ class BaseFile(BaseStr):
             return validated_value
 
         self.error(object, name, value)
+
+    def info(self):
+        """ Return a description of the type of value this trait accepts. """
+        description = "a string or os.PathLike object"
+        if self.exists:
+            description += " referring to an existing file"
+        return description
 
     def create_editor(self):
         from traitsui.editors.file_editor import FileEditor
@@ -1498,10 +1502,6 @@ class BaseDirectory(BaseStr):
         not.
     """
 
-    #: A description of the type of value this trait accepts:
-    info_text = ("a directory name or an object implementing "
-                 "the os.PathLike interface")
-
     def __init__(
         self, value="", auto_set=False, entries=0, exists=False, **metadata
     ):
@@ -1530,6 +1530,13 @@ class BaseDirectory(BaseStr):
             return validated_value
 
         self.error(object, name, value)
+
+    def info(self):
+        """ Return a description of the type of value this trait accepts. """
+        description = "a string or os.PathLike object"
+        if self.exists:
+            description += " referring to an existing directory"
+        return description
 
     def create_editor(self):
         from traitsui.editors.directory_editor import DirectoryEditor
