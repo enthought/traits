@@ -207,3 +207,11 @@ class TestListEditor(unittest.TestCase):
         trait = List(Instance(HasTraits))
         editor = list_editor(trait, trait)
         self.assertIsInstance(editor, traitsui.api.TableEditor)
+
+    # regression test for enthought/traitsui#1539
+    def test_list_editor_list_instance_row_factory(self):
+        trait = List(Instance(HasTraits, kw={}))
+        editor = list_editor(trait, trait)
+        self.assertIsInstance(editor, traitsui.api.TableEditor)
+        if editor.row_factory is not None:
+            self.assertTrue(callable(editor.row_factory))
