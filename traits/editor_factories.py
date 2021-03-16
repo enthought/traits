@@ -148,7 +148,11 @@ def _instance_handler_factory(handler):
     if isinstance(handler, TraitInstance):
         return handler.aClass
     elif isinstance(handler, BaseInstance):
-        return handler.default_value
+        result = handler.default_value
+        if isinstance(result, tuple):
+            return lambda : result[0](*result[1], **result[2])
+        else:
+            return result
     else:
         msg = "handler should be TraitInstance or BaseInstance, but got {}"
         raise ValueError(msg.format(repr(handler)))
