@@ -255,9 +255,12 @@ Traits
 .. autoclass:: Date
    :show-inheritance:
 
-.. autodata:: Datetime
+.. autoclass:: Datetime
+   :show-inheritance:
 
-.. autodata:: Time
+.. autoclass:: Time
+   :show-inheritance:
+
 
 Deprecated Traits
 -----------------
