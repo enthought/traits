@@ -150,7 +150,8 @@ def _instance_handler_factory(handler):
     elif isinstance(handler, BaseInstance):
         result = handler.default_value
         if isinstance(result, tuple):
-            return lambda: result[0](*result[1], **result[2])
+            default_value_getter, args, kwargs = result
+            return lambda: default_value_getter(*args, **kwargs)
         else:
             return result
     else:
