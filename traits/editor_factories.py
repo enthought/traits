@@ -143,12 +143,17 @@ def _expects_hastraits_instance(handler):
 def _instance_handler_factory(handler):
     """ Get the instance factory of an Instance or TraitInstance
     """
-    from traits.api import BaseInstance, TraitInstance
+    from traits.api import BaseInstance, DefaultValue, TraitInstance
 
     if isinstance(handler, TraitInstance):
         return handler.aClass
     elif isinstance(handler, BaseInstance):
-        return handler.default_value
+        result = handler.default_value
+        if handler.default_value_type == DefaultValue.callable_and_args:
+            default_value_getter, args, kwargs = result
+            return lambda: default_value_getter(*args, **kwargs)
+        else:
+            return result
     else:
         msg = "handler should be TraitInstance or BaseInstance, but got {}"
         raise ValueError(msg.format(repr(handler)))
