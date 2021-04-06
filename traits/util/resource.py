@@ -32,6 +32,7 @@ import sys
 
 from sysconfig import get_path
 
+
 def get_path(path):
     """ Returns an absolute path for the specified path.
 
