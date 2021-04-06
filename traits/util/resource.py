@@ -30,7 +30,7 @@ import inspect
 import os
 import sys
 
-from sysconfig import get_path
+from sysconfig import get_path as _get_path
 
 
 def get_path(path):
@@ -145,7 +145,7 @@ def find_resource(project, resource_path, alt_path=None, return_path=False):
         # Setuptools was either not installed, or it failed to find the file.
         # First check to see if the package was installed using egginst by
         # looking for the file at: site-packages\\resource_path
-        full_path = os.path.join(get_path('purelib'), resource_path)
+        full_path = os.path.join(_get_path('purelib'), resource_path)
         if os.path.exists(full_path):
             if return_path:
                 return full_path
