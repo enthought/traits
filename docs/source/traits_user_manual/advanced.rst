@@ -1383,12 +1383,12 @@ case, you might clone an object and its trait attributes; allow the user to
 modify the clone; and then re-clone only the trait attributes back to the
 original object when the user commits changes.
 
-.. index:: set()
+.. index:: trait_set()
 
-.. _set:
+.. _trait_set:
 
-set()
-`````
+trait_set()
+```````````
 
 This method takes a list of keyword-value pairs, and sets the trait attribute
 corresponding to each keyword to the matching value. This shorthand is useful
