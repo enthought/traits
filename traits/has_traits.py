@@ -1358,8 +1358,14 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
 
         Parameters
         ----------
-        names : list of strings
-            A list of trait attribute names whose values are requested.
+        names : optional
+            List of positional arguments. Either trait attribute names as
+            string arguments or a single list or tuple of trait attribute
+            names whose values are requested.
+        metadata : optional
+            Dictionary of keyword–value pairs. Metadata information used to
+            find the traits to use, provided no positional arguments are
+            passed.
 
         Returns
         -------
