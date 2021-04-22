@@ -703,7 +703,7 @@ handler with the ``[]`` suffix as noted in the Table
 :ref:`semantics-of-extended-name-notation-table`, or you can define an
 *name*\ _items event handler.
 
-For these trait types, an auxilliary *name*\ _items Event trait is defined which
+For these trait types, an auxiliary *name*\ _items Event trait is defined which
 you can listen to either with a static handler _\ *name*\ _items_changed()
 or a dynamic handler which matches *name*\ _items, and these handlers will be
 called with notifications of changes to the contents of the list, set or
