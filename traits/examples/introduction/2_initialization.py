@@ -115,7 +115,7 @@ Although you aren't required to write an ``__init__`` method in a
 ``HasTraits`` subclass, you can always choose to do so.  If you do, you
 **must** call ``super()`` to ensure that Traits has a chance to set up
 its machinery.  In our example the ``__init__`` method is also used to set
-up some auxilliary values. This doesn't have to change::
+up some auxiliary values. This doesn't have to change::
 
     def __init__(self, **traits):
         super().__init__(**traits)
