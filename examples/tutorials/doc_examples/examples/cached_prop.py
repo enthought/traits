@@ -9,7 +9,7 @@
 # Thanks for using Enthought open source!
 
 """
-This example demonstrates the use of Property, with caching and notifcation
+This example demonstrates the use of Property, with caching and notification
 support.
 
 """
