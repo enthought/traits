@@ -1113,6 +1113,8 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
     def add_class_trait(cls, name, *trait):
         """ Adds a named trait attribute to this class.
 
+        Also adds the same attribute to all subclasses.
+
         Parameters
         ----------
         name : str
@@ -1143,6 +1145,31 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
 
     @classmethod
     def _add_class_trait(cls, name, trait, is_subclass):
+        """
+        Add a named trait attribute to this class.
+
+        Does not affect subclasses.
+
+        Parameters
+        ----------
+        name : str
+            Name of the attribute to add.
+        trait : CTrait
+            The trait to be added.
+        is_subclass : bool
+            True if we're adding the trait to a strict subclass of the
+            original class that add_class_trait was called for. This is used
+            to decide how to behave if ``cls`` already has a trait named
+            ``name``: in that circumstance, if ``is_subclass`` is False, an
+            error will be raised, while if ``is_subclass`` is True, no trait
+            will be added.
+
+        Raises
+        ------
+        TraitError
+            If a trait with the given name already exists, and is_subclass
+            is ``False``.
+        """
         # Get a reference to the class's dictionary and 'prefix' traits:
         class_dict = cls.__dict__
         prefix_traits = class_dict[PrefixTraits]
