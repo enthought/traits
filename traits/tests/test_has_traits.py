@@ -464,6 +464,81 @@ class TestHasTraits(unittest.TestCase):
         self.assertIsNot(objs_copy[0], objs[0])
         self.assertIs(objs_copy[0], objs_copy[1])
 
+    def test_add_class_trait(self):
+        # Testing basic usage.
+        class A(HasTraits):
+            pass
+
+        A.add_class_trait("y", Str())
+
+        a = A()
+
+        self.assertEqual(a.y, "")
+
+    def test_add_class_trait_affects_existing_instances(self):
+        class A(HasTraits):
+            pass
+
+        a = A()
+
+        A.add_class_trait("y", Str())
+
+        self.assertEqual(a.y, "")
+
+    def test_add_class_trait_affects_subclasses(self):
+        class A(HasTraits):
+            pass
+
+        class B(A):
+            pass
+
+        class C(B):
+            pass
+
+        class D(B):
+            pass
+
+        A.add_class_trait("y", Str())
+        self.assertEqual(A().y, "")
+        self.assertEqual(B().y, "")
+        self.assertEqual(C().y, "")
+        self.assertEqual(D().y, "")
+
+    def test_add_class_trait_has_items_and_subclasses(self):
+        # Regression test for enthought/traits#1460
+        class A(HasTraits):
+            pass
+
+        class B(A):
+            pass
+
+        class C(B):
+            pass
+
+        # Code branch for traits with items.
+        A.add_class_trait("x", List(Int))
+        self.assertEqual(A().x, [])
+        self.assertEqual(B().x, [])
+        self.assertEqual(C().x, [])
+
+        # Exercise the code branch for mapped traits.
+        A.add_class_trait("y", Map({"yes": 1, "no": 0}, default_value="no"))
+        self.assertEqual(A().y, "no")
+        self.assertEqual(B().y, "no")
+        self.assertEqual(C().y, "no")
+
+    def test_add_class_trait_add_prefix_traits(self):
+
+        class A(HasTraits):
+            pass
+
+        A.add_class_trait("abc_", Str())
+        A.add_class_trait("abc_def_", Int())
+
+        a = A()
+        self.assertEqual(a.abc_def_g, 0)
+        self.assertEqual(a.abc_z, "")
+
 
 class TestObjectNotifiers(unittest.TestCase):
     """ Test calling object notifiers. """

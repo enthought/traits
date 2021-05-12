@@ -1135,11 +1135,11 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             trait = trait_for(trait[0])
 
         # Add the trait to the class:
-        cls._add_class_trait(name, trait, False)
+        cls._add_class_trait(name, trait, is_subclass=False)
 
         # Also add the trait to all subclasses of this class:
         for subclass in cls.trait_subclasses(True):
-            subclass._add_class_trait(name, trait, True)
+            subclass._add_class_trait(name, trait, is_subclass=True)
 
     @classmethod
     def _add_class_trait(cls, name, trait, is_subclass):
@@ -1161,7 +1161,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             prefix_list.append(name)
 
             # Resort the list from longest to shortest:
-            prefix_list.sort(lambda x, y: len(y) - len(x))
+            prefix_list.sort(key=lambda x: -len(x))
 
             return
 
@@ -1177,9 +1177,17 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         handler = trait.handler
         if handler is not None:
             if handler.has_items:
-                cls.add_class_trait(name + "_items", handler.items_event())
+                cls._add_class_trait(
+                    name + "_items",
+                    handler.items_event(),
+                    is_subclass=is_subclass,
+                )
             if handler.is_mapped:
-                cls.add_class_trait(name + "_", mapped_trait_for(trait, name))
+                cls._add_class_trait(
+                    name + "_",
+                    mapped_trait_for(trait, name),
+                    is_subclass=is_subclass,
+                )
 
         # Make the new trait inheritable (if allowed):
         if trait.is_base is not False:
