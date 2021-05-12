@@ -21,7 +21,7 @@ jobs:
     - name: Install dependencies and local packages
       run: |
         python -m pip install --upgrade pip
-        python -m pip install Sphinx enthought_sphinx_theme
+        python -m pip install "Sphinx<4" enthought_sphinx_theme
     - name: Build HTML documentation with Sphinx
       run: |
         cd docs
