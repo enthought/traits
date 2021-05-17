@@ -1188,7 +1188,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             prefix_list.append(name)
 
             # Resort the list from longest to shortest:
-            prefix_list.sort(key=lambda x: -len(x))
+            prefix_list.sort(key=len, reverse=True)
 
             return
 
