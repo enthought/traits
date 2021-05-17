@@ -35,6 +35,7 @@ from traits.observation.exception_handling import (
 )
 from traits.traits import ForwardProperty, generic_trait
 from traits.trait_types import Event, Float, Instance, Int, List, Map, Str
+from traits.trait_errors import TraitError
 
 
 def _dummy_getter(self):
@@ -538,6 +539,30 @@ class TestHasTraits(unittest.TestCase):
         a = A()
         self.assertEqual(a.abc_def_g, 0)
         self.assertEqual(a.abc_z, "")
+
+    def test_add_class_trait_when_trait_already_exists(self):
+
+        class A(HasTraits):
+            foo = Int()
+
+        with self.assertRaises(TraitError):
+            A.add_class_trait("foo", List())
+
+        self.assertEqual(A().foo, 0)
+        with self.assertRaises(AttributeError):
+            A().foo_items
+
+    def test_add_class_trait_when_trait_already_exists_in_subclass(self):
+        class A(HasTraits):
+            pass
+
+        class B(A):
+            foo = Int()
+
+        A.add_class_trait("foo", Str())
+
+        self.assertEqual(A().foo, "")
+        self.assertEqual(B().foo, 0)
 
 
 class TestObjectNotifiers(unittest.TestCase):
