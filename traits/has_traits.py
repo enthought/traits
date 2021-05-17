@@ -643,7 +643,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
     # Make sure the trait prefixes are sorted longest to shortest
     # so that we can easily bind dynamic traits to the longest matching
     # prefix:
-    prefix_list.sort(key=lambda x: -len(x))
+    prefix_list.sort(key=len, reverse=True)
 
     # Get the list of all possible 'Instance'/'List(Instance)' handlers:
     instance_traits = _get_instance_handlers(class_dict, hastraits_bases)
