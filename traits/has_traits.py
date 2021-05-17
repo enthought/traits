@@ -1393,7 +1393,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             my_object.trait_get(["trait_name1", "trait_name2"])
 
         In the final form, no trait names are passed, and all trait names
-        and trait values are returned, subject to the given metadata filters.
+        and trait values are returned, subject to the given metadata filters::
 
             my_object.trait_get(transient=True, frombicated=False)
 
