@@ -1384,11 +1384,12 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         """ Retrieve trait values for one or more traits.
 
         This function can be called in one of three ways. In the first form,
-        the user passes the names of the traits to be retrieved::
+        the user passes the names of one or more traits to be retrieved::
 
             my_object.trait_get("trait_name1", "trait_name2")
 
-        In the second form, the user passes a list of names of traits::
+        In the second form, the user passes a list of zero or more names of
+        traits::
 
             my_object.trait_get(["trait_name1", "trait_name2"])
 
