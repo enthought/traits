@@ -1381,7 +1381,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         self._trait_set_inited()
 
     def trait_get(self, *names, **metadata):
-        """ Retrieve values for one or more traits at once.
+        """ Retrieve trait values for one or more traits.
 
         This function can be called in one of three ways. In the first form,
         the user passes the names of the traits to be retrieved::
