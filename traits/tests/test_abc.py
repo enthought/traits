@@ -29,8 +29,15 @@ class TestNew(unittest.TestCase):
         warnings.filters[:] = self.old_filters
 
     def test_new(self):
+        # Previously, this test used HasTraits(x=10). That has the
+        # side-effect of creating an `x` trait on HasTraits, possibly
+        # causing interactions with other tests.
+        # xref: enthought/traits#58
+        class A(HasTraits):
+            pass
+
         # Should not raise DeprecationWarning.
-        HasTraits(x=10)
+        A(x=10)
 
 
 class AbstractFoo(ABCHasTraits):

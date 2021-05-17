@@ -643,7 +643,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
     # Make sure the trait prefixes are sorted longest to shortest
     # so that we can easily bind dynamic traits to the longest matching
     # prefix:
-    prefix_list.sort(key=lambda x: -len(x))
+    prefix_list.sort(key=len, reverse=True)
 
     # Get the list of all possible 'Instance'/'List(Instance)' handlers:
     instance_traits = _get_instance_handlers(class_dict, hastraits_bases)
@@ -1113,6 +1113,8 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
     def add_class_trait(cls, name, *trait):
         """ Adds a named trait attribute to this class.
 
+        Also adds the same attribute to all subclasses.
+
         Parameters
         ----------
         name : str
@@ -1135,14 +1137,39 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             trait = trait_for(trait[0])
 
         # Add the trait to the class:
-        cls._add_class_trait(name, trait, False)
+        cls._add_class_trait(name, trait, is_subclass=False)
 
         # Also add the trait to all subclasses of this class:
         for subclass in cls.trait_subclasses(True):
-            subclass._add_class_trait(name, trait, True)
+            subclass._add_class_trait(name, trait, is_subclass=True)
 
     @classmethod
     def _add_class_trait(cls, name, trait, is_subclass):
+        """
+        Add a named trait attribute to this class.
+
+        Does not affect subclasses.
+
+        Parameters
+        ----------
+        name : str
+            Name of the attribute to add.
+        trait : CTrait
+            The trait to be added.
+        is_subclass : bool
+            True if we're adding the trait to a strict subclass of the
+            original class that add_class_trait was called for. This is used
+            to decide how to behave if ``cls`` already has a trait named
+            ``name``: in that circumstance, if ``is_subclass`` is False, an
+            error will be raised, while if ``is_subclass`` is True, no trait
+            will be added.
+
+        Raises
+        ------
+        TraitError
+            If a trait with the given name already exists, and is_subclass
+            is ``False``.
+        """
         # Get a reference to the class's dictionary and 'prefix' traits:
         class_dict = cls.__dict__
         prefix_traits = class_dict[PrefixTraits]
@@ -1161,7 +1188,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             prefix_list.append(name)
 
             # Resort the list from longest to shortest:
-            prefix_list.sort(lambda x, y: len(y) - len(x))
+            prefix_list.sort(key=len, reverse=True)
 
             return
 
@@ -1177,9 +1204,17 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         handler = trait.handler
         if handler is not None:
             if handler.has_items:
-                cls.add_class_trait(name + "_items", handler.items_event())
+                cls._add_class_trait(
+                    name + "_items",
+                    handler.items_event(),
+                    is_subclass=is_subclass,
+                )
             if handler.is_mapped:
-                cls.add_class_trait(name + "_", mapped_trait_for(trait, name))
+                cls._add_class_trait(
+                    name + "_",
+                    mapped_trait_for(trait, name),
+                    is_subclass=is_subclass,
+                )
 
         # Make the new trait inheritable (if allowed):
         if trait.is_base is not False:
