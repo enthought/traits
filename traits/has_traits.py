@@ -1381,26 +1381,43 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         self._trait_set_inited()
 
     def trait_get(self, *names, **metadata):
-        """ Shortcut for getting object trait attributes.
+        """ Retrieve trait values for one or more traits.
 
-        Looks up the value of each trait whose name is passed as an argument
-        and returns a dictionary containing the resulting name/value pairs.
-        If any name does not correspond to a defined trait, it is not included
-        in the result.
+        This function can be called in one of three ways. In the first form,
+        the user passes the names of one or more traits to be retrieved::
 
-        If no names are specified, the result is a dictionary containing
-        name/value pairs for *all* traits defined on the object.
+            my_object.trait_get("trait_name1", "trait_name2")
+
+        In the second form, the user passes a list of zero or more names of
+        traits::
+
+            my_object.trait_get(["trait_name1", "trait_name2"])
+
+        In the final form, no trait names are passed, and all trait names
+        and trait values are returned, subject to the given metadata filters::
+
+            my_object.trait_get(transient=True, frombicated=False)
+
+        In all cases, a dictionary mapping trait names to trait values is
+        returned.
+
+        For the first two forms, if any name does not correspond to a defined
+        trait, it is not included in the result.
 
         Parameters
         ----------
-        names : list of strings
-            A list of trait attribute names whose values are requested.
+        *names
+            Names of the traits to look up, or a single positional argument
+            providing a sequence of trait names.
+        **metadata
+            Metadata information used to filter the traits to return. This
+            information is used only when no names are provided.
 
         Returns
         -------
         result : dict
-            A dictionary whose keys are the names passed as arguments and whose
-            values are the corresponding trait values.
+            A dictionary mapping the selected trait names to their
+            corresponding values.
         """
 
         result = {}
