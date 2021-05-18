@@ -230,8 +230,7 @@ PROPERTY_SIMPLE_CASE_DESCRIPTION = """
     Given a subclass of HasTraits with a trait that is defined as Property
     that depends on a simple trait, compare having the Property be defined
     as Property(), Property(depends_on="name"), Property(observe="name"),
-    and Property(observe=trait('name')). (Note that this is a feature
-    currently available on master only).
+    and Property(observe=trait('name')).
 
     The timing we are interested in:
     (1) Time to import the module, i.e. the class construction.
@@ -326,8 +325,7 @@ PROPERTY_EXTENDED_CASE_DESCRIPTION = """
     that depends on an extended trait, compare having the Property be
     defined as Property(), Property(depends_on="child.name"),
     Property(observe="child.name"), and
-    Property(observe=trait('child').trait('name')). (Note that this is a
-    feature currently available on master only).
+    Property(observe=trait('child').trait('name')).
 
     The timing we are interested in:
     (1) Time to import the module, i.e. the class construction.
