@@ -33,7 +33,7 @@ def add_or_remove_notifiers(
         This is typically an instance of HasTraits seen by the user as the
         "owner" of the observer.
     dispatcher : callable(callable, event)
-        Callable for dispatching the user-defined handler, i.e. dispatching
+        Callable for dispatching the user-defined handler, e.g. dispatching
         callback on a different thread.
     remove : boolean
         If true, notifiers are being removed.
