@@ -43,9 +43,10 @@ def observe(
         Its type and content depends on the change.
     remove : boolean, optional
         If true, remove notifiers. i.e. unobserve the traits.
-    dispatcher : callable(callable, event)
-        Callable for dispatching the user-defined handler, i.e. dispatching
-        callback on a different thread.
+    dispatcher : callable(callable, event), optional
+        Callable for dispatching the user-defined handler, e.g. dispatching
+        callback on a different thread. Default is to dispatch on the same
+        thread.
     """
     # Implicit interface: ``expression`` can be anything with a method
     # ``_as_graphs`` that returns a list of ObserverGraph.
