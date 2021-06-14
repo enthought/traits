@@ -2974,18 +2974,63 @@ trait_traverse(trait_object *trait, visitproc visit, void *arg)
 |  Handles the 'getattr' operation on a 'CTrait' instance:
 +----------------------------------------------------------------------------*/
 
+/* Return 1 if name starts and ends with "__", else 0. Return -1 with
+   an exception set on failure. */
+
+static int
+is_dunder_name(PyObject *name) {
+    Py_ssize_t name_length;
+    int kind;
+    void *data;
+
+    if (PyUnicode_READY(name) < 0) {
+        return -1;
+    }
+
+    name_length = PyUnicode_GET_LENGTH(name);
+    kind = PyUnicode_KIND(name);
+    data = PyUnicode_DATA(name);
+    return (
+        (name_length >= 2)
+        && (PyUnicode_READ(kind, data, 0) == '_')
+        && (PyUnicode_READ(kind, data, 1) == '_')
+        && (PyUnicode_READ(kind, data, name_length - 2) == '_')
+        && (PyUnicode_READ(kind, data, name_length - 1) == '_')
+    );
+}
+
+
 static PyObject *
 trait_getattro(trait_object *obj, PyObject *name)
 {
-    PyObject *value = PyObject_GenericGetAttr((PyObject *)obj, name);
+    PyObject *value;
+    int is_dunder;
+
+    value = PyObject_GenericGetAttr((PyObject *)obj, name);
     if (value != NULL || !PyErr_ExceptionMatches(PyExc_AttributeError)) {
         return value;
     }
-
     PyErr_Clear();
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    /* The attribute lookup failed. For backwards compatibility, we return
+       `None` in this case, *except* for attribute names that start and end
+       with a double underscore. Those attribute names may have special meaning
+       to the interpreter, and `None` may not be a valid value, so we allow the
+       exception to propagate. */
+
+    is_dunder = is_dunder_name(name);
+    if (is_dunder < 0) {
+        return NULL;
+    }
+    else if (is_dunder) {
+        /* Retry the attribute lookup so that we get the correct exception
+           message. */
+        return PyObject_GenericGetAttr((PyObject *)obj, name);
+    }
+    else {
+        /* Not a __dunder__ name; invent an attribute value of `None`. */
+        Py_RETURN_NONE;
+    }
 }
 
 /*-----------------------------------------------------------------------------

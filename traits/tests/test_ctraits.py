@@ -308,8 +308,32 @@ class TestCTrait(unittest.TestCase):
         self.assertEqual(foo.bar_changed[0], "baz")
 
     def test_failed_attribute_access(self):
+        # Double-underscore names are special-cased.
+        non_dunder_names = [
+            "non_existent",
+            "__non_existent",
+            "non_existent__",
+            "__a__b_",
+            "_",
+        ]
+
+        dunder_names = [
+            "__package__",
+            "__a__",
+            "____",
+            "___",
+            "__",
+        ]
+
         ctrait = CTrait(0)
-        self.assertIsNone(ctrait.non_existent)
+        for name in non_dunder_names:
+            with self.subTest(name=name):
+                self.assertIsNone(getattr(ctrait, name))
+
+        for name in dunder_names:
+            with self.subTest(name=name):
+                with self.assertRaises(AttributeError):
+                    getattr(ctrait, name)
 
     def test_exception_from_attribute_access(self):
         # Regression test for enthought/traits#946.
