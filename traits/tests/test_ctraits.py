@@ -313,6 +313,7 @@ class TestCTrait(unittest.TestCase):
             "non_existent",
             "__non_existent",
             "non_existent__",
+            "_non_existent_",
             "__a__b_",
             "_",
         ]
