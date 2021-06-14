@@ -2971,14 +2971,15 @@ trait_traverse(trait_object *trait, visitproc visit, void *arg)
 }
 
 /*-----------------------------------------------------------------------------
-|  Handles the 'getattr' operation on a 'CTrait' instance:
+|  Identify double underscore names like "__qualname__" and "__package__".
+|
+|  Returns 1 if name starts and ends with "__", else 0. Returns -1 with
+|  an exception set on failure.
 +----------------------------------------------------------------------------*/
 
-/* Return 1 if name starts and ends with "__", else 0. Return -1 with
-   an exception set on failure. */
-
 static int
-is_dunder_name(PyObject *name) {
+is_dunder_name(PyObject *name)
+{
     Py_ssize_t name_length;
     int kind;
     void *data;
@@ -2999,6 +3000,9 @@ is_dunder_name(PyObject *name) {
     );
 }
 
+/*-----------------------------------------------------------------------------
+|  Handles the 'getattr' operation on a 'CTrait' instance:
++----------------------------------------------------------------------------*/
 
 static PyObject *
 trait_getattro(trait_object *obj, PyObject *name)
