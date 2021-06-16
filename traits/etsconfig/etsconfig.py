@@ -102,12 +102,14 @@ class ETSConfig(object):
 
         return self._application_data
 
-    def _get_application_data(self):
+    @property
+    def application_data(self):
         """ Property getter, see get_application_data's docstring.
         """
         return self.get_application_data(create=True)
 
-    def _set_application_data(self, application_data):
+    @application_data.setter
+    def application_data(self, application_data):
         """
         Property setter.
 
@@ -158,14 +160,14 @@ class ETSConfig(object):
 
         return self._application_home
 
-    application_data = property(_get_application_data, _set_application_data)
-
+    @property
     def _get_application_home(self):
         """ Property getter, see get_application_home's docstring.
         """
         return self.get_application_home(create=True)
 
-    def _set_application_home(self, application_home):
+    @application_home.setter
+    def application_home(self, application_home):
         """
         Property setter.
 
@@ -173,9 +175,8 @@ class ETSConfig(object):
 
         self._application_home = application_home
 
-    application_home = property(_get_application_home, _set_application_home)
-
-    def _get_company(self):
+    @property
+    def company(self):
         """
         Property getter.
 
@@ -186,15 +187,14 @@ class ETSConfig(object):
 
         return self._company
 
-    def _set_company(self, company):
+    @company.setter
+    def company(self, company):
         """
         Property setter for the company name.
 
         """
 
         self._company = company
-
-    company = property(_get_company, _set_company)
 
     @contextmanager
     def provisional_toolkit(self, toolkit):
@@ -228,7 +228,8 @@ class ETSConfig(object):
             self._toolkit = ""
             raise
 
-    def _get_toolkit(self):
+    @property
+    def toolkit(self):
         """
         Property getter for the GUI toolkit.  The value returned is, in order
         of preference: the value set by the application; the value specified by
@@ -241,7 +242,8 @@ class ETSConfig(object):
 
         return self._toolkit.split(".")[0]
 
-    def _set_toolkit(self, toolkit):
+    @toolkit.setter
+    def toolkit(self, toolkit):
         """
         Property setter for the GUI toolkit.  The toolkit can be set more than
         once, but only if it is the same one each time.  An application that is
@@ -258,9 +260,8 @@ class ETSConfig(object):
 
         self._toolkit = toolkit
 
-    toolkit = property(_get_toolkit, _set_toolkit)
-
-    def _get_enable_toolkit(self):
+    @property
+    def enable_toolkit(self):
         """
         Deprecated: This property is no longer used.
 
@@ -275,7 +276,8 @@ class ETSConfig(object):
 
         return self.toolkit
 
-    def _set_enable_toolkit(self, toolkit):
+    @enable_toolkit.setter
+    def enable_toolkit(self, toolkit):
         """
         Deprecated.
 
@@ -288,9 +290,8 @@ class ETSConfig(object):
 
         warn("Use of the enable_toolkit attribute is deprecated.")
 
-    enable_toolkit = property(_get_enable_toolkit, _set_enable_toolkit)
-
-    def _get_kiva_backend(self):
+    @property
+    def kiva_backend(self):
         """
         Property getter for the Kiva backend. The value returned is dependent
         on the value of the toolkit property. If toolkit specifies a kiva
@@ -321,9 +322,8 @@ class ETSConfig(object):
 
         return self._kiva_backend
 
-    kiva_backend = property(_get_kiva_backend)
-
-    def _get_user_data(self):
+    @property
+    def user_data(self):
         """
         Property getter.
 
@@ -339,15 +339,14 @@ class ETSConfig(object):
 
         return self._user_data
 
-    def _set_user_data(self, user_data):
+    @user_data.setter
+    def user_data(self, user_data):
         """
         Property setter.
 
         """
 
         self._user_data = user_data
-
-    user_data = property(_get_user_data, _set_user_data)
 
     #### private methods #####################################################
 
