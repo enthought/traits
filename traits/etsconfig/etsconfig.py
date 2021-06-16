@@ -161,7 +161,7 @@ class ETSConfig(object):
         return self._application_home
 
     @property
-    def _get_application_home(self):
+    def application_home(self):
         """ Property getter, see get_application_home's docstring.
         """
         return self.get_application_home(create=True)
