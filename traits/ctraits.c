@@ -3014,7 +3014,6 @@ trait_getattro(trait_object *obj, PyObject *name)
     if (value != NULL || !PyErr_ExceptionMatches(PyExc_AttributeError)) {
         return value;
     }
-    PyErr_Clear();
 
     /* The attribute lookup failed. For backwards compatibility, we return
        `None` in this case, *except* for attribute names that start and end
@@ -3022,17 +3021,14 @@ trait_getattro(trait_object *obj, PyObject *name)
        to the interpreter, and `None` may not be a valid value, so we allow the
        exception to propagate. */
 
-    is_dunder = is_dunder_name(name);
-    if (is_dunder < 0) {
+    if (is_dunder_name(name)) {
+        /* Either we have a double-underscore name, or the is_dunder_name
+           call itself failed; either way, propagate the current exception. */
         return NULL;
-    }
-    else if (is_dunder) {
-        /* Retry the attribute lookup so that we get the correct exception
-           message. */
-        return PyObject_GenericGetAttr((PyObject *)obj, name);
     }
     else {
         /* Not a __dunder__ name; invent an attribute value of `None`. */
+        PyErr_Clear();
         Py_RETURN_NONE;
     }
 }
