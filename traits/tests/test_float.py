@@ -14,7 +14,9 @@ Tests for the Float trait type.
 """
 import unittest
 
-from traits.api import BaseFloat, Either, Float, HasTraits, Str, TraitError
+from traits.api import (
+    BaseFloat, Either, Float, HasTraits, Str, TraitError, Union,
+)
 from traits.testing.optional_dependencies import numpy, requires_numpy
 
 
@@ -48,9 +50,9 @@ class FloatModel(HasTraits):
 class BaseFloatModel(HasTraits):
     value = BaseFloat
 
-    value_or_none = Either(None, BaseFloat)
+    value_or_none = Union(None, BaseFloat)
 
-    float_or_text = Either(Float, Str)
+    float_or_text = Union(Float, Str)
 
 
 class CommonFloatTests(object):

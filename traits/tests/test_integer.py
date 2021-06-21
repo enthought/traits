@@ -17,7 +17,7 @@ import decimal
 import sys
 import unittest
 
-from traits.api import Either, HasTraits, Int, CInt, TraitError
+from traits.api import HasTraits, Int, CInt, TraitError, Union
 from traits.testing.optional_dependencies import numpy, requires_numpy
 
 
@@ -26,7 +26,7 @@ class A(HasTraits):
 
     convertible = CInt
 
-    convertible_or_none = Either(None, CInt)
+    convertible_or_none = Union(None, CInt)
 
 
 class IntegerLike(object):

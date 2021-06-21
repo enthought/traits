@@ -26,7 +26,6 @@ from traits.trait_types import (
     Bool,
     DelegatesTo,
     Dict,
-    Either,
     Instance,
     Int,
     List,
@@ -258,7 +257,7 @@ class TestRegression(unittest.TestCase):
         # Regression test for enthought/traits#376.
 
         class MultiArrayDataSource(HasTraits):
-            data = Either(None, Array)
+            data = Union(None, Array)
 
         b = MultiArrayDataSource(data=numpy.array([1, 2]))  # noqa: F841
         # The following line was necessary to trigger the bug: the previous
@@ -296,7 +295,7 @@ class TestRegression(unittest.TestCase):
         class A(HasTraits):
             foo = RaisingValidator()
 
-            bar = Either(None, RaisingValidator())
+            bar = Union(None, RaisingValidator())
 
         a = A()
         with self.assertRaises(ZeroDivisionError):

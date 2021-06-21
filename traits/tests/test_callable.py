@@ -14,7 +14,6 @@ import unittest
 from traits.api import (
     BaseCallable,
     Callable,
-    Either,
     HasTraits,
     Int,
     Str,
@@ -58,13 +57,13 @@ class Unbool:
 class MyCallable(HasTraits):
     value = Callable()
 
-    callable_or_str = Either(Callable, Str)
+    callable_or_str = Union(Callable, Str)
 
-    old_callable_or_str = Either(OldCallable, Str)
+    old_callable_or_str = Union(OldCallable, Str)
 
-    bad_allow_none = Either(Callable(allow_none=Unbool()), Str)
+    bad_allow_none = Union(Callable(allow_none=Unbool()), Str)
 
-    non_none_callable_or_str = Either(Callable(allow_none=False), Str)
+    non_none_callable_or_str = Union(Callable(allow_none=False), Str)
 
 
 class MyBaseCallable(HasTraits):

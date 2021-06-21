@@ -12,7 +12,7 @@
 """
 import unittest
 
-from traits.api import BaseInt, Either, HasTraits, Int, Tuple
+from traits.api import BaseInt, HasTraits, Int, Tuple, Union
 from traits.tests.tuple_test_mixin import TupleTestMixin
 
 
@@ -37,7 +37,7 @@ class TupleTestCase(TupleTestMixin, unittest.TestCase):
         class A(HasTraits):
             foo = Tuple(BadInt(), BadInt())
 
-            bar = Either(Int, Tuple(BadInt(), BadInt()))
+            bar = Union(Int, Tuple(BadInt(), BadInt()))
 
         a = A()
         with self.assertRaises(ZeroDivisionError):
