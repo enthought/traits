@@ -564,6 +564,25 @@ class TestHasTraits(unittest.TestCase):
         self.assertEqual(A().foo, "")
         self.assertEqual(B().foo, 0)
 
+    def test_traits_method_with_dunder_metadata(self):
+        # Regression test for enthought/envisage#430
+        class A(HasTraits):
+            foo = Int(__extension_point__=True)
+            bar = Int(__extension_point__=False)
+            baz = Int()
+
+        a = A(foo=3, bar=4, baz=5)
+
+        self.assertEqual(
+            a.traits(__extension_point__=True),
+            {"foo": a.trait("foo")},
+        )
+
+        self.assertEqual(
+            A.class_traits(__extension_point__=True),
+            {"foo": A.class_traits()["foo"]},
+        )
+
 
 class TestObjectNotifiers(unittest.TestCase):
     """ Test calling object notifiers. """

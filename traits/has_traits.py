@@ -3041,7 +3041,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         result = {}
         for name, trait in traits.items():
             for meta_name, meta_eval in metadata.items():
-                if not meta_eval(getattr(trait, meta_name)):
+                if not meta_eval(getattr(trait, meta_name, None)):
                     break
             else:
                 result[name] = trait
@@ -3090,7 +3090,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
 
         for name, trait in cls.__base_traits__.items():
             for meta_name, meta_eval in metadata.items():
-                if not meta_eval(getattr(trait, meta_name)):
+                if not meta_eval(getattr(trait, meta_name, None)):
                     break
             else:
                 result[name] = trait
