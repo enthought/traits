@@ -75,10 +75,6 @@ class TraitDocumenter(ClassLevelDocumenter):
         """ Trait attributes have no members """
         pass
 
-    def add_content(self, more_content, no_docstring=False):
-        """ Never try to get a docstring from the trait."""
-        ClassLevelDocumenter.add_content(self, more_content, no_docstring=True)
-
     def import_object(self):
         """ Get the Trait object.
 
