@@ -3008,7 +3008,6 @@ static PyObject *
 trait_getattro(trait_object *obj, PyObject *name)
 {
     PyObject *value;
-    int is_dunder;
 
     value = PyObject_GenericGetAttr((PyObject *)obj, name);
     if (value != NULL || !PyErr_ExceptionMatches(PyExc_AttributeError)) {
