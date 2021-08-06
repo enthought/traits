@@ -955,21 +955,6 @@ class ListenerGroup(ListenerBase):
 
 class ListenerParser:
 
-    # -- object Method Overrides ----------------------------------------------
-
-    def __init__(self, text):
-        #: The text being parsed.
-        self.text = text
-
-        #: The length of the string being parsed.
-        self.len_text = len(self.text)
-
-        #: The current parse index within the string.
-        self.index = 0
-
-        #: The parsed listener.
-        self.listener = self.parse()
-
     # -- Property Implementations ---------------------------------------------
 
     @property
@@ -1005,6 +990,21 @@ class ListenerParser:
         self.index = match.start(2)
 
         return match.group(1)
+
+    # -- object Method Overrides ----------------------------------------------
+
+    def __init__(self, text):
+        #: The text being parsed.
+        self.text = text
+
+        #: The length of the string being parsed.
+        self.len_text = len(self.text)
+
+        #: The current parse index within the string.
+        self.index = 0
+
+        #: The parsed listener.
+        self.listener = self.parse()
 
     # -- Private Methods ------------------------------------------------------
 
