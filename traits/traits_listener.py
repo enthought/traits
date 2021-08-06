@@ -953,35 +953,28 @@ class ListenerGroup(ListenerBase):
             item.unregister(old)
 
 
-class ListenerParser(HasPrivateTraits):
+class ListenerParser:
 
-    #: The string being parsed
-    text = Str
+    # -- object Method Overrides ----------------------------------------------
 
-    #: The length of the string being parsed.
-    len_text = Int
+    def __init__(self, text):
+        #: The text being parsed.
+        self.text = text
 
-    #: The current parse index within the string
-    index = Int
+        #: The length of the string being parsed.
+        self.len_text = len(self.text)
 
-    #: The next character from the string being parsed
-    next = Property
+        #: The current parse index within the string.
+        self.index = 0
 
-    #: The next Python attribute name within the string:
-    name = Property
-
-    #: The next non-whitespace character
-    skip_ws = Property
-
-    #: Backspaces to the last character processed
-    backspace = Property
-
-    #: The ListenerBase object resulting from parsing **text**
-    listener = Instance(ListenerBase)
+        #: The parsed listener.
+        self.listener = self.parse()
 
     # -- Property Implementations ---------------------------------------------
 
-    def _get_next(self):
+    @property
+    def next(self):
+        """The next character from the string being parsed."""
         index = self.index
         self.index += 1
         if index >= self.len_text:
@@ -989,16 +982,22 @@ class ListenerParser(HasPrivateTraits):
 
         return self.text[index]
 
-    def _get_backspace(self):
+    @property
+    def backspace(self):
+        """Backspaces to the last character processed."""
         self.index = max(0, self.index - 1)
 
-    def _get_skip_ws(self):
+    @property
+    def skip_ws(self):
+        """The next non-whitespace character."""
         while True:
             c = self.next
             if c not in whitespace:
                 return c
 
-    def _get_name(self):
+    @property
+    def name(self):
+        """The next Python attribute name within the string."""
         match = name_pat.match(self.text, self.index - 1)
         if match is None:
             return ""
@@ -1006,12 +1005,6 @@ class ListenerParser(HasPrivateTraits):
         self.index = match.start(2)
 
         return match.group(1)
-
-    # -- object Method Overrides ----------------------------------------------
-
-    def __init__(self, text="", **traits):
-        self.text = text
-        super().__init__(**traits)
 
     # -- Private Methods ------------------------------------------------------
 
@@ -1150,13 +1143,6 @@ class ListenerParser(HasPrivateTraits):
         raise TraitError(
             "%s at column %d of '%s'" % (msg, self.index, self.text)
         )
-
-    # -- Event Handlers -------------------------------------------------------
-
-    def _text_changed(self):
-        self.index = 0
-        self.len_text = len(self.text)
-        self.listener = self.parse()
 
 
 class ListenerNotifyWrapper(TraitChangeNotifyWrapper):
