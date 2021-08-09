@@ -495,12 +495,6 @@ class ListenerItem(ListenerBase):
 
     # -- Event Handlers -------------------------------------------------------
 
-    def _wrapped_handler_ref_changed(self, wrapped_handler_ref):
-        """ Handles the 'wrapped_handler_ref' trait being changed.
-        """
-        if self.next is not None:
-            self.next.wrapped_handler_ref = wrapped_handler_ref
-
     def _dispatch_changed(self, dispatch):
         """ Handles the **dispatch** trait being changed.
         """
@@ -852,9 +846,6 @@ ListProperty = Property(fget=_get_value, fset=_set_value)
 
 class ListenerGroup(ListenerBase):
 
-    #: A weakref 'wrapped' version of 'handler':
-    wrapped_handler_ref = Property
-
     #: The dispatch mechanism to use when invoking the handler:
     dispatch = Property
 
@@ -880,12 +871,6 @@ class ListenerGroup(ListenerBase):
     items = List(ListenerBase)
 
     # -- Property Implementations ---------------------------------------------
-
-    def _set_wrapped_handler_ref(self, wrapped_handler_ref):
-        if self._wrapped_handler_ref is None:
-            self._wrapped_handler_ref = wrapped_handler_ref
-            for item in self.items:
-                item.wrapped_handler_ref = wrapped_handler_ref
 
     def _set_dispatch(self, dispatch):
         if self._dispatch is None:
@@ -975,7 +960,7 @@ class ListenerParser:
 
     # -- object Method Overrides ----------------------------------------------
 
-    def __init__(self, text, handler=None):
+    def __init__(self, text, handler=None, wrapped_handler_ref=None):
         #: The text being parsed.
         self.text = text
 
@@ -987,6 +972,9 @@ class ListenerParser:
 
         #: The handler to be called when any listened-to trait is changed.
         self.handler = handler
+
+        #: A weakref 'wrapped' version of 'handler':
+        self.wrapped_handler_ref = wrapped_handler_ref
 
         #: The parsed listener.
         self.listener = self.parse()
@@ -1015,8 +1003,10 @@ class ListenerParser:
                 next=ListenerItem(
                     name=match.group(3),
                     handler=self.handler,
+                    wrapped_handler_ref=self.wrapped_handler_ref,
                 ),
                 handler=self.handler,
+                wrapped_handler_ref=self.wrapped_handler_ref,
             )
 
         return self.parse_group(EOS)
@@ -1058,6 +1048,7 @@ class ListenerParser:
             result = ListenerItem(
                 name=name,
                 handler=self.handler,
+                wrapped_handler_ref=self.wrapped_handler_ref,
             )
 
             if c in "+-":

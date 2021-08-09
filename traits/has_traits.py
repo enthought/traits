@@ -2668,9 +2668,9 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                 listener = ListenerParser(
                     name,
                     handler=ListenerHandler(handler),
+                    wrapped_handler_ref=weakref.ref(lnw),
                 ).listener
                 listener.trait_set(
-                    wrapped_handler_ref=weakref.ref(lnw),
                     type=lnw.type,
                     dispatch=dispatch,
                     priority=priority,
