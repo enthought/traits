@@ -984,7 +984,7 @@ class ListenerParser:
                     priority=self.priority,
                     # Bug-for-bug compatibility with old behaviour: don't
                     # propagate the 'deferred' or 'handler_type' values for the
-                    # child item.
+                    # child item. Ref: enthought/traits#537.
                     deferred=False,
                     type=ANY_LISTENER,
                 ),
@@ -1112,6 +1112,7 @@ class ListenerParser:
             result.notify = c == "."
             # Bug-for-bug compatibility with old behaviour: don't propagate the
             # 'deferred' or 'handler_type' values for the child item.
+            # Ref: enthought/traits#537.
             next = self.parse_item(
                 terminator=terminator,
                 deferred=False,
