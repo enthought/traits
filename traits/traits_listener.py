@@ -126,9 +126,6 @@ def not_event(value):
 
 class ListenerBase(HasPrivateTraits):
 
-    # The handler to be called when any listened to trait is changed:
-    # handler = Any
-
     # The dispatch mechanism to use when invoking the handler:
     # dispatch = Str
 
@@ -498,12 +495,6 @@ class ListenerItem(ListenerBase):
 
     # -- Event Handlers -------------------------------------------------------
 
-    def _handler_changed(self, handler):
-        """ Handles the **handler** trait being changed.
-        """
-        if self.next is not None:
-            self.next.handler = handler
-
     def _wrapped_handler_ref_changed(self, wrapped_handler_ref):
         """ Handles the 'wrapped_handler_ref' trait being changed.
         """
@@ -861,9 +852,6 @@ ListProperty = Property(fget=_get_value, fset=_set_value)
 
 class ListenerGroup(ListenerBase):
 
-    #: The handler to be called when any listened-to trait is changed
-    handler = Property
-
     #: A weakref 'wrapped' version of 'handler':
     wrapped_handler_ref = Property
 
@@ -892,12 +880,6 @@ class ListenerGroup(ListenerBase):
     items = List(ListenerBase)
 
     # -- Property Implementations ---------------------------------------------
-
-    def _set_handler(self, handler):
-        if self._handler is None:
-            self._handler = handler
-            for item in self.items:
-                item.handler = handler
 
     def _set_wrapped_handler_ref(self, wrapped_handler_ref):
         if self._wrapped_handler_ref is None:
@@ -993,7 +975,7 @@ class ListenerParser:
 
     # -- object Method Overrides ----------------------------------------------
 
-    def __init__(self, text):
+    def __init__(self, text, handler=None):
         #: The text being parsed.
         self.text = text
 
@@ -1002,6 +984,9 @@ class ListenerParser:
 
         #: The current parse index within the string.
         self.index = 0
+
+        #: The handler to be called when any listened-to trait is changed.
+        self.handler = handler
 
         #: The parsed listener.
         self.listener = self.parse()
@@ -1027,7 +1012,11 @@ class ListenerParser:
             return ListenerItem(
                 name=match.group(1),
                 notify=match.group(2) == ".",
-                next=ListenerItem(name=match.group(3)),
+                next=ListenerItem(
+                    name=match.group(3),
+                    handler=self.handler,
+                ),
+                handler=self.handler,
             )
 
         return self.parse_group(EOS)
@@ -1066,7 +1055,10 @@ class ListenerParser:
             if name != "":
                 c = self.next
 
-            result = ListenerItem(name=name)
+            result = ListenerItem(
+                name=name,
+                handler=self.handler,
+            )
 
             if c in "+-":
                 result.name += "*"

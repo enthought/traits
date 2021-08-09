@@ -2665,9 +2665,11 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                 # wrapper, then we replace the `None` listener with the correct
                 # one.
                 lnw = ListenerNotifyWrapper(handler, self, name, None, target)
-                listener = ListenerParser(name).listener
-                listener.trait_set(
+                listener = ListenerParser(
+                    name,
                     handler=ListenerHandler(handler),
+                ).listener
+                listener.trait_set(
                     wrapped_handler_ref=weakref.ref(lnw),
                     type=lnw.type,
                     dispatch=dispatch,
