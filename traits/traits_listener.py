@@ -130,8 +130,15 @@ class ListenerBase(HasPrivateTraits):
     # our listened to traits is changed:
     # next = Instance( ListenerBase )
 
-    # Should changes to this item generate a notification to the handler?
-    # notify = Bool
+    def set_notify(self, notify):
+        """ Set notify state on this listener.
+
+        Parameters
+        ----------
+        notify : bool
+            True if this listener should notify, else False.
+        """
+        raise NotImplementedError
 
     def register(self, new):
         """ Registers new listeners.
@@ -268,6 +275,16 @@ class ListenerItem(ListenerBase):
             self.type,
             indent(next_repr, False),
         )
+
+    def set_notify(self, notify):
+        """ Set notify state on this listener.
+
+        Parameters
+        ----------
+        notify : bool
+            True if this listener should notify, else False.
+        """
+        self.notify = notify
 
     def register(self, new):
         """ Registers new listeners.
@@ -822,9 +839,6 @@ class ListenerGroup(ListenerBase):
     #: this object's listened-to traits is changed
     next = ListProperty
 
-    #: Should changes to this item generate a notification to the handler?
-    notify = ListProperty
-
     # The list of ListenerBase objects in the group
     items = List(ListenerBase)
 
@@ -854,6 +868,17 @@ class ListenerGroup(ListenerBase):
         lines.append("])")
 
         return "\n".join(lines)
+
+    def set_notify(self, notify):
+        """ Set notify state on this listener.
+
+        Parameters
+        ----------
+        notify : bool
+            True if this listener should notify, else False.
+        """
+        for item in self.items:
+            item.set_notify(notify)
 
     def register(self, new):
         """ Registers new listeners.
@@ -976,8 +1001,15 @@ class ListenerParser:
             return ListenerItem(
                 name=match.group(1),
                 notify=match.group(2) == ".",
+                handler=self.handler,
+                wrapped_handler_ref=self.wrapped_handler_ref,
+                dispatch=self.dispatch,
+                priority=self.priority,
+                deferred=deferred,
+                type=handler_type,
                 next=ListenerItem(
                     name=match.group(3),
+                    notify=True,
                     handler=self.handler,
                     wrapped_handler_ref=self.wrapped_handler_ref,
                     dispatch=self.dispatch,
@@ -988,12 +1020,6 @@ class ListenerParser:
                     deferred=False,
                     type=ANY_LISTENER,
                 ),
-                handler=self.handler,
-                wrapped_handler_ref=self.wrapped_handler_ref,
-                dispatch=self.dispatch,
-                priority=self.priority,
-                deferred=deferred,
-                type=handler_type,
             )
 
         return self.parse_group(
@@ -1070,6 +1096,7 @@ class ListenerParser:
 
             result = ListenerItem(
                 name=name,
+                notify=True,
                 handler=self.handler,
                 wrapped_handler_ref=self.wrapped_handler_ref,
                 dispatch=self.dispatch,
@@ -1109,7 +1136,7 @@ class ListenerParser:
             c = self.skip_ws
 
         if c in ".:":
-            result.notify = c == "."
+            result.set_notify(c == ".")
             # Bug-for-bug compatibility with old behaviour: don't propagate the
             # 'deferred' or 'handler_type' values for the child item.
             # Ref: enthought/traits#537.
