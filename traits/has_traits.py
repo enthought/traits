@@ -2658,20 +2658,27 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                 if wrapper.equals(handler):
                     break
             else:
-                listener = ListenerParser(name).listener
-                lnw = ListenerNotifyWrapper(
-                    handler, self, name, listener, target
-                )
-                listeners.append(lnw)
-                listener.trait_set(
+                # The listener notify wrapper needs a reference to the
+                # listener, and the listener needs a (weak) reference to the
+                # wrapper. We first construct the wrapper with a listener of
+                # `None`, then construct the listener with its reference to the
+                # wrapper, then we replace the `None` listener with the correct
+                # one.
+                lnw = ListenerNotifyWrapper(handler, self, name, None, target)
+                listener = ListenerParser(
+                    name,
                     handler=ListenerHandler(handler),
                     wrapped_handler_ref=weakref.ref(lnw),
-                    type=lnw.type,
                     dispatch=dispatch,
+                ).listener
+                listener.trait_set(
+                    type=lnw.type,
                     priority=priority,
                     deferred=deferred,
                 )
+                lnw.listener = listener
                 listener.register(self)
+                listeners.append(lnw)
 
     # A synonym for 'on_trait_change'
     on_trait_event = on_trait_change
