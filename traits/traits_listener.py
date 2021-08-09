@@ -19,10 +19,7 @@ from string import whitespace
 from types import MethodType
 
 from .constants import DefaultValue
-from .has_traits import HasPrivateTraits
 from .trait_base import Undefined, Uninitialized
-from .traits import Property
-from .trait_types import Str, Bool, Instance, List, Enum, Any
 from .trait_errors import TraitError
 from .trait_notifiers import TraitChangeNotifyWrapper
 from .util.weakiddict import WeakIDKeyDict
@@ -124,7 +121,7 @@ def not_event(value):
     return value != "event"
 
 
-class ListenerBase(HasPrivateTraits):
+class ListenerBase:
 
     # The next level (if any) of ListenerBase object to be called when any of
     # our listened to traits is changed:
@@ -187,56 +184,38 @@ class ListenerBase(HasPrivateTraits):
 
 class ListenerItem(ListenerBase):
 
-    #: The name of the trait to listen to:
-    name = Str
-
-    #: The name of any metadata that must be present (or not present):
-    metadata_name = Str
-
-    #: Does the specified metadata need to be defined (True) or not defined
-    #: (False)?
-    metadata_defined = Bool(True)
-
-    #: The handler to be called when any listened-to trait is changed:
-    handler = Any
-
-    #: A weakref 'wrapped' version of 'handler':
-    wrapped_handler_ref = Any
-
-    #: The dispatch mechanism to use when invoking the handler:
-    dispatch = Str
-
-    #: Does the handler go at the beginning (True) or end (False) of the
-    #: notification handlers list?
-    priority = Bool(False)
-
-    #: The next level (if any) of ListenerBase object to be called when any of
-    #: this object's listened-to traits is changed:
-    next = Instance(ListenerBase)
-
-    #: The type of handler being used:
-    type = Enum(ANY_LISTENER, SRC_LISTENER, DST_LISTENER)
-
-    #: Should changes to this item generate a notification to the handler?
-    notify = Bool(True)
-
-    #: Should registering listeners for items reachable from this listener item
-    #: be deferred until the associated trait is first read or set?
-    deferred = Bool(False)
-
-    #: Is this an 'any_trait' change listener, or does it create explicit
-    #: listeners for each individual trait?
-    is_any_trait = Bool(False)
-
-    #: Is the associated handler a special list handler that handles both
-    #: 'foo' and 'foo_items' events by receiving a list of 'deleted' and
-    #: 'added' items as the 'old' and 'new' arguments?
-    is_list_handler = Bool(False)
-
-    #: A dictionary mapping objects to a list of all current active
-    #: (*name*, *type*) listener pairs, where *type* defines the type of
-    #: listener, one of: (SIMPLE_LISTENER, LIST_LISTENER, DICT_LISTENER).
-    active = Instance(WeakIDKeyDict, ())
+    def __init__(
+        self,
+        *,
+        name,
+        notify,
+        handler=None,
+        wrapped_handler_ref=None,
+        dispatch,
+        priority=False,
+        deferred=False,
+        type,
+        next,
+        metadata_name="",
+        metadata_defined=True,
+        is_any_trait=False,
+        is_list_handler=False,
+    ):
+        self.name = name
+        self.notify = notify
+        self.handler = handler
+        self.wrapped_handler_ref = wrapped_handler_ref
+        self.dispatch = dispatch
+        self.priority = priority
+        self.deferred = deferred
+        self.type = type
+        self.next = next
+        self.metadata_name = metadata_name
+        self.metadata_defined = metadata_defined
+        self.is_any_trait = is_any_trait
+        self.is_list_handler = is_list_handler
+        self.active = WeakIDKeyDict()
+        self._metadata = None
 
     # -- 'ListenerBase' Class Method Implementations --------------------------
 
@@ -839,14 +818,11 @@ class ListenerItem(ListenerBase):
 
 class ListenerGroup(ListenerBase):
 
-    # The list of ListenerBase objects in the group
-    items = List(Instance(ListenerBase))
-
-    #: The next level (if any) of ListenerBase object to be called when any of
-    #: this object's listened-to traits is changed:
-    next = Instance(ListenerBase)
-
     # -- 'ListenerBase' Class Method Implementations --------------------------
+
+    def __init__(self, *, items):
+        self.items = items
+        self.next = None
 
     def __repr__(self, seen=None):
         """Returns a string representation of the object.
@@ -1036,6 +1012,7 @@ class ListenerParser:
                     # child item. Ref: enthought/traits#537.
                     deferred=False,
                     type=ANY_LISTENER,
+                    next=None,
                 ),
             )
 
@@ -1120,6 +1097,7 @@ class ListenerParser:
                 priority=self.priority,
                 deferred=deferred,
                 type=handler_type,
+                next=None,
             )
 
             if c in "+-":
