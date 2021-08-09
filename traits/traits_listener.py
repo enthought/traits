@@ -128,8 +128,6 @@ class ListenerBase(HasPrivateTraits):
 
     # The next level (if any) of ListenerBase object to be called when any of
     # our listened to traits is changed:
-    # next = Instance( ListenerBase )
-
     def set_notify(self, notify):
         """ Set notify state on this listener.
 
@@ -137,6 +135,17 @@ class ListenerBase(HasPrivateTraits):
         ----------
         notify : bool
             True if this listener should notify, else False.
+        """
+        raise NotImplementedError
+
+    def set_next(self, next):
+        """ Set the child listener for this one.
+
+        Parameters
+        ----------
+        next : ListenerBase
+            The next level (if any) of ListenerBase object to be called when
+            any of our listened to traits is changed:
         """
         raise NotImplementedError
 
@@ -285,6 +294,17 @@ class ListenerItem(ListenerBase):
             True if this listener should notify, else False.
         """
         self.notify = notify
+
+    def set_next(self, next):
+        """ Set the child listener for this one.
+
+        Parameters
+        ----------
+        next : ListenerBase
+            The next level (if any) of ListenerBase object to be called when
+            any of our listened to traits is changed:
+        """
+        self.next = next
 
     def register(self, new):
         """ Registers new listeners.
@@ -835,12 +855,12 @@ ListProperty = Property(fget=_get_value, fset=_set_value)
 
 class ListenerGroup(ListenerBase):
 
-    #: The next level (if any) of ListenerBase object to be called when any of
-    #: this object's listened-to traits is changed
-    next = ListProperty
-
     # The list of ListenerBase objects in the group
     items = List(ListenerBase)
+
+    #: The next level (if any) of ListenerBase object to be called when any of
+    #: this object's listened-to traits is changed:
+    next = Instance(ListenerBase)
 
     # -- 'ListenerBase' Class Method Implementations --------------------------
 
@@ -879,6 +899,19 @@ class ListenerGroup(ListenerBase):
         """
         for item in self.items:
             item.set_notify(notify)
+
+    def set_next(self, next):
+        """ Set the child listener for this one.
+
+        Parameters
+        ----------
+        next : ListenerBase
+            The next level (if any) of ListenerBase object to be called when
+            any of our listened to traits is changed:
+        """
+        self.next = next
+        for item in self.items:
+            item.set_next(next)
 
     def register(self, new):
         """ Registers new listeners.
@@ -1149,10 +1182,11 @@ class ListenerParser:
                 last = result
                 while last.next is not None:
                     last = last.next
-                last.next = lg = ListenerGroup(items=[next, result])
+                lg = ListenerGroup(items=[next, result])
+                last.set_next(lg)
                 result = lg
             else:
-                result.next = next
+                result.set_next(next)
 
             return result
 
@@ -1169,7 +1203,7 @@ class ListenerParser:
             self.backspace
 
         if cycle:
-            result.next = result
+            result.set_next(result)
 
         return result
 
