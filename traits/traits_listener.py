@@ -837,26 +837,10 @@ class ListenerItem(ListenerBase):
         return target
 
 
-def _set_value(self, name, value):
-    for item in self.items:
-        setattr(item, name, value)
-
-
-def _get_value(self, name):
-    # Use the attribute on the first item. If there are no items, return None.
-    if self.items:
-        return getattr(self.items[0], name)
-    else:
-        return None
-
-
-ListProperty = Property(fget=_get_value, fset=_set_value)
-
-
 class ListenerGroup(ListenerBase):
 
     # The list of ListenerBase objects in the group
-    items = List(ListenerBase)
+    items = List(Instance(ListenerBase))
 
     #: The next level (if any) of ListenerBase object to be called when any of
     #: this object's listened-to traits is changed:
