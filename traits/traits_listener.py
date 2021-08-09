@@ -130,9 +130,6 @@ class ListenerBase(HasPrivateTraits):
     # our listened to traits is changed:
     # next = Instance( ListenerBase )
 
-    # The type of handler being used:
-    # type = Enum( ANY_LISTENER, SRC_LISTENER, DST_LISTENER )
-
     # Should changes to this item generate a notification to the handler?
     # notify = Bool
 
@@ -825,9 +822,6 @@ class ListenerGroup(ListenerBase):
     #: this object's listened-to traits is changed
     next = ListProperty
 
-    #: The type of handler being used:
-    type = ListProperty
-
     #: Should changes to this item generate a notification to the handler?
     notify = ListProperty
 
@@ -925,6 +919,7 @@ class ListenerParser:
         dispatch="",
         priority=False,
         deferred=False,
+        handler_type=ANY_LISTENER,
     ):
         #: The text being parsed.
         self.text = text
@@ -949,11 +944,11 @@ class ListenerParser:
         self.priority = priority
 
         #: The parsed listener.
-        self.listener = self.parse(deferred)
+        self.listener = self.parse(deferred, handler_type)
 
     # -- Private Methods ------------------------------------------------------
 
-    def parse(self, deferred):
+    def parse(self, deferred, handler_type):
         """ Parses the text and returns the appropriate collection of
             ListenerBase objects described by the text.
 
@@ -962,6 +957,9 @@ class ListenerParser:
         deferred : bool
             Should registering listeners for items reachable from this listener
             item be deferred until the associated trait is first read or set?
+        handler_type : int
+            The type of handler being used; one of {ANY_LISTENER, SRC_LISTENER,
+            DST_LISTENER}.
         """
         # Try a simple case of 'name1.name2'. The simplest case of a single
         # Python name never triggers this parser, so we don't try to make that
@@ -985,19 +983,26 @@ class ListenerParser:
                     dispatch=self.dispatch,
                     priority=self.priority,
                     # Bug-for-bug compatibility with old behaviour: don't
-                    # propagate the 'deferred' value for the child item.
+                    # propagate the 'deferred' or 'handler_type' values for the
+                    # child item.
                     deferred=False,
+                    type=ANY_LISTENER,
                 ),
                 handler=self.handler,
                 wrapped_handler_ref=self.wrapped_handler_ref,
                 dispatch=self.dispatch,
                 priority=self.priority,
                 deferred=deferred,
+                type=handler_type,
             )
 
-        return self.parse_group(terminator=EOS, deferred=deferred)
+        return self.parse_group(
+            terminator=EOS,
+            deferred=deferred,
+            handler_type=handler_type,
+        )
 
-    def parse_group(self, *, terminator, deferred):
+    def parse_group(self, *, terminator, deferred, handler_type):
         """ Parses the contents of a group.
 
         Parameters
@@ -1007,11 +1012,18 @@ class ListenerParser:
         deferred : bool
             Should registering listeners for items reachable from this listener
             item be deferred until the associated trait is first read or set?
+        handler_type : int
+            The type of handler being used; one of {ANY_LISTENER, SRC_LISTENER,
+            DST_LISTENER}.
         """
         items = []
         while True:
             items.append(
-                self.parse_item(terminator=terminator, deferred=deferred)
+                self.parse_item(
+                    terminator=terminator,
+                    deferred=deferred,
+                    handler_type=handler_type,
+                )
             )
 
             c = self.skip_ws
@@ -1029,7 +1041,7 @@ class ListenerParser:
 
         return ListenerGroup(items=items)
 
-    def parse_item(self, *, terminator, deferred):
+    def parse_item(self, *, terminator, deferred, handler_type):
         """ Parses a single, complete listener item or group string.
 
         Parameters
@@ -1039,10 +1051,17 @@ class ListenerParser:
         deferred : bool
             Should registering listeners for items reachable from this listener
             item be deferred until the associated trait is first read or set?
+        handler_type : int
+            The type of handler being used; one of {ANY_LISTENER, SRC_LISTENER,
+            DST_LISTENER}.
         """
         c = self.skip_ws
         if c == "[":
-            result = self.parse_group(terminator="]", deferred=deferred)
+            result = self.parse_group(
+                terminator="]",
+                deferred=deferred,
+                handler_type=handler_type,
+            )
             c = self.skip_ws
         else:
             name = self.name
@@ -1056,6 +1075,7 @@ class ListenerParser:
                 dispatch=self.dispatch,
                 priority=self.priority,
                 deferred=deferred,
+                type=handler_type,
             )
 
             if c in "+-":
@@ -1091,8 +1111,12 @@ class ListenerParser:
         if c in ".:":
             result.notify = c == "."
             # Bug-for-bug compatibility with old behaviour: don't propagate the
-            # 'deferred' value for the child item.
-            next = self.parse_item(terminator=terminator, deferred=False)
+            # 'deferred' or 'handler_type' values for the child item.
+            next = self.parse_item(
+                terminator=terminator,
+                deferred=False,
+                handler_type=ANY_LISTENER,
+            )
             if cycle:
                 last = result
                 while last.next is not None:

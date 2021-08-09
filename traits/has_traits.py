@@ -2672,10 +2672,8 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                     dispatch=dispatch,
                     priority=priority,
                     deferred=deferred,
+                    handler_type=lnw.type,
                 ).listener
-                listener.trait_set(
-                    type=lnw.type,
-                )
                 lnw.listener = listener
                 listener.register(self)
                 listeners.append(lnw)
