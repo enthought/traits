@@ -126,9 +126,6 @@ def not_event(value):
 
 class ListenerBase(HasPrivateTraits):
 
-    # The dispatch mechanism to use when invoking the handler:
-    # dispatch = Str
-
     # Does the handler go at the beginning (True) or end (False) of the
     # notification handlers list?
     # priority = Bool( False )
@@ -495,12 +492,6 @@ class ListenerItem(ListenerBase):
 
     # -- Event Handlers -------------------------------------------------------
 
-    def _dispatch_changed(self, dispatch):
-        """ Handles the **dispatch** trait being changed.
-        """
-        if self.next is not None:
-            self.next.dispatch = dispatch
-
     def _priority_changed(self, priority):
         """ Handles the **priority** trait being changed.
         """
@@ -846,9 +837,6 @@ ListProperty = Property(fget=_get_value, fset=_set_value)
 
 class ListenerGroup(ListenerBase):
 
-    #: The dispatch mechanism to use when invoking the handler:
-    dispatch = Property
-
     #: Does the handler go at the beginning (True) or end (False) of the
     #: notification handlers list?
     priority = ListProperty
@@ -869,14 +857,6 @@ class ListenerGroup(ListenerBase):
 
     # The list of ListenerBase objects in the group
     items = List(ListenerBase)
-
-    # -- Property Implementations ---------------------------------------------
-
-    def _set_dispatch(self, dispatch):
-        if self._dispatch is None:
-            self._dispatch = dispatch
-            for item in self.items:
-                item.dispatch = dispatch
 
     # -- 'ListenerBase' Class Method Implementations --------------------------
 
@@ -960,7 +940,9 @@ class ListenerParser:
 
     # -- object Method Overrides ----------------------------------------------
 
-    def __init__(self, text, handler=None, wrapped_handler_ref=None):
+    def __init__(
+        self, text, handler=None, wrapped_handler_ref=None, dispatch=""
+    ):
         #: The text being parsed.
         self.text = text
 
@@ -973,8 +955,11 @@ class ListenerParser:
         #: The handler to be called when any listened-to trait is changed.
         self.handler = handler
 
-        #: A weakref 'wrapped' version of 'handler':
+        #: A weakref 'wrapped' version of 'handler'.
         self.wrapped_handler_ref = wrapped_handler_ref
+
+        #: The dispatch mechanism to use when invoking the handler.
+        self.dispatch = dispatch
 
         #: The parsed listener.
         self.listener = self.parse()
@@ -1004,9 +989,11 @@ class ListenerParser:
                     name=match.group(3),
                     handler=self.handler,
                     wrapped_handler_ref=self.wrapped_handler_ref,
+                    dispatch=self.dispatch,
                 ),
                 handler=self.handler,
                 wrapped_handler_ref=self.wrapped_handler_ref,
+                dispatch=self.dispatch,
             )
 
         return self.parse_group(EOS)
@@ -1049,6 +1036,7 @@ class ListenerParser:
                 name=name,
                 handler=self.handler,
                 wrapped_handler_ref=self.wrapped_handler_ref,
+                dispatch=self.dispatch,
             )
 
             if c in "+-":
