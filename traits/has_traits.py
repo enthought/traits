@@ -2670,10 +2670,10 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                     handler=ListenerHandler(handler),
                     wrapped_handler_ref=weakref.ref(lnw),
                     dispatch=dispatch,
+                    priority=priority,
                 ).listener
                 listener.trait_set(
                     type=lnw.type,
-                    priority=priority,
                     deferred=deferred,
                 )
                 lnw.listener = listener

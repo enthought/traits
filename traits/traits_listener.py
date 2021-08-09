@@ -126,10 +126,6 @@ def not_event(value):
 
 class ListenerBase(HasPrivateTraits):
 
-    # Does the handler go at the beginning (True) or end (False) of the
-    # notification handlers list?
-    # priority = Bool( False )
-
     # The next level (if any) of ListenerBase object to be called when any of
     # our listened to traits is changed:
     # next = Instance( ListenerBase )
@@ -490,14 +486,6 @@ class ListenerItem(ListenerBase):
                 "incompatible with a change to an intermediate trait"
             )
 
-    # -- Event Handlers -------------------------------------------------------
-
-    def _priority_changed(self, priority):
-        """ Handles the **priority** trait being changed.
-        """
-        if self.next is not None:
-            self.next.priority = priority
-
     # -- Private Methods ------------------------------------------------------
 
     def _register_anytrait(self, object, name, remove):
@@ -837,10 +825,6 @@ ListProperty = Property(fget=_get_value, fset=_set_value)
 
 class ListenerGroup(ListenerBase):
 
-    #: Does the handler go at the beginning (True) or end (False) of the
-    #: notification handlers list?
-    priority = ListProperty
-
     #: The next level (if any) of ListenerBase object to be called when any of
     #: this object's listened-to traits is changed
     next = ListProperty
@@ -941,7 +925,13 @@ class ListenerParser:
     # -- object Method Overrides ----------------------------------------------
 
     def __init__(
-        self, text, handler=None, wrapped_handler_ref=None, dispatch=""
+        self,
+        text,
+        *,
+        handler=None,
+        wrapped_handler_ref=None,
+        dispatch="",
+        priority=False,
     ):
         #: The text being parsed.
         self.text = text
@@ -960,6 +950,10 @@ class ListenerParser:
 
         #: The dispatch mechanism to use when invoking the handler.
         self.dispatch = dispatch
+
+        #: Does the handler go at the beginning (True) or end (False) of the
+        #: notification handlers list?
+        self.priority = priority
 
         #: The parsed listener.
         self.listener = self.parse()
@@ -990,10 +984,12 @@ class ListenerParser:
                     handler=self.handler,
                     wrapped_handler_ref=self.wrapped_handler_ref,
                     dispatch=self.dispatch,
+                    priority=self.priority,
                 ),
                 handler=self.handler,
                 wrapped_handler_ref=self.wrapped_handler_ref,
                 dispatch=self.dispatch,
+                priority=self.priority,
             )
 
         return self.parse_group(EOS)
@@ -1037,6 +1033,7 @@ class ListenerParser:
                 handler=self.handler,
                 wrapped_handler_ref=self.wrapped_handler_ref,
                 dispatch=self.dispatch,
+                priority=self.priority,
             )
 
             if c in "+-":
