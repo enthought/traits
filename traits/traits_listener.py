@@ -136,10 +136,6 @@ class ListenerBase(HasPrivateTraits):
     # Should changes to this item generate a notification to the handler?
     # notify = Bool
 
-    # Should registering listeners for items reachable from this listener item
-    # be deferred until the associated trait is first read or set?
-    # deferred = Bool
-
     def register(self, new):
         """ Registers new listeners.
         """
@@ -835,10 +831,6 @@ class ListenerGroup(ListenerBase):
     #: Should changes to this item generate a notification to the handler?
     notify = ListProperty
 
-    #: Should registering listeners for items reachable from this listener item
-    #: be deferred until the associated trait is first read or set?
-    deferred = ListProperty
-
     # The list of ListenerBase objects in the group
     items = List(ListenerBase)
 
@@ -932,6 +924,7 @@ class ListenerParser:
         wrapped_handler_ref=None,
         dispatch="",
         priority=False,
+        deferred=False,
     ):
         #: The text being parsed.
         self.text = text
@@ -956,13 +949,19 @@ class ListenerParser:
         self.priority = priority
 
         #: The parsed listener.
-        self.listener = self.parse()
+        self.listener = self.parse(deferred)
 
     # -- Private Methods ------------------------------------------------------
 
-    def parse(self):
+    def parse(self, deferred):
         """ Parses the text and returns the appropriate collection of
             ListenerBase objects described by the text.
+
+        Parameters
+        ----------
+        deferred : bool
+            Should registering listeners for items reachable from this listener
+            item be deferred until the associated trait is first read or set?
         """
         # Try a simple case of 'name1.name2'. The simplest case of a single
         # Python name never triggers this parser, so we don't try to make that
@@ -985,21 +984,35 @@ class ListenerParser:
                     wrapped_handler_ref=self.wrapped_handler_ref,
                     dispatch=self.dispatch,
                     priority=self.priority,
+                    # Bug-for-bug compatibility with old behaviour: don't
+                    # propagate the 'deferred' value for the child item.
+                    deferred=False,
                 ),
                 handler=self.handler,
                 wrapped_handler_ref=self.wrapped_handler_ref,
                 dispatch=self.dispatch,
                 priority=self.priority,
+                deferred=deferred,
             )
 
-        return self.parse_group(EOS)
+        return self.parse_group(terminator=EOS, deferred=deferred)
 
-    def parse_group(self, terminator="]"):
+    def parse_group(self, *, terminator, deferred):
         """ Parses the contents of a group.
+
+        Parameters
+        ----------
+        terminator : str or EOS
+            Character on which to halt parsing of this item.
+        deferred : bool
+            Should registering listeners for items reachable from this listener
+            item be deferred until the associated trait is first read or set?
         """
         items = []
         while True:
-            items.append(self.parse_item(terminator))
+            items.append(
+                self.parse_item(terminator=terminator, deferred=deferred)
+            )
 
             c = self.skip_ws
             if c == terminator:
@@ -1016,12 +1029,20 @@ class ListenerParser:
 
         return ListenerGroup(items=items)
 
-    def parse_item(self, terminator):
+    def parse_item(self, *, terminator, deferred):
         """ Parses a single, complete listener item or group string.
+
+        Parameters
+        ----------
+        terminator : str or EOS
+            Character on which to halt parsing of this item.
+        deferred : bool
+            Should registering listeners for items reachable from this listener
+            item be deferred until the associated trait is first read or set?
         """
         c = self.skip_ws
         if c == "[":
-            result = self.parse_group()
+            result = self.parse_group(terminator="]", deferred=deferred)
             c = self.skip_ws
         else:
             name = self.name
@@ -1034,6 +1055,7 @@ class ListenerParser:
                 wrapped_handler_ref=self.wrapped_handler_ref,
                 dispatch=self.dispatch,
                 priority=self.priority,
+                deferred=deferred,
             )
 
             if c in "+-":
@@ -1068,7 +1090,9 @@ class ListenerParser:
 
         if c in ".:":
             result.notify = c == "."
-            next = self.parse_item(terminator)
+            # Bug-for-bug compatibility with old behaviour: don't propagate the
+            # 'deferred' value for the child item.
+            next = self.parse_item(terminator=terminator, deferred=False)
             if cycle:
                 last = result
                 while last.next is not None:

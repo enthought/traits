@@ -2671,10 +2671,10 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                     wrapped_handler_ref=weakref.ref(lnw),
                     dispatch=dispatch,
                     priority=priority,
+                    deferred=deferred,
                 ).listener
                 listener.trait_set(
                     type=lnw.type,
-                    deferred=deferred,
                 )
                 lnw.listener = listener
                 listener.register(self)
