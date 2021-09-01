@@ -1048,12 +1048,6 @@ class ListenerParser:
             return ListenerItem(
                 name=match.group(1),
                 notify=match.group(2) == ".",
-                handler=self.handler,
-                wrapped_handler_ref=self.wrapped_handler_ref,
-                dispatch=self.dispatch,
-                priority=self.priority,
-                deferred=deferred,
-                type=handler_type,
                 next=ListenerItem(
                     name=match.group(3),
                     handler=self.handler,
@@ -1066,6 +1060,12 @@ class ListenerParser:
                     deferred=False,
                     type=ANY_LISTENER,
                 ),
+                handler=self.handler,
+                wrapped_handler_ref=self.wrapped_handler_ref,
+                dispatch=self.dispatch,
+                priority=self.priority,
+                deferred=deferred,
+                type=handler_type,
             )
 
         return self.parse_group(
