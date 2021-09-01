@@ -122,9 +122,10 @@ def not_event(value):
 
 
 class ListenerBase:
+    """
+    Abstract base class for both ListenerItem and ListenerGroup.
+    """
 
-    # The next level (if any) of ListenerBase object to be called when any of
-    # our listened to traits is changed:
     def set_notify(self, notify):
         """ Set notify state on this listener.
 
@@ -183,6 +184,48 @@ class ListenerBase:
 
 
 class ListenerItem(ListenerBase):
+    """
+    Listener description for a single item.
+
+    Parameters
+    ----------
+    name : str
+        The name of the trait to listen to.
+    notify : bool
+        True if changes to this item should generate a notification to
+        the handler; False otherwise.
+    handler : ListenerHandler, optional
+        Zero-argument callable that returns the actual handler when called (or
+        Undefined if that handler is no longer available).
+    wrapped_handler_ref : weakref.ref, optional
+        Weak reference to a ListenerNotifyWrapper wrapping the actual handler.
+    dispatch : str
+        The dispatch mechanism to use when invoking the handler.
+    priority : bool, optional
+        True if the handler goes at the beginning of the notification handlers
+        list, else False.
+    deferred : bool, optional
+        True if registering listeners for items reachable from this listener
+        item should be deferred until the associated trait is first read or
+        set.
+    type : int
+        The type of handler being used. One of ANY_LISTENER, SRC_LISTENER,
+        DST_LISTENER.
+    next : ListenerBase
+        The next level (if any) of ListenerBase object to be called when any
+        of this object's listened-to traits is changed.
+    metadata_name : str, optional
+        The name of any metadata that must be present (or not present).
+    metadata_defined : bool, optional
+        True if the specified metadata needs to be defined; False if the
+        specified metadata needs to be not defined.
+    is_any_trait : bool, optional
+        True if this is an "anytrait" change listener. False if it creates
+        explicit listeners for each individual trait.
+    is_list_handler : bool, optional
+        True if the associated handler is a special list handler that handles
+        both "foo" and "foo_items" events. False otherwise.
+    """
 
     def __init__(
         self,
