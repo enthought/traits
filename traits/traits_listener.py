@@ -860,6 +860,17 @@ class ListenerItem(ListenerBase):
 
 
 class ListenerGroup(ListenerBase):
+    """
+    Listener description for a collection of items.
+
+    The ListenerParser produces a ListenerGroup rather than a ListenerItem
+    when parsing strings like ``[abc,def]``.
+
+    Parameters
+    ----------
+    items : list
+        List of ListenerItem objects representing the components of the group.
+    """
 
     # -- 'ListenerBase' Class Method Implementations --------------------------
 
