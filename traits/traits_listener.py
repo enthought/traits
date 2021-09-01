@@ -206,15 +206,15 @@ class ListenerItem(ListenerBase):
     priority : bool, optional
         True if the handler goes at the beginning of the notification handlers
         list, else False.
-    next : ListenerBase
+    next : ListenerBase or None, optional
         The next level (if any) of ListenerBase object to be called when any
-        of this object's listened-to traits is changed.
+        of this object's listened-to traits is changed. The default is None.
     type : int
         The type of handler being used. One of ANY_LISTENER, SRC_LISTENER,
         DST_LISTENER.
-    notify : bool
+    notify : bool, optional
         True if changes to this item should generate a notification to
-        the handler; False otherwise.
+        the handler; False otherwise. The default is True.
     deferred : bool, optional
         True if registering listeners for items reachable from this listener
         item should be deferred until the associated trait is first read or
@@ -237,9 +237,9 @@ class ListenerItem(ListenerBase):
         wrapped_handler_ref=None,
         dispatch,
         priority=False,
-        next,
+        next=None,
         type,
-        notify,
+        notify=True,
         deferred=False,
         is_any_trait=False,
         is_list_handler=False,
@@ -1056,7 +1056,6 @@ class ListenerParser:
                 type=handler_type,
                 next=ListenerItem(
                     name=match.group(3),
-                    notify=True,
                     handler=self.handler,
                     wrapped_handler_ref=self.wrapped_handler_ref,
                     dispatch=self.dispatch,
@@ -1066,7 +1065,6 @@ class ListenerParser:
                     # child item. Ref: enthought/traits#537.
                     deferred=False,
                     type=ANY_LISTENER,
-                    next=None,
                 ),
             )
 
@@ -1144,14 +1142,12 @@ class ListenerParser:
 
             result = ListenerItem(
                 name=name,
-                notify=True,
                 handler=self.handler,
                 wrapped_handler_ref=self.wrapped_handler_ref,
                 dispatch=self.dispatch,
                 priority=self.priority,
                 deferred=deferred,
                 type=handler_type,
-                next=None,
             )
 
             if c in "+-":
