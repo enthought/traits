@@ -923,9 +923,9 @@ class ListenerGroup(ListenerBase):
             The next level (if any) of ListenerBase object to be called when
             any of our listened to traits is changed:
         """
-        self.next = next
         for item in self.items:
             item.set_next(next)
+        self.next = next if self.items else None
 
     def register(self, new):
         """ Registers new listeners.
