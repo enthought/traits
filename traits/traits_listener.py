@@ -1195,22 +1195,15 @@ class ListenerNotifyWrapper(TraitChangeNotifyWrapper):
 
 class ListenerHandler(object):
     def __init__(self, handler):
-        if type(handler) is MethodType:
-            object = handler.__self__
-            if object is not None:
-                self.object = weakref.ref(object, self.listener_deleted)
-                self.name = handler.__name__
-
-                return
-
-        self.handler = handler
+        if isinstance(handler, MethodType):
+            self.handler_ref = weakref.WeakMethod(handler)
+        else:
+            self.handler = handler
 
     def __call__(self):
         result = getattr(self, "handler", None)
         if result is not None:
             return result
-
-        return getattr(self.object(), self.name)
-
-    def listener_deleted(self, ref):
-        self.handler = Undefined
+        else:
+            handler = self.handler_ref()
+            return Undefined if handler is None else handler

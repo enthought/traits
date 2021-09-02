@@ -18,9 +18,10 @@ import unittest
 
 from traits import traits_listener
 from traits.api import (
-    TraitError,
     pop_exception_handler,
     push_exception_handler,
+    TraitError,
+    Undefined,
 )
 
 
@@ -460,3 +461,35 @@ class TestListenerParser(unittest.TestCase):
             next=None,
         )
         self.assertEqual(parser.listener, expected)
+
+    def test_listener_handler_for_method(self):
+        class A:
+            def __init__(self, value):
+                self.value = value
+
+            def square(self):
+                return self.value*self.value
+
+        a = A(7)
+        listener_handler = traits_listener.ListenerHandler(a.square)
+        handler = listener_handler()
+        self.assertEqual(handler(), 49)
+
+        # listener_handler does not keep the object 'a' alive
+        del a, handler
+        handler = listener_handler()
+        self.assertEqual(handler, Undefined)
+
+    def test_listener_handler_for_function(self):
+
+        def square(value):
+            return value * value
+
+        listener_handler = traits_listener.ListenerHandler(square)
+        handler = listener_handler()
+        self.assertEqual(handler(9), 81)
+
+        # listener_handler *does* keep the 'square' function alive
+        del square, handler
+        handler = listener_handler()
+        self.assertEqual(handler(5), 25)
