@@ -468,7 +468,7 @@ class TestListenerParser(unittest.TestCase):
                 self.value = value
 
             def square(self):
-                return self.value*self.value
+                return self.value * self.value
 
         a = A(7)
         listener_handler = traits_listener.ListenerHandler(a.square)
