@@ -47,8 +47,8 @@ def assert_listener_item_equal(test_case, item1, item2, msg=None):
         msg=get_msg("metadata_defined", msg),
     )
     test_case.assertEqual(
-        item1.is_any_trait, item2.is_any_trait,
-        msg=get_msg("is_any_trait", msg),
+        item1.is_anytrait, item2.is_anytrait,
+        msg=get_msg("is_anytrait", msg),
     )
     test_case.assertEqual(
         item1.dispatch, item2.dispatch,
@@ -97,7 +97,7 @@ class TestListenerParser(unittest.TestCase):
             name="some_trait_name",
             metadata_name="",
             metadata_defined=True,
-            is_any_trait=False,
+            is_anytrait=False,
             dispatch="",
             notify=True,
             is_list_handler=False,
@@ -114,7 +114,7 @@ class TestListenerParser(unittest.TestCase):
         common_traits = dict(
             metadata_name="",
             metadata_defined=True,
-            is_any_trait=False,
+            is_anytrait=False,
             dispatch="",
             notify=True,
             is_list_handler=False,
@@ -140,7 +140,7 @@ class TestListenerParser(unittest.TestCase):
         common_traits = dict(
             metadata_name="",
             metadata_defined=True,
-            is_any_trait=False,
+            is_anytrait=False,
             dispatch="",
             is_list_handler=False,
             type=traits_listener.ANY_LISTENER,
@@ -174,7 +174,7 @@ class TestListenerParser(unittest.TestCase):
         common_traits = dict(
             metadata_name="",
             metadata_defined=True,
-            is_any_trait=False,
+            is_anytrait=False,
             dispatch="",
             notify=True,
             is_list_handler=False,
@@ -242,7 +242,7 @@ class TestListenerParser(unittest.TestCase):
             name="prefix",
             metadata_name="",
             metadata_defined=True,
-            is_any_trait=False,
+            is_anytrait=False,
             dispatch="",
             notify=True,
             is_list_handler=False,
@@ -260,7 +260,7 @@ class TestListenerParser(unittest.TestCase):
             name="prefix*",
             metadata_name="foo",
             metadata_defined=True,
-            is_any_trait=False,
+            is_anytrait=False,
             dispatch="",
             notify=True,
             is_list_handler=False,
@@ -269,7 +269,7 @@ class TestListenerParser(unittest.TestCase):
         )
         self.assertEqual(parser.listener, expected)
 
-    def test_parse_is_any_trait_plus(self):
+    def test_parse_is_anytrait_plus(self):
         text = "+"
         parser = traits_listener.ListenerParser(text=text)
 
@@ -277,7 +277,7 @@ class TestListenerParser(unittest.TestCase):
             name="*",
             metadata_name="",
             metadata_defined=True,
-            is_any_trait=False,
+            is_anytrait=False,
             dispatch="",
             notify=True,
             is_list_handler=False,
@@ -286,7 +286,7 @@ class TestListenerParser(unittest.TestCase):
         )
         self.assertEqual(parser.listener, expected)
 
-    def test_parse_is_any_trait_minus(self):
+    def test_parse_is_anytrait_minus(self):
         text = "-"
         parser = traits_listener.ListenerParser(text=text)
 
@@ -294,7 +294,7 @@ class TestListenerParser(unittest.TestCase):
             name="*",
             metadata_name="",
             metadata_defined=False,    # the effect of '-'
-            is_any_trait=True,         # the effect of '-'
+            is_anytrait=True,         # the effect of '-'
             dispatch="",
             notify=True,
             is_list_handler=False,
@@ -311,7 +311,7 @@ class TestListenerParser(unittest.TestCase):
             name="foo*",
             metadata_name="",
             metadata_defined=False,    # the effect of '-'
-            is_any_trait=False,
+            is_anytrait=False,
             dispatch="",
             notify=True,
             is_list_handler=False,
@@ -328,7 +328,7 @@ class TestListenerParser(unittest.TestCase):
             name="*",
             metadata_name="foo",
             metadata_defined=False,    # the effect of '-'
-            is_any_trait=False,
+            is_anytrait=False,
             dispatch="",
             notify=True,
             is_list_handler=False,
@@ -346,7 +346,7 @@ class TestListenerParser(unittest.TestCase):
         common_traits = dict(
             metadata_name="",
             metadata_defined=True,
-            is_any_trait=False,
+            is_anytrait=False,
             dispatch="",
             notify=True,
             is_list_handler=False,
@@ -377,7 +377,7 @@ class TestListenerParser(unittest.TestCase):
         common_traits = dict(
             metadata_name="",
             metadata_defined=True,
-            is_any_trait=False,
+            is_anytrait=False,
             dispatch="",
             notify=True,
             is_list_handler=False,
@@ -416,7 +416,7 @@ class TestListenerParser(unittest.TestCase):
         common_traits = dict(
             metadata_name="",
             metadata_defined=True,
-            is_any_trait=False,
+            is_anytrait=False,
             dispatch="",
             notify=True,
             is_list_handler=False,
@@ -452,7 +452,7 @@ class TestListenerParser(unittest.TestCase):
             name="foo",
             metadata_name="",
             metadata_defined=True,
-            is_any_trait=False,
+            is_anytrait=False,
             dispatch="",
             notify=True,
             is_list_handler=True,    # the effect of '[]'

@@ -208,9 +208,9 @@ class ListenerItem(ListenerBase):
     #: be deferred until the associated trait is first read or set?
     deferred = Bool(False)
 
-    #: Is this an 'any_trait' change listener, or does it create explicit
+    #: Is this an 'anytrait' change listener, or does it create explicit
     #: listeners for each individual trait?
-    is_any_trait = Bool(False)
+    is_anytrait = Bool(False)
 
     #: Is the associated handler a special list handler that handles both
     #: 'foo' and 'foo_items' events by receiving a list of 'deleted' and
@@ -250,7 +250,7 @@ class ListenerItem(ListenerBase):
     name = %r,
     metadata_name = %r,
     metadata_defined = %r,
-    is_any_trait = %r,
+    is_anytrait = %r,
     dispatch = %r,
     notify = %r,
     is_list_handler = %r,
@@ -261,7 +261,7 @@ class ListenerItem(ListenerBase):
             self.name,
             self.metadata_name,
             self.metadata_defined,
-            self.is_any_trait,
+            self.is_anytrait,
             self.dispatch,
             self.notify,
             self.is_list_handler,
@@ -283,7 +283,7 @@ class ListenerItem(ListenerBase):
         last = name[-1:]
         if last == "*":
             # Handle the special case of an 'anytrait' change listener:
-            if self.is_any_trait:
+            if self.is_anytrait:
                 try:
                     self.active[new] = [("", ANYTRAIT_LISTENER)]
                     return self._register_anytrait(new, "", False)
@@ -1086,12 +1086,12 @@ class ListenerParser:
                 if metadata != "":
                     cn = self.skip_ws
 
-                result.is_any_trait = (
+                result.is_anytrait = (
                     (c == "-") and (name == "") and (metadata == "")
                 )
                 c = cn
 
-                if result.is_any_trait and (
+                if result.is_anytrait and (
                     not (
                         (c == terminator)
                         or ((c == ",") and (terminator == "]"))
