@@ -113,7 +113,7 @@ most of the use cases commonly encountered by users.
    * - [*item1*, *item2*, ..., *itemN*]
      - Matches any of the specified expressions.
    * - *\**
-     - Matches any trait
+     - Matches any trait.
    * - *+metadata_name*
      - Matches any trait on the object that has metadata *metadata_name*
 
@@ -126,7 +126,7 @@ most of the use cases commonly encountered by users.
    * - Example
      - Meaning
    * - ``"*"``
-       Matches all traits on the current object. A change to any trait will
+     - Matches all traits on the current object. A change to any trait will
        trigger notifications.
    * - ``"foo.+updated"``
      - Matches any trait on the *foo* that has a metadata attribute named
