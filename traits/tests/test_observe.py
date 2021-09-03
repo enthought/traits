@@ -771,6 +771,25 @@ class TestObserveAnytrait(unittest.TestCase):
         self.assertEqual(bar_event.old, "off")
         self.assertEqual(bar_event.new, "on")
 
+    def test_anytrait_method(self):
+        foo = HasVariousTraits()
+        bar = HasVariousTraits()
+        obj = UpdateListener(foo=foo, bar=bar)
+
+        events = []
+        obj.observe(events.append, trait("foo", notify=False).anytrait())
+
+        foo.updated = True
+        bar.updated = True
+
+        self.assertEqual(len(events), 1)
+        foo_event, = events
+
+        self.assertEqual(foo_event.object, foo)
+        self.assertEqual(foo_event.name, "updated")
+        self.assertEqual(foo_event.old, Undefined)
+        self.assertEqual(foo_event.new, True)
+
     def test_anytrait_with_children(self):
         foo = HasVariousTraits()
         bar = HasVariousTraits()
