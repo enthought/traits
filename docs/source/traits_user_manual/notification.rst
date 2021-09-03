@@ -227,11 +227,11 @@ notifications should be fired for changes.
 * ``anytrait()``
    Matches all traits on the current object.
 
-* ``trait("foo").anytrait()`
+* ``trait("foo").anytrait()``
    Matches all traits on *foo* on the current object. Changes on *foo* or
    the nested attributes will trigger notifications.
 
-* ``trait("foo", notify=False).anytrait()`
+* ``trait("foo", notify=False).anytrait()``
    Matches all traits on *foo* on the current object. Changes on the nested
    attributes will trigger notifications. Changes on *foo* will not trigger
    notifications.
