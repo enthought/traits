@@ -14,6 +14,7 @@ from traits.observation.exception_handling import (     # noqa: F401
 )
 
 from traits.observation.expression import (   # noqa: F401
+    anytrait,
     dict_items,
     list_items,
     match,

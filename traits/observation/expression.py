@@ -411,6 +411,26 @@ def match(filter, notify=True):
     return SingleObserverExpression(observer)
 
 
+def _anytrait_filter(name, ctrait):
+    """ Match filter that matches all traits. """
+    return True
+
+
+def anytrait(notify=True):
+    """ Create a new expression for observing all traits on an object.
+
+    Events emitted (if any) will be instances of
+    :class:`~traits.observation.events.TraitChangeEvent`.
+
+    Parameters
+    ----------
+    notify : bool, optional
+        Whether to notify for changes.
+    """
+    observer = FilteredTraitObserver(notify=notify, filter=_anytrait_filter)
+    return SingleObserverExpression(observer)
+
+
 def metadata(metadata_name, notify=True):
     """ Return a new expression for observing traits where the given metadata
     is not None.
