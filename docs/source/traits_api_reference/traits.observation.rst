@@ -6,10 +6,20 @@
     :undoc-members:
     :show-inheritance:
 
+
 :mod:`traits.observation.exception_handling` Module
 ---------------------------------------------------
 
 .. automodule:: traits.observation.exception_handling
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+:mod:`traits.observation.exceptions` Module
+---------------------------------------------
+
+.. automodule:: traits.observation.exceptions
     :members:
     :undoc-members:
     :show-inheritance:

@@ -405,8 +405,8 @@ In other words::
 
     foo.number += 1  # handler is not called.
 
-Attempts to remove change handlers that do not exist will also lead to an
-exception.
+Attempts to remove change handlers that do not exist will lead to a
+|NotifierNotFound| exception.
 
 
 Migration from |@on_trait_change|
@@ -608,6 +608,7 @@ used for putting up the observer::
 .. |parse| replace:: :func:`~traits.observation.parsing.parse`
 .. |print| replace:: :func:`~traits.observation.expression.print`
 .. |ObserverExpression.then| replace:: :func:`~traits.observation.expression.ObserverExpression.then`
+.. |NotifierNotFound| replace:: :exc:`~traits.observation.exceptions.NotifierNotFound`
 
 .. |TraitChangeEvent| replace:: :class:`~traits.observation.events.TraitChangeEvent`
 .. |ListChangeEvent| replace:: :class:`~traits.observation.events.ListChangeEvent`
