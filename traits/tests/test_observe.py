@@ -675,3 +675,29 @@ class TestObserveItemsFromOnTraitChange(unittest.TestCase):
         app.trait_property_changed("i_am_undefined_with_items", 1, 2)
 
         self.assertEqual(len(events), 1)
+
+
+# Integration tests for anytrait listener -------------------------------------
+
+class HasManyTraits(HasTraits):
+    foo = Int(16)
+
+    bar = Str("off")
+
+
+class TestObserveAnytrait(unittest.TestCase):
+    def test_observe_any_trait(self):
+        obj = HasManyTraits()
+
+        events = []
+        obj.observe(events.append, "*")
+
+        obj.foo = 23
+        obj.bar = "on"
+
+        self.assertEqual(len(events), 2)
+        # XXX Add test for the events themselves.
+
+
+    # Add test with Instance traits as well as Int and Str;
+    # Add test for nested case (some_trait.*)
