@@ -361,7 +361,7 @@ class AbstractStaticChangeNotifyWrapper(object):
         return False
 
 
-class StaticAnyTraitChangeNotifyWrapper(AbstractStaticChangeNotifyWrapper):
+class StaticAnytraitChangeNotifyWrapper(AbstractStaticChangeNotifyWrapper):
 
     # The wrapper is called with the full set of argument, and we need to
     # create a tuple with the arguments that need to be sent to the event
