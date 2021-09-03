@@ -112,6 +112,8 @@ most of the use cases commonly encountered by users.
      - Matching items in a list or dict or set, or a trait named "items".
    * - [*item1*, *item2*, ..., *itemN*]
      - Matches any of the specified expressions.
+   * - *\**
+     - Matches any trait
    * - *+metadata_name*
      - Matches any trait on the object that has metadata *metadata_name*
 
@@ -123,6 +125,9 @@ most of the use cases commonly encountered by users.
 
    * - Example
      - Meaning
+   * - ``"*"``
+       Matches all traits on the current object. A change to any trait will
+       trigger notifications.
    * - ``"foo.+updated"``
      - Matches any trait on the *foo* that has a metadata attribute named
        *updated*. Changes on those traits and changes on *foo* will trigger
@@ -145,6 +150,9 @@ most of the use cases commonly encountered by users.
        of *HasTraits*, matches attribute *container.items.value* on the current
        object. Only changes to *value* will trigger notifications, assignments
        or mutations on *container* will not trigger notifications.
+   * - ``"container:items:*"``
+     - If *container* is a list or dict or set, matches all traits on an object
+       that is an item of the container.
 
 .. _observe-expression-object:
 
@@ -174,6 +182,8 @@ functions from the |observation.api| module.
      - For observing items in a set.
    * - |match|
      - For observing traits satisfying a user-defined filter.
+   * - |anytrait|
+     - For observing all traits on an object.
    * - |parse|
      - For parsing a string written in Traits domain specific language into an
        expression object.
@@ -214,9 +224,18 @@ notifications should be fired for changes.
    Matches *foo.bar* or *foo.baz* on the current object. Changes on *foo*,
    *foo.bar* or *foo.baz* will trigger notifications.
 
-* ``trait("foo").match(lambda n, t: True)``
+* ``anytrait()``
+   Matches all traits on the current object.
+
+* ``trait("foo").anytrait()`
    Matches all traits on *foo* on the current object. Changes on *foo* or
    the nested attributes will trigger notifications.
+
+* ``trait("foo", notify=False).anytrait()`
+   Matches all traits on *foo* on the current object. Changes on the nested
+   attributes will trigger notifications. Changes on *foo* will not trigger
+   notifications.
+
 
 .. rubric:: Extend an expression in text
 
@@ -605,6 +624,7 @@ used for putting up the observer::
 .. |list_items| replace:: :func:`~traits.observation.expression.list_items`
 .. |set_items| replace:: :func:`~traits.observation.expression.set_items`
 .. |match| replace:: :func:`~traits.observation.expression.match`
+.. |anytrait| replace:: :func:`~traits.observation.expression.anytrait`
 .. |parse| replace:: :func:`~traits.observation.parsing.parse`
 .. |print| replace:: :func:`~traits.observation.expression.print`
 .. |ObserverExpression.then| replace:: :func:`~traits.observation.expression.ObserverExpression.then`
