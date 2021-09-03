@@ -8,14 +8,14 @@
 #
 # Thanks for using Enthought open source!
 
-from traits.observation.exception_handling import (
+from traits.observation.exception_handling import (     # noqa: F401
     pop_exception_handler,
     push_exception_handler,
 )
 
 from traits.observation.exceptions import NotifierNotFound
 
-from traits.observation.expression import (
+from traits.observation.expression import (   # noqa: F401
     dict_items,
     list_items,
     match,
@@ -24,8 +24,8 @@ from traits.observation.expression import (
     trait,
 )
 
-from traits.observation.observe import (
+from traits.observation.observe import (   # noqa: F401
     dispatch_same,
     observe,
 )
-from traits.observation.parsing import parse
+from traits.observation.parsing import parse     # noqa: F401
