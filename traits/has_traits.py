@@ -2370,6 +2370,10 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                         event queue.
             =========== =======================================================
 
+        Raises
+        ------
+        traits.observation.api.NotifierNotFound
+            When attempting to remove a handler that doesn't exist.
         """
         expressions = _parse_expression(expression)
 
