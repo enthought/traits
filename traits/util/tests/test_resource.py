@@ -33,4 +33,3 @@ class TestResource(unittest.TestCase):
                     os.path.join("traits", "__init__.py"),
                     os.path.join(tmpdir, "just_testing.py"),
                 )
-                breakpoint()
