@@ -219,11 +219,11 @@ class TestObserverExpressionAnytrait(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_anytrait_method_notify_false(self):
-        expr = expression.trait("name").anytrait(notify=True)
+        expr = expression.trait("name").anytrait(notify=False)
         expected = [
             create_graph(
                 NamedTraitObserver(name="name", notify=True, optional=False),
-                FilteredTraitObserver(filter=anytrait_filter, notify=True),
+                FilteredTraitObserver(filter=anytrait_filter, notify=False),
             ),
         ]
         actual = expr._as_graphs()
