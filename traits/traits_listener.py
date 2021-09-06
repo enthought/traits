@@ -137,7 +137,7 @@ class ListenerBase:
         raise NotImplementedError
 
     def set_next(self, next):
-        """ Set the child listener for this one.
+        """ Set the child listener for this listener.
 
         Parameters
         ----------
