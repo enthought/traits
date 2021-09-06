@@ -8,4 +8,4 @@
 #
 # Thanks for using Enthought open source!
 
-from .etsconfig import ETSConfig, ETSToolkitError  # noqa: F401
+from .etsconfig import ETSConfig, ETSToolkitError
