@@ -30,6 +30,7 @@ import inspect
 import os
 import sys
 import sysconfig
+import warnings
 
 
 def get_path(path):
@@ -90,6 +91,8 @@ def find_resource(project, resource_path, alt_path=None, return_path=False):
     find/open the resource, find_resource will use the sys.path[0] to find the
     resource if alt_path is defined.
 
+    .. deprecated:: 6.3.0
+
     Parameters
     ----------
     project : str
@@ -116,6 +119,11 @@ def find_resource(project, resource_path, alt_path=None, return_path=False):
         will be the full path to the resource. If the file is not found or
         cannot be opened, None is returned.
     """
+    warnings.warn(
+        "find_resource is deprecated. Use importlib.resources instead.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
 
     try:
         # Get the image using the pkg_resources resource_stream module, which
@@ -178,7 +186,15 @@ def store_resource(project, resource_path, filename):
         argument (filename) is the name of the file which will be created,
         or overwritten if it already exists.
         The return value in always None.
+
+        .. deprecated:: 6.3.0
     """
+    warnings.warn(
+        "store_resource is deprecated. Use importlib.resources instead.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+
     fi = find_resource(project, resource_path)
     if fi is None:
         raise RuntimeError(

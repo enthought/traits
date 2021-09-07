@@ -8,11 +8,11 @@
 #
 # Thanks for using Enthought open source!
 
-from .adapter import Adapter, PurePythonAdapter  # noqa: F401
+from .adapter import Adapter, PurePythonAdapter
 
-from .adaptation_error import AdaptationError  # noqa: F401
+from .adaptation_error import AdaptationError
 
-from .adaptation_manager import (  # noqa: F401
+from .adaptation_manager import (
     adapt,
     AdaptationManager,
     get_global_adaptation_manager,
@@ -25,4 +25,4 @@ from .adaptation_manager import (  # noqa: F401
     supports_protocol,
 )
 
-from .adaptation_offer import AdaptationOffer  # noqa: F401
+from .adaptation_offer import AdaptationOffer
