@@ -41,7 +41,7 @@ from .trait_notifiers import (
     ExtendedTraitChangeNotifyWrapper,
     FastUITraitChangeNotifyWrapper,
     NewTraitChangeNotifyWrapper,
-    StaticAnyTraitChangeNotifyWrapper,
+    StaticAnytraitChangeNotifyWrapper,
     StaticTraitChangeNotifyWrapper,
     TraitChangeNotifyWrapper,
     ui_dispatch,
@@ -89,7 +89,7 @@ class AbstractViewElement(abc.ABC):
 # Constants
 
 WrapperTypes = (
-    StaticAnyTraitChangeNotifyWrapper,
+    StaticAnytraitChangeNotifyWrapper,
     StaticTraitChangeNotifyWrapper,
 )
 
@@ -652,7 +652,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
     # it can be attached to all traits in the class:
     anytrait = _get_def(class_name, class_dict, bases, "_anytrait_changed")
     if anytrait is not None:
-        anytrait = StaticAnyTraitChangeNotifyWrapper(anytrait)
+        anytrait = StaticAnytraitChangeNotifyWrapper(anytrait)
 
         # Save it in the prefix traits dictionary so that any dynamically
         # created traits (e.g. 'prefix traits') can re-use it:
@@ -2370,6 +2370,10 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                         event queue.
             =========== =======================================================
 
+        Raises
+        ------
+        NotifierNotFound
+            When attempting to remove a handler that doesn't exist.
         """
         expressions = _parse_expression(expression)
 

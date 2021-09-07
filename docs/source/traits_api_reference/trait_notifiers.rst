@@ -13,7 +13,7 @@ Classes
     :members: _push_handler, _pop_handler, _handle_exception, _get_handlers,
         _check_lock, _log_exception
 
-.. autoclass:: StaticAnyTraitChangeNotifyWrapper
+.. autoclass:: StaticAnytraitChangeNotifyWrapper
 
 .. autoclass:: StaticTraitChangeNotifyWrapper
 

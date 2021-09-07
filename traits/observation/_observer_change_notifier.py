@@ -11,7 +11,7 @@
 import types
 import weakref
 
-from traits.observation._exceptions import NotifierNotFound
+from traits.observation.exceptions import NotifierNotFound
 
 
 class ObserverChangeNotifier:

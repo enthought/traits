@@ -16,7 +16,7 @@ from traits.observation.exception_handling import (
     pop_exception_handler,
     push_exception_handler,
 )
-from traits.observation._exceptions import NotifierNotFound
+from traits.observation.exceptions import NotifierNotFound
 from traits.observation._trait_event_notifier import TraitEventNotifier
 
 

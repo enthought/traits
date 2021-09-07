@@ -10,9 +10,9 @@
 
 from unittest import mock
 
-from traits.observation._exceptions import NotifierNotFound
 from traits.observation._observe import add_or_remove_notifiers
 from traits.observation._observer_graph import ObserverGraph
+from traits.observation.exceptions import NotifierNotFound
 
 
 #: An object that does not get garbage collected until the very end
