@@ -13,6 +13,8 @@ from traits.observation.exception_handling import (
     push_exception_handler,
 )
 
+from traits.observation.exceptions import NotifierNotFound
+
 from traits.observation.expression import (
     dict_items,
     list_items,

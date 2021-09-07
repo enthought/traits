@@ -13,8 +13,8 @@
 
 from traits.constants import ComparisonMode, TraitKind
 from traits.ctraits import CHasTraits
-from traits.observation._exceptions import NotifierNotFound
 from traits.observation._observe import add_or_remove_notifiers
+from traits.observation.exceptions import NotifierNotFound
 from traits.trait_base import Undefined, Uninitialized
 
 

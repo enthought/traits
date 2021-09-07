@@ -28,7 +28,7 @@ from traits.has_traits import (
     SingletonHasPrivateTraits,
 )
 from traits.ctrait import CTrait
-from traits.observation.api import trait
+from traits.observation.api import NotifierNotFound, trait
 from traits.observation.exception_handling import (
     pop_exception_handler,
     push_exception_handler,
@@ -796,6 +796,13 @@ class TestHasTraitsObserveHook(unittest.TestCase):
         # then
         person.age += 1
         self.assertEqual(len(events), 1)  # unchanged
+
+    def test_observe_method_remove_nonexistent_handler(self):
+        events = []
+        person = Person()
+
+        with self.assertRaises(NotifierNotFound):
+            person.observe(events.append, "age", remove=True)
 
     def test_observe_dispatch_ui(self):
         # Test to ensure "ui" is one of the allowed value
