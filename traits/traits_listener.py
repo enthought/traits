@@ -19,10 +19,7 @@ from string import whitespace
 from types import MethodType
 
 from .constants import DefaultValue
-from .has_traits import HasPrivateTraits
 from .trait_base import Undefined, Uninitialized
-from .traits import Property
-from .trait_types import Str, Bool, Instance, List, Enum, Any
 from .trait_errors import TraitError
 from .trait_notifiers import TraitChangeNotifyWrapper
 from .util.weakiddict import WeakIDKeyDict
@@ -124,14 +121,31 @@ def not_event(value):
     return value != "event"
 
 
-class ListenerBase(HasPrivateTraits):
+class ListenerBase:
+    """
+    Abstract base class for both ListenerItem and ListenerGroup.
+    """
 
-    # The next level (if any) of ListenerBase object to be called when any of
-    # our listened to traits is changed:
-    # next = Instance( ListenerBase )
+    def set_notify(self, notify):
+        """ Set notify state on this listener.
 
-    # Should changes to this item generate a notification to the handler?
-    # notify = Bool
+        Parameters
+        ----------
+        notify : bool
+            True if this listener should notify, else False.
+        """
+        raise NotImplementedError
+
+    def set_next(self, next):
+        """ Set the child listener for this listener.
+
+        Parameters
+        ----------
+        next : ListenerBase
+            The next level (if any) of ListenerBase object to be called when
+            any of our listened to traits is changed:
+        """
+        raise NotImplementedError
 
     def register(self, new):
         """ Registers new listeners.
@@ -170,57 +184,81 @@ class ListenerBase(HasPrivateTraits):
 
 
 class ListenerItem(ListenerBase):
+    """
+    Listener description for a single item.
 
-    #: The name of the trait to listen to:
-    name = Str
+    Parameters
+    ----------
+    name : str
+        The name of the trait to listen to.
+    metadata_name : str, optional
+        The name of any metadata that must be present (or not present).
+    metadata_defined : bool, optional
+        True if the specified metadata needs to be defined; False if the
+        specified metadata needs to be not defined.
+    handler : ListenerHandler, optional
+        Zero-argument callable that returns the actual handler when called (or
+        Undefined if that handler is no longer available).
+    wrapped_handler_ref : weakref.ref, optional
+        Weak reference to a ListenerNotifyWrapper wrapping the actual handler.
+    dispatch : str
+        The dispatch mechanism to use when invoking the handler.
+    priority : bool, optional
+        True if the handler goes at the beginning of the notification handlers
+        list, else False.
+    next : ListenerBase or None, optional
+        The next level (if any) of ListenerBase object to be called when any
+        of this object's listened-to traits is changed. The default is None.
+    type : int
+        The type of handler being used. One of ANY_LISTENER, SRC_LISTENER,
+        DST_LISTENER.
+    notify : bool, optional
+        True if changes to this item should generate a notification to
+        the handler; False otherwise. The default is True.
+    deferred : bool, optional
+        True if registering listeners for items reachable from this listener
+        item should be deferred until the associated trait is first read or
+        set.
+    is_anytrait : bool, optional
+        True if this is an "anytrait" change listener. False if it creates
+        explicit listeners for each individual trait.
+    is_list_handler : bool, optional
+        True if the associated handler is a special list handler that handles
+        both "foo" and "foo_items" events. False otherwise.
+    """
 
-    #: The name of any metadata that must be present (or not present):
-    metadata_name = Str
-
-    #: Does the specified metadata need to be defined (True) or not defined
-    #: (False)?
-    metadata_defined = Bool(True)
-
-    #: The handler to be called when any listened-to trait is changed:
-    handler = Any
-
-    #: A weakref 'wrapped' version of 'handler':
-    wrapped_handler_ref = Any
-
-    #: The dispatch mechanism to use when invoking the handler:
-    dispatch = Str
-
-    #: Does the handler go at the beginning (True) or end (False) of the
-    #: notification handlers list?
-    priority = Bool(False)
-
-    #: The next level (if any) of ListenerBase object to be called when any of
-    #: this object's listened-to traits is changed:
-    next = Instance(ListenerBase)
-
-    #: The type of handler being used:
-    type = Enum(ANY_LISTENER, SRC_LISTENER, DST_LISTENER)
-
-    #: Should changes to this item generate a notification to the handler?
-    notify = Bool(True)
-
-    #: Should registering listeners for items reachable from this listener item
-    #: be deferred until the associated trait is first read or set?
-    deferred = Bool(False)
-
-    #: Is this an 'anytrait' change listener, or does it create explicit
-    #: listeners for each individual trait?
-    is_anytrait = Bool(False)
-
-    #: Is the associated handler a special list handler that handles both
-    #: 'foo' and 'foo_items' events by receiving a list of 'deleted' and
-    #: 'added' items as the 'old' and 'new' arguments?
-    is_list_handler = Bool(False)
-
-    #: A dictionary mapping objects to a list of all current active
-    #: (*name*, *type*) listener pairs, where *type* defines the type of
-    #: listener, one of: (SIMPLE_LISTENER, LIST_LISTENER, DICT_LISTENER).
-    active = Instance(WeakIDKeyDict, ())
+    def __init__(
+        self,
+        *,
+        name,
+        metadata_name="",
+        metadata_defined=True,
+        handler=None,
+        wrapped_handler_ref=None,
+        dispatch,
+        priority=False,
+        next=None,
+        type,
+        notify=True,
+        deferred=False,
+        is_anytrait=False,
+        is_list_handler=False,
+    ):
+        self.name = name
+        self.notify = notify
+        self.handler = handler
+        self.wrapped_handler_ref = wrapped_handler_ref
+        self.dispatch = dispatch
+        self.priority = priority
+        self.deferred = deferred
+        self.type = type
+        self.next = next
+        self.metadata_name = metadata_name
+        self.metadata_defined = metadata_defined
+        self.is_anytrait = is_anytrait
+        self.is_list_handler = is_list_handler
+        self.active = WeakIDKeyDict()
+        self._metadata = None
 
     # -- 'ListenerBase' Class Method Implementations --------------------------
 
@@ -268,6 +306,27 @@ class ListenerItem(ListenerBase):
             self.type,
             indent(next_repr, False),
         )
+
+    def set_notify(self, notify):
+        """ Set notify state on this listener.
+
+        Parameters
+        ----------
+        notify : bool
+            True if this listener should notify, else False.
+        """
+        self.notify = notify
+
+    def set_next(self, next):
+        """ Set the child listener for this one.
+
+        Parameters
+        ----------
+        next : ListenerBase
+            The next level (if any) of ListenerBase object to be called when
+            any of our listened to traits is changed:
+        """
+        self.next = next
 
     def register(self, new):
         """ Registers new listeners.
@@ -800,35 +859,24 @@ class ListenerItem(ListenerBase):
         return target
 
 
-def _set_value(self, name, value):
-    for item in self.items:
-        setattr(item, name, value)
-
-
-def _get_value(self, name):
-    # Use the attribute on the first item. If there are no items, return None.
-    if self.items:
-        return getattr(self.items[0], name)
-    else:
-        return None
-
-
-ListProperty = Property(fget=_get_value, fset=_set_value)
-
-
 class ListenerGroup(ListenerBase):
+    """
+    Listener description for a collection of items.
 
-    #: The next level (if any) of ListenerBase object to be called when any of
-    #: this object's listened-to traits is changed
-    next = ListProperty
+    The ListenerParser produces a ListenerGroup rather than a ListenerItem
+    when parsing strings like ``[abc,def]``.
 
-    #: Should changes to this item generate a notification to the handler?
-    notify = ListProperty
-
-    # The list of ListenerBase objects in the group
-    items = List(ListenerBase)
+    Parameters
+    ----------
+    items : list
+        List of ListenerItem objects representing the components of the group.
+    """
 
     # -- 'ListenerBase' Class Method Implementations --------------------------
+
+    def __init__(self, *, items):
+        self.items = items
+        self.next = None
 
     def __repr__(self, seen=None):
         """Returns a string representation of the object.
@@ -854,6 +902,30 @@ class ListenerGroup(ListenerBase):
         lines.append("])")
 
         return "\n".join(lines)
+
+    def set_notify(self, notify):
+        """ Set notify state on this listener.
+
+        Parameters
+        ----------
+        notify : bool
+            True if this listener should notify, else False.
+        """
+        for item in self.items:
+            item.set_notify(notify)
+
+    def set_next(self, next):
+        """ Set the child listener for this one.
+
+        Parameters
+        ----------
+        next : ListenerBase
+            The next level (if any) of ListenerBase object to be called when
+            any of our listened to traits is changed:
+        """
+        for item in self.items:
+            item.set_next(next)
+        self.next = next if self.items else None
 
     def register(self, new):
         """ Registers new listeners.
@@ -1109,7 +1181,7 @@ class ListenerParser:
             c = self.skip_ws
 
         if c in ".:":
-            result.notify = c == "."
+            result.set_notify(c == ".")
             # Bug-for-bug compatibility with old behaviour: don't propagate the
             # 'deferred' or 'handler_type' values for the child item.
             # Ref: enthought/traits#537.
@@ -1122,10 +1194,11 @@ class ListenerParser:
                 last = result
                 while last.next is not None:
                     last = last.next
-                last.next = lg = ListenerGroup(items=[next, result])
+                lg = ListenerGroup(items=[next, result])
+                last.set_next(lg)
                 result = lg
             else:
-                result.next = next
+                result.set_next(next)
 
             return result
 
@@ -1142,7 +1215,7 @@ class ListenerParser:
             self.backspace
 
         if cycle:
-            result.next = result
+            result.set_next(result)
 
         return result
 
@@ -1194,23 +1267,33 @@ class ListenerNotifyWrapper(TraitChangeNotifyWrapper):
 
 
 class ListenerHandler(object):
+    """
+    Wrapper for trait change handlers that avoids strong references to methods.
+
+    For a bound method handler, this wrapper prevents us from holding a
+    strong reference to the object bound to that bound method. For other
+    callable handlers, we do keep a strong reference to the handler.
+
+    When called with no arguments, this object returns either the actual
+    handler, or Undefined if the handler no longer exists because the object
+    it was bound to has been garbage collected.
+
+    Parameters
+    ----------
+    handler : callable
+        Object to be called when the relevant trait or traits change.
+    """
+
     def __init__(self, handler):
-        if type(handler) is MethodType:
-            object = handler.__self__
-            if object is not None:
-                self.object = weakref.ref(object, self.listener_deleted)
-                self.name = handler.__name__
-
-                return
-
-        self.handler = handler
+        if isinstance(handler, MethodType):
+            self.handler_ref = weakref.WeakMethod(handler)
+        else:
+            self.handler = handler
 
     def __call__(self):
         result = getattr(self, "handler", None)
         if result is not None:
             return result
-
-        return getattr(self.object(), self.name)
-
-    def listener_deleted(self, ref):
-        self.handler = Undefined
+        else:
+            handler = self.handler_ref()
+            return Undefined if handler is None else handler
