@@ -16,7 +16,7 @@ from .ctraits import CHasTraits as CHasTraits
 from .trait_base import SequenceTypes as SequenceTypes, TraitsCache as TraitsCache, Undefined as Undefined, is_none as is_none, not_event as not_event, not_false as not_false
 from .trait_converters import check_trait as check_trait, mapped_trait_for as mapped_trait_for, trait_for as trait_for
 from .trait_errors import TraitError as TraitError
-from .trait_notifiers import ExtendedTraitChangeNotifyWrapper as ExtendedTraitChangeNotifyWrapper, FastUITraitChangeNotifyWrapper as FastUITraitChangeNotifyWrapper, NewTraitChangeNotifyWrapper as NewTraitChangeNotifyWrapper, StaticAnyTraitChangeNotifyWrapper as StaticAnyTraitChangeNotifyWrapper, StaticTraitChangeNotifyWrapper as StaticTraitChangeNotifyWrapper, TraitChangeNotifyWrapper as TraitChangeNotifyWrapper
+from .trait_notifiers import ExtendedTraitChangeNotifyWrapper as ExtendedTraitChangeNotifyWrapper, FastUITraitChangeNotifyWrapper as FastUITraitChangeNotifyWrapper, NewTraitChangeNotifyWrapper as NewTraitChangeNotifyWrapper, StaticAnytraitChangeNotifyWrapper as StaticAnytraitChangeNotifyWrapper, StaticTraitChangeNotifyWrapper as StaticTraitChangeNotifyWrapper, TraitChangeNotifyWrapper as TraitChangeNotifyWrapper
 from .trait_types import Any as Any, Bool as Bool, Disallow as Disallow, Event as Event, Python as Python
 from .traits import ForwardProperty as ForwardProperty, Property as Property, Trait as Trait, generic_trait as generic_trait
 from .util.deprecated import deprecated as deprecated

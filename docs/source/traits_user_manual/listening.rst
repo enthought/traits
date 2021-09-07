@@ -494,7 +494,7 @@ To notify about changes to any trait attribute on a class, define a method
 named _anytrait_changed().
 
 .. index::
-   pair: examples; _any_trait_changed()
+   pair: examples; _anytrait_changed()
    pair: static notification; examples
 
 Both of these types of static trait attribute notification methods are

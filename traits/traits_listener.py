@@ -219,7 +219,7 @@ class ListenerItem(ListenerBase):
         True if registering listeners for items reachable from this listener
         item should be deferred until the associated trait is first read or
         set.
-    is_any_trait : bool, optional
+    is_anytrait : bool, optional
         True if this is an "anytrait" change listener. False if it creates
         explicit listeners for each individual trait.
     is_list_handler : bool, optional
@@ -241,7 +241,7 @@ class ListenerItem(ListenerBase):
         type,
         notify=True,
         deferred=False,
-        is_any_trait=False,
+        is_anytrait=False,
         is_list_handler=False,
     ):
         self.name = name
@@ -255,7 +255,7 @@ class ListenerItem(ListenerBase):
         self.next = next
         self.metadata_name = metadata_name
         self.metadata_defined = metadata_defined
-        self.is_any_trait = is_any_trait
+        self.is_anytrait = is_anytrait
         self.is_list_handler = is_list_handler
         self.active = WeakIDKeyDict()
         self._metadata = None
@@ -288,7 +288,7 @@ class ListenerItem(ListenerBase):
     name = %r,
     metadata_name = %r,
     metadata_defined = %r,
-    is_any_trait = %r,
+    is_anytrait = %r,
     dispatch = %r,
     notify = %r,
     is_list_handler = %r,
@@ -299,7 +299,7 @@ class ListenerItem(ListenerBase):
             self.name,
             self.metadata_name,
             self.metadata_defined,
-            self.is_any_trait,
+            self.is_anytrait,
             self.dispatch,
             self.notify,
             self.is_list_handler,
@@ -342,7 +342,7 @@ class ListenerItem(ListenerBase):
         last = name[-1:]
         if last == "*":
             # Handle the special case of an 'anytrait' change listener:
-            if self.is_any_trait:
+            if self.is_anytrait:
                 try:
                     self.active[new] = [("", ANYTRAIT_LISTENER)]
                     return self._register_anytrait(new, "", False)
@@ -1158,12 +1158,12 @@ class ListenerParser:
                 if metadata != "":
                     cn = self.skip_ws
 
-                result.is_any_trait = (
+                result.is_anytrait = (
                     (c == "-") and (name == "") and (metadata == "")
                 )
                 c = cn
 
-                if result.is_any_trait and (
+                if result.is_anytrait and (
                     not (
                         (c == terminator)
                         or ((c == ",") and (terminator == "]"))
