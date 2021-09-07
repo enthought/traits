@@ -3,21 +3,11 @@
 //     $ python etstool.py generate-parser
 //
 
-?start: parallel
-
-// Connectors
-notify: "."
-quiet: ":"
-?connector: notify | quiet
-
 // Simple name as trait name, e.g. "a"
 trait: NAME
 
 // Anytrait
 anytrait: "*"
-
-// Element that can be followed by a ".", ":"
-?element: trait | anytrait | "[" parallel "]" | metadata | items
 
 // Syntax to indicate name is being used for matching an existing
 // metadata name rather than a trait name.
@@ -27,11 +17,22 @@ metadata: "+" NAME
 // or a trait named "items")
 items: "items"
 
+// Element that can be followed by a ".", ":"
+?element: trait | anytrait | "[" parallel "]" | metadata | items
+
+// Series connector used when left item should notify
+notify: "."
+
+// Series connector used when left item should not notify
+quiet: ":"
+
 // Rule for joining elements in series, e.g. "a.b.c"
-?series: (element connector)* element
+?series: (series (notify | quiet))? element
 
 // Rule for joining elements in parallel, e.g. "a,b,c"
-?parallel: (series ",")* series
+?parallel: (parallel ",")? series
+
+?start: parallel
 
 // Matching Python variable name rule
 NAME: /[a-zA-Z_]\w*/

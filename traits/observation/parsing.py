@@ -8,8 +8,7 @@
 #
 # Thanks for using Enthought open source!
 
-from functools import lru_cache, reduce
-import operator
+from functools import lru_cache
 
 from traits.observation import _generated_parser
 import traits.observation.expression as expression_module
@@ -21,13 +20,13 @@ _OBSERVER_EXPRESSION_CACHE_MAXSIZE = 128
 
 
 def _handle_series(trees, notify):
-    """ Handle expressions joined in series using "." or ":" connectors.
+    """ Handle an expression of the form "a.b" or "a:b".
 
     Parameters
     ----------
     trees : list of lark.tree.Tree
-        The children tree for the "series" rule.
-        It should contain one or more items.
+        The children tree for the "series" rule. It should always
+        contain exactly three items.
     notify : bool
         True if the final target should notify, else False.
 
@@ -35,13 +34,9 @@ def _handle_series(trees, notify):
     -------
     expression : ObserverExpression
     """
-    elements = trees[::2]
-    notify_flags = [tree.data == "notify" for tree in trees[1::2]] + [notify]
-    expressions = (
-        _handle_tree(element, notify)
-        for element, notify in zip(elements, notify_flags)
-    )
-    return expression_module.join(*expressions)
+    left, connector, right = trees
+    notify_left = connector.data == "notify"
+    return _handle_tree(left, notify_left).then(_handle_tree(right, notify))
 
 
 def _handle_parallel(trees, notify):
@@ -50,8 +45,8 @@ def _handle_parallel(trees, notify):
     Parameters
     ----------
     trees : list of lark.tree.Tree
-        The children tree for the "parallel" rule.
-        It should contain one or more items.
+        The children tree for the "parallel" rule. It should always
+        contain exactly two items.
     notify : bool
         True if the final target should notify, else False.
 
@@ -59,8 +54,8 @@ def _handle_parallel(trees, notify):
     -------
     expression : ObserverExpression
     """
-    expressions = (_handle_tree(tree, notify) for tree in trees)
-    return reduce(operator.or_, expressions)
+    left, right = trees
+    return _handle_tree(left, notify) | _handle_tree(right, notify)
 
 
 def _handle_trait(trees, notify):
@@ -139,14 +134,11 @@ def _handle_items(trees, notify):
         # Nothing should be wrapped in items
         raise ValueError("Unexpected tree: {!r}".format(trees))
 
-    return reduce(
-        operator.or_,
-        (
-            expression_module.trait("items", notify=notify, optional=True),
-            expression_module.dict_items(notify=notify, optional=True),
-            expression_module.list_items(notify=notify, optional=True),
-            expression_module.set_items(notify=notify, optional=True),
-        )
+    return (
+        expression_module.trait("items", notify=notify, optional=True)
+        | expression_module.dict_items(notify=notify, optional=True)
+        | expression_module.list_items(notify=notify, optional=True)
+        | expression_module.set_items(notify=notify, optional=True)
     )
 
 
