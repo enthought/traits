@@ -40,7 +40,7 @@ def _handle_series(trees, notify):
 
 
 def _handle_parallel(trees, notify):
-    """ Handle expressions joined in parallel using "," connectors.
+    """ Handle an expression of the form "a, b".
 
     Parameters
     ----------
