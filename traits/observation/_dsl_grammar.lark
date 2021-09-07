@@ -6,19 +6,16 @@
 // Simple name as trait name, e.g. "a"
 trait: NAME
 
-// Anytrait
-anytrait: "*"
+// Keyword for handing items (in list, or dict, or set,
+// or a trait named "items")
+items: "items"
 
 // Syntax to indicate name is being used for matching an existing
 // metadata name rather than a trait name.
 metadata: "+" NAME
 
-// Keyword for handing items (in list, or dict, or set,
-// or a trait named "items")
-items: "items"
-
-// Element that can be followed by a ".", ":"
-?element: trait | anytrait | "[" parallel "]" | metadata | items
+// Used to match any trait name.
+anytrait: "*"
 
 // Series connector used when left item should notify
 notify: "."
@@ -26,12 +23,16 @@ notify: "."
 // Series connector used when left item should not notify
 quiet: ":"
 
+// Atomic expression
+?element: trait | items | metadata | anytrait | "[" parallel "]"
+
 // Rule for joining elements in series, e.g. "a.b.c"
 ?series: (series (notify | quiet))? element
 
 // Rule for joining elements in parallel, e.g. "a,b,c"
 ?parallel: (parallel ",")? series
 
+// Start point for the parser
 ?start: parallel
 
 // Matching Python variable name rule
