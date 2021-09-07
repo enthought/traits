@@ -10,6 +10,7 @@
 
 import functools
 
+from traits.observation._anytrait_filter import anytrait_filter
 from traits.observation._dict_item_observer import DictItemObserver
 from traits.observation._filtered_trait_observer import FilteredTraitObserver
 from traits.observation._list_item_observer import ListItemObserver
@@ -100,6 +101,23 @@ class ObserverExpression:
         new_expression : ObserverExpression
         """
         return self.then(match(filter=filter, notify=notify))
+
+    def anytrait(self, notify=True):
+        """ Create a new expression for observing all traits.
+
+        Events emitted (if any) will be instances of
+        :class:`~traits.observation.events.TraitChangeEvent`.
+
+        Parameters
+        ----------
+        notify : bool, optional
+            Whether to notify for changes. Default is to notify.
+
+        Returns
+        -------
+        new_expression : ObserverExpression
+        """
+        return self.match(filter=anytrait_filter, notify=notify)
 
     def metadata(self, metadata_name, notify=True):
         """ Return a new expression for observing traits where the given
@@ -408,6 +426,21 @@ def match(filter, notify=True):
     new_expression : ObserverExpression
     """
     observer = FilteredTraitObserver(notify=notify, filter=filter)
+    return SingleObserverExpression(observer)
+
+
+def anytrait(notify=True):
+    """ Create a new expression for observing all traits on an object.
+
+    Events emitted (if any) will be instances of
+    :class:`~traits.observation.events.TraitChangeEvent`.
+
+    Parameters
+    ----------
+    notify : bool, optional
+        Whether to notify for changes.
+    """
+    observer = FilteredTraitObserver(notify=notify, filter=anytrait_filter)
     return SingleObserverExpression(observer)
 
 

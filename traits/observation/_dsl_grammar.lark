@@ -15,8 +15,11 @@ _colon: ":"
 // Simple name as trait name, e.g. "a"
 trait: NAME -> trait
 
+// Anytrait
+anytrait: "*" -> anytrait
+
 // Element that can be followed by a ".", ":"
-?element: trait | grouped | metadata | items
+?element: trait | anytrait | grouped | metadata | items
 
 // Syntax to indicate name is being used for matching an existing
 // metadata name rather than a trait name.

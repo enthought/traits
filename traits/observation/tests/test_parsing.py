@@ -12,6 +12,7 @@ import unittest
 
 from traits.observation.parsing import parse
 from traits.observation.expression import (
+    anytrait,
     dict_items,
     list_items,
     metadata,
@@ -99,6 +100,29 @@ class TestParsingTrait(unittest.TestCase):
     def test_trait_not_notifiy(self):
         actual = parse("a:b")
         expected = trait("a", notify=False).trait("b")
+        self.assertEqual(actual, expected)
+
+
+class TestParsingAnytrait(unittest.TestCase):
+
+    def test_anytrait(self):
+        actual = parse("*")
+        expected = anytrait()
+        self.assertEqual(actual, expected)
+
+    def test_anytrait_trait_not_notify(self):
+        actual = parse("*:name")
+        expected = anytrait(notify=False).trait("name")
+        self.assertEqual(actual, expected)
+
+    def test_trait_anytrait_not_notify(self):
+        actual = parse("name:*")
+        expected = trait("name", notify=False).anytrait()
+        self.assertEqual(actual, expected)
+
+    def test_anytrait_anytrait(self):
+        actual = parse("*:*")
+        expected = anytrait(notify=False).anytrait()
         self.assertEqual(actual, expected)
 
 

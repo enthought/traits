@@ -169,6 +169,24 @@ def _handle_trait(trees, default_notifies):
     return expression_module.trait(name, notify=notify)
 
 
+def _handle_anytrait(trees, default_notifies):
+    """ Handle an anytrait element.
+
+    Parameters
+    ----------
+    trees : list of lark.tree.Tree
+        The children tree for the "trait" rule. This should be empty.
+    default_notifies : list of boolean
+        The notify flag stack.
+
+    Returns
+    -------
+    expression : ObserverExpression
+    """
+    notify = default_notifies[-1]
+    return expression_module.anytrait(notify=notify)
+
+
 def _handle_metadata(trees, default_notifies):
     """ Handle an element for filtering existing metadata.
 
@@ -252,6 +270,7 @@ def _handle_tree(tree, default_notifies=None):
         "trait": _handle_trait,
         "metadata": _handle_metadata,
         "items": _handle_items,
+        "anytrait": _handle_anytrait,
     }
     return handlers[tree.data](
         tree.children, default_notifies=default_notifies)

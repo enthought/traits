@@ -16,6 +16,7 @@ from traits.observation.exception_handling import (
 from traits.observation.exceptions import NotifierNotFound
 
 from traits.observation.expression import (
+    anytrait,
     dict_items,
     list_items,
     match,
