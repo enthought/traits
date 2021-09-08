@@ -341,7 +341,7 @@ def _create_property_observe_state(observe, property_name, cached):
 
 
 def _compile_expression(expression):
-    """ Parse a user-supplied expression or list of expressions.
+    """ Compile a user-supplied expression or list of expressions.
 
     Converts a list of strings or ObserverExpressions to a list of
     ObserverGraphs representing the observation patterns to be applied.
