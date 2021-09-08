@@ -521,7 +521,7 @@ def trait(name, notify=True, optional=False):
     return SingleObserverExpression(observer)
 
 
-def compile_from_expr(expr):
+def compile_expr(expr):
     """ Compile an ObserverExpression to a list of ObserverGraphs.
 
     Parameters

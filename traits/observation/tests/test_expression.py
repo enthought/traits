@@ -684,13 +684,13 @@ class TestObserverExpressionEquality(unittest.TestCase):
 
 
 class TestCompileFromExpr(unittest.TestCase):
-    """ Tests for compile_from_expr. """
+    """ Tests for compile_expr. """
 
     # The complicated pieces are already tested; we just need to double
-    # check that "_as_graphs" corresponds to "compile_from_expr" for a
+    # check that "_as_graphs" corresponds to "compile_expr" for a
     # handful of cases.
 
-    def test_compile_from_expr(self):
+    def test_compile_expr(self):
         observer1 = 1
         observer2 = 2
         observer3 = 3
@@ -716,6 +716,6 @@ class TestCompileFromExpr(unittest.TestCase):
         for test_expression in test_expressions:
             with self.subTest(expression=test_expression):
                 self.assertEqual(
-                    expression.compile_from_expr(test_expression),
+                    expression.compile_expr(test_expression),
                     test_expression._as_graphs(),
                 )

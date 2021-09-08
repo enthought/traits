@@ -17,7 +17,7 @@ from traits.observation.exceptions import NotifierNotFound
 
 from traits.observation.expression import (
     anytrait,
-    compile_from_expr,
+    compile_expr,
     dict_items,
     list_items,
     match,
@@ -33,6 +33,6 @@ from traits.observation.observe import (
 )
 
 from traits.observation.parsing import (
-    compile,
+    compile_str,
     parse,
 )

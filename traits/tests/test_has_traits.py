@@ -29,8 +29,8 @@ from traits.has_traits import (
 )
 from traits.ctrait import CTrait
 from traits.observation.api import (
-    compile,
-    compile_from_expr,
+    compile_str,
+    compile_expr,
     NotifierNotFound,
     trait,
 )
@@ -203,13 +203,13 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
             {
                 "my_listener": [
                     {
-                        "graphs": compile("name"),
+                        "graphs": compile_str("name"),
                         "post_init": False,
                         "dispatch": "same",
                         "handler_getter": getattr,
                     },
                     {
-                        "graphs": compile_from_expr(trait("value")),
+                        "graphs": compile_expr(trait("value")),
                         "post_init": True,
                         "dispatch": "ui",
                         "handler_getter": getattr,

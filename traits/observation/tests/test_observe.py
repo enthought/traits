@@ -18,7 +18,7 @@ from traits.observation.api import (
     push_exception_handler,
 )
 from traits.observation.exceptions import NotifierNotFound
-from traits.observation.expression import compile_from_expr, trait
+from traits.observation.expression import compile_expr, trait
 from traits.observation.observe import (
     apply_observers,
     dispatch_same,
@@ -570,7 +570,7 @@ class TestApplyObservers(unittest.TestCase):
     def test_apply_observers_with_expression(self):
         foo = ClassWithNumber()
         handler = mock.Mock()
-        graphs = compile_from_expr(trait("number"))
+        graphs = compile_expr(trait("number"))
 
         apply_observers(
             object=foo,
@@ -612,7 +612,7 @@ class TestApplyObservers(unittest.TestCase):
         # when
         apply_observers(
             object=foo,
-            graphs=compile_from_expr(trait("number")),
+            graphs=compile_expr(trait("number")),
             handler=handler,
             dispatcher=dispatcher,
         )
@@ -626,7 +626,7 @@ class TestApplyObservers(unittest.TestCase):
         # Test the result of setting target to be the same as object
         parent1 = ClassWithInstance()
         parent2 = ClassWithInstance()
-        graphs = compile_from_expr(trait("instance").trait("number"))
+        graphs = compile_expr(trait("instance").trait("number"))
 
         # the instance is shared
         instance = ClassWithNumber()

@@ -368,8 +368,8 @@ def _compile_expression(expression):
     graphs = []
     for expr in expressions:
         graphs.extend(
-            observe_api.compile(expr) if isinstance(expr, str)
-            else observe_api.compile_from_expr(expr)
+            observe_api.compile_str(expr) if isinstance(expr, str)
+            else observe_api.compile_expr(expr)
         )
     return graphs
 

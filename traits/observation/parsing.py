@@ -293,7 +293,7 @@ def parse(text):
     return _handle_tree(tree)
 
 
-def compile(text):
+def compile_str(text):
     """ Compile a mini-language string to a list of ObserverGraphs.
 
     Parameters
@@ -305,4 +305,4 @@ def compile(text):
     -------
     list of ObserverGraph
     """
-    return expression_module.compile_from_expr(parse(text))
+    return expression_module.compile_expr(parse(text))
