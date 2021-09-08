@@ -10,7 +10,9 @@
 
 import unittest
 
-from traits.observation.parsing import parse
+from traits.observation._named_trait_observer import NamedTraitObserver
+from traits.observation._testing import create_graph
+from traits.observation.parsing import compile, parse
 from traits.observation.expression import (
     anytrait,
     dict_items,
@@ -146,4 +148,41 @@ class TestParsingItems(unittest.TestCase):
             | list_items(notify=False, optional=True)
             | set_items(notify=False, optional=True)
         ).trait("attr")
+        self.assertEqual(actual, expected)
+
+
+class TestCompile(unittest.TestCase):
+
+    # Most of the complication is in the parsing; compile should need little
+    # additional testing.
+
+    def test_compile_simple(self):
+        actual = compile("name")
+        expected = [
+            create_graph(
+                NamedTraitObserver(name="name", notify=True, optional=False),
+            ),
+        ]
+        self.assertEqual(actual, expected)
+
+    def test_compile_serial(self):
+        actual = compile("name1.name2")
+        expected = [
+            create_graph(
+                NamedTraitObserver(name="name1", notify=True, optional=False),
+                NamedTraitObserver(name="name2", notify=True, optional=False),
+            ),
+        ]
+        self.assertEqual(actual, expected)
+
+    def test_compile_parallel(self):
+        actual = compile("name1,name2")
+        expected = [
+            create_graph(
+                NamedTraitObserver(name="name1", notify=True, optional=False),
+            ),
+            create_graph(
+                NamedTraitObserver(name="name2", notify=True, optional=False),
+            ),
+        ]
         self.assertEqual(actual, expected)

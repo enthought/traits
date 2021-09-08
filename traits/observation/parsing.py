@@ -291,3 +291,18 @@ def parse(text):
     """
     tree = _LARK_PARSER.parse(text)
     return _handle_tree(tree)
+
+
+def compile(text):
+    """ Compile a mini-language string to a list of ObserverGraphs.
+
+    Parameters
+    ----------
+    text : str
+        Text to be parsed.
+
+    Returns
+    -------
+    list of ObserverGraph
+    """
+    return expression_module.compile_from_expr(parse(text))

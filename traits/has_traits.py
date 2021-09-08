@@ -330,32 +330,33 @@ def _create_property_observe_state(observe, property_name, cached):
     def handler_getter(instance, name):
         return types.MethodType(handler, instance)
 
-    expressions = _parse_expression(observe)
+    graphs = _compile_expression(observe)
 
     return dict(
-        expression=expressions,
+        graphs=graphs,
         dispatch="same",
         handler_getter=handler_getter,
         post_init=False,
     )
 
 
-def _parse_expression(expression):
-    """ Parse a given expression or list of expressions to convert them into
-    ObserveExpression objects if needed.
+def _compile_expression(expression):
+    """ Parse a user-supplied expression or list of expressions.
+
+    Converts a list of strings or ObserverExpressions to a list of
+    ObserverGraphs representing the observation patterns to be applied.
 
     Parameters
     ----------
     expression : str or list or ObserverExpression
         A description of what traits are being observed.
-        If this is a list, each item must be a string or an Expression.
+        If this is a list, each item must be a string or an ObserverExpression.
 
     Returns
     -------
-    expressions : list of ObserverExpression
-        List of parsed expression(s) obtained by calling the parse function on
-        each expression input string expression, and leaving
-        ObserverExpression objects as is.
+    graphs : list of ObserverGraph
+        List of graphs representing the observation patterns to be applied
+        to the relevant objects and handlers.
     """
     # Handle the overloaded signature.
     # Support list to be consistent with on_trait_change.
@@ -364,11 +365,13 @@ def _parse_expression(expression):
     else:
         expressions = [expression]
 
-    expressions = [
-        observe_api.parse(expr) if isinstance(expr, str) else expr
-        for expr in expressions
-    ]
-    return expressions
+    graphs = []
+    for expr in expressions:
+        graphs.extend(
+            observe_api.compile(expr) if isinstance(expr, str)
+            else observe_api.compile_from_expr(expr)
+        )
+    return graphs
 
 
 # This really should be 'HasTraits', but it's not defined yet:
@@ -842,10 +845,10 @@ def observe(expression, *, post_init=False, dispatch="same"):
             observe_inputs = []
             handler._observe_inputs = observe_inputs
 
-        expressions = _parse_expression(expression)
+        graphs = _compile_expression(expression)
 
         observe_input = dict(
-            expression=expressions,
+            graphs=graphs,
             dispatch=dispatch,
             post_init=post_init,
             handler_getter=getattr,
@@ -2375,16 +2378,15 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         NotifierNotFound
             When attempting to remove a handler that doesn't exist.
         """
-        expressions = _parse_expression(expression)
+        graphs = _compile_expression(expression)
 
-        for expr in expressions:
-            observe_api.observe(
-                object=self,
-                expression=expr,
-                handler=handler,
-                remove=remove,
-                dispatcher=_ObserverDispatchers[dispatch],
-            )
+        observe_api.apply_observers(
+            object=self,
+            graphs=graphs,
+            handler=handler,
+            dispatcher=_ObserverDispatchers[dispatch],
+            remove=remove,
+        )
 
     def on_trait_change(
         self,
@@ -3442,10 +3444,11 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         for name, states in self.__class__.__observer_traits__.items():
             for state in states:
                 if not state["post_init"]:
-                    self.observe(
-                        expression=state["expression"],
+                    observe_api.apply_observers(
+                        object=self,
                         handler=state["handler_getter"](self, name),
-                        dispatch=state["dispatch"],
+                        graphs=state["graphs"],
+                        dispatcher=_ObserverDispatchers[state["dispatch"]],
                     )
 
     def _post_init_trait_observers(self):
@@ -3454,10 +3457,11 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         for name, states in self.__class__.__observer_traits__.items():
             for state in states:
                 if state["post_init"]:
-                    self.observe(
-                        expression=state["expression"],
+                    observe_api.apply_observers(
+                        object=self,
                         handler=state["handler_getter"](self, name),
-                        dispatch=state["dispatch"],
+                        graphs=state["graphs"],
+                        dispatcher=_ObserverDispatchers[state["dispatch"]],
                     )
 
     def _trait_delegate_name(self, name, pattern):
