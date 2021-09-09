@@ -74,6 +74,10 @@ class TestNamedTraitObserverEqualHash(unittest.TestCase):
         with self.assertRaises(AttributeError):
             observer.__weakref__
 
+    def test_eval_repr_roundtrip(self):
+        observer = NamedTraitObserver(name="foo", notify=True, optional=True)
+        self.assertEqual(eval(repr(observer)), observer)
+
 
 class TestObserverGraphIntegrateNamedTraitObserver(unittest.TestCase):
     """ Test integrating ObserverGraph with NamedTraitObserver as nodes.

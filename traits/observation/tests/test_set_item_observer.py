@@ -68,6 +68,10 @@ class TestSetItemObserverEqualHash(unittest.TestCase):
         with self.assertRaises(AttributeError):
             observer.__weakref__
 
+    def test_eval_repr_roundtrip(self):
+        observer = SetItemObserver(notify=True, optional=False)
+        self.assertEqual(eval(repr(observer)), observer)
+
 
 class CustomSet(set):
     # This is a set, but not an observable

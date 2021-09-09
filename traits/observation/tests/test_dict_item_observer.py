@@ -65,6 +65,10 @@ class TestDictItemObserverEqualHash(unittest.TestCase):
         with self.assertRaises(AttributeError):
             observer.__weakref__
 
+    def test_eval_repr_roundtrip(self):
+        observer = DictItemObserver(notify=True, optional=False)
+        self.assertEqual(eval(repr(observer)), observer)
+
 
 class CustomDict(dict):
     # This is a dict, but not an observable

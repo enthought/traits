@@ -49,6 +49,13 @@ class ListItemObserver:
             and self.optional == other.optional
         )
 
+    def __repr__(self):
+        formatted_args = [
+            f"notify={self.notify!r}",
+            f"optional={self.optional!r}",
+        ]
+        return f"{self.__class__.__name__}({', '.join(formatted_args)})"
+
     def iter_observables(self, object):
         """ If the given object is an observable list, yield that list.
         Otherwise, raise an error unless the observer is optional.
