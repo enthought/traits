@@ -193,3 +193,18 @@ def parse(text):
         raise ValueError(f"Invalid expression: {text!r}") from parser_exception
 
     return _handle_tree(tree, notify=True)
+
+
+def compile_str(text):
+    """ Compile a mini-language string to a list of ObserverGraphs.
+
+    Parameters
+    ----------
+    text : str
+        Text to be parsed.
+
+    Returns
+    -------
+    list of ObserverGraph
+    """
+    return expression_module.compile_expr(parse(text))

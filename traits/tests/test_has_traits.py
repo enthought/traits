@@ -28,7 +28,12 @@ from traits.has_traits import (
     SingletonHasPrivateTraits,
 )
 from traits.ctrait import CTrait
-from traits.observation.api import NotifierNotFound, trait
+from traits.observation.api import (
+    compile_str,
+    compile_expr,
+    NotifierNotFound,
+    trait,
+)
 from traits.observation.exception_handling import (
     pop_exception_handler,
     push_exception_handler,
@@ -198,13 +203,13 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
             {
                 "my_listener": [
                     {
-                        "expression": [trait("name")],
+                        "graphs": compile_str("name"),
                         "post_init": False,
                         "dispatch": "same",
                         "handler_getter": getattr,
                     },
                     {
-                        "expression": [trait("value")],
+                        "graphs": compile_expr(trait("value")),
                         "post_init": True,
                         "dispatch": "ui",
                         "handler_getter": getattr,

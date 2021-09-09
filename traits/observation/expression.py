@@ -519,3 +519,17 @@ def trait(name, notify=True, optional=False):
     observer = NamedTraitObserver(
         name=name, notify=notify, optional=optional)
     return SingleObserverExpression(observer)
+
+
+def compile_expr(expr):
+    """ Compile an ObserverExpression to a list of ObserverGraphs.
+
+    Parameters
+    ----------
+    expr : ObserverExpression
+
+    Returns
+    -------
+    list of ObserverGraph
+    """
+    return expr._as_graphs()

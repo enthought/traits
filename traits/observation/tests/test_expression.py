@@ -681,3 +681,41 @@ class TestObserverExpressionEquality(unittest.TestCase):
     def test_equality_different_type(self):
         expr = create_expression(1)
         self.assertNotEqual(expr, "1")
+
+
+class TestCompileFromExpr(unittest.TestCase):
+    """ Tests for compile_expr. """
+
+    # The complicated pieces are already tested; we just need to double
+    # check that "_as_graphs" corresponds to "compile_expr" for a
+    # handful of cases.
+
+    def test_compile_expr(self):
+        observer1 = 1
+        observer2 = 2
+        observer3 = 3
+        observer4 = 4
+        expr1 = create_expression(observer1)
+        expr2 = create_expression(observer2)
+        expr3 = create_expression(observer3)
+        expr4 = create_expression(observer4)
+
+        test_expressions = [
+            expr1,
+            expr1 | expr2,
+            expr1 | expr2 | expr3,
+            expr1.then(expr2),
+            expr1.then(expr2).then(expr3),
+            (expr1.then(expr2)) | (expr3.then(expr4)),
+            expr1.list_items(),
+            expr1.dict_items(),
+            expr1.set_items(),
+            expr1.anytrait(notify=False),
+            expr1.anytrait(notify=True),
+        ]
+        for test_expression in test_expressions:
+            with self.subTest(expression=test_expression):
+                self.assertEqual(
+                    expression.compile_expr(test_expression),
+                    test_expression._as_graphs(),
+                )
