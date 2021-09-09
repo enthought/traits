@@ -59,6 +59,8 @@ class ObserverGraph:
         If not all children are unique.
     """
 
+    __slots__ = ("node", "children")
+
     def __init__(self, *, node, children=None):
 
         if children is not None and len(set(children)) != len(children):

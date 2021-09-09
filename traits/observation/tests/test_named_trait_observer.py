@@ -67,6 +67,13 @@ class TestNamedTraitObserverEqualHash(unittest.TestCase):
         imposter.optional = True
         self.assertNotEqual(observer, imposter)
 
+    def test_slots(self):
+        observer = NamedTraitObserver(name="foo", notify=True, optional=True)
+        with self.assertRaises(AttributeError):
+            observer.__dict__
+        with self.assertRaises(AttributeError):
+            observer.__weakref__
+
 
 class TestObserverGraphIntegrateNamedTraitObserver(unittest.TestCase):
     """ Test integrating ObserverGraph with NamedTraitObserver as nodes.

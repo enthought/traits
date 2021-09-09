@@ -61,6 +61,13 @@ class TestSetItemObserverEqualHash(unittest.TestCase):
         self.assertEqual(observer1, observer2)
         self.assertEqual(hash(observer1), hash(observer2))
 
+    def test_slots(self):
+        observer = SetItemObserver(notify=True, optional=False)
+        with self.assertRaises(AttributeError):
+            observer.__dict__
+        with self.assertRaises(AttributeError):
+            observer.__weakref__
+
 
 class CustomSet(set):
     # This is a set, but not an observable

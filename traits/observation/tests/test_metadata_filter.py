@@ -74,6 +74,13 @@ class TestMetadataFilter(unittest.TestCase):
         imposter.metadata_name = "name"
         self.assertNotEqual(imposter, filter1)
 
+    def test_slots(self):
+        filter = MetadataFilter(metadata_name="name")
+        with self.assertRaises(AttributeError):
+            filter.__dict__
+        with self.assertRaises(AttributeError):
+            filter.__weakref__
+
     def test_repr_value(self):
         metadata_filter = MetadataFilter(
             metadata_name="name",

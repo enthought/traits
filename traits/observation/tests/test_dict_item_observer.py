@@ -58,6 +58,13 @@ class TestDictItemObserverEqualHash(unittest.TestCase):
         self.assertEqual(observer1, observer2)
         self.assertEqual(hash(observer1), hash(observer2))
 
+    def test_slots(self):
+        observer = DictItemObserver(notify=True, optional=False)
+        with self.assertRaises(AttributeError):
+            observer.__dict__
+        with self.assertRaises(AttributeError):
+            observer.__weakref__
+
 
 class CustomDict(dict):
     # This is a dict, but not an observable

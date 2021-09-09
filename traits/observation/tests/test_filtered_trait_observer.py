@@ -96,6 +96,16 @@ class TestFilteredTraitObserverEqualHash(unittest.TestCase):
         imposter.filter = filter_func
         self.assertNotEqual(observer1, imposter)
 
+    def test_slots(self):
+        observer = FilteredTraitObserver(
+            notify=True,
+            filter=DummyFilter(return_value=True),
+        )
+        with self.assertRaises(AttributeError):
+            observer.__dict__
+        with self.assertRaises(AttributeError):
+            observer.__weakref__
+
 
 class Dummy(HasTraits):
 

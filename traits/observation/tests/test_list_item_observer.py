@@ -46,6 +46,13 @@ class TestListItemObserverEqualHash(unittest.TestCase):
         self.assertEqual(observer1, observer2)
         self.assertEqual(hash(observer1), hash(observer2))
 
+    def test_slots(self):
+        observer = ListItemObserver(notify=True, optional=False)
+        with self.assertRaises(AttributeError):
+            observer.__dict__
+        with self.assertRaises(AttributeError):
+            observer.__weakref__
+
 
 class CustomList(list):
     pass

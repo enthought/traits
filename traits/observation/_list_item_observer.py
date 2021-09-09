@@ -31,6 +31,8 @@ class ListItemObserver:
         parser, where the source container type is ambiguous.
     """
 
+    __slots__ = ("notify", "optional")
+
     def __init__(self, *, notify, optional):
         self.notify = notify
         self.optional = optional
