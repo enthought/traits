@@ -19,8 +19,6 @@ from traits.observation._named_trait_observer import NamedTraitObserver
 from traits.observation._observer_graph import ObserverGraph
 from traits.observation._set_item_observer import SetItemObserver
 
-_graph_version_count = 0
-
 # ObserverExpression is a public user interface for constructing ObserverGraph.
 
 
@@ -261,10 +259,6 @@ class ObserverExpression:
         -------
         graphs : list of ObserverGraph
         """
-        global _graph_version_count
-        _graph_version_count += 1
-        print("_as_graphs_call_count:", _graph_version_count)
-
         return self._create_graphs(branches=[])
 
     def _create_graphs(self, branches):
