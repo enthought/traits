@@ -40,6 +40,10 @@ class DummyFilter:
     def __hash__(self):
         return hash(self.return_value)
 
+    def __repr__(self):
+        formatted_args = [f"return_value={self.return_value!r}"]
+        return f"{self.__class__.__name__}({', '.join(formatted_args)})"
+
 
 def create_observer(**kwargs):
     values = dict(
@@ -105,6 +109,13 @@ class TestFilteredTraitObserverEqualHash(unittest.TestCase):
             observer.__dict__
         with self.assertRaises(AttributeError):
             observer.__weakref__
+
+    def test_eval_repr_roundtrip(self):
+        observer = FilteredTraitObserver(
+            notify=True,
+            filter=DummyFilter(return_value=True),
+        )
+        self.assertEqual(eval(repr(observer)), observer)
 
 
 class Dummy(HasTraits):

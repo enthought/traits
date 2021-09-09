@@ -91,6 +91,12 @@ class TestMetadataFilter(unittest.TestCase):
             "MetadataFilter(metadata_name='name')"
         )
 
+    def test_eval_repr_roundtrip(self):
+        metadata_filter = MetadataFilter(
+            metadata_name="name",
+        )
+        self.assertEqual(eval(repr(metadata_filter)), metadata_filter)
+
 
 class TestWithFilteredTraitObserver(unittest.TestCase):
     """ Test MetadataFilter with FilteredTraitObserver and HasTraits. """

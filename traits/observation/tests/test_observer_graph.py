@@ -101,3 +101,13 @@ class TestObserverGraph(unittest.TestCase):
             graph.__dict__
         with self.assertRaises(AttributeError):
             graph.__weakref__
+
+    def test_eval_repr_roundtrip(self):
+        graph = ObserverGraph(
+            node=1,
+            children=[
+                ObserverGraph(node=2),
+                ObserverGraph(node=3),
+            ],
+        )
+        self.assertEqual(eval(repr(graph)), graph)
