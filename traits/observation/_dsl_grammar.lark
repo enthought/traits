@@ -3,52 +3,37 @@
 //     $ python etstool.py generate-parser
 //
 
-?start: expr
-
-// Connectors
-_dot: "."
-_colon: ":"
-
-// Grouped elements, e.g. "[a.b]", "[a,b]"
-?grouped: "[" parallel "]"
-
 // Simple name as trait name, e.g. "a"
-trait: NAME -> trait
-
-// Anytrait
-anytrait: "*" -> anytrait
-
-// Element that can be followed by a ".", ":"
-?element: trait | anytrait | grouped | metadata | items
-
-// Syntax to indicate name is being used for matching an existing
-// metadata name rather than a trait name.
-metadata: "+" NAME -> metadata
+trait: NAME
 
 // Keyword for handing items (in list, or dict, or set,
 // or a trait named "items")
-items: "items" -> items
+items: "items"
 
-// Element marked with notify flag set to True
-// e.g. "a."
-notified_element: element _dot -> notify
+// Syntax to indicate name is being used for matching an existing
+// metadata name rather than a trait name.
+metadata: "+" NAME
 
-// Element marked with notify flag set to False
-// e.g. "a:", "[a.b]:"
-quiet_element: element _colon -> quiet
+// Used to match any trait name.
+anytrait: "*"
 
-// Element appearing last and therefore its notify flag needs to be implied.
-// e.g. The "b" and "c" in "[a.b,c]:d" will have notify flag set to false
-last_element: element -> last
+// Series connector used when left item should notify
+notify: "."
+
+// Series connector used when left item should not notify
+quiet: ":"
+
+// Atomic expression
+?element: trait | items | metadata | anytrait | "[" parallel "]"
 
 // Rule for joining elements in series, e.g. "a.b.c"
-?series: (notified_element | quiet_element)* last_element
+?series: (series (notify | quiet))? element
 
 // Rule for joining elements in parallel, e.g. "a,b,c"
-?parallel: series ("," series)*
+?parallel: (parallel ",")? series
 
-// Final expression to be used in start
-?expr: parallel
+// Start point for the parser
+?start: parallel
 
 // Matching Python variable name rule
 NAME: /[a-zA-Z_]\w*/
