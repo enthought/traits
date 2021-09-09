@@ -32,6 +32,8 @@ class ObserverExpression:
     functions provided in this module, e.g. ``trait``.
     """
 
+    __slots__ = ()
+
     def __eq__(self, other):
         """ Return true if the other value is an ObserverExpression with
         equivalent content.
@@ -278,6 +280,8 @@ class SingleObserverExpression(ObserverExpression):
     """ Container of ObserverExpression for wrapping a single observer.
     """
 
+    __slots__ = ("observer",)
+
     def __init__(self, observer):
         self.observer = observer
 
@@ -298,6 +302,8 @@ class SeriesObserverExpression(ObserverExpression):
         Right expression to be joined in series.
     """
 
+    __slots__ = ("_first", "_second")
+
     def __init__(self, first, second):
         self._first = first
         self._second = second
@@ -317,6 +323,8 @@ class ParallelObserverExpression(ObserverExpression):
     right : ObserverExpression
         Right expression to be joined in parallel.
     """
+
+    __slots__ = ("_left", "_right")
 
     def __init__(self, left, right):
         self._left = left
