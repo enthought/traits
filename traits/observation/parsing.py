@@ -188,8 +188,8 @@ def parse(text):
         If the text is not a valid observe expression.
     """
     try:
-        tree = _LARK_PARSER.parse(text, notify=True)
+        tree = _LARK_PARSER.parse(text)
     except _generated_parser.LarkError as parser_exception:
         raise ValueError(f"Invalid expression: {text!r}") from parser_exception
 
-    return _handle_tree(tree)
+    return _handle_tree(tree, notify=True)
