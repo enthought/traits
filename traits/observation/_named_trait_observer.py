@@ -28,6 +28,8 @@ class NamedTraitObserver:
     on an instance of HasTraits.
     """
 
+    __slots__ = ("name", "notify", "optional")
+
     def __init__(self, *, name, notify, optional):
         """ Initializer.
         Once this observer is defined, it should not be mutated.

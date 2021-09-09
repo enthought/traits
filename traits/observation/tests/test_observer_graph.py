@@ -94,3 +94,10 @@ class TestObserverGraph(unittest.TestCase):
 
         self.assertEqual(
             str(exception_cm.exception), "Not all children are unique.")
+
+    def test_slots(self):
+        graph = ObserverGraph(node=1)
+        with self.assertRaises(AttributeError):
+            graph.__dict__
+        with self.assertRaises(AttributeError):
+            graph.__weakref__

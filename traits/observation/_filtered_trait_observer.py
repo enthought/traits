@@ -37,6 +37,8 @@ class FilteredTraitObserver:
         also be hashable.
     """
 
+    __slots__ = ("notify", "filter")
+
     def __init__(self, notify, filter):
         self.notify = notify
         self.filter = filter
