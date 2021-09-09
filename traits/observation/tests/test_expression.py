@@ -683,6 +683,22 @@ class TestObserverExpressionEquality(unittest.TestCase):
         self.assertNotEqual(expr, "1")
 
 
+class TestObserverExpressionSlots(unittest.TestCase):
+    """ Check that expressions use __slots__. """
+
+    def test_single_expression(self):
+        expr = create_expression(1)
+        self.assertFalse(hasattr(expr, "__dict__"))
+
+    def test_series_expression(self):
+        expr = create_expression(1).then(create_expression(2))
+        self.assertFalse(hasattr(expr, "__dict__"))
+
+    def test_parallel_expression(self):
+        expr = create_expression(1) | create_expression(2)
+        self.assertFalse(hasattr(expr, "__dict__"))
+
+
 class TestCompileFromExpr(unittest.TestCase):
     """ Tests for compile_expr. """
 
