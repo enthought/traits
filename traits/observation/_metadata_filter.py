@@ -27,8 +27,6 @@ class MetadataFilter:
         Name of the metadata to filter traits with.
     """
 
-    __slots__ = ("metadata_name",)
-
     def __init__(self, metadata_name):
         self.metadata_name = metadata_name
 

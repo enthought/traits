@@ -31,8 +31,6 @@ class SetItemObserver:
         parser, where the source container type is ambiguous.
     """
 
-    __slots__ = ("notify", "optional")
-
     def __init__(self, *, notify, optional):
         self.notify = notify
         self.optional = optional
@@ -48,13 +46,6 @@ class SetItemObserver:
             and self.notify == other.notify
             and self.optional == other.optional
         )
-
-    def __repr__(self):
-        formatted_args = [
-            f"notify={self.notify!r}",
-            f"optional={self.optional!r}",
-        ]
-        return f"{self.__class__.__name__}({', '.join(formatted_args)})"
 
     def iter_observables(self, object):
         """ If the given object is an observable set, yield that set.

@@ -28,8 +28,6 @@ class NamedTraitObserver:
     on an instance of HasTraits.
     """
 
-    __slots__ = ("name", "notify", "optional")
-
     def __init__(self, *, name, notify, optional):
         """ Initializer.
         Once this observer is defined, it should not be mutated.
@@ -64,14 +62,6 @@ class NamedTraitObserver:
             and self.notify == other.notify
             and self.optional == other.optional
         )
-
-    def __repr__(self):
-        formatted_args = [
-            f"name={self.name!r}",
-            f"notify={self.notify!r}",
-            f"optional={self.optional!r}",
-        ]
-        return f"{self.__class__.__name__}({', '.join(formatted_args)})"
 
     def iter_observables(self, object):
         """ Yield the named instance trait from the given object. If the named
