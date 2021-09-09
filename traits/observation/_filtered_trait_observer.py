@@ -55,6 +55,13 @@ class FilteredTraitObserver:
             and self.filter == other.filter
         )
 
+    def __repr__(self):
+        formatted_args = [
+            f"notify={self.notify!r}",
+            f"filter={self.filter!r}",
+        ]
+        return f"{self.__class__.__name__}({', '.join(formatted_args)})"
+
     def iter_observables(self, object):
         """ Yield the instance traits matching the filter given. Any error
         occurred upon obtaining the trait definitions (e.g. the given object
