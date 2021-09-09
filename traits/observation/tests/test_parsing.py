@@ -147,3 +147,18 @@ class TestParsingItems(unittest.TestCase):
             | set_items(notify=False, optional=True)
         ).trait("attr")
         self.assertEqual(actual, expected)
+
+
+class TestParsingGeneral(unittest.TestCase):
+
+    def test_parse_error(self):
+        invalid_expressions = [
+            "a:",
+            "**",
+            ".",
+            "",
+        ]
+        for expression in invalid_expressions:
+            with self.subTest(expression=expression):
+                with self.assertRaises(ValueError):
+                    parse(expression)
