@@ -59,6 +59,8 @@ class ObserverGraph:
         If not all children are unique.
     """
 
+    __slots__ = ("node", "children")
+
     def __init__(self, *, node, children=None):
 
         if children is not None and len(set(children)) != len(children):
@@ -83,3 +85,10 @@ class ObserverGraph:
             and self.node == other.node
             and set(self.children) == set(other.children)
         )
+
+    def __repr__(self):
+        formatted_args = [f"node={self.node!r}"]
+        if self.children:
+            formatted_args.append(f"children={self.children!r}")
+
+        return f"{self.__class__.__name__}({', '.join(formatted_args)})"

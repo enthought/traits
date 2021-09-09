@@ -37,6 +37,8 @@ class FilteredTraitObserver:
         also be hashable.
     """
 
+    __slots__ = ("notify", "filter")
+
     def __init__(self, notify, filter):
         self.notify = notify
         self.filter = filter
@@ -52,6 +54,13 @@ class FilteredTraitObserver:
             and self.notify == other.notify
             and self.filter == other.filter
         )
+
+    def __repr__(self):
+        formatted_args = [
+            f"notify={self.notify!r}",
+            f"filter={self.filter!r}",
+        ]
+        return f"{self.__class__.__name__}({', '.join(formatted_args)})"
 
     def iter_observables(self, object):
         """ Yield the instance traits matching the filter given. Any error
