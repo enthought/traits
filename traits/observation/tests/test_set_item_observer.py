@@ -73,7 +73,6 @@ class TestSetItemObserverEqualHash(unittest.TestCase):
         self.assertEqual(eval(repr(observer)), observer)
 
 
-
 class CustomSet(set):
     # This is a set, but not an observable
     pass
