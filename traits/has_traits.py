@@ -827,6 +827,8 @@ def observe(expression, *, post_init=False, dispatch="same"):
     HasTraits.observe
     """
 
+    graphs = _compile_expression(expression)
+
     def observe_decorator(handler):
         """ Create input arguments for HasTraits.observe and attach the input
         to the callable.
@@ -844,8 +846,6 @@ def observe(expression, *, post_init=False, dispatch="same"):
         except AttributeError:
             observe_inputs = []
             handler._observe_inputs = observe_inputs
-
-        graphs = _compile_expression(expression)
 
         observe_input = dict(
             graphs=graphs,
