@@ -162,3 +162,22 @@ class TestParsingGeneral(unittest.TestCase):
             with self.subTest(expression=expression):
                 with self.assertRaises(ValueError):
                     parse(expression)
+
+    def test_deep_nesting(self):
+        actual = parse("[[a:b].c]:d")
+        expected = (
+            trait("a", notify=False)
+            .trait("b")
+            .trait("c", notify=False)
+            .trait("d")
+        )
+        self.assertEqual(actual, expected)
+
+        actual = parse("[a:[b.[c:d]]]")
+        expected = (
+            trait("a", notify=False)
+            .trait("b")
+            .trait("c", notify=False)
+            .trait("d")
+        )
+        self.assertEqual(actual, expected)
