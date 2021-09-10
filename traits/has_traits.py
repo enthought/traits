@@ -2700,6 +2700,11 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         on this object causes the corresponding trait attribute of *object* to
         be updated, but not vice versa.
 
+        For ``List`` traits, the list's items are also synchronized, so that
+        mutations to this trait's list will be reflected in the synchronized
+        list (and vice versa in the case of mutual synchronization). For
+        ``Dict`` and ``Set`` traits, items are not synchronized.
+
         Parameters
         ----------
         name : str
