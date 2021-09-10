@@ -282,10 +282,6 @@ class SingleObserverExpression(ObserverExpression):
             and self._observer == other._observer
         )
 
-    def __repr__(self):
-        formatted_args = [f"observer={self._observer!r}"]
-        return f"{self.__class__.__name__}({', '.join(formatted_args)})"
-
     def _create_graphs(self, branches):
         return [
             ObserverGraph(node=self._observer, children=branches),
@@ -319,13 +315,6 @@ class SeriesObserverExpression(ObserverExpression):
             and self._second == other._second
         )
 
-    def __repr__(self):
-        formatted_args = [
-            f"first={self._first!r}",
-            f"second={self._second!r}",
-        ]
-        return f"{self.__class__.__name__}({', '.join(formatted_args)})"
-
     def _create_graphs(self, branches):
         branches = self._second._create_graphs(branches=branches)
         return self._first._create_graphs(branches=branches)
@@ -357,13 +346,6 @@ class ParallelObserverExpression(ObserverExpression):
             and self._left == other._left
             and self._right == other._right
         )
-
-    def __repr__(self):
-        formatted_args = [
-            f"left={self._left!r}",
-            f"right={self._right!r}",
-        ]
-        return f"{self.__class__.__name__}({', '.join(formatted_args)})"
 
     def _create_graphs(self, branches):
         left_graphs = self._left._create_graphs(branches=branches)
