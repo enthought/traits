@@ -195,6 +195,7 @@ def parse(text):
     return _handle_tree(tree, notify=True)
 
 
+@lru_cache(maxsize=_OBSERVER_EXPRESSION_CACHE_MAXSIZE)
 def compile_str(text):
     """ Compile a mini-language string to a list of ObserverGraphs.
 
