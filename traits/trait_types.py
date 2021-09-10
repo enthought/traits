@@ -2293,9 +2293,10 @@ class BaseTuple(TraitType):
             child_defaults = []
             child_default_types = []
             for child_trait in self.types:
-                default_type, default_value = child_trait.default_value()
-                child_default_types.append(default_type)
-                child_defaults.append(default_value)
+                child_default_type, child_default = child_trait.default_value()
+
+                child_default_types.append(child_default_type)
+                child_defaults.append(child_default)
 
             constant_default = all(
                 dvt == DefaultValue.constant for dvt in child_default_types
