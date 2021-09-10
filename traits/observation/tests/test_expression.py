@@ -660,13 +660,14 @@ class TestObserverExpressionSetItem(unittest.TestCase):
         )
 
 
-class TestObserverExpressionEquality(unittest.TestCase):
-    """ Test ObserverExpression.__eq__ """
+class TestObserverExpressionEqualityAndHashing(unittest.TestCase):
+    """ Test ObserverExpression.__eq__ and ObserverExpression.__hash__. """
 
     def test_trait_equality(self):
         expr1 = create_expression(1)
         expr2 = create_expression(1)
         self.assertEqual(expr1, expr2)
+        self.assertEqual(hash(expr1), hash(expr2))
 
     def test_join_equality_with_then(self):
         # The following all result in the same graphs
@@ -677,6 +678,13 @@ class TestObserverExpressionEquality(unittest.TestCase):
         combined2 = expr1.then(expr2)
 
         self.assertEqual(combined1, combined2)
+        self.assertEqual(hash(combined1), hash(combined2))
+
+    def test_equality_of_parallel_expressions(self):
+        expr1 = create_expression(1) | create_expression(2)
+        expr2 = create_expression(1) | create_expression(2)
+        self.assertEqual(expr1, expr2)
+        self.assertEqual(hash(expr1), hash(expr2))
 
     def test_equality_different_type(self):
         expr = create_expression(1)

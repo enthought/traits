@@ -177,10 +177,11 @@ class TestParsingGeneral(unittest.TestCase):
 
         actual = parse("[a:[b.[c:d]]]")
         expected = (
-            trait("a", notify=False)
-            .trait("b")
-            .trait("c", notify=False)
-            .trait("d")
+            trait("a", notify=False).then(
+                trait("b").then(
+                    trait("c", notify=False).then(trait("d"))
+                )
+            )
         )
         self.assertEqual(actual, expected)
 

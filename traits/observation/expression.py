@@ -34,18 +34,6 @@ class ObserverExpression:
 
     __slots__ = ()
 
-    def __eq__(self, other):
-        """ Return true if the other value is an ObserverExpression with
-        equivalent content.
-
-        Returns
-        -------
-        bool
-        """
-        if type(other) is not type(self):
-            return False
-        return self._as_graphs() == other._as_graphs()
-
     def __or__(self, expression):
         """ Create a new expression that matches this expression OR
         the given expression.
@@ -280,14 +268,23 @@ class SingleObserverExpression(ObserverExpression):
     """ Container of ObserverExpression for wrapping a single observer.
     """
 
-    __slots__ = ("observer",)
+    __slots__ = ("_observer",)
 
     def __init__(self, observer):
-        self.observer = observer
+        self._observer = observer
+
+    def __hash__(self):
+        return hash((type(self).__name__, self._observer))
+
+    def __eq__(self, other):
+        return (
+            type(self) is type(other)
+            and self._observer == other._observer
+        )
 
     def _create_graphs(self, branches):
         return [
-            ObserverGraph(node=self.observer, children=branches),
+            ObserverGraph(node=self._observer, children=branches),
         ]
 
 
@@ -307,6 +304,16 @@ class SeriesObserverExpression(ObserverExpression):
     def __init__(self, first, second):
         self._first = first
         self._second = second
+
+    def __hash__(self):
+        return hash((type(self).__name__, self._first, self._second))
+
+    def __eq__(self, other):
+        return (
+            type(self) is type(other)
+            and self._first == other._first
+            and self._second == other._second
+        )
 
     def _create_graphs(self, branches):
         branches = self._second._create_graphs(branches=branches)
@@ -329,6 +336,16 @@ class ParallelObserverExpression(ObserverExpression):
     def __init__(self, left, right):
         self._left = left
         self._right = right
+
+    def __hash__(self):
+        return hash((type(self).__name__, self._left, self._right))
+
+    def __eq__(self, other):
+        return (
+            type(self) is type(other)
+            and self._left == other._left
+            and self._right == other._right
+        )
 
     def _create_graphs(self, branches):
         left_graphs = self._left._create_graphs(branches=branches)
