@@ -14,7 +14,6 @@ from typing import (
     Any as _Any,
     Callable as _CallableType,
     Dict as _DictType,
-    Generic as Generic,
     List as _ListType,
     Optional,
     Sequence as _Sequence,
@@ -605,8 +604,8 @@ class WeakRef(Instance):
         ...
 
 
-
 _OptionalDate = Optional[datetime.date]
+
 
 class Date(_TraitType[_OptionalDate, _OptionalDate]):
     def __init__(
@@ -622,6 +621,7 @@ class Date(_TraitType[_OptionalDate, _OptionalDate]):
 
 _OptionalDatetime = Optional[datetime.datetime]
 
+
 class Datetime(_TraitType[_OptionalDatetime, _OptionalDatetime]):
     def __init__(
             self,
@@ -634,6 +634,7 @@ class Datetime(_TraitType[_OptionalDatetime, _OptionalDatetime]):
 
 
 _OptionalTime = Optional[datetime.time]
+
 
 class Time(_TraitType[_OptionalTime, _OptionalTime]):
     def __init__(
