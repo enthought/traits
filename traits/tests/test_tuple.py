@@ -12,7 +12,8 @@
 """
 import unittest
 
-from traits.api import BaseInt, Either, HasTraits, Int, Tuple
+from traits.api import (
+    BaseInt, Either, HasTraits, Int, List, Str, TraitError, Tuple)
 from traits.tests.tuple_test_mixin import TupleTestMixin
 
 
@@ -45,3 +46,30 @@ class TupleTestCase(TupleTestMixin, unittest.TestCase):
 
         with self.assertRaises(ZeroDivisionError):
             a.bar = (3, 5)
+
+    def test_non_constant_defaults(self):
+        class A(HasTraits):
+            foo = Tuple(List(Int),)
+
+        a = A()
+        a.foo[0].append(35)
+        self.assertEqual(a.foo[0], [35])
+
+        # The inner list should be being validated.
+        with self.assertRaises(TraitError):
+            a.foo[0].append(3.5)
+
+        # The inner list should not be shared between instances.
+        b = A()
+        self.assertEqual(b.foo[0], [])
+
+    def test_constant_defaults(self):
+        # Exercise the code path where all child traits have a constant
+        # default type.
+        class A(HasTraits):
+            foo = Tuple(Int, Tuple(Str, Int))
+
+        a = A()
+        b = A()
+        self.assertEqual(a.foo, (0, ("", 0)))
+        self.assertIs(a.foo, b.foo)

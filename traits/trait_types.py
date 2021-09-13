@@ -2283,15 +2283,40 @@ class BaseTuple(TraitType):
             if len(types) == 0:
                 types = [Trait(element) for element in default_value]
 
-        self.types = tuple([trait_from(type) for type in types])
+        self.types = tuple(trait_from(type) for type in types)
         self.init_fast_validate(ValidateTrait.tuple, self.types)
 
         if default_value is None:
-            default_value = tuple(
-                [type.default_value()[1] for type in self.types]
+            # Optimisation: if all child traits have a constant default value,
+            # we can use a constant default value too. Otherwise the default
+            # needs to be computed dynamically.
+            child_defaults = []
+            child_default_types = []
+            for child_trait in self.types:
+                child_default_type, child_default = child_trait.default_value()
+
+                child_default_types.append(child_default_type)
+                child_defaults.append(child_default)
+
+            constant_default = all(
+                dvt == DefaultValue.constant for dvt in child_default_types
             )
+            if constant_default:
+                self.default_value_type = DefaultValue.constant
+                default_value = tuple(child_defaults)
+            else:
+                self.default_value_type = DefaultValue.callable
+                default_value = self._get_default_value
 
         super().__init__(default_value, **metadata)
+
+    def _get_default_value(self, object):
+        # Dynamic default, used when at least one of the child traits requires
+        # a dynamic default.
+        return tuple(
+            inner_trait.default_value_for(object, "<inner_trait>")
+            for inner_trait in self.types
+        )
 
     def init_fast_validate(self, *args):
         """ Saves the validation parameters.
