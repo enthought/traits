@@ -10,8 +10,9 @@
 
 import unittest
 
-from traits.api import (Float, Instance, Int, Str, TraitError, TraitType,
-                        HasTraits, Union, Type)
+from traits.api import (
+    Float, Instance, Int, List, Str, TraitError, TraitType, HasTraits, Union,
+    Type)
 
 
 class CustomClass(HasTraits):
@@ -27,7 +28,7 @@ class CustomStrType(TraitType):
         self.error(obj, name, value)
 
 
-class TestCaseEnumTrait(unittest.TestCase):
+class TestUnion(unittest.TestCase):
 
     def test_union_incompatible_trait(self):
         with self.assertRaises(ValueError) as exception_context:
@@ -178,6 +179,25 @@ class TestCaseEnumTrait(unittest.TestCase):
             s = UnionAllowStr(Int, Float)
 
         TestClass(s="sdf")
+
+    def test_list_inside_union_default(self):
+        class HasUnionWithList(HasTraits):
+            foo = Union(List(Int), Str)
+
+        has_union = HasUnionWithList()
+        value = has_union.foo
+        self.assertIsInstance(value, list)
+        with self.assertRaises(TraitError):
+            value.append("not an integer")
+
+    def test_constant_default(self):
+        # Exercise the branch where the default is constant.
+        class HasUnionWithList(HasTraits):
+            foo = Union(Int(23), Float)
+
+        has_union = HasUnionWithList()
+        value = has_union.foo
+        self.assertEqual(value, 23)
 
 
 if __name__ == '__main__':

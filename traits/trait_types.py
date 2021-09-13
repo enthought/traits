@@ -43,7 +43,6 @@ from .trait_errors import TraitError
 from .trait_list_object import TraitListEvent, TraitListObject
 from .trait_set_object import TraitSetEvent, TraitSetObject
 from .trait_type import (
-    _infer_default_value_type,
     NoDefaultSpecified,
     TraitType,
 )
@@ -4001,14 +4000,24 @@ class Union(TraitType):
                 "'default'."
             )
 
-        default_value = None
         if 'default_value' in metadata:
             default_value = metadata.pop("default_value")
-        elif self.list_ctrait_instances:
-            default_value = self.list_ctrait_instances[0].default
+        else:
+            first_default_value, first_default_value_type = (
+                self.list_ctrait_instances[0].default_value())
 
-        self.default_value_type = _infer_default_value_type(default_value)
+            if first_default_value_type == DefaultValue.constant:
+                self.default_value_type = DefaultValue.constant
+                default_value = first_default_value
+            else:
+                self.default_value_type = DefaultValue.callable
+                default_value = self._get_default_value
+
         super().__init__(default_value, **metadata)
+
+    def _get_default_value(self, object):
+        return self.list_ctrait_instances[0].default_value_for(
+            object, "<inner_trait>")
 
     def validate(self, obj, name, value):
         """ Return the value by the first trait in the list that can
