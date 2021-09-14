@@ -175,6 +175,9 @@ class TraitType(BaseTraitHandler):
     #: The default value for the trait type.
     default_value = Undefined
 
+    #: The default value type for the trait type.
+    default_value_type = DefaultValue.constant
+
     #: The metadata for the trait.
     metadata = {}
 
@@ -254,13 +257,7 @@ class TraitType(BaseTraitHandler):
             as described above.
 
         """
-        dv = self.default_value
-        dvt = self.default_value_type
-        if dvt < 0:
-            dvt = _infer_default_value_type(dv)
-            self.default_value_type = dvt
-
-        return (dvt, dv)
+        return (self.default_value_type, self.default_value)
 
     def clone(self, default_value=NoDefaultSpecified, **metadata):
         """ Copy, optionally modifying default value and metadata.
