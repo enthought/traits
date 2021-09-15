@@ -131,6 +131,7 @@ class TestParsingAnytrait(unittest.TestCase):
             "*.items",
             "*:name",
             "*.a,b",
+            "[a.*,b].c",
         ]
         for expression in invalid_expressions:
             with self.subTest(expression=expression):

@@ -34,12 +34,11 @@ quiet: ":"
 
 // We only allow "*" if it appears in a "terminal" position, in the sense that
 // it's not directly or indirectly followed by a "." or ":" connector. For
-// example, "b.*" and "[a:*,b]" are valid, but "*.b" is not. Here are variants
-// of element, series and parallel used for expressions appearing in terminal
-// position.
-?element_terminal : element | anytrait
+// example, "b.*" and "[a:*,b]" are valid, but "*.b" and "[*,a].b" are not.
+// Here are variants of the series and parallel rules used for expressions
+// appearing in a terminal position.
 
-?series_terminal : (series (notify | quiet))? element_terminal
+?series_terminal : (series (notify | quiet))? (element | anytrait)
 
 ?parallel_terminal : (parallel_terminal ",")? series_terminal
 
