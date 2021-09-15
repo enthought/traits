@@ -37,6 +37,20 @@ from traits.observation.api import (
 )
 
 
+class TestObserveDecorator(unittest.TestCase):
+    """ General tests for the observe decorator. """
+
+    def test_warning_on_handler_with_bad_signature(self):
+        message_regex = "should be callable with a single positional parameter"
+        with self.assertWarnsRegex(UserWarning, message_regex):
+            class A(HasTraits):
+                foo = Int()
+
+                @observe("foo")
+                def _do_something_when_foo_changes(self):
+                    pass
+
+
 class Student(HasTraits):
     """ Model for testing list + post_init (enthought/traits#275) """
 
