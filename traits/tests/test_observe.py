@@ -52,7 +52,7 @@ class TestObserveDecorator(unittest.TestCase):
                     pass
 
         with self.assertWarnsRegex(UserWarning, message_regex):
-            class A(HasTraits):
+            class B(HasTraits):
                 foo = Int()
 
                 @observe("foo")
