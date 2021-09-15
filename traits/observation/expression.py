@@ -21,7 +21,7 @@ from traits.observation._set_item_observer import SetItemObserver
 
 
 #: Maximum number of parsed observer expressions stored in the LRU caches
-_OBSERVER_EXPRESSION_CACHE_MAXSIZE = 128
+_OBSERVER_EXPRESSION_CACHE_MAXSIZE = 256
 
 
 # ObserverExpression is a public user interface for constructing ObserverGraph.
