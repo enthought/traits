@@ -796,44 +796,8 @@ class TestObserveAnytrait(unittest.TestCase):
         obj = UpdateListener(foo=foo, bar=bar)
 
         events = []
-        obj.observe(events.append, "*:updated")
-
-        foo.updated = True
-        bar.updated = True
-
-        self.assertEqual(len(events), 2)
-        foo_event, bar_event = events
-
-        self.assertEqual(foo_event.object, foo)
-        self.assertEqual(foo_event.name, "updated")
-        self.assertEqual(foo_event.old, Undefined)
-        self.assertEqual(foo_event.new, True)
-
-        self.assertEqual(bar_event.object, bar)
-        self.assertEqual(bar_event.name, "updated")
-        self.assertEqual(bar_event.old, Undefined)
-        self.assertEqual(bar_event.new, True)
-
-    def test_anytrait_with_children_parent_notifications(self):
-        foo = HasVariousTraits()
-        bar = HasVariousTraits()
-        obj = UpdateListener(foo=foo, bar=bar)
-
-        no_notify_events = []
-        obj.observe(no_notify_events.append, "*:updated")
-
-        notify_events = []
-        obj.observe(notify_events.append, "*.updated")
-
-        obj.foo = new_foo = HasVariousTraits(foo=17)
-        self.assertEqual(len(no_notify_events), 0)
-        self.assertEqual(len(notify_events), 1)
-        foo_event, = notify_events
-
-        self.assertEqual(foo_event.object, obj)
-        self.assertEqual(foo_event.name, "foo")
-        self.assertEqual(foo_event.old, foo)
-        self.assertEqual(foo_event.new, new_foo)
+        with self.assertRaises(ValueError):
+            obj.observe(events.append, "*:updated")
 
     def test_anytrait_of_anytrait(self):
         foo = HasVariousTraits()
@@ -841,23 +805,8 @@ class TestObserveAnytrait(unittest.TestCase):
         obj = UpdateListener(foo=foo, bar=bar)
 
         events = []
-        obj.observe(events.append, "*:*")
-
-        obj.foo.bar = "testing"
-        obj.bar.foo = 1729
-
-        self.assertEqual(len(events), 2)
-        foo_event, bar_event = events
-
-        self.assertEqual(foo_event.object, foo)
-        self.assertEqual(foo_event.name, "bar")
-        self.assertEqual(foo_event.old, "off")
-        self.assertEqual(foo_event.new, "testing")
-
-        self.assertEqual(bar_event.object, bar)
-        self.assertEqual(bar_event.name, "foo")
-        self.assertEqual(bar_event.old, 16)
-        self.assertEqual(bar_event.new, 1729)
+        with self.assertRaises(ValueError):
+            obj.observe(events.append, "*:*")
 
     def test_anytrait_unobserve(self):
         obj = HasVariousTraits()

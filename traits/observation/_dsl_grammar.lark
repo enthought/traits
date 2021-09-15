@@ -24,7 +24,7 @@ notify: "."
 quiet: ":"
 
 // Atomic expression
-?element: trait | items | metadata | anytrait | "[" parallel "]"
+?element: trait | items | metadata | "[" parallel "]"
 
 // Rule for joining elements in series, e.g. "a.b.c"
 ?series: (series (notify | quiet))? element
@@ -32,8 +32,19 @@ quiet: ":"
 // Rule for joining elements in parallel, e.g. "a,b,c"
 ?parallel: (parallel ",")? series
 
+// We only allow "*" if it appears in a "terminal" position, in the sense that
+// it's not directly or indirectly followed by a "." or ":" connector. For
+// example, "b.*" and "[a:*,b]" are valid, but "*.b" is not. Here are variants
+// of element, series and parallel used for expressions appearing in terminal
+// position.
+?element_terminal : element | anytrait
+
+?series_terminal : (series (notify | quiet))? element_terminal
+
+?parallel_terminal : (parallel_terminal ",")? series_terminal
+
 // Start point for the parser
-?start: parallel
+?start: parallel_terminal
 
 // Matching Python variable name rule
 NAME: /[a-zA-Z_]\w*/
