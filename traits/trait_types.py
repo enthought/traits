@@ -216,7 +216,6 @@ class Any(TraitType):
     info_text = "any value"
 
     def __init__(self, default_value=NoDefaultSpecified, **metadata):
-        # Backwards compatibility
         if isinstance(default_value, list):
             warnings.warn(
                 (
