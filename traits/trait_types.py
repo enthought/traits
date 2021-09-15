@@ -188,6 +188,22 @@ def _validate_float(value):
 
 class Any(TraitType):
     """ A trait type whose value can be anything.
+
+    Parameters
+    ----------
+    default_value : object, optional
+        The default value for the trait. If this is an instance of either
+        :class:`list` or :class:`dict` then a copy of the default value
+        is made for each instance. Otherwise, the default is shared between
+        all instances.
+
+        .. deprecated:: 6.3.0
+            In a future version of Traits, a ``list`` or ``dict`` default value
+            will no longer be copied. If you need a per-instance default, use a
+            ``_trait_name_default`` method to supply that default.
+
+    **metadata
+        Metadata for the trait.
     """
 
     #: The default value type to use.
