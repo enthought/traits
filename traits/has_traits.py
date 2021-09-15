@@ -839,10 +839,12 @@ def observe(expression, *, post_init=False, dispatch="same"):
         Parameters
         ----------
         handler : callable
-            Method of a subclass of HasTraits
+            Method of a subclass of HasTraits, with signature of the form
+            ``my_method(self, event)``.
         """
-        # Warn on a missing 'event' parameter in the handler. The handler
-        # should accept a call consisting of a single positional argument.
+        # Warn on a dubious handler signature. The handler should accept a call
+        # that passes a single positional argument (conventionally named
+        # "event") in addition to the usual "self".
         try:
             handler_signature = inspect.signature(handler)
         except (ValueError, TypeError):
@@ -853,10 +855,10 @@ def observe(expression, *, post_init=False, dispatch="same"):
             except TypeError:
                 warnings.warn(
                     (
-                        "Suspicious signature for observe-decorated method. "
-                        "The target method should be callable with a single "
-                        "positional parameter. Did you forget to add an "
-                        "'event' parameter?"
+                        "Dubious signature for observe-decorated method. "
+                        "The decorated method should be callable with a "
+                        "single positional argument in addition to 'self'. "
+                        "Did you forget to add an 'event' parameter?"
                     ),
                     UserWarning,
                     stacklevel=2,

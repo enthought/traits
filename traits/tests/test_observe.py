@@ -41,7 +41,7 @@ class TestObserveDecorator(unittest.TestCase):
     """ General tests for the observe decorator. """
 
     def test_warning_on_handler_with_bad_signature(self):
-        message_regex = "should be callable with a single positional parameter"
+        message_regex = "should be callable with a single positional argument"
         with self.assertWarnsRegex(UserWarning, message_regex):
             class A(HasTraits):
                 foo = Int()
