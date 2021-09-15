@@ -69,6 +69,10 @@ class TestObserveDecorator(unittest.TestCase):
             call_count = Int(0)
 
             @observe("foo")
+            def _the_usual_signature(self, event):
+                self.call_count += 1
+
+            @observe("foo")
             def _method_with_extra_optional_args(self, event, frombicate=True):
                 self.call_count += 1
 
@@ -80,10 +84,14 @@ class TestObserveDecorator(unittest.TestCase):
             def _method_with_alternative_name(self, foo_change_event):
                 self.call_count += 1
 
+            @observe("foo")
+            def _optional_second_argument(self, event=None):
+                self.call_count += 1
+
         a = A()
         self.assertEqual(a.call_count, 0)
         a.foo = 23
-        self.assertEqual(a.call_count, 3)
+        self.assertEqual(a.call_count, 5)
 
 
 class Student(HasTraits):
