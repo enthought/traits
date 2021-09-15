@@ -190,11 +190,43 @@ class Any(TraitType):
     """ A trait type whose value can be anything.
     """
 
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
+
     #: The default value for the trait:
     default_value = None
 
     #: A description of the type of value this trait accepts:
     info_text = "any value"
+
+    def __init__(self, default_value=NoDefaultSpecified, **metadata):
+        # Backwards compatibility
+        if isinstance(default_value, list):
+            warnings.warn(
+                (
+                    "In the future, a default value of type 'list' in an Any "
+                    "trait will be shared between all instances. For a "
+                    "per-instance default, use a default method for this "
+                    "trait. "
+                ),
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            self.default_value_type = DefaultValue.list_copy
+        elif isinstance(default_value, dict):
+            warnings.warn(
+                (
+                    "In the future, a default value of type 'dict' in an Any "
+                    "trait will be shared between all instances. For a "
+                    "per-instance default, use a default method for this "
+                    "trait. "
+                ),
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            self.default_value_type = DefaultValue.dict_copy
+
+        super().__init__(default_value, **metadata)
 
 
 class BaseInt(TraitType):
