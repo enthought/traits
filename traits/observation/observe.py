@@ -9,6 +9,7 @@
 # Thanks for using Enthought open source!
 
 from traits.observation._observe import add_or_remove_notifiers
+from traits.observation.expression import compile_expr
 
 
 def dispatch_same(handler, event):
@@ -48,12 +49,9 @@ def observe(
         callback on a different thread. Default is to dispatch on the same
         thread.
     """
-    # Implicit interface: ``expression`` can be anything with a method
-    # ``_as_graphs`` that returns a list of ObserverGraph.
-
     apply_observers(
         object,
-        graphs=expression._as_graphs(),
+        graphs=compile_expr(expression),
         handler=handler,
         dispatcher=dispatcher,
         remove=remove,
