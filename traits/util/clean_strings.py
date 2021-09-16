@@ -18,6 +18,7 @@ import datetime
 import keyword
 import re
 import unicodedata
+import warnings
 
 
 def clean_filename(name, replace_empty=""):
@@ -31,6 +32,9 @@ def clean_filename(name, replace_empty=""):
 
     This does not give a faithful representation of the original string:
     different input strings can result in the same output string.
+
+    .. deprecated:: 6.3.0
+        This function will be removed in a future version of Traits.
 
     Parameters
     ----------
@@ -48,6 +52,12 @@ def clean_filename(name, replace_empty=""):
         A filename-safe version of string.
 
     """
+    warnings.warn(
+        "clean_filename is deprecated and will eventually be removed",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+
     # Code is based on Django's slugify utility.
     # https://docs.djangoproject.com/en/1.9/_modules/django/utils/text/#slugify
     name = (
@@ -74,6 +84,9 @@ def clean_timestamp(dt=None, microseconds=False):
     * Microseconds are not displayed if the 'microseconds' parameter is
         False.
 
+    .. deprecated:: 6.3.0
+        This function will be removed in a future version of Traits.
+
     Parameters
     ----------
     dt : None or datetime.datetime
@@ -85,6 +98,12 @@ def clean_timestamp(dt=None, microseconds=False):
     -------
     A string timestamp.
     """
+    warnings.warn(
+        "clean_timestamp is deprecated and will eventually be removed",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+
     if dt is None:
         dt = datetime.datetime.now()
     else:
