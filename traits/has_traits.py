@@ -845,24 +845,20 @@ def observe(expression, *, post_init=False, dispatch="same"):
         # Warn on a dubious handler signature. The handler should accept a call
         # that passes a single positional argument (conventionally named
         # "event") in addition to the usual "self".
+        handler_signature = inspect.signature(handler)
         try:
-            handler_signature = inspect.signature(handler)
-        except (ValueError, TypeError):
-            pass
-        else:
-            try:
-                handler_signature.bind("self", "event")
-            except TypeError:
-                warnings.warn(
-                    (
-                        "Dubious signature for observe-decorated method. "
-                        "The decorated method should be callable with a "
-                        "single positional argument in addition to 'self'. "
-                        "Did you forget to add an 'event' parameter?"
-                    ),
-                    UserWarning,
-                    stacklevel=2,
-                )
+            handler_signature.bind("self", "event")
+        except TypeError:
+            warnings.warn(
+                (
+                    "Dubious signature for observe-decorated method. "
+                    "The decorated method should be callable with a "
+                    "single positional argument in addition to 'self'. "
+                    "Did you forget to add an 'event' parameter?"
+                ),
+                UserWarning,
+                stacklevel=2,
+            )
 
         try:
             observe_inputs = handler._observe_inputs
