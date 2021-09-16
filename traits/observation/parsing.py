@@ -13,10 +13,8 @@ from functools import lru_cache
 from traits.observation import _generated_parser
 import traits.observation.expression as expression_module
 
-_LARK_PARSER = _generated_parser.Lark_StandAlone()
 
-#: Maximum number of parsed observer expressions stored in the LRU cache
-_OBSERVER_EXPRESSION_CACHE_MAXSIZE = 128
+_LARK_PARSER = _generated_parser.Lark_StandAlone()
 
 
 def _handle_series(trees, notify):
@@ -169,7 +167,7 @@ def _handle_tree(tree, notify):
     return handlers[tree.data](tree.children, notify)
 
 
-@lru_cache(maxsize=_OBSERVER_EXPRESSION_CACHE_MAXSIZE)
+@lru_cache(maxsize=expression_module._OBSERVER_EXPRESSION_CACHE_MAXSIZE)
 def parse(text):
     """ Top-level function for parsing user's text to an ObserverExpression.
 
@@ -195,7 +193,7 @@ def parse(text):
     return _handle_tree(tree, notify=True)
 
 
-@lru_cache(maxsize=_OBSERVER_EXPRESSION_CACHE_MAXSIZE)
+@lru_cache(maxsize=expression_module._OBSERVER_EXPRESSION_CACHE_MAXSIZE)
 def compile_str(text):
     """ Compile a mini-language string to a list of ObserverGraphs.
 

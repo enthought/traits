@@ -19,8 +19,12 @@ from traits.observation._named_trait_observer import NamedTraitObserver
 from traits.observation._observer_graph import ObserverGraph
 from traits.observation._set_item_observer import SetItemObserver
 
-# ObserverExpression is a public user interface for constructing ObserverGraph.
 
+#: Maximum number of parsed observer expressions stored in the LRU caches
+_OBSERVER_EXPRESSION_CACHE_MAXSIZE = 256
+
+
+# ObserverExpression is a public user interface for constructing ObserverGraph.
 
 class ObserverExpression:
     """
@@ -546,6 +550,7 @@ def trait(name, notify=True, optional=False):
     return SingleObserverExpression(observer)
 
 
+@functools.lru_cache(maxsize=_OBSERVER_EXPRESSION_CACHE_MAXSIZE)
 def compile_expr(expr):
     """ Compile an ObserverExpression to a list of ObserverGraphs.
 
