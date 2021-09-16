@@ -158,7 +158,9 @@ def _handle_tree(tree, notify):
     # with the signature (list of Tree, notify)
     handlers = {
         "series": _handle_series,
+        "series_terminal": _handle_series,
         "parallel": _handle_parallel,
+        "parallel_terminal": _handle_parallel,
         "trait": _handle_trait,
         "metadata": _handle_metadata,
         "items": _handle_items,

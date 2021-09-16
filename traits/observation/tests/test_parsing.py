@@ -112,20 +112,31 @@ class TestParsingAnytrait(unittest.TestCase):
         expected = anytrait()
         self.assertEqual(actual, expected)
 
-    def test_anytrait_trait_not_notify(self):
-        actual = parse("*:name")
-        expected = anytrait(notify=False).trait("name")
-        self.assertEqual(actual, expected)
-
     def test_trait_anytrait_not_notify(self):
         actual = parse("name:*")
         expected = trait("name", notify=False).anytrait()
         self.assertEqual(actual, expected)
 
-    def test_anytrait_anytrait(self):
-        actual = parse("*:*")
-        expected = anytrait(notify=False).anytrait()
+    def test_anytrait_in_parallel_branch(self):
+        actual = parse("a:*,b")
+        expected = trait("a", notify=False).anytrait() | trait("b")
         self.assertEqual(actual, expected)
+
+    def test_anytrait_in_invalid_position(self):
+        # "*" can only appear in a terminal position
+        invalid_expressions = [
+            "*.*",
+            "*:*",
+            "*.name",
+            "*.items",
+            "*:name",
+            "*.a,b",
+            "[a.*,b].c",
+        ]
+        for expression in invalid_expressions:
+            with self.subTest(expression=expression):
+                with self.assertRaises(ValueError):
+                    parse(expression)
 
 
 class TestParsingItems(unittest.TestCase):

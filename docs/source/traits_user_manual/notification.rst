@@ -113,7 +113,11 @@ most of the use cases commonly encountered by users.
    * - [*item1*, *item2*, ..., *itemN*]
      - Matches any of the specified expressions.
    * - *\**
-     - Matches any trait.
+     - Matches any trait. The ``"*"`` may only appear as a "terminal" item in
+       an expression - one that's not followed directly or indirectly by a
+       ``"."`` or ``":"`` connector. For example, ``"*"``, ``"name.*"`` and
+       ``"[a.*, b.c]"`` are all permitted, but ``"*.name"`` and ``[a, *].name``
+       are not.
    * - *+metadata_name*
      - Matches any trait on the object that has metadata *metadata_name*
 
