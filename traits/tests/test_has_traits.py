@@ -187,7 +187,7 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
         # Given
         @observe(trait("value"), post_init=True, dispatch="ui")
         @observe("name")
-        def handler(event):
+        def handler(self, event):
             pass
 
         class_name = "MyClass"
