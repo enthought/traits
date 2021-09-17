@@ -11,8 +11,8 @@
 import unittest
 
 from traits.api import (
-    Bytes, DefaultValue, Float, HasTraits, Instance, Int, List, Str, TraitError, TraitType,
-    Type, Union)
+    Bytes, DefaultValue, Float, HasTraits, Instance, Int, List, Str,
+    TraitError, TraitType,Type, Union)
 
 
 class CustomClass(HasTraits):
@@ -209,8 +209,6 @@ class TestUnion(unittest.TestCase):
             has_union.trait("nested").default_value(),
             (DefaultValue.constant, ""),
         )
-
-
 
 
 if __name__ == '__main__':
