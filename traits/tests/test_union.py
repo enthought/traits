@@ -12,7 +12,7 @@ import unittest
 
 from traits.api import (
     Bytes, DefaultValue, Float, HasTraits, Instance, Int, List, Str,
-    TraitError, TraitType,Type, Union)
+    TraitError, TraitType, Type, Union)
 
 
 class CustomClass(HasTraits):
