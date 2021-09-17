@@ -4028,7 +4028,7 @@ class Union(TraitType):
         if 'default_value' in metadata:
             default_value = metadata.pop("default_value")
         else:
-            first_default_value, first_default_value_type = (
+            first_default_value_type, first_default_value = (
                 self.list_ctrait_instances[0].default_value())
 
             if first_default_value_type == DefaultValue.constant:
