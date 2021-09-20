@@ -11,8 +11,8 @@
 import unittest
 
 from traits.api import (
-    Float, Instance, Int, List, Str, TraitError, TraitType, HasTraits, Union,
-    Type)
+    Bytes, DefaultValue, Float, HasTraits, Instance, Int, List, Str,
+    TraitError, TraitType, Type, Union)
 
 
 class CustomClass(HasTraits):
@@ -195,9 +195,20 @@ class TestUnion(unittest.TestCase):
         class HasUnionWithList(HasTraits):
             foo = Union(Int(23), Float)
 
+            nested = Union(Union(Str(), Bytes()), Union(Int(), Float(), None))
+
         has_union = HasUnionWithList()
         value = has_union.foo
         self.assertEqual(value, 23)
+
+        self.assertEqual(
+            has_union.trait("foo").default_value(),
+            (DefaultValue.constant, 23),
+        )
+        self.assertEqual(
+            has_union.trait("nested").default_value(),
+            (DefaultValue.constant, ""),
+        )
 
 
 if __name__ == '__main__':
