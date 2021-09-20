@@ -49,7 +49,6 @@ from .trait_type import (
 from .traits import (
     Trait,
     _TraitMaker,
-    _InstanceArgs,
 )
 from .util.deprecated import deprecated
 from .util.import_symbol import import_symbol
@@ -3202,6 +3201,9 @@ class BaseClass(TraitType):
         The name of the module that contains the class.
     """
 
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
+
     def resolve_class(self, object, name, value):
         """ Resolve the class object as part of validation.
 
@@ -3375,7 +3377,8 @@ class BaseInstance(BaseClass):
                 if (len(args) > 0) or (len(kw) > 0):
                     raise TraitError("'factory' must be callable")
             else:
-                value = _InstanceArgs(factory, args, kw)
+                self.default_value_type = DefaultValue.callable_and_args
+                value = (self.create_default_value, (factory, *args), kw)
 
         self.default_value = value
 
@@ -3417,7 +3420,7 @@ class BaseInstance(BaseClass):
             self.validate_failed(object, name, value)
         else:
             result = self.default_value
-            if isinstance(result, _InstanceArgs):
+            if self.default_value_type == DefaultValue.callable_and_args:
                 return result[0](*result[1], **result[2])
             else:
                 return result
@@ -3440,25 +3443,6 @@ class BaseInstance(BaseClass):
             return result + " or None"
 
         return result
-
-    def get_default_value(self):
-        """ Returns a tuple of the form: ( default_value_type, default_value )
-            which describes the default value for this trait.
-        """
-        dv = self.default_value
-        dvt = self.default_value_type
-        if dvt < 0:
-            if not isinstance(dv, _InstanceArgs):
-                return super().get_default_value()
-
-            self.default_value_type = dvt = DefaultValue.callable_and_args
-            self.default_value = dv = (
-                self.create_default_value,
-                dv.args,
-                dv.kw,
-            )
-
-        return (dvt, dv)
 
     def clone(self, default_value=NoDefaultSpecified, **metadata):
         """ Copy, optionally modifying default value and metadata. """
