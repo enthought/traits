@@ -221,7 +221,7 @@ class Any(TraitType):
                 (
                     "In the future, a default value of type 'list' in an Any "
                     "trait will be shared between all instances. For a "
-                    "per-instance default, use a default method for this "
+                    "per-instance default, define a default method for this "
                     "trait. "
                 ),
                 DeprecationWarning,
@@ -233,7 +233,7 @@ class Any(TraitType):
                 (
                     "In the future, a default value of type 'dict' in an Any "
                     "trait will be shared between all instances. For a "
-                    "per-instance default, use a default method for this "
+                    "per-instance default, define a default method for this "
                     "trait. "
                 ),
                 DeprecationWarning,
