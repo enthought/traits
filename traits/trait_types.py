@@ -188,13 +188,60 @@ def _validate_float(value):
 
 class Any(TraitType):
     """ A trait type whose value can be anything.
+
+    Parameters
+    ----------
+    default_value : object, optional
+        The default value for the trait. If this is an instance of either
+        :class:`list` or :class:`dict` then a copy of the default value
+        is made for each instance. Otherwise, the default is shared between
+        all instances.
+
+        .. deprecated:: 6.3.0
+            In a future version of Traits, a ``list`` or ``dict`` default value
+            will no longer be copied. If you need a per-instance default, use a
+            ``_trait_name_default`` method to supply that default.
+
+    **metadata
+        Metadata for the trait.
     """
+
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
 
     #: The default value for the trait:
     default_value = None
 
     #: A description of the type of value this trait accepts:
     info_text = "any value"
+
+    def __init__(self, default_value=NoDefaultSpecified, **metadata):
+        if isinstance(default_value, list):
+            warnings.warn(
+                (
+                    "In the future, a default value of type 'list' in an Any "
+                    "trait will be shared between all instances. For a "
+                    "per-instance default, define a default method for this "
+                    "trait. "
+                ),
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            self.default_value_type = DefaultValue.list_copy
+        elif isinstance(default_value, dict):
+            warnings.warn(
+                (
+                    "In the future, a default value of type 'dict' in an Any "
+                    "trait will be shared between all instances. For a "
+                    "per-instance default, define a default method for this "
+                    "trait. "
+                ),
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            self.default_value_type = DefaultValue.dict_copy
+
+        super().__init__(default_value, **metadata)
 
 
 class BaseInt(TraitType):
