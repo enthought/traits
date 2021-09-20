@@ -254,6 +254,9 @@ class BaseInt(TraitType):
     #: The function to use for evaluating strings to this type:
     evaluate = int
 
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
+
     #: The default value for the trait:
     default_value = 0
 
@@ -295,6 +298,9 @@ class BaseFloat(TraitType):
 
     #: The function to use for evaluating strings to this type:
     evaluate = float
+
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
 
     #: The default value for the trait:
     default_value = 0.0
@@ -340,6 +346,9 @@ class BaseComplex(TraitType):
     #: The function to use for evaluating strings to this type:
     evaluate = complex
 
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
+
     #: The default value for the trait:
     default_value = 0.0 + 0.0j
 
@@ -379,6 +388,9 @@ class Complex(BaseComplex):
 class BaseStr(TraitType):
     """ A trait type whose value must be a string.
     """
+
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
 
     #: The default value for the trait:
     default_value = ""
@@ -436,6 +448,9 @@ class BaseBytes(TraitType):
     """ A trait type whose value must be a bytestring.
     """
 
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
+
     #: The default value for the trait:
     default_value = b""
 
@@ -482,6 +497,9 @@ class BaseBool(TraitType):
 
     #: The function to use for evaluating strings to this type:
     evaluate = bool
+
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
 
     #: The default value for the trait:
     default_value = False
@@ -694,6 +712,9 @@ class String(TraitType):
         A Python regular expression that the string must match.
     """
 
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
+
     def __init__(
         self, value="", minlen=0, maxlen=sys.maxsize, regex="", **metadata
     ):
@@ -871,6 +892,9 @@ class BaseCallable(TraitType):
     #: The standard metadata for the trait:
     metadata = {"copy": "ref"}
 
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
+
     #: The default value for the trait:
     default_value = None
 
@@ -919,6 +943,9 @@ class BaseType(TraitType):
 class This(BaseType):
     """ A trait type whose value must be an instance of the defining class.
     """
+
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
 
     #: The C-level fast validator to use:
     fast_validate = (ValidateTrait.self_type,)
@@ -1052,6 +1079,9 @@ class Python(TraitType):
     #: The standard metadata for the trait:
     metadata = {"type": "python"}
 
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
+
     #: The default value for the trait:
     default_value = Undefined
 
@@ -1071,6 +1101,9 @@ class ReadOnly(TraitType):
 
     # Defines the CTrait type to use for this trait:
     ctrait_type = TraitKind.read_only
+
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
 
     #: The default value for the trait:
     default_value = Undefined
@@ -1344,6 +1377,9 @@ class Expression(TraitType):
     The compiled form of a valid expression is stored as the mapped value of
     the trait.
     """
+
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
 
     #: The default value for the trait:
     default_value = "0"
@@ -1685,6 +1721,9 @@ class BaseRange(TraitType):
     exclude_high : bool
         Indicates whether the high end of the range is exclusive.
     """
+
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
 
     def __init__(
         self,
@@ -2081,6 +2120,9 @@ class BaseEnum(TraitType):
         None.
     """
 
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
+
     def __init__(self, *args, values=None, **metadata):
         self.name = values
 
@@ -2338,6 +2380,9 @@ class BaseTuple(TraitType):
         element.
     """
 
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
+
     def __init__(self, *types, **metadata):
         if len(types) == 0:
             self.init_fast_validate(ValidateTrait.coerce, tuple, None, list)
@@ -2372,7 +2417,6 @@ class BaseTuple(TraitType):
                 dvt == DefaultValue.constant for dvt in child_default_types
             )
             if constant_default:
-                self.default_value_type = DefaultValue.constant
                 default_value = tuple(child_defaults)
             else:
                 self.default_value_type = DefaultValue.callable
@@ -3104,6 +3148,9 @@ class Map(TraitType):
             trait attribute.
     """
 
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
+
     is_mapped = True
 
     def __init__(self, map, **metadata):
@@ -3188,6 +3235,10 @@ class PrefixMap(TraitType):
         trait attribute, and whose corresponding values are the values for
         the shadow trait attribute.
     """
+
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
+
     is_mapped = True
 
     def __init__(self, map, **metadata):
@@ -4071,6 +4122,9 @@ class Union(TraitType):
     first trait will be used.
     """
 
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
+
     def __init__(self, *traits, **metadata):
         self.list_ctrait_instances = []
 
@@ -4103,7 +4157,6 @@ class Union(TraitType):
                 self.list_ctrait_instances[0].default_value())
 
             if first_default_value_type == DefaultValue.constant:
-                self.default_value_type = DefaultValue.constant
                 default_value = first_default_value
             else:
                 self.default_value_type = DefaultValue.callable
@@ -4405,6 +4458,9 @@ class Date(TraitType):
         Additional metadata.
     """
 
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
+
     def __init__(
         self,
         default_value=None,
@@ -4503,6 +4559,9 @@ class Datetime(TraitType):
         Additional metadata.
     """
 
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
+
     def __init__(
         self,
         default_value=None,
@@ -4576,6 +4635,9 @@ class Time(TraitType):
     **metadata: dict
         Additional metadata.
     """
+
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
 
     def __init__(
         self,
