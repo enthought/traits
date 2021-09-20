@@ -1034,6 +1034,9 @@ class ReadOnly(TraitType):
     # Defines the CTrait type to use for this trait:
     ctrait_type = TraitKind.read_only
 
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
+
     #: The default value for the trait:
     default_value = Undefined
 
