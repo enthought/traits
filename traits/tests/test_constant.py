@@ -52,3 +52,23 @@ class TestConstantTrait(unittest.TestCase):
 
         self.assertEqual(obj.c_atr_1, [1, 2, 3, 4, 5, 6])
         self.assertEqual(obj.c_atr_2, {"a": 1, "b": 2, "c": 3})
+
+    def test_mutate_affects_all_instances(self):
+        # Mutable values are allowed for the 'Constant' trait because it's
+        # impractical to do otherwise - many things are mutable but not
+        # intended to be mutated, and there's no practical way to test for
+        # "not-intended-to-be-mutated". Nevertheless, actually mutating the
+        # value for 'Constant' is inadvisable in practice, despite the
+        # existence of this test.
+        class TestClass(HasTraits):
+            c_atr = Constant([1, 2, 3, 4, 5])
+
+        obj1 = TestClass()
+        obj2 = TestClass()
+
+        # Mutate obj2; check that obj1 is affected.
+        obj2.c_atr.append(6)
+        self.assertEqual(obj1.c_atr, [1, 2, 3, 4, 5, 6])
+
+        # Check directly that both refer to the same object.
+        self.assertIs(obj1.c_atr, obj2.c_atr)
