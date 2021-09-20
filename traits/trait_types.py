@@ -1045,6 +1045,9 @@ class Constant(TraitType):
         Trait metadata for the trait.
     """
 
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
+
     #: Defines the CTrait type to use for this trait:
     ctrait_type = TraitKind.constant
 
