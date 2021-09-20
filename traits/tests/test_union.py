@@ -20,6 +20,11 @@ class CustomClass(HasTraits):
 
 
 class CustomStrType(TraitType):
+
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
+
+    #: The default value.
     default_value = "a string value"
 
     def validate(self, obj, name, value):

@@ -904,6 +904,9 @@ class BaseType(TraitType):
     This is an abstract class and should not be directly instantiated.
     """
 
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
+
     def validate(self, object, name, value):
         """ Validates that the value is a Python callable.
         """
@@ -972,6 +975,12 @@ class Function(TraitType):
         ``Instance(types.FunctionType)``.
     """
 
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
+
+    #: The default value for the trait type.
+    default_value = Undefined
+
     @deprecated("Function trait type has been deprecated. Use 'Callable' or "
                 "'Instance(types.FunctionType)' instead")
     def __init__(self):
@@ -995,6 +1004,12 @@ class Method(TraitType):
         ``Instance(types.MethodType)``.
     """
 
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
+
+    #: The default value for the trait type.
+    default_value = Undefined
+
     @deprecated("Method trait type has been deprecated. Use 'Callable' or "
                 "'Instance(types.MethodType)' instead")
     def __init__(self):
@@ -1010,6 +1025,12 @@ class Method(TraitType):
 class Module(TraitType):
     """ A trait type whose value must be a module.
     """
+
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
+
+    #: The default value for the trait type.
+    default_value = Undefined
 
     #: The C-level fast validator to use:
     fast_validate = (ValidateTrait.coerce, ModuleType)
@@ -4262,7 +4283,7 @@ class UUID(TraitType):
     def get_default_value(self):
         """ Return a Traits default value tuple for the trait.
 
-        This uses the _create_uuid method to generate the defualt value.
+        This uses the _create_uuid method to generate the default value.
         """
         return (
             DefaultValue.callable_and_args,

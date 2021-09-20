@@ -36,6 +36,10 @@ class TraitTypesTest(unittest.TestCase):
         # Regression test for a bug in traits where the same _metadata
         # dictionary was shared between different trait types.
         class LazyProperty(TraitType):
+
+            #: The default value type to use.
+            default_value_type = DefaultValue.constant
+
             def get(self, obj, name):
                 return 1729
 
@@ -70,16 +74,20 @@ class TraitTypesTest(unittest.TestCase):
         self.assertEqual(output.strip(), "Success")
 
     def test_default_value_in_init(self):
+
+        class MyTraitType(TraitType):
+            pass
+
         # Tests for the behaviour of the default_value argument
         # to TraitType.__init__.
-        trait_type = TraitType(default_value=23)
+        trait_type = MyTraitType(default_value=23)
         self.assertEqual(
             trait_type.get_default_value(),
             (DefaultValue.constant, 23),
         )
 
         # An explicit default value of None should work as expected.
-        trait_type = TraitType(default_value=None)
+        trait_type = MyTraitType(default_value=None)
         self.assertEqual(
             trait_type.get_default_value(),
             (DefaultValue.constant, None),
@@ -87,7 +95,7 @@ class TraitTypesTest(unittest.TestCase):
 
         # If no default is given, get_default_value() returns a value
         # of Undefined.
-        trait_type = TraitType()
+        trait_type = MyTraitType()
         self.assertEqual(
             trait_type.get_default_value(),
             (DefaultValue.constant, Undefined),
@@ -95,7 +103,7 @@ class TraitTypesTest(unittest.TestCase):
 
         # Similarly, if NoDefaultSpecified is given, get_default_value()
         # is Undefined.
-        trait_type = TraitType(default_value=NoDefaultSpecified)
+        trait_type = MyTraitType(default_value=NoDefaultSpecified)
         self.assertEqual(
             trait_type.get_default_value(),
             (DefaultValue.constant, Undefined),
