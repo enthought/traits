@@ -36,6 +36,10 @@ class TraitTypesTest(unittest.TestCase):
         # Regression test for a bug in traits where the same _metadata
         # dictionary was shared between different trait types.
         class LazyProperty(TraitType):
+
+            #: The default value type to use.
+            default_value_type = DefaultValue.constant
+
             def get(self, obj, name):
                 return 1729
 
