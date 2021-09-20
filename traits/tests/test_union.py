@@ -11,8 +11,8 @@
 import unittest
 
 from traits.api import (
-    Float, Instance, Int, List, Str, TraitError, TraitType, HasTraits, Union,
-    Type)
+    DefaultValue, Float, Instance, Int, List, Str, TraitError, TraitType,
+    HasTraits, Union, Type)
 
 
 class CustomClass(HasTraits):
@@ -20,6 +20,11 @@ class CustomClass(HasTraits):
 
 
 class CustomStrType(TraitType):
+
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
+
+    #: The default value.
     default_value = "a string value"
 
     def validate(self, obj, name, value):

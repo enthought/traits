@@ -13,6 +13,7 @@ import gc
 import sys
 import unittest
 
+from traits.constants import DefaultValue
 from traits.has_traits import (
     HasStrictTraits,
     HasTraits,
@@ -133,6 +134,9 @@ class RaisingValidator(TraitType):
     Used for testing propagation of that exception.
     """
     info_text = "bogus"
+
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
 
     #: The default value for the trait:
     default_value = None
