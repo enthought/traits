@@ -31,7 +31,3 @@ class TestCaseNoneTrait(unittest.TestCase):
         with self.assertRaises(ValueError):
             class TestClass(HasTraits):
                 none_trait = _NoneTrait(default_value=[])
-
-
-if __name__ == '__main__':
-    unittest.main()
