@@ -197,6 +197,10 @@ class DefaultValue(IntEnum):
     #: is the default value.
     trait_set_object = traits.ctraits._TRAIT_SET_OBJECT_DEFAULT_VALUE
 
+    #: This trait doesn't support a default value, and an attempt to retrieve
+    #: the default value using the default_value_for method will fail.
+    unsupported = traits.ctraits._UNSUPPORTED_DEFAULT_VALUE
+
 
 #: Maximum legal value for default_value_type, for use in testing
 #: and validation.
@@ -215,4 +219,5 @@ default_value_map = {
     DefaultValue.callable_and_args: "factory",
     DefaultValue.callable: "method",
     DefaultValue.trait_set_object: "set",
+    DefaultValue.unsupported: "unsupported"
 }

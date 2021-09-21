@@ -110,6 +110,30 @@ class TraitTypesTest(unittest.TestCase):
             (DefaultValue.constant, Undefined),
         )
 
+    def test_unsupported_default_value(self):
+        class MyTraitType(TraitType):
+
+            default_value_type = DefaultValue.unsupported
+
+        trait_type = MyTraitType()
+        self.assertEqual(
+            trait_type.get_default_value(),
+            (DefaultValue.unsupported, Undefined)
+        )
+
+        ctrait = trait_type.as_ctrait()
+        self.assertEqual(
+            ctrait.default_value(),
+            (DefaultValue.unsupported, Undefined),
+        )
+        self.assertEqual(ctrait.default_kind, "unsupported")
+        self.assertEqual(ctrait.default, Undefined)
+
+        with self.assertRaises(ValueError):
+            ctrait.default_value_for(None, "<dummy>")
+
+
+
 
 class TestDeprecatedTraitTypes(unittest.TestCase):
     def test_function_deprecated(self):
