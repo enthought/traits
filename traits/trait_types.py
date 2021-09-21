@@ -1010,8 +1010,8 @@ class Function(TraitType):
 
     @deprecated("Function trait type has been deprecated. Use 'Callable' or "
                 "'Instance(types.FunctionType)' instead")
-    def __init__(self):
-        super().__init__()
+    def __init__(self, default_value=NoDefaultSpecified, **metadata):
+        super().__init__(default_value=default_value, **metadata)
 
     #: The C-level fast validator to use:
     fast_validate = (ValidateTrait.coerce, FunctionType)
@@ -1039,8 +1039,8 @@ class Method(TraitType):
 
     @deprecated("Method trait type has been deprecated. Use 'Callable' or "
                 "'Instance(types.MethodType)' instead")
-    def __init__(self):
-        super().__init__()
+    def __init__(self, default_value=NoDefaultSpecified, **metadata):
+        super().__init__(default_value=default_value, **metadata)
 
     #: The C-level fast validator to use:
     fast_validate = (ValidateTrait.coerce, MethodType)
