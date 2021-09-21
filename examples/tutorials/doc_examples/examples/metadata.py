@@ -11,7 +11,8 @@
 # metadata.py --- Example of accessing trait metadata attributes
 
 # --[Imports]------------------------------------------------------------------
-from traits.api import HasTraits, Int, List, Float, Instance, Any, TraitType
+from traits.api import (
+    HasTraits, Int, List, Float, Instance, Any, Str, TraitType)
 
 
 # --[Code]---------------------------------------------------------------------
@@ -23,7 +24,7 @@ class Test(HasTraits):
     i = Int(99)
     lf = List(Float)
     foo = Instance(Foo, ())
-    any = Any([1, 2, 3])
+    any = Any("123")
 
 
 # --[Example*]-----------------------------------------------------------------
@@ -51,8 +52,8 @@ print(t.trait("foo").inner_traits)  # ()
 print(t.trait("foo").is_trait_type(Instance))  # True
 print(t.trait("foo").is_trait_type(List))  # False
 
-print(t.trait("any").default)  # [1, 2, 3]
-print(t.trait("any").default_kind)  # list
+print(t.trait("any").default)  # 123
+print(t.trait("any").default_kind)  # value
 print(t.trait("any").inner_traits)  # ()
 print(t.trait("any").is_trait_type(Any))  # True
-print(t.trait("any").is_trait_type(List))  # False
+print(t.trait("any").is_trait_type(Str))  # False
