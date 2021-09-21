@@ -23,8 +23,9 @@ from traits.api import (
     DefaultValue,
     Float,
     Function,
-    NoDefaultSpecified,
     Method,
+    NoDefaultSpecified,
+    Symbol,
     TraitType,
     Undefined
 )
@@ -130,3 +131,7 @@ class TestDeprecatedTraitTypes(unittest.TestCase):
             Method()
         with self.assertWarnsRegex(DeprecationWarning, "Method trait type"):
             Method(A().some_method, gluten_free=False)
+
+    def test_symbol_deprecated(self):
+        with self.assertWarnsRegex(DeprecationWarning, "Symbol trait type"):
+            Symbol("random:random")

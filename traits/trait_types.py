@@ -4216,7 +4216,15 @@ class Symbol(TraitType):
 
     The value returned by the trait is the actual object that this string
     refers to.  The value is cached, so any calls are only evaluated once.
+
+    .. deprecated:: 6.3.0
+        This trait type is deprecated, and will be removed in a future
+        version of Traits.
     """
+
+    @deprecated("The Symbol trait type has been deprecated.")
+    def __init__(self, default_value=NoDefaultSpecified, **metadata):
+        super().__init__(default_value=default_value, **metadata)
 
     #: A description of the type of value this trait accepts:
     info_text = (
