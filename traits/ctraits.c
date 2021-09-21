@@ -1854,7 +1854,6 @@ default_value_for(trait_object *trait, has_traits_object *obj, PyObject *name)
                 "default value unsupported for this trait"
             );
             return NULL;
-
     }
     return result;
 }
