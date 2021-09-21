@@ -56,7 +56,7 @@ class CustomCollection:
 
 
 class EnumListExample(HasTraits):
-    values = Any(['foo', 'bar', 'baz'])
+    values = List(['foo', 'bar', 'baz'])
 
     value = Enum(['foo', 'bar', 'baz'])
 
