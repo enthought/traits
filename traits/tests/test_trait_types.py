@@ -133,8 +133,6 @@ class TraitTypesTest(unittest.TestCase):
             ctrait.default_value_for(None, "<dummy>")
 
 
-
-
 class TestDeprecatedTraitTypes(unittest.TestCase):
     def test_function_deprecated(self):
         def some_function():
