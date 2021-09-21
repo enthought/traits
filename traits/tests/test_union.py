@@ -214,7 +214,3 @@ class TestUnion(unittest.TestCase):
             has_union.trait("nested").default_value(),
             (DefaultValue.constant, ""),
         )
-
-
-if __name__ == '__main__':
-    unittest.main()
