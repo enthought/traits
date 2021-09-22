@@ -36,7 +36,7 @@ from .traits import (
     Trait,
     generic_trait,
 )
-from .trait_types import Any, Bool, Disallow, Event, Python
+from .trait_types import Any, Bool, Disallow, Event, Python, Str
 from .trait_notifiers import (
     ExtendedTraitChangeNotifyWrapper,
     FastUITraitChangeNotifyWrapper,
@@ -1111,12 +1111,13 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
 
     # -- Trait Definitions ----------------------------------------------------
 
-    #: An event fired when a new trait is dynamically added to the object
-    trait_added = Event(str)
+    #: An event fired when a new trait is dynamically added to the object. The
+    #: value is the name of the trait that was added.
+    trait_added = Event(Str())
 
     #: An event that can be fired to indicate that the state of the object has
-    #: been modified
-    trait_modified = Event
+    #: been modified.
+    trait_modified = Event()
 
     def _trait_added_changed(self, name):
         """ Handles a 'trait_added' event being fired.
