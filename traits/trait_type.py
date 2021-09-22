@@ -420,7 +420,7 @@ class TraitType(BaseTraitHandler):
                     "use the 'comparison_mode' metadata instead. In a future "
                     "release, rich_compare will have no effect.",
                     DeprecationWarning,
-                    stacklevel=6,
+                    stacklevel=7,
                 )
 
                 if rich_compare:
