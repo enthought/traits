@@ -32,7 +32,6 @@ from .ctrait import CTrait as CTrait
 from .has_traits import (
     ABCHasStrictTraits as ABCHasStrictTraits,
     ABCHasTraits as ABCHasTraits,
-    ABCMetaHasTraits as ABCMetaHasTraits,
     AbstractViewElement as AbstractViewElement,
     HasTraits as HasTraits,
     HasStrictTraits as HasStrictTraits,
@@ -42,7 +41,6 @@ from .has_traits import (
     SingletonHasTraits as SingletonHasTraits,
     SingletonHasStrictTraits as SingletonHasStrictTraits,
     SingletonHasPrivateTraits as SingletonHasPrivateTraits,
-    MetaHasTraits as MetaHasTraits,
     Vetoable as Vetoable,
     VetoableEvent as VetoableEvent,
     observe as observe,

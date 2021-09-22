@@ -173,7 +173,6 @@ from .trait_types import UUID, ValidatedTuple
 from .has_traits import (
     ABCHasStrictTraits,
     ABCHasTraits,
-    ABCMetaHasTraits,
     AbstractViewElement,
     HasTraits,
     HasStrictTraits,
@@ -183,7 +182,6 @@ from .has_traits import (
     SingletonHasTraits,
     SingletonHasStrictTraits,
     SingletonHasPrivateTraits,
-    MetaHasTraits,
     Vetoable,
     VetoableEvent,
     observe,

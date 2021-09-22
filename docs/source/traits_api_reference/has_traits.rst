@@ -7,8 +7,6 @@
 Classes
 -------
 
-.. autoclass:: MetaHasTraits
-
 .. autoclass:: MetaInterface
 
     .. automethod:: __init__
@@ -46,8 +44,6 @@ ABC classes
 
 .. note:: These classes are only available when the abc module is present.
 
-.. autoclass:: ABCMetaHasTraits
-
 .. autoclass:: ABCHasTraits
 
 .. autoclass:: ABCHasStrictTraits
@@ -80,4 +76,3 @@ and may be removed in a future version of Traits.
 .. autoclass:: SingletonHasStrictTraits
 
 .. autoclass:: SingletonHasPrivateTraits
-

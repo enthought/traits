@@ -378,22 +378,6 @@ def _compile_expression(expression):
 _HasTraits = None
 
 
-class MetaHasTraits(type):
-    """ Controls the creation of HasTraits classes.
-
-    The heavy work is done by the `update_traits_class_dict` function, which
-    takes the ``class_dict`` dictionary of class members and extracts and
-    processes the trait declarations in it. The trait declarations are then
-    added back to the class dictionary and passed off to the __new__ method
-    of the type superclass, to be added to the class.
-
-    """
-
-    def __new__(cls, class_name, bases, class_dict):
-        # update_traits_class_dict(class_name, bases, class_dict)
-        return type.__new__(cls, class_name, bases, class_dict)
-
-
 def update_traits_class_dict(class_name, bases, class_dict, cls):
     """ Processes all of the traits related data in the class dictionary.
 
@@ -1030,8 +1014,7 @@ def weak_arg(arg):
     return decorator
 
 
-
-class BaseHasTraits(CHasTraits, metaclass=MetaHasTraits):
+class BaseHasTraits(CHasTraits):
     """ Base class adding PEP 487 pre-processing functionality. """
 
     def __init_subclass__(cls):
@@ -3568,18 +3551,7 @@ class HasPrivateTraits(HasTraits):
 
 # ABC classes with traits
 
-class ABCMetaHasTraits(abc.ABCMeta, MetaHasTraits):
-    """ A MetaHasTraits subclass which also inherits from
-    abc.ABCMeta.
-
-    .. note:: The ABCMeta class is cooperative and behaves nicely
-        with MetaHasTraits, provided it is inherited first.
-    """
-
-    pass
-
-
-class ABCHasTraits(HasTraits, metaclass=ABCMetaHasTraits):
+class ABCHasTraits(HasTraits, metaclass=abc.ABCMeta):
     """ A HasTraits subclass which enables the features of Abstract
     Base Classes (ABC). See the 'abc' module in the standard library
     for more information.
@@ -3652,7 +3624,7 @@ class Vetoable(HasStrictTraits):
 VetoableEvent = Event(Vetoable)
 
 
-class MetaInterface(ABCMetaHasTraits):
+class MetaInterface(abc.ABCMeta):
     """ Meta class for interfaces.
 
     Interfaces are simple ABCs with the following features:-

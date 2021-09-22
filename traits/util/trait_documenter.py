@@ -23,7 +23,7 @@ import traceback
 from sphinx.ext.autodoc import ClassLevelDocumenter
 from sphinx.util import logging
 
-from traits.has_traits import MetaHasTraits
+from traits.has_traits import BaseHasTraits
 from traits.trait_type import TraitType
 from traits.traits import generic_trait
 
@@ -35,7 +35,7 @@ def _is_class_trait(name, cls):
     """ Check if the name is in the list of class defined traits of ``cls``.
     """
     return (
-        isinstance(cls, MetaHasTraits)
+        issubclass(cls, BaseHasTraits)
         and name in cls.__class_traits__
         and cls.__class_traits__[name] is not generic_trait
     )
@@ -149,7 +149,7 @@ def trait_definition(*, cls, trait_name):
 
     Parameters
     ----------
-    cls : MetaHasTraits
+    cls : BaseHasTraits subclass
         Class being documented.
     trait_name : str
         Name of the trait being documented.

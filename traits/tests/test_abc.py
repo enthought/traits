@@ -14,7 +14,7 @@ import abc
 import unittest
 import warnings
 
-from traits.api import ABCHasTraits, ABCMetaHasTraits, HasTraits, Int, Float
+from traits.api import ABCHasTraits, HasTraits, Int, Float
 
 
 class TestNew(unittest.TestCase):
@@ -100,7 +100,7 @@ class TestABC(unittest.TestCase):
         self.assertTrue(isinstance(foolike, AbstractFoo))
 
     def test_post_hoc_mixing(self):
-        class TraitedBar(HasTraits, AbstractBar, metaclass=ABCMetaHasTraits):
+        class TraitedBar(HasTraits, AbstractBar, metaclass=abc.ABCMeta):
             x = Int(10)
 
             def bar(self):
