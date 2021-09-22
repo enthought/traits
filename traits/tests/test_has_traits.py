@@ -61,9 +61,13 @@ class TestMetaHasTraits(unittest.TestCase):
         def listener(cls):
             pass
 
-        with self.assertWarnsRegex(DeprecationWarning, "add_listener is deprecated"):
+        with self.assertWarnsRegex(
+            DeprecationWarning, "add_listener is deprecated"
+        ):
             MetaHasTraits.add_listener(listener)
-        with self.assertWarnsRegex(DeprecationWarning, "remove_listener is deprecated"):
+        with self.assertWarnsRegex(
+            DeprecationWarning, "remove_listener is deprecated"
+        ):
             MetaHasTraits.remove_listener(listener)
 
 
