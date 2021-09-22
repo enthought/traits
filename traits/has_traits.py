@@ -390,11 +390,11 @@ class MetaHasTraits(type):
     """
 
     def __new__(cls, class_name, bases, class_dict):
-        update_traits_class_dict(class_name, bases, class_dict)
+        # update_traits_class_dict(class_name, bases, class_dict)
         return type.__new__(cls, class_name, bases, class_dict)
 
 
-def update_traits_class_dict(class_name, bases, class_dict):
+def update_traits_class_dict(class_name, bases, class_dict, cls):
     """ Processes all of the traits related data in the class dictionary.
 
     This is called during the construction of a new HasTraits class. The first
@@ -461,7 +461,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
                 getter, setter, validate, True, value.handler, **value.metadata
             )
         if rc:
-            del class_dict[name]
+            delattr(cls, name)
             if name[-1:] != "_":
                 base_traits[name] = class_traits[name] = value
                 value_type = value.type
@@ -551,7 +551,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
                     else:
                         value.set_default_value(
                             DefaultValue.missing, value.default)
-                    del class_dict[name]
+                    delattr(cls, name)
                     break
 
     # Process all HasTraits base classes:
@@ -715,13 +715,13 @@ def update_traits_class_dict(class_name, bases, class_dict):
             stack.append(observer_state)
 
     # Add processed traits back into class_dict.
-    class_dict[BaseTraits] = base_traits
-    class_dict[ClassTraits] = class_traits
-    class_dict[InstanceTraits] = instance_traits
-    class_dict[PrefixTraits] = prefix_traits
-    class_dict[ListenerTraits] = listeners
-    class_dict[ObserverTraits] = observers
-    class_dict[ViewTraits] = view_elements
+    setattr(cls, BaseTraits, base_traits)
+    setattr(cls, ClassTraits, class_traits)
+    setattr(cls, InstanceTraits, instance_traits)
+    setattr(cls, PrefixTraits, prefix_traits)
+    setattr(cls, ListenerTraits, listeners)
+    setattr(cls, ObserverTraits, observers)
+    setattr(cls, ViewTraits, view_elements)
 
 
 def migrate_property(name, property, property_info, class_dict):
@@ -1059,6 +1059,12 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
     starting with "trait" or "_trait" to avoid overshadowing existing methods,
     unless it has been documented as being safe to do so.
     """
+
+    def __init_subclass__(cls):
+        class_name = cls.__name__
+        bases = cls.__bases__
+        class_dict = cls.__dict__
+        update_traits_class_dict(class_name, bases, class_dict, cls)
 
     # -- Trait Prefix Rules ---------------------------------------------------
 
