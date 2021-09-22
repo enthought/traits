@@ -35,7 +35,8 @@ def _is_class_trait(name, cls):
     """ Check if the name is in the list of class defined traits of ``cls``.
     """
     return (
-        issubclass(cls, BaseHasTraits)
+        isinstance(cls, type)
+        and issubclass(cls, BaseHasTraits)
         and name in cls.__class_traits__
         and cls.__class_traits__[name] is not generic_trait
     )
