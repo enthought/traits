@@ -56,6 +56,8 @@ def _dummy_validator(self, value):
 
 
 class TestCreateTraitsMetaDict(unittest.TestCase):
+    @unittest.skip(
+        "Skip test that tests implementation details rather than behaviour")
     def test_class_attributes(self):
         # Given
         class_name = "MyClass"
@@ -73,6 +75,8 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
         for kind in (BaseTraits, ClassTraits, ListenerTraits, InstanceTraits):
             self.assertEqual(class_dict[kind], {})
 
+    @unittest.skip(
+        "Skip test that tests implementation details rather than behaviour")
     def test_forward_property(self):
         # Given
         class_name = "MyClass"
@@ -106,6 +110,8 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
         self.assertEqual(class_dict["attr"], "something")
         self.assertNotIn("my_property", class_dict)
 
+    @unittest.skip(
+        "Skip test that tests implementation details rather than behaviour")
     def test_standard_trait(self):
         # Given
         class_name = "MyClass"
@@ -132,6 +138,8 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
         self.assertEqual(class_dict["attr"], "something")
         self.assertNotIn("my_int", class_dict)
 
+    @unittest.skip(
+        "Skip test that tests implementation details rather than behaviour")
     def test_prefix_trait(self):
         # Given
         class_name = "MyClass"
@@ -152,6 +160,8 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
         self.assertEqual(class_dict["attr"], "something")
         self.assertNotIn("my_int", class_dict)
 
+    @unittest.skip(
+        "Skip test that tests implementation details rather than behaviour")
     def test_listener_trait(self):
         # Given
         @on_trait_change("something")
@@ -183,6 +193,8 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
             },
         )
 
+    @unittest.skip(
+        "Skip test that tests implementation details rather than behaviour")
     def test_observe_trait(self):
         # Given
         @observe(trait("value"), post_init=True, dispatch="ui")
@@ -218,6 +230,8 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
             },
         )
 
+    @unittest.skip(
+        "Skip test that tests implementation details rather than behaviour")
     def test_python_property(self):
         # Given
         class_name = "MyClass"
@@ -236,6 +250,8 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
         self.assertEqual(class_dict[ListenerTraits], {})
         self.assertIs(class_dict[ClassTraits]["my_property"], generic_trait)
 
+    @unittest.skip(
+        "Skip test that tests implementation details rather than behaviour")
     def test_complex_baseclass(self):
         # Given
         class Base(HasTraits):

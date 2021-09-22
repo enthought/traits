@@ -524,7 +524,7 @@ def update_traits_class_dict(class_name, bases, class_dict, cls):
             view_elements[name] = value
 
             # Remove the view element from the class definition:
-            del class_dict[name]
+            delattr(cls, name)
 
         else:
             for ct in inherited_class_traits:
@@ -1030,7 +1030,18 @@ def weak_arg(arg):
     return decorator
 
 
-class HasTraits(CHasTraits, metaclass=MetaHasTraits):
+
+class BaseHasTraits(CHasTraits, metaclass=MetaHasTraits):
+    """ Base class adding PEP 487 pre-processing functionality. """
+
+    def __init_subclass__(cls):
+        class_name = cls.__name__
+        bases = cls.__bases__
+        class_dict = cls.__dict__
+        update_traits_class_dict(class_name, bases, class_dict, cls)
+
+
+class HasTraits(BaseHasTraits):
     """ Enables any Python class derived from it to have trait attributes.
 
     Most of the methods of HasTraits operated by default only on the trait
@@ -1059,12 +1070,6 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
     starting with "trait" or "_trait" to avoid overshadowing existing methods,
     unless it has been documented as being safe to do so.
     """
-
-    def __init_subclass__(cls):
-        class_name = cls.__name__
-        bases = cls.__bases__
-        class_dict = cls.__dict__
-        update_traits_class_dict(class_name, bases, class_dict, cls)
 
     # -- Trait Prefix Rules ---------------------------------------------------
 
