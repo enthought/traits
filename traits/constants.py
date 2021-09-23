@@ -219,5 +219,5 @@ default_value_map = {
     DefaultValue.callable_and_args: "factory",
     DefaultValue.callable: "method",
     DefaultValue.trait_set_object: "set",
-    DefaultValue.unsupported: "unsupported"
+    DefaultValue.unsupported: "unsupported",
 }
