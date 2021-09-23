@@ -26,6 +26,7 @@ from traits.has_traits import (
     SingletonHasTraits,
     SingletonHasStrictTraits,
     SingletonHasPrivateTraits,
+    MetaHasTraits,
 )
 from traits.ctrait import CTrait
 from traits.observation.api import (
@@ -53,6 +54,21 @@ def _dummy_setter(self, value):
 
 def _dummy_validator(self, value):
     pass
+
+
+class TestMetaHasTraits(unittest.TestCase):
+    def test_add_listener_and_remove_listener_deprecated(self):
+        def listener(cls):
+            pass
+
+        with self.assertWarnsRegex(
+            DeprecationWarning, "add_listener is deprecated"
+        ):
+            MetaHasTraits.add_listener(listener)
+        with self.assertWarnsRegex(
+            DeprecationWarning, "remove_listener is deprecated"
+        ):
+            MetaHasTraits.remove_listener(listener)
 
 
 class TestCreateTraitsMetaDict(unittest.TestCase):

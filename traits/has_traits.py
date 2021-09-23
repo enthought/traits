@@ -417,13 +417,25 @@ class MetaHasTraits(type):
 
         If the class name is the empty string then the listener will be called
         when *any* class is created.
+
+        .. deprecated:: 6.3.0
         """
+        warnings.warn(
+            "add_listener is deprecated", DeprecationWarning, stacklevel=2
+        )
+
         MetaHasTraits._listeners.setdefault(class_name, []).append(listener)
 
     @classmethod
     def remove_listener(cls, listener, class_name=""):
         """ Removes a class creation listener.
+
+        .. deprecated:: 6.3.0
         """
+        warnings.warn(
+            "remove_listener is deprecated", DeprecationWarning, stacklevel=2
+        )
+
         MetaHasTraits._listeners[class_name].remove(listener)
 
 
