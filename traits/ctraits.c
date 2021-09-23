@@ -1851,7 +1851,7 @@ default_value_for(trait_object *trait, has_traits_object *obj, PyObject *name)
         case DISALLOW_DEFAULT_VALUE:
             PyErr_SetString(
                 PyExc_ValueError,
-                "default value unsupported for this trait"
+                "default value not permitted for this trait"
             );
             return NULL;
     }
