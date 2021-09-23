@@ -186,8 +186,8 @@ call_notifiers(
    is the default value */
 #define TRAIT_SET_OBJECT_DEFAULT_VALUE 9
 
-/* This trait doesn't support a default value */
-#define UNSUPPORTED_DEFAULT_VALUE 10
+/* This trait doesn't permit a default value */
+#define DISALLOW_DEFAULT_VALUE 10
 
 /* Maximum legal value for default_value_type, for use in testing and
    validation. */
@@ -1848,7 +1848,7 @@ default_value_for(trait_object *trait, has_traits_object *obj, PyObject *name)
         case TRAIT_SET_OBJECT_DEFAULT_VALUE:
             return call_class(
                 TraitSetObject, trait, obj, name, trait->default_value);
-        case UNSUPPORTED_DEFAULT_VALUE:
+        case DISALLOW_DEFAULT_VALUE:
             PyErr_SetString(
                 PyExc_ValueError,
                 "default value unsupported for this trait"
@@ -5737,8 +5737,8 @@ PyInit_ctraits(void)
     }
     error = PyModule_AddIntConstant(
         module,
-        "_UNSUPPORTED_DEFAULT_VALUE",
-        UNSUPPORTED_DEFAULT_VALUE
+        "_DISALLOW_DEFAULT_VALUE",
+        DISALLOW_DEFAULT_VALUE
     );
     if (error < 0) {
         return NULL;

@@ -110,23 +110,23 @@ class TraitTypesTest(unittest.TestCase):
             (DefaultValue.constant, Undefined),
         )
 
-    def test_unsupported_default_value(self):
+    def test_disallowed_default_value(self):
         class MyTraitType(TraitType):
 
-            default_value_type = DefaultValue.unsupported
+            default_value_type = DefaultValue.disallow
 
         trait_type = MyTraitType()
         self.assertEqual(
             trait_type.get_default_value(),
-            (DefaultValue.unsupported, Undefined)
+            (DefaultValue.disallow, Undefined)
         )
 
         ctrait = trait_type.as_ctrait()
         self.assertEqual(
             ctrait.default_value(),
-            (DefaultValue.unsupported, Undefined),
+            (DefaultValue.disallow, Undefined),
         )
-        self.assertEqual(ctrait.default_kind, "unsupported")
+        self.assertEqual(ctrait.default_kind, "invalid")
         self.assertEqual(ctrait.default, Undefined)
 
         with self.assertRaises(ValueError):
