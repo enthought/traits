@@ -60,6 +60,7 @@ class CTrait(ctraits.cTrait):
             DefaultValue.object,
             DefaultValue.callable_and_args,
             DefaultValue.callable,
+            DefaultValue.disallow,
         ):
             return Undefined
         elif kind in (

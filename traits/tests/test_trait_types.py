@@ -110,6 +110,28 @@ class TraitTypesTest(unittest.TestCase):
             (DefaultValue.constant, Undefined),
         )
 
+    def test_disallowed_default_value(self):
+        class MyTraitType(TraitType):
+
+            default_value_type = DefaultValue.disallow
+
+        trait_type = MyTraitType()
+        self.assertEqual(
+            trait_type.get_default_value(),
+            (DefaultValue.disallow, Undefined)
+        )
+
+        ctrait = trait_type.as_ctrait()
+        self.assertEqual(
+            ctrait.default_value(),
+            (DefaultValue.disallow, Undefined),
+        )
+        self.assertEqual(ctrait.default_kind, "invalid")
+        self.assertEqual(ctrait.default, Undefined)
+
+        with self.assertRaises(ValueError):
+            ctrait.default_value_for(None, "<dummy>")
+
 
 class TestDeprecatedTraitTypes(unittest.TestCase):
     def test_function_deprecated(self):
