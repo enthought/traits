@@ -1125,6 +1125,9 @@ class Disallow(TraitType):
     #: Defines the CTrait type to use for this trait:
     ctrait_type = TraitKind.disallow
 
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
+
 
 # Create a singleton instance as the trait:
 Disallow = Disallow()
@@ -1216,6 +1219,9 @@ class Delegate(TraitType):
 
     #: Defines the CTrait type to use for this trait:
     ctrait_type = TraitKind.delegate
+
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
 
     #: The standard metadata for the trait:
     metadata = {"type": "delegate", "transient": False}
@@ -3861,6 +3867,9 @@ class Event(TraitType):
     trait : a trait
         The type of value that can be assigned to the event.
     """
+
+    #: The default value type to use.
+    default_value_type = DefaultValue.constant
 
     def __init__(self, trait=None, **metadata):
         metadata["type"] = "event"
