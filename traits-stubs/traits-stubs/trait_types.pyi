@@ -52,7 +52,8 @@ class Any(_TraitType[_Any, _Any]):
         args: tuple = ...,
         kw: dict = ...,
         **metadata: _Any,
-    ) -> None: ...
+    ) -> None:
+        ...
 
 
 class _BaseInt(_TraitType[_T, int]):
