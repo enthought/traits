@@ -267,7 +267,7 @@ class Constant(_TraitType[_Any, _Any]):
 class Delegate(_TraitType[_Any, _Any]):
     def __init__(
             self,
-            deligate: str = ...,
+            delegate: str = ...,
             prefix: str = ...,
             modify: bool = ...,
             listenable: bool = ...,
