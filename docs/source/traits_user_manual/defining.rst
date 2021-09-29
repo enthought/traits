@@ -278,7 +278,9 @@ the table.
 +------------------+----------------------------------------------------------+
 | Name             | Callable Signature                                       |
 +==================+==========================================================+
-| Any              | Any( [*value* = None, \*\*\ *metadata*] )                |
+| Any              | Any( [*default_value* = None, \*,                        |
+|                  | *factory* = None, *args* = (), *kw = {},                 |
+|                  | \*\*\ *metadata* )                                       |
 +------------------+----------------------------------------------------------+
 | Array            | Array( [*dtype* = None, *shape* = None, *value* = None,  |
 |                  | *typecode* = None, \*\*\ *metadata*] )                   |
