@@ -42,7 +42,17 @@ _S = TypeVar("_S")
 
 _Trait = _Union[_TraitType[_S, _T], _Type[_TraitType[_S, _T]]]
 
-Any = _Any
+
+class Any(_TraitType[_Any, _Any]):
+    def __init__(
+        self,
+        default_value=...,
+        *,
+        factory: _CallableType = ...,
+        args: tuple = ...,
+        kw: dict = ...,
+        **metadata: _Any,
+    ) -> None: ...
 
 
 class _BaseInt(_TraitType[_T, int]):
