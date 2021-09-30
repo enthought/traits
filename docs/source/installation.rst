@@ -23,7 +23,7 @@ Installation from source on macOS
 The system Python 3.8 on macOS Catalina has trouble installing Traits from
 source, due to an apparent mismatch in architecture settings. This issue can
 be worked around by specifying the "ARCHFLAGS" environment variable for
-the install:
+the install::
 
     ARCHFLAGS="-arch x86_64" python -m pip install traits
 
