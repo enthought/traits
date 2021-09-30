@@ -604,6 +604,68 @@ class TestHasTraits(unittest.TestCase):
             {"foo": A.class_traits()["foo"]},
         )
 
+    def test_decorated_changed_method(self):
+        # xref: enthought/traits#527
+        # Traits should ignore the _changed magic naming.
+
+        events = []
+
+        class A(HasTraits):
+            foo = Int()
+
+            @on_trait_change("foo")
+            def _foo_changed(self, obj, name, old, new):
+                events.append((obj, name, old, new))
+
+        a = A()
+        a.foo = 23
+        self.assertEqual(
+            events,
+            [(a, "foo", 0, 23)],
+        )
+
+    def test_observed_changed_method(self):
+        events = []
+
+        class A(HasTraits):
+            foo = Int()
+
+            @observe("foo")
+            def _foo_changed(self, event):
+                events.append(event)
+
+        a = A()
+        a.foo = 23
+        self.assertEqual(len(events), 1)
+        event = events[0]
+        self.assertEqual(event.object, a)
+        self.assertEqual(event.name, "foo")
+        self.assertEqual(event.old, 0)
+        self.assertEqual(event.new, 23)
+
+    def test_decorated_changed_method_subclass(self):
+        # xref: enthought/traits#527
+        # Traits should ignore the _changed magic naming.
+
+        events = []
+
+        class A(HasTraits):
+            foo = Int()
+
+            @on_trait_change("foo")
+            def _foo_changed(self, obj, name, old, new):
+                events.append((obj, name, old, new))
+
+        class B(A):
+            pass
+
+        a = B()
+        a.foo = 23
+        self.assertEqual(
+            events,
+            [(a, "foo", 0, 23)],
+        )
+
 
 class TestObjectNotifiers(unittest.TestCase):
     """ Test calling object notifiers. """
