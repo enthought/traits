@@ -52,9 +52,8 @@ class Foo:
 
 class Superclass(HasTraits):
     x = Any()
-    # y = Any()
 
 
 class Subclass(Superclass):
-    x = Instance(Foo)
+    x = Instance(Foo)  # E: assignment
     y = Int()

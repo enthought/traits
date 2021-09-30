@@ -201,6 +201,13 @@ class Any(TraitType):
             will no longer be copied. If you need a per-instance default, use a
             ``_trait_name_default`` method to supply that default.
 
+    factory : callable, optional
+        A callable, that when called with *args* and
+        *kw*, returns the default value for the trait.
+    args : tuple, optional
+        Positional arguments (if any) for generating the default value.
+    kw : dictionary, optional
+        Keyword arguments (if any) for generating the default value.
     **metadata
         Metadata for the trait.
     """
@@ -214,7 +221,15 @@ class Any(TraitType):
     #: A description of the type of value this trait accepts:
     info_text = "any value"
 
-    def __init__(self, default_value=NoDefaultSpecified, **metadata):
+    def __init__(
+        self,
+        default_value=NoDefaultSpecified,
+        *,
+        factory=None,
+        args=(),
+        kw={},
+        **metadata
+    ):
         if isinstance(default_value, list):
             warnings.warn(
                 (
@@ -239,6 +254,17 @@ class Any(TraitType):
                 stacklevel=2,
             )
             self.default_value_type = DefaultValue.dict_copy
+
+        # Sanity check the parameters
+        if default_value is not NoDefaultSpecified and factory is not None:
+            raise TypeError(
+                "ambiguous defaults: both a default value and a default "
+                "value factory are specified"
+            )
+
+        if factory is not None:
+            self.default_value_type = DefaultValue.callable_and_args
+            default_value = (factory, args, kw)
 
         super().__init__(default_value, **metadata)
 
