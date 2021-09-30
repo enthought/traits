@@ -234,9 +234,10 @@ class Any(TraitType):
             warnings.warn(
                 (
                     "In the future, a default value of type 'list' in an Any "
-                    "trait will be shared between all instances. For a "
-                    "per-instance default, define a default method for this "
-                    "trait. "
+                    "trait will be shared between all instances. To keep the "
+                    "current semantics, replace `Any([])` with "
+                    "`Any(factory=list)` or `Any([1, 2, 3])` (for example) "
+                    "with `Any(factory=list, args=([1, 2, 3],))`."
                 ),
                 DeprecationWarning,
                 stacklevel=2,
@@ -246,9 +247,10 @@ class Any(TraitType):
             warnings.warn(
                 (
                     "In the future, a default value of type 'dict' in an Any "
-                    "trait will be shared between all instances. For a "
-                    "per-instance default, define a default method for this "
-                    "trait. "
+                    "trait will be shared between all instances. To keep the "
+                    "current semantics, replace `Any({})` with "
+                    "`Any(factory=dict)` or `Any({1: 2})` (for example) "
+                    "with `Any(factory=dict, args=({1: 2},))`."
                 ),
                 DeprecationWarning,
                 stacklevel=2,
