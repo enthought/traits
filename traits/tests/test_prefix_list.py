@@ -60,15 +60,26 @@ class TestPrefixList(unittest.TestCase):
             a.foo = "abc"
 
     def test_invalid_default(self):
-        with self.assertRaises(TraitError) as exception_context:
+        with self.assertRaises(ValueError):
             class A(HasTraits):
                 foo = PrefixList(["zero", "one", "two"], default_value="uno")
 
-        self.assertIn(
-            "The value of a PrefixList trait must be 'zero' or 'one' or 'two' "
-            "(or any unique prefix), but a value of 'uno'",
-            str(exception_context.exception),
-        )
+    def test_invalid_default_corner_case(self):
+        with self.assertRaises(ValueError):
+
+            # In this case the default is "abc", which is invalid because
+            # it's not a unique prefix.
+            class A(HasTraits):
+                foo = PrefixList(["abc", "abcd", "e"])
+
+    def test_invalid_value_corner_case(self):
+        class A(HasTraits):
+            foo = PrefixList(["abcd", "abc", "e"])
+
+        a = A()
+        self.assertEqual(a.foo, "abcd")
+        with self.assertRaises(TraitError):
+            a.foo = "abc"
 
     def test_values_not_sequence(self):
         # Defining values with this signature is not supported

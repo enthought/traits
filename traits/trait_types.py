@@ -2796,18 +2796,10 @@ class PrefixList(TraitType):
     Parameters
     ----------
     values
-        A single iterable of legal string values.
-
-    Attributes
-    ----------
-    values : tuple of strings
-        Enumeration of all legal values for a trait.
+        An iterable of legal string values.
     """
 
-    #: The default value for the trait:
-    default_value = None
-
-    #: The default value type to use (i.e. 'constant'):
+    #: The default value type to use.
     default_value_type = DefaultValue.constant
 
     def __init__(self, values, **metadata):
@@ -2816,15 +2808,11 @@ class PrefixList(TraitType):
                 "Legal values should be provided via an iterable of strings, "
                 "got {!r}.".format(values)
             )
-        self.values = list(values)
+        self.values = values = list(values)
         self.values_ = values_ = {}
-        for key in values:
-            values_[key] = key
 
-        default = self.default_value
         if 'default_value' in metadata:
             default = metadata.pop('default_value')
-            default = self.value_for(default)
         elif self.values:
             default = self.values[0]
         else:
@@ -2832,29 +2820,51 @@ class PrefixList(TraitType):
                 "The iterable of legal string values can not be empty."
             )
 
-        super().__init__(default, **metadata)
-
-    def value_for(self, value):
-        if not isinstance(value, str):
-            raise TraitError(
-                "The value of a {} trait must be {}, but a value of {!r} {!r} "
-                "was specified.".format(
-                    self.__class__.__name__, self.info(), value, type(value))
+        # Validate and transform the default.
+        default_value = self._complete_prefix(default)
+        if default_value is None:
+            raise ValueError(
+                f"The default value {default!r} is not a unique prefix "
+                f"of any element of {self.values}."
             )
 
-        if value in self.values_:
-            return self.values_[value]
+        super().__init__(default, **metadata)
 
-        matches = [key for key in self.values if key.startswith(value)]
-        if len(matches) == 1:
-            self.values_[value] = match = matches[0]
-            return match
+    def _complete_prefix(self, prefix):
+        """
+        Return the unique completion for a given prefix, or None if there is no
+        unique completion.
+        """
+        # Check the cache.
+        if prefix in self.values_:
+            return self.values_[prefix]
 
-        raise TraitError(
-            "The value of a {} trait must be {}, but a value of {!r} {!r} was "
-            "specified.".format(
-                self.__class__.__name__, self.info(), value, type(value))
-        )
+        matches = [key for key in self.values if key.startswith(prefix)]
+        if len(matches) != 1:
+            # Be nice and distinguish between the two failure cases.
+            if not matches:
+                raise ValueError(
+                    f"{prefix!r} is not a prefix "
+                    f"of any element of {self.values}."
+                )
+            else:
+                raise ValueError(
+                    f"{prefix!r} is a prefix of multiple elements of "
+                    f"{self.values}."
+                )
+
+        completion = matches[0]
+        self.values_[prefix] = completion
+        return completion
+
+    def validate(self, object, name, value):
+        if isinstance(value, str):
+            try:
+                return self._complete_prefix(value)
+            except ValueError:
+                pass
+
+        self.error(object, name, value)
 
     def info(self):
         return (
