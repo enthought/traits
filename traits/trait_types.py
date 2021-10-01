@@ -2811,14 +2811,17 @@ class PrefixList(TraitType):
                 "Legal values should be provided via an iterable of strings, "
                 "got {!r}.".format(values)
             )
-        self.values = list(values)
-        if not self.values:
+        values = list(values)
+        if not values:
             raise ValueError(
                 "The iterable of legal string values can not be empty."
             )
 
         if default_value is None:
-            default_value = self.values[0]
+            default_value = values[0]
+
+        # Use a frozenset for quick lookups in the normal case.
+        self.values = frozenset(values)
 
         super().__init__(self._complete_prefix(default_value), **metadata)
 
@@ -2834,7 +2837,7 @@ class PrefixList(TraitType):
 
     def info(self):
         return (
-            " or ".join(repr(x) for x in self.values)
+            " or ".join(repr(x) for x in sorted(self.values))
             + " (or any unique prefix)"
         )
 
@@ -2843,8 +2846,9 @@ class PrefixList(TraitType):
         Return the unique string completion for a given string prefix.
 
         Finds the unique string in "self.values" which starts with "prefix".
-        If there is no such string, or there are multiple matches, raises
-        ValueError.
+        If there is no such string, or there are multiple matches and the
+        given prefix is not exactly equal to one of the strings in self.values,
+        raises ValueError.
 
         Parameters
         ----------
@@ -2862,6 +2866,9 @@ class PrefixList(TraitType):
         ValueError
             If the string has no completion.
         """
+        if prefix in self.values:
+            return prefix
+
         matches = [key for key in self.values if key.startswith(prefix)]
         if len(matches) == 1:
             return matches[0]
