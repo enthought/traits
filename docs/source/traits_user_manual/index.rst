@@ -13,6 +13,7 @@ Contents
     :maxdepth: 3
 
     intro.rst
+    installation.rst
     defining.rst
     notification.rst
     deferring.rst
