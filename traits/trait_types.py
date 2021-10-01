@@ -2842,7 +2842,7 @@ class PrefixList(TraitType):
         """
         Return the unique string completion for a given string prefix.
 
-        Finds the unique string in "values" which starts with "prefix".
+        Finds the unique string in "self.values" which starts with "prefix".
         If there is no such string, or there are multiple matches, raises
         ValueError.
 
