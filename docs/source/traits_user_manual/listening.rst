@@ -539,6 +539,17 @@ The arguments that are passed to the trait attribute change notification
 method depend on the method signature and on which type of static notification
 handler it is.
 
+.. note::
+    The :func:`~.on_trait_change` and :func:`~.observe` decorators nullify
+    the effect of special naming. A method that looks like::
+
+        @observe("foo")
+        def _foo_changed(self, event):
+            do_something_with(event)
+
+    will only be called once when ``foo`` changes, as a result of the
+    ``observe`` decorator.
+
 .. _attribute-specific-handler-signatures:
 
 Attribute-specific Handler Signatures

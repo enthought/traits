@@ -162,6 +162,7 @@ def _get_def(class_name, class_dict, bases, method):
         (result is not None)
         and is_unbound_method_type(result)
         and (getattr(result, "on_trait_change", None) is None)
+        and (getattr(result, "_observe_inputs", None) is None)
     ):
         return result
 
@@ -171,6 +172,7 @@ def _get_def(class_name, class_dict, bases, method):
             (result is not None)
             and is_unbound_method_type(result)
             and (getattr(result, "on_trait_change", None) is None)
+            and (getattr(result, "_observe_inputs", None) is None)
         ):
             return result
 
