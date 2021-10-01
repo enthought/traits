@@ -103,6 +103,10 @@ class TestPrefixList(unittest.TestCase):
         with self.assertRaises(ValueError):
             PrefixList([])
 
+    def test_values_is_empty_with_default(self):
+        with self.assertRaises(ValueError):
+            PrefixList([], default_value="one")
+
     def test_pickle_roundtrip(self):
         class A(HasTraits):
             foo = PrefixList(["zero", "one", "two"], default_value="one")

@@ -2797,67 +2797,33 @@ class PrefixList(TraitType):
     ----------
     values
         An iterable of legal string values.
+    default_value : str, optional
+        The default value for this PrefixList. If not given, the first element
+        of *values* is used as the default value.
     """
 
     #: The default value type to use.
     default_value_type = DefaultValue.constant
 
-    def __init__(self, values, **metadata):
+    def __init__(self, values, *, default_value=None, **metadata):
         if isinstance(values, (str, bytes, bytearray)):
             raise TypeError(
                 "Legal values should be provided via an iterable of strings, "
                 "got {!r}.".format(values)
             )
-        self.values = values = list(values)
-        self.values_ = values_ = {}
-
-        if 'default_value' in metadata:
-            default = metadata.pop('default_value')
-        elif self.values:
-            default = self.values[0]
-        else:
+        self.values = list(values)
+        if not self.values:
             raise ValueError(
                 "The iterable of legal string values can not be empty."
             )
 
-        # Validate and transform the default.
-        default_value = self._complete_prefix(default)
         if default_value is None:
-            raise ValueError(
-                f"The default value {default!r} is not a unique prefix "
-                f"of any element of {self.values}."
-            )
+            default_value = self.values[0]
 
-        super().__init__(default, **metadata)
-
-    def _complete_prefix(self, prefix):
-        """
-        Return the unique completion for a given prefix, or None if there is no
-        unique completion.
-        """
-        # Check the cache.
-        if prefix in self.values_:
-            return self.values_[prefix]
-
-        matches = [key for key in self.values if key.startswith(prefix)]
-        if len(matches) != 1:
-            # Be nice and distinguish between the two failure cases.
-            if not matches:
-                raise ValueError(
-                    f"{prefix!r} is not a prefix "
-                    f"of any element of {self.values}."
-                )
-            else:
-                raise ValueError(
-                    f"{prefix!r} is a prefix of multiple elements of "
-                    f"{self.values}."
-                )
-
-        completion = matches[0]
-        self.values_[prefix] = completion
-        return completion
+        super().__init__(self._complete_prefix(default_value), **metadata)
 
     def validate(self, object, name, value):
+        """ Validate and transform a value assigned to this trait. """
         if isinstance(value, str):
             try:
                 return self._complete_prefix(value)
@@ -2868,9 +2834,46 @@ class PrefixList(TraitType):
 
     def info(self):
         return (
-            " or ".join([repr(x) for x in self.values])
+            " or ".join(repr(x) for x in self.values)
             + " (or any unique prefix)"
         )
+
+    def _complete_prefix(self, prefix):
+        """
+        Return the unique string completion for a given string prefix.
+
+        Finds the unique string in "values" which starts with "prefix".
+        If there is no such string, or there are multiple matches, raises
+        ValueError.
+
+        Parameters
+        ----------
+        prefix : str
+            The string to be completed
+
+        Returns
+        -------
+        completion : str
+            The unique completion of *prefix* to one of the values in
+            self.values.
+
+        Raises
+        ------
+        ValueError
+            If the string has no completion.
+        """
+        matches = [key for key in self.values if key.startswith(prefix)]
+        if len(matches) == 1:
+            return matches[0]
+        elif matches:
+            raise ValueError(
+                f"{prefix!r} is a prefix of multiple elements of "
+                f"{self.values}, so has no unique completion."
+            )
+        else:
+            raise ValueError(
+                f"{prefix!r} is not a prefix of any element of {self.values}."
+            )
 
 
 class Set(TraitType):
