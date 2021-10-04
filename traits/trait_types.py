@@ -2804,13 +2804,10 @@ class PrefixList(TraitType):
         Enumeration of all legal values for a trait.
     """
 
-    #: The default value for the trait:
-    default_value = None
-
     #: The default value type to use (i.e. 'constant'):
     default_value_type = DefaultValue.constant
 
-    def __init__(self, values, **metadata):
+    def __init__(self, values, *, default_value=None, **metadata):
         if isinstance(values, (str, bytes, bytearray)):
             raise TypeError(
                 "Legal values should be provided via an iterable of strings, "
@@ -2821,18 +2818,16 @@ class PrefixList(TraitType):
         for key in values:
             values_[key] = key
 
-        default = self.default_value
-        if 'default_value' in metadata:
-            default = metadata.pop('default_value')
-            default = self.value_for(default)
+        if default_value is not None:
+            default_value = self.value_for(default_value)
         elif self.values:
-            default = self.values[0]
+            default_value = self.values[0]
         else:
             raise ValueError(
                 "The iterable of legal string values can not be empty."
             )
 
-        super().__init__(default, **metadata)
+        super().__init__(default_value, **metadata)
 
     def value_for(self, value):
         if not isinstance(value, str):
