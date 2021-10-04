@@ -2818,7 +2818,7 @@ class PrefixList(TraitType):
         # Use a set for faster lookup in the common case that the value
         # to be validated is one of the elements of 'values' (rather than
         # a strict prefix).
-        self._values = frozenset(values)
+        self._values_as_set = frozenset(values)
 
         if default_value is not None:
             default_value = self._complete_value(default_value)
@@ -2850,7 +2850,7 @@ class PrefixList(TraitType):
             element of self.values, or is a prefix of multiple elements
             of self.values.
         """
-        if value in self._values:
+        if value in self._values_as_set:
             return value
 
         matches = [key for key in self.values if key.startswith(value)]
