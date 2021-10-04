@@ -1,0 +1,22 @@
+name: Release to PyPI
+
+on:
+  workflow_dispatch:
+  # release:
+  #   types: [published]
+  pull_request:
+
+jobs:
+  build-wheels:
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Check out the release commit
+      uses: actions/checkout@v2
+
+    - name: Build wheels
+      uses: pypa/cibuildwheel@v2.1.2
