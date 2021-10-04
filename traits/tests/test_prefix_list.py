@@ -51,6 +51,7 @@ class TestPrefixList(unittest.TestCase):
     def test_repeated_prefix(self):
         class A(HasTraits):
             foo = PrefixList(("abc1", "abc2"))
+
         a = A()
 
         a.foo = "abc1"
@@ -59,8 +60,30 @@ class TestPrefixList(unittest.TestCase):
         with self.assertRaises(TraitError):
             a.foo = "abc"
 
-    def test_invalid_default(self):
+    def test_default_default(self):
+        class A(HasTraits):
+            foo = PrefixList(["zero", "one", "two"], default_value="zero")
+
+        a = A()
+        self.assertEqual(a.foo, "zero")
+
+    def test_explicit_default(self):
+        class A(HasTraits):
+            foo = PrefixList(["zero", "one", "two"], default_value="one")
+
+        a = A()
+        self.assertEqual(a.foo, "one")
+
+    def test_default_subject_to_completion(self):
+        class A(HasTraits):
+            foo = PrefixList(["zero", "one", "two"], default_value="o")
+
+        a = A()
+        self.assertEqual(a.foo, "one")
+
+    def test_default_subject_to_validation(self):
         with self.assertRaises(TraitError) as exception_context:
+
             class A(HasTraits):
                 foo = PrefixList(["zero", "one", "two"], default_value="uno")
 
@@ -69,6 +92,19 @@ class TestPrefixList(unittest.TestCase):
             "(or any unique prefix), but a value of 'uno'",
             str(exception_context.exception),
         )
+
+    def test_default_legal_but_not_unique_prefix(self):
+        # Corner case to exercise internal logic: the default is not a unique
+        # prefix, but it is one of the list of values, so it's legal.
+        class A(HasTraits):
+            foo = PrefixList(["live", "modal", "livemodal"], default="live")
+
+        a = A()
+        self.assertEqual(a.foo, "live")
+
+    def test_default_value_cant_be_passed_by_position(self):
+        with self.assertRaises(TypeError):
+            PrefixList(["zero", "one", "two"], "one")
 
     def test_values_not_sequence(self):
         # Defining values with this signature is not supported
