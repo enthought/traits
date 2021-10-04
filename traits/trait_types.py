@@ -2842,8 +2842,7 @@ class PrefixList(TraitType):
 
         matches = [key for key in self.values if key.startswith(value)]
         if len(matches) == 1:
-            self.values_[value] = match = matches[0]
-            return match
+            return matches[0]
 
         raise TraitError(
             "The value of a {} trait must be {}, but a value of {!r} {!r} was "
