@@ -127,6 +127,18 @@ class TestPrefixList(unittest.TestCase):
         with self.assertRaises(ValueError):
             PrefixList([], default_value="one")
 
+    def test_no_nested_exception(self):
+        # Regression test for enthought/traits#1155
+        class A(HasTraits):
+            foo = PrefixList(["zero", "one", "two"])
+
+        a = A()
+        try:
+            a.foo = "three"
+        except TraitError as exc:
+            self.assertIsNone(exc.__context__)
+            self.assertIsNone(exc.__cause__)
+
     def test_pickle_roundtrip(self):
         class A(HasTraits):
             foo = PrefixList(["zero", "one", "two"], default_value="one")

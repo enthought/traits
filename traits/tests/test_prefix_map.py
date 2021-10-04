@@ -189,6 +189,18 @@ class TestPrefixMap(unittest.TestCase):
                 married = PrefixMap(
                     {"yes": 1, "yeah": 1, "no": 0}, default_value="meh")
 
+    def test_no_nested_exception(self):
+        # Regression test for enthought/traits#1155
+        class A(HasTraits):
+            washable = PrefixMap({"yes": 1, "no": 0})
+
+        a = A()
+        try:
+            a.washable = "affirmatron"
+        except TraitError as exc:
+            self.assertIsNone(exc.__context__)
+            self.assertIsNone(exc.__cause__)
+
     def test_pickle_roundtrip(self):
         class Person(HasTraits):
             married = PrefixMap({"yes": 1, "yeah": 1, "no": 0, "nah": 0},
