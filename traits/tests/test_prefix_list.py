@@ -82,16 +82,10 @@ class TestPrefixList(unittest.TestCase):
         self.assertEqual(a.foo, "one")
 
     def test_default_subject_to_validation(self):
-        with self.assertRaises(TraitError) as exception_context:
+        with self.assertRaises(ValueError):
 
             class A(HasTraits):
                 foo = PrefixList(["zero", "one", "two"], default_value="uno")
-
-        self.assertIn(
-            "The value of a PrefixList trait must be 'zero' or 'one' or 'two' "
-            "(or any unique prefix), but a value of 'uno'",
-            str(exception_context.exception),
-        )
 
     def test_default_legal_but_not_unique_prefix(self):
         # Corner case to exercise internal logic: the default is not a unique
@@ -118,8 +112,8 @@ class TestPrefixList(unittest.TestCase):
 
         self.assertEqual(
             str(exception_context.exception),
-            "Legal values should be provided via an iterable of strings, "
-            "got 'zero'."
+
+            "values should be a collection of strings, not 'zero'"
         )
 
     def test_values_is_empty(self):
@@ -127,6 +121,11 @@ class TestPrefixList(unittest.TestCase):
         # sure we raise a ValueError
         with self.assertRaises(ValueError):
             PrefixList([])
+
+    def test_values_is_empty_with_default_value(self):
+        # Raise even if we give a default value.
+        with self.assertRaises(ValueError):
+            PrefixList([], default_value="one")
 
     def test_pickle_roundtrip(self):
         class A(HasTraits):

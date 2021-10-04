@@ -2789,54 +2789,66 @@ class PrefixList(TraitType):
     to either 'yes' or 'no'. That is, if the value 'y' is assigned to the
     **married** attribute, the actual value assigned will be 'yes'.
 
-    Note that the algorithm used by PrefixList in determining whether
-    a string is a valid value is fairly efficient in terms of both time and
-    space, and is not based on a brute force set of comparisons.
-
     Parameters
     ----------
     values
-        A single iterable of legal string values.
+        A list or other iterable of legal string values for this trait.
 
     Attributes
     ----------
-    values : tuple of strings
-        Enumeration of all legal values for a trait.
+    values : list of str
+        The list of legal values for this trait.
     """
 
-    #: The default value type to use (i.e. 'constant'):
+    #: The default value type to use.
     default_value_type = DefaultValue.constant
 
     def __init__(self, values, *, default_value=None, **metadata):
+        # Avoid confusion from expanding a string-like into characters.
         if isinstance(values, (str, bytes, bytearray)):
             raise TypeError(
-                "Legal values should be provided via an iterable of strings, "
-                "got {!r}.".format(values)
+                "values should be a collection of strings, "
+                f"not {values!r}"
             )
-        self.values = list(values)
-        self.values_ = values_ = {}
-        for key in values:
-            values_[key] = key
+        values = list(values)
+        if not values:
+            raise ValueError(
+                "values must be nonempty"
+            )
+
+        self.values = values
+        self.values_ = {key: key for key in values}
 
         if default_value is not None:
-            default_value = self.value_for(default_value)
-        elif self.values:
-            default_value = self.values[0]
+            default_value = self._complete_value(default_value)
         else:
-            raise ValueError(
-                "The iterable of legal string values can not be empty."
-            )
+            default_value = self.values[0]
 
         super().__init__(default_value, **metadata)
 
-    def value_for(self, value):
-        if not isinstance(value, str):
-            raise TraitError(
-                "The value of a {} trait must be {}, but a value of {!r} {!r} "
-                "was specified.".format(
-                    self.__class__.__name__, self.info(), value, type(value))
-            )
+    def _complete_value(self, value):
+        """
+        Validate and complete a given value.
 
+        Parameters
+        ----------
+        value : str
+            Value to be validated.
+
+        Returns
+        -------
+        completion : str
+            Equal to *value*, if *value* is already a member of self.values.
+            Otherwise, the unique member of self.values for which *value*
+            is a prefix.
+
+        Raises
+        ------
+        ValueError
+            If value is not in self.values, and is not a prefix of any
+            element of self.values, or is a prefix of multiple elements
+            of self.values.
+        """
         if value in self.values_:
             return self.values_[value]
 
@@ -2844,15 +2856,23 @@ class PrefixList(TraitType):
         if len(matches) == 1:
             return matches[0]
 
-        raise TraitError(
-            "The value of a {} trait must be {}, but a value of {!r} {!r} was "
-            "specified.".format(
-                self.__class__.__name__, self.info(), value, type(value))
+        raise ValueError(
+            f"{value!r} is neither a member nor a unique prefix of a member "
+            f"of {self.values}"
         )
+
+    def validate(self, object, name, value):
+        if isinstance(value, str):
+            try:
+                return self._complete_value(value)
+            except ValueError:
+                pass
+
+        self.error(object, name, value)
 
     def info(self):
         return (
-            " or ".join([repr(x) for x in self.values])
+            " or ".join(repr(x) for x in self.values)
             + " (or any unique prefix)"
         )
 
