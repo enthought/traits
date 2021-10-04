@@ -1,8 +1,7 @@
 name: Publish release to PyPI
 
 on:
-  release:
-    types: [published]
+  pull_request
 
 jobs:
   build-sdist:
@@ -88,7 +87,7 @@ jobs:
     - name: Publish wheels to PyPI
       env:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+        TWINE_PASSWORD: "bogus"
       run: |
         python -m twine check --strict dist/*-manylinux*.whl
         python -m twine upload dist/*-manylinux*.whl
