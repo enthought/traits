@@ -3348,8 +3348,10 @@ class PrefixMap(TraitType):
         setattr(object, name + "_", self.mapped_value(value))
 
     def info(self):
-        keys = sorted(repr(x) for x in self.map)
-        return " or ".join(keys) + " (or any unique prefix)"
+        return (
+            " or ".join(repr(x) for x in self.map)
+            + " (or any unique prefix)"
+        )
 
     def get_editor(self, trait):
         from traitsui.api import EnumEditor
