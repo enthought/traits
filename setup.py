@@ -308,7 +308,7 @@ setuptools.setup(
             "flake8",
             "flake8-ets",
             "mypy",
-            "numpy",
+            "numpy; python_version<'3.10'",
             "pyface",
             "PySide2; python_version<'3.10'",
             "setuptools",
