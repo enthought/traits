@@ -4,7 +4,7 @@ Traits CHANGELOG
 Release 6.3.0
 -------------
 
-Released: 2021-01-08
+Released: 2021-10-08
 
 Traits 6.3 is the latest feature release in the Traits 6 series, with several
 improvements and fixes over Traits 6.2.
