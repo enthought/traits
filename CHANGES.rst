@@ -37,11 +37,11 @@ to look out for:
   special-casing will be removed, and the default value will be shared between
   all instances. For the 6.3 release of Traits, a deprecation warning is issued
   whenever a trait definition of the form ``Any([1, 2, 3])`` or ``Any({})``
-  is encountered. Users can avoid the warning by changing their code to use
-  the new ``factory`` argument to the ``Any`` trait type, for example replacing
-  a trait declaration ``foo = Any({})`` with ``foo = Any(factory=dict)``, and
-  a trait declaration ``foo = Any([1, 2, 3])`` with
-  ``foo = Any(factory=list, args=([1, 2, 3],))``.
+  is encountered. Users can retain the existing behaviour and suppress the
+  warning by changing their code to use the new ``factory`` argument to the
+  ``Any`` trait type, for example replacing a trait declaration ``foo =
+  Any({})`` with ``foo = Any(factory=dict)``, and a trait declaration ``foo =
+  Any([1, 2, 3])`` with ``foo = Any(factory=list, args=([1, 2, 3],))``.
 
 * Starting with Traits 7.0, the ``Date`` trait type will no longer accept
   ``datetime`` instances by default. Traits 6.3 will issue a deprecation
