@@ -137,23 +137,11 @@ Changes
 Deprecations
 ~~~~~~~~~~~~
 
-* The ``MetaHasTraits.add_listener`` and ``MetaHasTraits.remove_listener``
-  methods are deprecated. If you need the functionality that these methods
-  provide, please discuss your use-case with the ETS maintenance team. (#1550)
-* The ``Symbol`` trait type is deprecated. For resolution of a string
-  representing a package/module/object combination, use ``import_symbol``
-  instead. (#1542)
 * The ``Any`` trait type currently implicitly makes a per-``HasTraits``-instance
   copy of the default value if that value is an instance of either ``list`` or
   ``dict``. This behaviour is deprecated, and will be removed in Traits 7.0.
   For a per-instance default, use the new ``factory`` argument to ``Any``
   instead. (#1548, #1532)
-* The ``clean_filename`` and ``clean_timestamp`` utilities are deprecated. If
-  you need this code in your own project, you're advised to vendorise it.
-  (#1527)
-* The ``find_resource`` and ``store_resource`` functions are deprecated. New
-  code should use ``importlib.resources`` or ``importlib_resources`` instead
-  of either of these functions.
 * The ``Date``, ``Datetime`` and ``Time`` trait types will no longer accept
   ``None`` as a valid trait value in the future. To keep the existing
   behaviour, use the new ``allow_none`` keyword argument to these trait types.
@@ -161,40 +149,54 @@ Deprecations
 * The ``Date`` trait type will no longer accept ``datetime`` instances by
   default in the future. To keep the existing behaviour, use the new
   ``allow_datetime`` keyword argument. (#1441)
+* The ``Symbol`` trait type is deprecated. For resolution of a string
+  representing a package/module/object combination, use ``import_symbol``
+  instead. (#1542)
+* The ``MetaHasTraits.add_listener`` and ``MetaHasTraits.remove_listener``
+  methods are deprecated. If you need the functionality that these methods
+  provide, please discuss your use-case with the ETS maintenance team. (#1550)
+* The ``clean_filename`` and ``clean_timestamp`` utilities are deprecated. If
+  you need these utilities in your own project, you're advised to copy the
+  code directly into your project. (#1527)
+* The ``find_resource`` and ``store_resource`` functions are deprecated. New
+  code should use ``importlib.resources`` or ``importlib_resources`` instead
+  of either of these functions. (#1501)
 
 
 Fixes
 ~~~~~
 
-* Fix redundant nested exception for invalid assignments to
-  ``PrefixList`` and ``PrefixMap`` traits. (#1564)
+* Invalid assignments to ``PrefixList`` and ``PrefixMap`` traits produced
+  an unnecessarily nested exception. This has been fixed. (#1564)
 * An ``observe``-decorated listener method whose name has the special form
   ``"_traitname_changed"`` will no longer be triggered both as as result
   of the ``observe`` decorator *and* the special naming: it will only be
   triggered via the ``observe`` decorator. (#1560)
-* Fix a parameter name typo in stubs for the ``Delegate`` trait type. (#1556)
-* Fix deprecation of ``Function`` and ``Method`` trait types, which would
-  fail if any argument was used. (#1543)
-* Fix validation of inner traits with a dynamic default in a ``Union`` trait.
-  This affected trait declarations like ``foo = Union(List(Int), Str)``, where
-  the list entries would not be validated. (#1522, #1534)
-* Fix validation of inner traits with a dynamic default in a ``Tuple`` trait.
-  (#1521)
-* Fix a potential race condition in ``ListenerHandler`` that could end up
-  trying to look up an attribute on ``None`` under unusual timing conditions.
+* The ``delegate`` parameter was mistyped in the typing stubs for the
+  ``Delegate`` trait type. This has been fixed. (#1556)
+* The ``Function`` and ``Method`` trait types will no longer fail when
+  arguments are passed. Note that these trait types are already deprecated, and
+  should not be used in new code. (#1543)
+* Inner traits of a ``Union`` trait are now validated properly. Previously, in
+  trait declarations like ``foo = Union(List(Int), Str)``, the list entries
+  would not be validated. (#1522, #1534)
+* Traits with a dynamic default that appear as inner traits of a ``Tuple``
+  trait are now validated properly. (#1521)
+* A potential race condition in ``ListenerHandler`` has been fixed. The
+  race condition is hard to exercise and has not been witnessed in the wild.
   (#1495)
-* Fix failure of ``add_class_trait`` to add a ``List`` trait in the presence of
-  subclasses. (#1461)
-* Replace a use of the (deprecated) ``distutils`` library with ``sysconfig``.
-  (#1452)
-* Fix handling of dynamic defaults in the ``_instance_handler_factory`` used
-  by the TraitsUI ``TableEditor``. (#1446, #1450)
-* Fix trait descriptions (the "info" text) for the ``File`` and ``Directory``
-  traits to avoid giving a misleading error message when ``exists=True``.
-  (#1440)
-* Fix that clones of ``BaseInstance`` traits didn't correctly respect
-  the ``allow_none`` parameter. (#1433)
-* Remove outdated reference to the "pyglet" Kiva backend. (#1431)
+* Use of ``add_class_trait`` to add a ``List`` trait was broken in the presence
+  of subclasses. This has been fixed. (#1461)
+* A use of the (deprecated) ``distutils`` library has been replcaed with
+  ``sysconfig``. (#1452)
+* Dynamic default handing has been fixed in the ``_instance_handler_factory``
+  used by the TraitsUI ``TableEditor``. (#1446, #1450)
+* The trait descriptions (the "info" text) for the ``File`` and ``Directory``
+  traits have been fixed to avoid giving a misleading error message when
+  ``exists=True``. (#1440)
+* Clones of ``BaseInstance`` traits didn't correctly respect the ``allow_none``
+  parameter. This is now fixed. (#1433)
+* An outdated reference to the "pyglet" Kiva backend has been removed. (#1431)
 
 
 Documentation
