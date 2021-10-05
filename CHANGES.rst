@@ -78,21 +78,27 @@ Features
   all traits on a ``HasTraits`` object. Currently this support is limited to
   cases where the ``"*"`` appears in a terminal position. For example,
   ``observe("foo:*")`` is supported, but ``observe("*:foo")`` is not.
-  (#1525, #1496)
+  (#1496, #1525)
 * The ``Any`` trait type now supports a ``factory`` argument (with accompanying
   ``args`` and ``kw`` arguments). This can be used to specify a per-instance
   default, for example with ``Any(factory=dict)``. (#1557, #1558)
-* Add a new member ``DefaultValue.disallow`` to the ``DefaultValue``
-  enumeration, to be used for trait types that don't have a meaningful default.
-* Warn on a bad signature for an ``observe``-decorated method, to catch the
-  common error of not providing the ``event`` parameter. (#1529)
-* Support the ``"qt"`` toolkit name as a synonym for ``"qt4"``. (#1436)
+* The ``DefaultValue`` enumeration has a new member ``DefaultValue.disallow``
+  intended to be used for trait types that don't have a meaningful default. For
+  traits using this default value type, an attempt to retrieve the
+  corresponding default using ``default_value_for`` will raise ``ValueError``.
+  (#1546)
+* When a method is decorated with an ``observe`` decorator, the method
+  signature is now checked, and a warning issued if it doesn't match the
+  expected signature. This should catch the common error of forgetting to
+  provide the ``event`` parameter. (#1529)
+* In ``ETSToolkit``, the ``"qt"`` toolkit name is now supported as a synonym
+  for ``"qt4"``. (#1436)
 * The ``Date``, ``Datetime`` and ``Time`` trait types have a new argument
   ``allow_none``. In the future, these trait types will not accept ``None``
   unless ``allow_none=True`` is specified. (#1432)
 * The ``Date`` trait type has a new argument ``allow_datetime``. In the future,
-  ``datetime`` instances will not be valid for a ``Date`` trait unless
-  ``allow_datetime`` is specified. (#1429)
+  ``datetime`` instances will not be valid values for a ``Date`` trait unless
+  ``allow_datetime=True`` is specified. (#1429)
 
 
 Performance
@@ -102,12 +108,14 @@ Performance
   ``ObserverExpression`` objects and observe mini-language strings are now
   cached. This should speed up creation and instantiation of ``HasTraits``
   subclasses that involve listening for the same pattern in multiple places.
-* Simplify equality definition on ``ObserverExpression``. (#1517)
-* Add ``__slots__`` to ``ObserverExpression``, ``ObserverGraph`` and related
-  classes. (#1513, #1515)
+  (#1516, #1528)
+* The equality definition on ``ObserverExpression`` has been simplified.
+  (#1517)
+* The ``ObserverExpression``, ``ObserverGraph`` and related
+  classes now use ``__slots__`` to improve speed and memory use. (#1513, #1515)
 * The ``on_trait_change`` method has been sped up by almost a factor of two,
   by removing unnecessary internal usage of Traits in the parsing and listener
-  functionality. (#1493, #1492, #1491, #1490)
+  functionality. (#1490, #1491, #1492, #1493)
 
 
 Changes
@@ -122,8 +130,8 @@ Changes
   ``traits.observation.api``. (#1498)
 * An attempt to access a nonexistent "dunder" attribute (an attribute whose
   name starts and ends with "__") on a ``CTrait`` instance will now raise
-  ``AttributeError``. Previously, it would return ``None``. (#1477, #1469,
-  #1474)
+  ``AttributeError``. Previously, it would return ``None``. (#1469, #1474,
+  #1477)
 
 
 Deprecations
@@ -192,21 +200,24 @@ Fixes
 Documentation
 ~~~~~~~~~~~~~
 
-* Add installation docs. (#1559)
-* Fix occurrences of ``Any(some_list)`` in docs. (#1547)
-* Document that ``sync_trait`` only synchronises items for ``List`` traits, not
-  for ``Dict`` and ``Set`` traits. (#1519)
-* Add a configuration file for Read the Docs. (#1478)
-* Fix a ``DeprecationWarning`` arising from an unnecessary override of the
-  ``add_content`` method in the ``TraitDocumenter``. (#1475)
-* Temporarily pin Sphinx version to avoid build failures with Sphinx 4.0.1.
+* Brief installation docs have been added. (#1559)
+* Occurrences of ``Any(some_list)`` in docs have been replaced. (#1547)
+* The documentation for ``sync_trait`` has been updated to note that it only
+  synchronises items for ``List`` traits, not for ``Dict`` and ``Set`` traits.
+  (#1519)
+* A configuration file for Read the Docs has been added. (#1478)
+* A ``DeprecationWarning`` arising from an unnecessary override of the
+  ``add_content`` method in the ``TraitDocumenter`` has been fixed. (#1475)
+* The Sphinx version was temporarily pinned to avoid build failures arising
+  from bugs in Sphinx 4.0.1. That pin has since been reverted.
   (#1471, #1462)
-* Remove requirement to use Sphinx < 4 for building documentation. (#1471)
-* Various docstring fixes. (#1468, #1465)
-* Various typo fixes. (#1458, #1442)
-* Replace references to ``HasTraits.set`` with ``HasTraits.trait_set``. (#1451)
-* Fix some issues with tutorial CSS; change colour scheme to Enthought colours.
-  (#1421, #1419)
+* Various docstring fixes have been applied. (#1468, #1465)
+* Various typo fixes have been applied. (#1458, #1442)
+* References to ``HasTraits.set`` have been replaced with
+  ``HasTraits.trait_set``. (#1451)
+* Some issues with the tutorial CSS used in the ETS demo application have been
+  fixed; the colour scheme has been changed to Enthought colours. (#1421,
+  #1419)
 
 
 Cleanup and refactoring
@@ -214,21 +225,23 @@ Cleanup and refactoring
 
 * All built-in TraitType subclasses now provide the default value type directly
   rather than inferring it. (#1555, #1536, #1531, #1539, #1532, #1540)
-* Use proper declarations for the ``trait_added`` and ``trait_modified``
-  traits on ``HasTraits``. (#1552)
-* Remove redundant ``unittest.main blocks``. (#1545)
-* Apply some style fixes in ``trait_types.pyi``. (#1523)
-* Add more friendly ``repr`` implementations for ``ObserverExpression`` and
-  other key observation classes. (#1514)
-* Shuffle internals around to make ``ObserverGraph`` the key "compiled"
-  object that the rest of Traits cares about, rather than
-  ``ObserverExpression``. (#1512)
-* Simplify grammar and parser for observe mini-language. (#1506)
-* Make "any_trait" versus "anytrait" usage consistent in non-user-facing
-  functions and classes. (#1497)
-* Remove unnecessary ``noqa`` markers. (#1499)
-* Use ``property`` decorators instead of ``property`` callable. (#1470)
-* Fix a bad observe-decorated listener signature in a test. (#1530)
+* The ``trait_added`` and ``trait_modified`` traits on ``HasTraits`` now
+  have proper trait type declarations. (#1552)
+* Redundant ``unittest.main blocks`` have been removed. (#1545)
+* Style fixes have been applied to ``trait_types.pyi``. (#1523)
+* ``ObserverExpression`` and other key observation classes now have more
+  debug-friendly ``repr`` implementations. (#1514)
+* The ``observer`` parsing internals have been reworked to make
+  ``ObserverGraph`` the key "compiled" object that the rest of Traits cares
+  about, rather than ``ObserverExpression``. (#1512)
+* The grammar and parser for the observe mini-language have been simplified.
+  (#1506)
+* Confusion between "any_trait" and "anytrait" in non-user-facing
+  functions and classes has been cleaned up. (#1497)
+* Unnecessary ``noqa`` markers have been removed. (#1499)
+* A use of the ``property`` callable has been replaced with a ``property``
+  decorator. (#1470)
+* A bad observe-decorated listener signature in a test has been fixed. (#1530)
 
 
 Build and development workflow
@@ -238,11 +251,12 @@ Build and development workflow
   (#1569, #1567, #1425)
 * Wheels are now built for Linux/aarch64. (#1567)
 * Universal wheels are now built for macOS, to support Apple Silicon. (#1567)
-* Add Slack notifications for cron jobs. (#1481)
-* Add a ``workflow_dispatch`` trigger for all cron jobs. (#1480)
+* Cron jobs now send failure/success Slack notifications to Enthought's
+  internal channel. (#1481)
+* All cron jobs now include a ``workflow_dispatch`` trigger. (#1480)
 * The main development branch is now called "main" rather than "master".
   (#1467)
-* Add automated tests for PyPI wheels. (#1417)
+* Automated tests have been added for PyPI wheels. (#1417)
 
 
 Release 6.2.0
