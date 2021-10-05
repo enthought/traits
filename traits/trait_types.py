@@ -2804,7 +2804,7 @@ class PrefixList(TraitType):
     default_value_type = DefaultValue.constant
 
     def __init__(self, values, *, default_value=None, **metadata):
-        # Avoid confusion from expanding a string-like into characters.
+        # Avoid confusion from treating a string-like object as an iterable.
         if isinstance(values, (str, bytes, bytearray)):
             raise TypeError(
                 "values should be a collection of strings, "
