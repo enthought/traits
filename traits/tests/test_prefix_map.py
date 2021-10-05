@@ -76,6 +76,10 @@ class TestPrefixMap(unittest.TestCase):
         self.assertEqual(p.married, "nah")
         self.assertEqual(p.married_, 0)
 
+    def test_default_keyword_only(self):
+        with self.assertRaises(TypeError):
+            PrefixMap({"yes": 1, "no": 0}, "yes")
+
     def test_default_method(self):
         class Person(HasTraits):
             married = PrefixMap({"yes": 1, "yeah": 1, "no": 0, "nah": 0})
@@ -180,15 +184,22 @@ class TestPrefixMap(unittest.TestCase):
         self.assertEqual(p.married, "yeah")
 
     def test_static_default_validation_error(self):
-        with self.assertRaises(TraitError) as exception_context:
+        with self.assertRaises(ValueError):
             class Person(HasTraits):
                 married = PrefixMap(
                     {"yes": 1, "yeah": 1, "no": 0}, default_value="meh")
 
-        self.assertIn(
-            "but a value 'meh' was specified",
-            str(exception_context.exception),
-        )
+    def test_no_nested_exception(self):
+        # Regression test for enthought/traits#1155
+        class A(HasTraits):
+            washable = PrefixMap({"yes": 1, "no": 0})
+
+        a = A()
+        try:
+            a.washable = "affirmatron"
+        except TraitError as exc:
+            self.assertIsNone(exc.__context__)
+            self.assertIsNone(exc.__cause__)
 
     def test_pickle_roundtrip(self):
         class Person(HasTraits):
