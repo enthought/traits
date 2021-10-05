@@ -21,6 +21,37 @@ Highlights of this release
 * Support for Python 3.10 has been added.
 
 
+Migration guide
+~~~~~~~~~~~~~~~
+
+Traits 6.3 is intended to be fully backwards compatible with Traits 6.2, and
+most projects should have no difficulties upgrading. However, you may see
+some new deprecation warnings for existing code, warning about behaviour
+that will be changed in Traits 7.0. There are two particular sets of changes
+to look out for:
+
+* Starting with Traits 7.0, the ``Any`` trait type will treat a default
+  value of type ``list`` or ``dict`` differently. Currently, instances of
+  ``list`` and ``dict`` are special-cased, and a per-instance copy of the
+  default is provided to each ``HasTraits`` instance. In Traits 7.0, this
+  special-casing will be removed, and the default value will be shared between
+  all instances. For the 6.3 release of Traits, a deprecation warning is issued
+  whenever a trait definition of the form ``Any([1, 2, 3])`` or ``Any({})``
+  is encountered. Users can avoid the warning by changing their code to use
+  the new ``factory`` argument to the ``Any`` trait type, for example replacing
+  a trait declaration ``foo = Any({})`` with ``foo = Any(factory=dict)``, and
+  a trait declaration ``foo = Any([1, 2, 3])`` with
+  ``foo = Any(factory=list, args=([1, 2, 3],))``.
+
+* Starting with Traits 7.0, the ``Date`` trait type will no longer accept
+  ``datetime`` instances by default. Traits 6.3 will issue a deprecation
+  warning whenever a ``datetime`` instance is assigned as a value for
+  a ``Date`` trait. The existing behaviour can be preserved and the warning
+  silenced by using ``Date(allow_datetime=True)``; alternatively, you can
+  use ``Date(allow_datetime=False)`` to adopt the Traits 7.0 behaviour
+  right now.
+
+
 Detailed PR-by-PR changes
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
