@@ -67,9 +67,10 @@ Features
 Performance
 ~~~~~~~~~~~
 
-* Previously compiled ``ObserverExpression``s and observe mini-language strings
-  are now cached, to speed up compilation of commonly-used expressions.
-  (#1528, #1516)
+* The ``ObserverGraph`` instances that result from compiling
+  ``ObserverExpression`` objects and observe mini-language strings are now
+  cached. This should speed up creation and instantiation of ``HasTraits``
+  subclasses that involve listening for the same pattern in multiple places.
 * Simplify equality definition on ``ObserverExpression``. (#1517)
 * Add ``__slots__`` to ``ObserverExpression``, ``ObserverGraph`` and related
   classes. (#1513, #1515)
