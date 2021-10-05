@@ -15,8 +15,21 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+
     - name: Check out the release commit
       uses: actions/checkout@v2
 
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
     - name: Build wheels
       uses: pypa/cibuildwheel@v2.1.2
+      env:
+        CIBW_SKIP: 'pp*'
+        CIBW_ARCHS_LINUX: auto aarch64
+        CIBW_ARCHS_MACOS: auto universal2
+    - name: Check wheels
+      run: |
+        python -m twine check --strict wheelhouse/*.whl
