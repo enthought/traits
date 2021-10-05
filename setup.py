@@ -280,6 +280,7 @@ setuptools.setup(
         Programming Language :: Python :: 3.7
         Programming Language :: Python :: 3.8
         Programming Language :: Python :: 3.9
+        Programming Language :: Python :: 3.10
         Programming Language :: Python :: Implementation :: CPython
         Topic :: Scientific/Engineering
         Topic :: Software Development
@@ -308,9 +309,9 @@ setuptools.setup(
             "flake8",
             "flake8-ets",
             "mypy",
-            "numpy",
+            "numpy; python_version<'3.10'",
             "pyface",
-            "PySide2",
+            "PySide2; python_version<'3.10'",
             "setuptools",
             "Sphinx>=2.1.0,!=3.2.0",
             "traitsui",
