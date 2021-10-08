@@ -153,8 +153,7 @@ Deprecations
   representing a package/module/object combination, use ``import_symbol``
   instead. (#1542)
 * The ``MetaHasTraits.add_listener`` and ``MetaHasTraits.remove_listener``
-  methods are deprecated. If you need the functionality that these methods
-  provide, please discuss your use-case with the ETS maintenance team. (#1550)
+  methods are deprecated. (#1550)
 * The ``clean_filename`` and ``clean_timestamp`` utilities are deprecated. If
   you need these utilities in your own project, you're advised to copy the
   code directly into your project. (#1527)
