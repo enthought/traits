@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.observation._set_change_event &mdash; Traits 6.2 Documentation</title>
+    <title>traits.observation._set_change_event &mdash; Traits 6.3 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
@@ -13,10 +13,10 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '6.2.0',
+        VERSION:     '6.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        LINK_SUFFIX: '',
+        LINK_SUFFIX: '.html',
         SOURCELINK_SUFFIX: '.txt',
         HAS_SOURCE:  true
       };
@@ -24,13 +24,12 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../_static/language_data.js"></script>
     <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../../genindex.html" >
     <link rel="search" title="Search" href="../../../search.html" >
-    <link rel="top" title="Traits 6.2 Documentation" href="../../../index.html" >
+    <link rel="top" title="Traits 6.3 Documentation" href="../../../index.html" >
     <link rel="up" title="Module code" href="../../index.html" > 
   </head>
   <body>
@@ -48,7 +47,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../../index.html">Traits 6.2 Documentation</a></li>
+        <li class="active"><a href="../../../index.html">Traits 6.3 Documentation</a></li>
 	
           <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -106,17 +105,17 @@
 <span class="sd">        Values added to the set.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">removed</span><span class="p">,</span> <span class="n">added</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">removed</span><span class="p">,</span> <span class="n">added</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="nb">object</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">removed</span> <span class="o">=</span> <span class="n">removed</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">added</span> <span class="o">=</span> <span class="n">added</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span>
-            <span class="n">f</span><span class="s2">&quot;</span><span class="si">{self.__class__.__name__}</span><span class="s2">(&quot;</span>
-            <span class="n">f</span><span class="s2">&quot;object=</span><span class="si">{self.object!r}</span><span class="s2">, &quot;</span>
-            <span class="n">f</span><span class="s2">&quot;removed=</span><span class="si">{self.removed!r}</span><span class="s2">, &quot;</span>
-            <span class="n">f</span><span class="s2">&quot;added=</span><span class="si">{self.added!r}</span><span class="s2">)&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;object=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="si">!r}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;removed=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">removed</span><span class="si">!r}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;added=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">added</span><span class="si">!r}</span><span class="s2">)&quot;</span>
         <span class="p">)</span></div>
 
 
@@ -158,7 +157,7 @@
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
         </div>
@@ -180,10 +179,10 @@ All rights reserved.
 
       </li>
       <li>
-      Last updated on Jan 20, 2021.
+      Last updated on Oct 08, 2021.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
       </li>
     </ul>
     </div>

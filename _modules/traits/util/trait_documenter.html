@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.util.trait_documenter &mdash; Traits 6.2 Documentation</title>
+    <title>traits.util.trait_documenter &mdash; Traits 6.3 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
@@ -13,10 +13,10 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '6.2.0',
+        VERSION:     '6.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        LINK_SUFFIX: '',
+        LINK_SUFFIX: '.html',
         SOURCELINK_SUFFIX: '.txt',
         HAS_SOURCE:  true
       };
@@ -24,13 +24,12 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../_static/language_data.js"></script>
     <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../../genindex.html" >
     <link rel="search" title="Search" href="../../../search.html" >
-    <link rel="top" title="Traits 6.2 Documentation" href="../../../index.html" >
+    <link rel="top" title="Traits 6.3 Documentation" href="../../../index.html" >
     <link rel="up" title="Module code" href="../../index.html" > 
   </head>
   <body>
@@ -48,7 +47,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../../index.html">Traits 6.2 Documentation</a></li>
+        <li class="active"><a href="../../../index.html">Traits 6.3 Documentation</a></li>
 	
           <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -92,19 +91,19 @@
 <span class="sd">    (Subclassed from the autodoc ClassLevelDocumenter)</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">importlib</span> <span class="k">import</span> <span class="n">import_module</span>
+<span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">import_module</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">io</span>
 <span class="kn">import</span> <span class="nn">token</span>
 <span class="kn">import</span> <span class="nn">tokenize</span>
 <span class="kn">import</span> <span class="nn">traceback</span>
 
-<span class="kn">from</span> <span class="nn">sphinx.ext.autodoc</span> <span class="k">import</span> <span class="n">ClassLevelDocumenter</span>
-<span class="kn">from</span> <span class="nn">sphinx.util</span> <span class="k">import</span> <span class="n">logging</span>
+<span class="kn">from</span> <span class="nn">sphinx.ext.autodoc</span> <span class="kn">import</span> <span class="n">ClassLevelDocumenter</span>
+<span class="kn">from</span> <span class="nn">sphinx.util</span> <span class="kn">import</span> <span class="n">logging</span>
 
-<span class="kn">from</span> <span class="nn">traits.has_traits</span> <span class="k">import</span> <span class="n">MetaHasTraits</span>
-<span class="kn">from</span> <span class="nn">traits.trait_type</span> <span class="k">import</span> <span class="n">TraitType</span>
-<span class="kn">from</span> <span class="nn">traits.traits</span> <span class="k">import</span> <span class="n">generic_trait</span>
+<span class="kn">from</span> <span class="nn">traits.has_traits</span> <span class="kn">import</span> <span class="n">MetaHasTraits</span>
+<span class="kn">from</span> <span class="nn">traits.trait_type</span> <span class="kn">import</span> <span class="n">TraitType</span>
+<span class="kn">from</span> <span class="nn">traits.traits</span> <span class="kn">import</span> <span class="n">generic_trait</span>
 
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -153,10 +152,6 @@
 <div class="viewcode-block" id="TraitDocumenter.document_members"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.trait_documenter.TraitDocumenter.document_members">[docs]</a>    <span class="k">def</span> <span class="nf">document_members</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">all_members</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Trait attributes have no members &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
-
-<div class="viewcode-block" id="TraitDocumenter.add_content"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.trait_documenter.TraitDocumenter.add_content">[docs]</a>    <span class="k">def</span> <span class="nf">add_content</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">more_content</span><span class="p">,</span> <span class="n">no_docstring</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Never try to get a docstring from the trait.&quot;&quot;&quot;</span>
-        <span class="n">ClassLevelDocumenter</span><span class="o">.</span><span class="n">add_content</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">more_content</span><span class="p">,</span> <span class="n">no_docstring</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TraitDocumenter.import_object"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.trait_documenter.TraitDocumenter.import_object">[docs]</a>    <span class="k">def</span> <span class="nf">import_object</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Get the Trait object.</span>
@@ -338,7 +333,7 @@
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
         </div>
@@ -360,10 +355,10 @@ All rights reserved.
 
       </li>
       <li>
-      Last updated on Jan 20, 2021.
+      Last updated on Oct 08, 2021.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
       </li>
     </ul>
     </div>

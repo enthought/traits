@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.trait_dict_object &mdash; Traits 6.2 Documentation</title>
+    <title>traits.trait_dict_object &mdash; Traits 6.3 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-extend.css">
@@ -13,10 +13,10 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '6.2.0',
+        VERSION:     '6.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        LINK_SUFFIX: '',
+        LINK_SUFFIX: '.html',
         SOURCELINK_SUFFIX: '.txt',
         HAS_SOURCE:  true
       };
@@ -24,13 +24,12 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
     <script type="text/javascript" src="../../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../genindex.html" >
     <link rel="search" title="Search" href="../../search.html" >
-    <link rel="top" title="Traits 6.2 Documentation" href="../../index.html" >
+    <link rel="top" title="Traits 6.3 Documentation" href="../../index.html" >
     <link rel="up" title="Module code" href="../index.html" > 
   </head>
   <body>
@@ -48,7 +47,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../index.html">Traits 6.2 Documentation</a></li>
+        <li class="active"><a href="../../index.html">Traits 6.3 Documentation</a></li>
 	
           <li class="active"><a href="../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -89,11 +88,11 @@
 
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">weakref</span> <span class="k">import</span> <span class="n">ref</span>
+<span class="kn">from</span> <span class="nn">weakref</span> <span class="kn">import</span> <span class="n">ref</span>
 
-<span class="kn">from</span> <span class="nn">traits.observation.i_observable</span> <span class="k">import</span> <span class="n">IObservable</span>
-<span class="kn">from</span> <span class="nn">traits.trait_base</span> <span class="k">import</span> <span class="n">Undefined</span><span class="p">,</span> <span class="n">_validate_everything</span>
-<span class="kn">from</span> <span class="nn">traits.trait_errors</span> <span class="k">import</span> <span class="n">TraitError</span>
+<span class="kn">from</span> <span class="nn">traits.observation.i_observable</span> <span class="kn">import</span> <span class="n">IObservable</span>
+<span class="kn">from</span> <span class="nn">traits.trait_base</span> <span class="kn">import</span> <span class="n">Undefined</span><span class="p">,</span> <span class="n">_validate_everything</span>
+<span class="kn">from</span> <span class="nn">traits.trait_errors</span> <span class="kn">import</span> <span class="n">TraitError</span>
 
 
 <div class="viewcode-block" id="TraitDictEvent"><a class="viewcode-back" href="../../traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDictEvent">[docs]</a><span class="k">class</span> <span class="nc">TraitDictEvent</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -118,7 +117,7 @@
 <span class="sd">        Updated keys and their previous values.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">removed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">added</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">changed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">removed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">added</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">changed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">removed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">removed</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">removed</span> <span class="o">=</span> <span class="n">removed</span>
@@ -131,12 +130,12 @@
             <span class="n">changed</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">changed</span> <span class="o">=</span> <span class="n">changed</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span>
-            <span class="n">f</span><span class="s2">&quot;</span><span class="si">{self.__class__.__name__}</span><span class="s2">(&quot;</span>
-            <span class="n">f</span><span class="s2">&quot;removed=</span><span class="si">{self.removed!r}</span><span class="s2">, &quot;</span>
-            <span class="n">f</span><span class="s2">&quot;added=</span><span class="si">{self.added!r}</span><span class="s2">, &quot;</span>
-            <span class="n">f</span><span class="s2">&quot;changed=</span><span class="si">{self.changed!r}</span><span class="s2">)&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;removed=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">removed</span><span class="si">!r}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;added=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">added</span><span class="si">!r}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;changed=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">changed</span><span class="si">!r}</span><span class="s2">)&quot;</span>
         <span class="p">)</span></div>
 
 
@@ -190,14 +189,14 @@
 <span class="sd">        &#39;changed&#39; is a dict with old values previously associated with the key.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">key_validator</span> <span class="o">=</span> <span class="n">_validate_everything</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value_validator</span> <span class="o">=</span> <span class="n">_validate_everything</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">notifiers</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">return</span> <span class="bp">self</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key_validator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key_validator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">value_validator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">notifiers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
         <span class="k">if</span> <span class="n">key_validator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -235,7 +234,7 @@
 
     <span class="c1"># -- dict interface -------------------------------------------------------</span>
 
-    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Set a value for the key, implements self[key] = value.</span>
 
 <span class="sd">        Parameters</span>
@@ -260,7 +259,7 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__setitem__</span><span class="p">(</span><span class="n">validated_key</span><span class="p">,</span> <span class="n">validated_value</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="n">removed</span><span class="o">=</span><span class="n">removed</span><span class="p">,</span> <span class="n">added</span><span class="o">=</span><span class="n">added</span><span class="p">,</span> <span class="n">changed</span><span class="o">=</span><span class="n">changed</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Delete the item from the dict indicated by the key.</span>
 
 <span class="sd">        Parameters</span>
@@ -279,7 +278,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="n">removed</span><span class="o">=</span><span class="n">removed</span><span class="p">,</span> <span class="n">added</span><span class="o">=</span><span class="p">{},</span> <span class="n">changed</span><span class="o">=</span><span class="p">{})</span>
 
     <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span>
-        <span class="k">def</span> <span class="nf">__ior__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__ior__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot; Update self with the contents of other.</span>
 
 <span class="sd">            Parameters</span>
@@ -515,7 +514,7 @@
 <span class="sd">        mutated.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trait</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trait</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trait</span> <span class="o">=</span> <span class="n">trait</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="n">ref</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
@@ -689,7 +688,7 @@
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
         </div>
@@ -711,10 +710,10 @@ All rights reserved.
 
       </li>
       <li>
-      Last updated on Jan 20, 2021.
+      Last updated on Oct 08, 2021.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
       </li>
     </ul>
     </div>

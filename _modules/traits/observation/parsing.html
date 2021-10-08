@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.observation.parsing &mdash; Traits 6.2 Documentation</title>
+    <title>traits.observation.parsing &mdash; Traits 6.3 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
@@ -13,10 +13,10 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '6.2.0',
+        VERSION:     '6.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        LINK_SUFFIX: '',
+        LINK_SUFFIX: '.html',
         SOURCELINK_SUFFIX: '.txt',
         HAS_SOURCE:  true
       };
@@ -24,13 +24,12 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../_static/language_data.js"></script>
     <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../../genindex.html" >
     <link rel="search" title="Search" href="../../../search.html" >
-    <link rel="top" title="Traits 6.2 Documentation" href="../../../index.html" >
+    <link rel="top" title="Traits 6.3 Documentation" href="../../../index.html" >
     <link rel="up" title="Module code" href="../../index.html" > 
   </head>
   <body>
@@ -48,7 +47,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../../index.html">Traits 6.2 Documentation</a></li>
+        <li class="active"><a href="../../../index.html">Traits 6.3 Documentation</a></li>
 	
           <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -87,147 +86,55 @@
 <span class="c1">#</span>
 <span class="c1"># Thanks for using Enthought open source!</span>
 
-<span class="kn">import</span> <span class="nn">contextlib</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">lru_cache</span><span class="p">,</span> <span class="n">reduce</span>
-<span class="kn">import</span> <span class="nn">operator</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span>
 
-<span class="kn">from</span> <span class="nn">traits.observation</span> <span class="k">import</span> <span class="n">_generated_parser</span>
+<span class="kn">from</span> <span class="nn">traits.observation</span> <span class="kn">import</span> <span class="n">_generated_parser</span>
 <span class="kn">import</span> <span class="nn">traits.observation.expression</span> <span class="k">as</span> <span class="nn">expression_module</span>
+
 
 <span class="n">_LARK_PARSER</span> <span class="o">=</span> <span class="n">_generated_parser</span><span class="o">.</span><span class="n">Lark_StandAlone</span><span class="p">()</span>
 
-<span class="c1">#: Maximum number of parsed observer expressions stored in the LRU cache</span>
-<span class="n">_OBSERVER_EXPRESSION_CACHE_MAXSIZE</span> <span class="o">=</span> <span class="mi">128</span>
 
-
-<span class="k">def</span> <span class="nf">_handle_series</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">default_notifies</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Handle expressions joined in series using &quot;.&quot; or &quot;:&quot; connectors.</span>
+<span class="k">def</span> <span class="nf">_handle_series</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">notify</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Handle an expression of the form &quot;a.b&quot; or &quot;a:b&quot;.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    trees : list of lark.tree.Tree</span>
-<span class="sd">        The children tree for the &quot;series&quot; rule.</span>
-<span class="sd">        It should contain one or more items.</span>
-<span class="sd">    default_notifies : list of boolean</span>
-<span class="sd">        The notify flag stack.</span>
+<span class="sd">        The children tree for the &quot;series&quot; rule. It should always</span>
+<span class="sd">        contain exactly three items.</span>
+<span class="sd">    notify : bool</span>
+<span class="sd">        True if the final target should notify, else False.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    expression : ObserverExpression</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">expressions</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">_handle_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">default_notifies</span><span class="o">=</span><span class="n">default_notifies</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="n">trees</span>
-    <span class="p">)</span>
-    <span class="k">return</span> <span class="n">expression_module</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="o">*</span><span class="n">expressions</span><span class="p">)</span>
+    <span class="n">left</span><span class="p">,</span> <span class="n">connector</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">trees</span>
+    <span class="n">notify_left</span> <span class="o">=</span> <span class="n">connector</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="s2">&quot;notify&quot;</span>
+    <span class="k">return</span> <span class="n">_handle_tree</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">notify_left</span><span class="p">)</span><span class="o">.</span><span class="n">then</span><span class="p">(</span><span class="n">_handle_tree</span><span class="p">(</span><span class="n">right</span><span class="p">,</span> <span class="n">notify</span><span class="p">))</span>
 
 
-<span class="k">def</span> <span class="nf">_handle_parallel</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">default_notifies</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Handle expressions joined in parallel using &quot;,&quot; connectors.</span>
+<span class="k">def</span> <span class="nf">_handle_parallel</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">notify</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Handle an expression of the form &quot;a, b&quot;.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    trees : list of lark.tree.Tree</span>
-<span class="sd">        The children tree for the &quot;parallel&quot; rule.</span>
-<span class="sd">        It should contain one or more items.</span>
-<span class="sd">    default_notifies : list of boolean</span>
-<span class="sd">        The notify flag stack.</span>
+<span class="sd">        The children tree for the &quot;parallel&quot; rule. It should always</span>
+<span class="sd">        contain exactly two items.</span>
+<span class="sd">    notify : bool</span>
+<span class="sd">        True if the final target should notify, else False.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    expression : ObserverExpression</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">expressions</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">_handle_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">default_notifies</span><span class="o">=</span><span class="n">default_notifies</span><span class="p">)</span> <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="n">trees</span>
-    <span class="p">)</span>
-    <span class="k">return</span> <span class="n">reduce</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">or_</span><span class="p">,</span> <span class="n">expressions</span><span class="p">)</span>
+    <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">trees</span>
+    <span class="k">return</span> <span class="n">_handle_tree</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">notify</span><span class="p">)</span> <span class="o">|</span> <span class="n">_handle_tree</span><span class="p">(</span><span class="n">right</span><span class="p">,</span> <span class="n">notify</span><span class="p">)</span>
 
 
-<span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
-<span class="k">def</span> <span class="nf">_notify_flag</span><span class="p">(</span><span class="n">default_notifies</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Context manager to push the notify to the given stack.</span>
-<span class="sd">    Upon exiting the context, pop the flag out of the stack.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    default_notifies : list of boolean</span>
-<span class="sd">        The notify flag stack.</span>
-<span class="sd">    value : boolean</span>
-<span class="sd">        Notify flag to push.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">default_notifies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">yield</span>
-    <span class="k">finally</span><span class="p">:</span>
-        <span class="n">notify</span> <span class="o">=</span> <span class="n">default_notifies</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">notify</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">value</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Default notify flag unexpectedly changed.&quot;</span><span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">_handle_notify</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">default_notifies</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Handle trees wrapped with the notify flag set to True,</span>
-<span class="sd">    indicated by the existence of &quot;.&quot; suffix to an element.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    trees : list of lark.tree.Tree</span>
-<span class="sd">        The children tree for the &quot;notify&quot; rule.</span>
-<span class="sd">        It contains only one item.</span>
-<span class="sd">    default_notifies : list of boolean</span>
-<span class="sd">        The notify flag stack.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    expression : ObserverExpression</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">with</span> <span class="n">_notify_flag</span><span class="p">(</span><span class="n">default_notifies</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">_handle_last</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">default_notifies</span><span class="o">=</span><span class="n">default_notifies</span><span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">_handle_quiet</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">default_notifies</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Handle trees wrapped with the notify flag set to True,</span>
-<span class="sd">    indicated by the existence of &quot;:&quot; suffix to an element.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    trees : list of lark.tree.Tree</span>
-<span class="sd">        The children tree for the &quot;quiet&quot; rule.</span>
-<span class="sd">        It contains only one item.</span>
-<span class="sd">    default_notifies : list of boolean</span>
-<span class="sd">        The notify flag stack.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    expression : ObserverExpression</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">with</span> <span class="n">_notify_flag</span><span class="p">(</span><span class="n">default_notifies</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">_handle_last</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">default_notifies</span><span class="o">=</span><span class="n">default_notifies</span><span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">_handle_last</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">default_notifies</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Handle trees when the notify is not immediately specified</span>
-<span class="sd">    as a suffix. The last notify flag will be used.</span>
-
-<span class="sd">    e.g. In &quot;a.[b,c]:d&quot;, the element &quot;b&quot; should receive a notify flag</span>
-<span class="sd">    set to false, which is set after a parallel group is defined.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    trees : list of lark.tree.Tree</span>
-<span class="sd">        The children tree for the &quot;last&quot; rule.</span>
-<span class="sd">        It contains only one item.</span>
-<span class="sd">    default_notifies : list of boolean</span>
-<span class="sd">        The notify flag stack.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    expression : ObserverExpression</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">tree</span><span class="p">,</span> <span class="o">=</span> <span class="n">trees</span>
-    <span class="k">return</span> <span class="n">_handle_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">default_notifies</span><span class="o">=</span><span class="n">default_notifies</span><span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">_handle_trait</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">default_notifies</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_handle_trait</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">notify</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Handle an element for a named trait.</span>
 
 <span class="sd">    Parameters</span>
@@ -235,8 +142,8 @@
 <span class="sd">    trees : list of lark.tree.Tree</span>
 <span class="sd">        The children tree for the &quot;trait&quot; rule.</span>
 <span class="sd">        It contains only one item.</span>
-<span class="sd">    default_notifies : list of boolean</span>
-<span class="sd">        The notify flag stack.</span>
+<span class="sd">    notify : bool</span>
+<span class="sd">        True if the final target should notify, else False.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -244,11 +151,27 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">token</span><span class="p">,</span> <span class="o">=</span> <span class="n">trees</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">value</span>
-    <span class="n">notify</span> <span class="o">=</span> <span class="n">default_notifies</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">expression_module</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">notify</span><span class="o">=</span><span class="n">notify</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_handle_metadata</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">default_notifies</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_handle_anytrait</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">notify</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Handle an anytrait element.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    trees : list of lark.tree.Tree</span>
+<span class="sd">        The children tree for the &quot;trait&quot; rule. This should be empty.</span>
+<span class="sd">    notify : bool</span>
+<span class="sd">        True if the final target should notify, else False.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    expression : ObserverExpression</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">expression_module</span><span class="o">.</span><span class="n">anytrait</span><span class="p">(</span><span class="n">notify</span><span class="o">=</span><span class="n">notify</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_handle_metadata</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">notify</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Handle an element for filtering existing metadata.</span>
 
 <span class="sd">    Parameters</span>
@@ -256,8 +179,8 @@
 <span class="sd">    trees : list of lark.tree.Tree</span>
 <span class="sd">        The children tree for the &quot;metadata&quot; rule.</span>
 <span class="sd">        It contains only one item.</span>
-<span class="sd">    default_notifies : list of boolean</span>
-<span class="sd">        The notify flag stack.</span>
+<span class="sd">    notify : bool</span>
+<span class="sd">        True if the final target should notify, else False.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -265,11 +188,10 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">token</span><span class="p">,</span> <span class="o">=</span> <span class="n">trees</span>
     <span class="n">metadata_name</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">value</span>
-    <span class="n">notify</span> <span class="o">=</span> <span class="n">default_notifies</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">expression_module</span><span class="o">.</span><span class="n">metadata</span><span class="p">(</span><span class="n">metadata_name</span><span class="p">,</span> <span class="n">notify</span><span class="o">=</span><span class="n">notify</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_handle_items</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">default_notifies</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_handle_items</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">notify</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Handle keyword &quot;items&quot;.</span>
 
 <span class="sd">    Parameters</span>
@@ -277,8 +199,8 @@
 <span class="sd">    trees : list of lark.tree.Tree</span>
 <span class="sd">        The children tree for the &quot;items&quot; rule.</span>
 <span class="sd">        It should be empty.</span>
-<span class="sd">    default_notifies : list of boolean</span>
-<span class="sd">        The notify flag stack.</span>
+<span class="sd">    notify : bool</span>
+<span class="sd">        True if the final target should notify, else False.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -288,55 +210,44 @@
         <span class="c1"># Nothing should be wrapped in items</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unexpected tree: </span><span class="si">{!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">trees</span><span class="p">))</span>
 
-    <span class="n">notify</span> <span class="o">=</span> <span class="n">default_notifies</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">reduce</span><span class="p">(</span>
-        <span class="n">operator</span><span class="o">.</span><span class="n">or_</span><span class="p">,</span>
-        <span class="p">(</span>
-            <span class="n">expression_module</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="s2">&quot;items&quot;</span><span class="p">,</span> <span class="n">notify</span><span class="o">=</span><span class="n">notify</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-            <span class="n">expression_module</span><span class="o">.</span><span class="n">dict_items</span><span class="p">(</span><span class="n">notify</span><span class="o">=</span><span class="n">notify</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-            <span class="n">expression_module</span><span class="o">.</span><span class="n">list_items</span><span class="p">(</span><span class="n">notify</span><span class="o">=</span><span class="n">notify</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-            <span class="n">expression_module</span><span class="o">.</span><span class="n">set_items</span><span class="p">(</span><span class="n">notify</span><span class="o">=</span><span class="n">notify</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-        <span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">expression_module</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="s2">&quot;items&quot;</span><span class="p">,</span> <span class="n">notify</span><span class="o">=</span><span class="n">notify</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="o">|</span> <span class="n">expression_module</span><span class="o">.</span><span class="n">dict_items</span><span class="p">(</span><span class="n">notify</span><span class="o">=</span><span class="n">notify</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="o">|</span> <span class="n">expression_module</span><span class="o">.</span><span class="n">list_items</span><span class="p">(</span><span class="n">notify</span><span class="o">=</span><span class="n">notify</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="o">|</span> <span class="n">expression_module</span><span class="o">.</span><span class="n">set_items</span><span class="p">(</span><span class="n">notify</span><span class="o">=</span><span class="n">notify</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_handle_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">default_notifies</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_handle_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">notify</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Handle a tree using the specified rule.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    tree : lark.tree.Tree</span>
 <span class="sd">        Tree to be converted to an ObserverExpression.</span>
-<span class="sd">    default_notifies : list of boolean</span>
-<span class="sd">        The notify flag stack.</span>
-<span class="sd">        The last item is the current notify flag.</span>
-<span class="sd">        See handlers for &quot;notify&quot; and &quot;quiet&quot;, which</span>
-<span class="sd">        push and pop a notify flag to this stack.</span>
+<span class="sd">    notify : bool</span>
+<span class="sd">        True if the final target should notify, else False.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    expression: ObserverExpression</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">default_notifies</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">default_notifies</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span><span class="p">]</span>
-
     <span class="c1"># All handlers must be callable</span>
-    <span class="c1"># with the signature (list of Tree, default_notifies)</span>
+    <span class="c1"># with the signature (list of Tree, notify)</span>
     <span class="n">handlers</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;series&quot;</span><span class="p">:</span> <span class="n">_handle_series</span><span class="p">,</span>
+        <span class="s2">&quot;series_terminal&quot;</span><span class="p">:</span> <span class="n">_handle_series</span><span class="p">,</span>
         <span class="s2">&quot;parallel&quot;</span><span class="p">:</span> <span class="n">_handle_parallel</span><span class="p">,</span>
-        <span class="s2">&quot;notify&quot;</span><span class="p">:</span> <span class="n">_handle_notify</span><span class="p">,</span>
-        <span class="s2">&quot;quiet&quot;</span><span class="p">:</span> <span class="n">_handle_quiet</span><span class="p">,</span>
-        <span class="s2">&quot;last&quot;</span><span class="p">:</span> <span class="n">_handle_last</span><span class="p">,</span>
+        <span class="s2">&quot;parallel_terminal&quot;</span><span class="p">:</span> <span class="n">_handle_parallel</span><span class="p">,</span>
         <span class="s2">&quot;trait&quot;</span><span class="p">:</span> <span class="n">_handle_trait</span><span class="p">,</span>
         <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="n">_handle_metadata</span><span class="p">,</span>
         <span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="n">_handle_items</span><span class="p">,</span>
+        <span class="s2">&quot;anytrait&quot;</span><span class="p">:</span> <span class="n">_handle_anytrait</span><span class="p">,</span>
     <span class="p">}</span>
-    <span class="k">return</span> <span class="n">handlers</span><span class="p">[</span><span class="n">tree</span><span class="o">.</span><span class="n">data</span><span class="p">](</span>
-        <span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">,</span> <span class="n">default_notifies</span><span class="o">=</span><span class="n">default_notifies</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">handlers</span><span class="p">[</span><span class="n">tree</span><span class="o">.</span><span class="n">data</span><span class="p">](</span><span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">,</span> <span class="n">notify</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="parse"><a class="viewcode-back" href="../../../traits_api_reference/traits.observation.html#traits.observation.parsing.parse">[docs]</a><span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="n">_OBSERVER_EXPRESSION_CACHE_MAXSIZE</span><span class="p">)</span>
+<div class="viewcode-block" id="parse"><a class="viewcode-back" href="../../../traits_api_reference/traits.observation.html#traits.observation.parsing.parse">[docs]</a><span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="n">expression_module</span><span class="o">.</span><span class="n">_OBSERVER_EXPRESSION_CACHE_MAXSIZE</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Top-level function for parsing user&#39;s text to an ObserverExpression.</span>
 
@@ -348,9 +259,34 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    expression : ObserverExpression</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the text is not a valid observe expression.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">tree</span> <span class="o">=</span> <span class="n">_LARK_PARSER</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">_handle_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span></div>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">_LARK_PARSER</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">_generated_parser</span><span class="o">.</span><span class="n">LarkError</span> <span class="k">as</span> <span class="n">parser_exception</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid expression: </span><span class="si">{</span><span class="n">text</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">parser_exception</span>
+
+    <span class="k">return</span> <span class="n">_handle_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">notify</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="compile_str"><a class="viewcode-back" href="../../../traits_api_reference/traits.observation.html#traits.observation.parsing.compile_str">[docs]</a><span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="n">expression_module</span><span class="o">.</span><span class="n">_OBSERVER_EXPRESSION_CACHE_MAXSIZE</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">compile_str</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Compile a mini-language string to a list of ObserverGraphs.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    text : str</span>
+<span class="sd">        Text to be parsed.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list of ObserverGraph</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">expression_module</span><span class="o">.</span><span class="n">compile_expr</span><span class="p">(</span><span class="n">parse</span><span class="p">(</span><span class="n">text</span><span class="p">))</span></div>
 </pre></div>
 
           </div>
@@ -370,7 +306,7 @@
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
         </div>
@@ -392,10 +328,10 @@ All rights reserved.
 
       </li>
       <li>
-      Last updated on Jan 20, 2021.
+      Last updated on Oct 08, 2021.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
       </li>
     </ul>
     </div>

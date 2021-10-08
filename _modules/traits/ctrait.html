@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.ctrait &mdash; Traits 6.2 Documentation</title>
+    <title>traits.ctrait &mdash; Traits 6.3 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-extend.css">
@@ -13,10 +13,10 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '6.2.0',
+        VERSION:     '6.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        LINK_SUFFIX: '',
+        LINK_SUFFIX: '.html',
         SOURCELINK_SUFFIX: '.txt',
         HAS_SOURCE:  true
       };
@@ -24,13 +24,12 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
     <script type="text/javascript" src="../../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../genindex.html" >
     <link rel="search" title="Search" href="../../search.html" >
-    <link rel="top" title="Traits 6.2 Documentation" href="../../index.html" >
+    <link rel="top" title="Traits 6.3 Documentation" href="../../index.html" >
     <link rel="up" title="Module code" href="../index.html" > 
   </head>
   <body>
@@ -48,7 +47,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../index.html">Traits 6.2 Documentation</a></li>
+        <li class="active"><a href="../../index.html">Traits 6.3 Documentation</a></li>
 	
           <li class="active"><a href="../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -97,13 +96,13 @@
 
 <span class="kn">import</span> <span class="nn">inspect</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">ctraits</span>
-<span class="kn">from</span> <span class="nn">.constants</span> <span class="k">import</span> <span class="n">ComparisonMode</span><span class="p">,</span> <span class="n">DefaultValue</span><span class="p">,</span> <span class="n">default_value_map</span>
-<span class="kn">from</span> <span class="nn">.observation.i_observable</span> <span class="k">import</span> <span class="n">IObservable</span>
-<span class="kn">from</span> <span class="nn">.trait_base</span> <span class="k">import</span> <span class="n">SequenceTypes</span><span class="p">,</span> <span class="n">Undefined</span>
-<span class="kn">from</span> <span class="nn">.trait_dict_object</span> <span class="k">import</span> <span class="n">TraitDictObject</span>
-<span class="kn">from</span> <span class="nn">.trait_list_object</span> <span class="k">import</span> <span class="n">TraitListObject</span>
-<span class="kn">from</span> <span class="nn">.trait_set_object</span> <span class="k">import</span> <span class="n">TraitSetObject</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">ctraits</span>
+<span class="kn">from</span> <span class="nn">.constants</span> <span class="kn">import</span> <span class="n">ComparisonMode</span><span class="p">,</span> <span class="n">DefaultValue</span><span class="p">,</span> <span class="n">default_value_map</span>
+<span class="kn">from</span> <span class="nn">.observation.i_observable</span> <span class="kn">import</span> <span class="n">IObservable</span>
+<span class="kn">from</span> <span class="nn">.trait_base</span> <span class="kn">import</span> <span class="n">SequenceTypes</span><span class="p">,</span> <span class="n">Undefined</span>
+<span class="kn">from</span> <span class="nn">.trait_dict_object</span> <span class="kn">import</span> <span class="n">TraitDictObject</span>
+<span class="kn">from</span> <span class="nn">.trait_list_object</span> <span class="kn">import</span> <span class="n">TraitListObject</span>
+<span class="kn">from</span> <span class="nn">.trait_set_object</span> <span class="kn">import</span> <span class="n">TraitSetObject</span>
 
 
 <span class="k">def</span> <span class="nf">__newobj__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
@@ -117,10 +116,10 @@
     <span class="sd">&quot;&quot;&quot; Extends the underlying C-based cTrait type.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Allows a derivative trait to be defined from this one. &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">.trait_type</span> <span class="k">import</span> <span class="n">TraitType</span>
-        <span class="kn">from</span> <span class="nn">.traits</span> <span class="k">import</span> <span class="n">Trait</span>
+        <span class="kn">from</span> <span class="nn">.trait_type</span> <span class="kn">import</span> <span class="n">TraitType</span>
+        <span class="kn">from</span> <span class="nn">.traits</span> <span class="kn">import</span> <span class="n">Trait</span>
 
         <span class="n">handler</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">handler</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="n">TraitType</span><span class="p">):</span>
@@ -139,6 +138,7 @@
             <span class="n">DefaultValue</span><span class="o">.</span><span class="n">object</span><span class="p">,</span>
             <span class="n">DefaultValue</span><span class="o">.</span><span class="n">callable_and_args</span><span class="p">,</span>
             <span class="n">DefaultValue</span><span class="o">.</span><span class="n">callable</span><span class="p">,</span>
+            <span class="n">DefaultValue</span><span class="o">.</span><span class="n">disallow</span><span class="p">,</span>
         <span class="p">):</span>
             <span class="k">return</span> <span class="n">Undefined</span>
         <span class="k">elif</span> <span class="n">kind</span> <span class="ow">in</span> <span class="p">(</span>
@@ -167,7 +167,7 @@
         <span class="k">if</span> <span class="n">handler</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">handler</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">.trait_types</span> <span class="k">import</span> <span class="n">Any</span>
+            <span class="kn">from</span> <span class="nn">.trait_types</span> <span class="kn">import</span> <span class="n">Any</span>
 
             <span class="k">return</span> <span class="n">Any</span>
 
@@ -230,7 +230,7 @@
 <div class="viewcode-block" id="CTrait.get_editor"><a class="viewcode-back" href="../../traits_api_reference/ctrait.html#traits.ctrait.CTrait.get_editor">[docs]</a>    <span class="k">def</span> <span class="nf">get_editor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns the user interface editor associated with the trait.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">EditorFactory</span>
+        <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="kn">import</span> <span class="n">EditorFactory</span>
 
         <span class="c1"># See if we have an editor:</span>
         <span class="n">editor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">editor</span>
@@ -243,7 +243,7 @@
 
             <span class="c1"># If not, give up and use a default text editor:</span>
             <span class="k">if</span> <span class="n">editor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">TextEditor</span>
+                <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="kn">import</span> <span class="n">TextEditor</span>
 
                 <span class="n">editor</span> <span class="o">=</span> <span class="n">TextEditor</span>
 
@@ -336,7 +336,7 @@
     <span class="c1"># This wrapper is called once, after which we set the ctraits callback</span>
     <span class="c1"># to point directly to &#39;adapt&#39;.</span>
 
-    <span class="kn">from</span> <span class="nn">traits.adaptation.api</span> <span class="k">import</span> <span class="n">adapt</span>
+    <span class="kn">from</span> <span class="nn">traits.adaptation.api</span> <span class="kn">import</span> <span class="n">adapt</span>
 
     <span class="n">ctraits</span><span class="o">.</span><span class="n">_adapt</span><span class="p">(</span><span class="n">adapt</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">adapt</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
@@ -371,7 +371,7 @@
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
         </div>
@@ -393,10 +393,10 @@ All rights reserved.
 
       </li>
       <li>
-      Last updated on Jan 20, 2021.
+      Last updated on Oct 08, 2021.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
       </li>
     </ul>
     </div>

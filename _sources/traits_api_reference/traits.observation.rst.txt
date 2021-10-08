@@ -15,6 +15,15 @@
     :show-inheritance:
 
 
+:mod:`traits.observation.exceptions` Module
+---------------------------------------------
+
+.. automodule:: traits.observation.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
 :mod:`traits.observation.api` Module
 ------------------------------------
 

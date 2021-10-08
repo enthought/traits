@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.trait_type &mdash; Traits 6.2 Documentation</title>
+    <title>traits.trait_type &mdash; Traits 6.3 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-extend.css">
@@ -13,10 +13,10 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '6.2.0',
+        VERSION:     '6.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        LINK_SUFFIX: '',
+        LINK_SUFFIX: '.html',
         SOURCELINK_SUFFIX: '.txt',
         HAS_SOURCE:  true
       };
@@ -24,13 +24,12 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
     <script type="text/javascript" src="../../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../genindex.html" >
     <link rel="search" title="Search" href="../../search.html" >
-    <link rel="top" title="Traits 6.2 Documentation" href="../../index.html" >
+    <link rel="top" title="Traits 6.3 Documentation" href="../../index.html" >
     <link rel="up" title="Module code" href="../index.html" > 
   </head>
   <body>
@@ -48,7 +47,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../index.html">Traits 6.2 Documentation</a></li>
+        <li class="active"><a href="../../index.html">Traits 6.3 Documentation</a></li>
 	
           <li class="active"><a href="../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -97,13 +96,13 @@
 
 <span class="kn">import</span> <span class="nn">warnings</span>
 
-<span class="kn">from</span> <span class="nn">.base_trait_handler</span> <span class="k">import</span> <span class="n">BaseTraitHandler</span>
-<span class="kn">from</span> <span class="nn">.constants</span> <span class="k">import</span> <span class="n">ComparisonMode</span><span class="p">,</span> <span class="n">DefaultValue</span><span class="p">,</span> <span class="n">TraitKind</span>
-<span class="kn">from</span> <span class="nn">.trait_base</span> <span class="k">import</span> <span class="n">Missing</span><span class="p">,</span> <span class="n">Self</span><span class="p">,</span> <span class="n">TraitsCache</span><span class="p">,</span> <span class="n">Undefined</span><span class="p">,</span> <span class="n">class_of</span>
-<span class="kn">from</span> <span class="nn">.trait_dict_object</span> <span class="k">import</span> <span class="n">TraitDictObject</span>
-<span class="kn">from</span> <span class="nn">.trait_errors</span> <span class="k">import</span> <span class="n">TraitError</span>
-<span class="kn">from</span> <span class="nn">.trait_list_object</span> <span class="k">import</span> <span class="n">TraitListObject</span>
-<span class="kn">from</span> <span class="nn">.trait_set_object</span> <span class="k">import</span> <span class="n">TraitSetObject</span>
+<span class="kn">from</span> <span class="nn">.base_trait_handler</span> <span class="kn">import</span> <span class="n">BaseTraitHandler</span>
+<span class="kn">from</span> <span class="nn">.constants</span> <span class="kn">import</span> <span class="n">ComparisonMode</span><span class="p">,</span> <span class="n">DefaultValue</span><span class="p">,</span> <span class="n">TraitKind</span>
+<span class="kn">from</span> <span class="nn">.trait_base</span> <span class="kn">import</span> <span class="n">Missing</span><span class="p">,</span> <span class="n">Self</span><span class="p">,</span> <span class="n">TraitsCache</span><span class="p">,</span> <span class="n">Undefined</span><span class="p">,</span> <span class="n">class_of</span>
+<span class="kn">from</span> <span class="nn">.trait_dict_object</span> <span class="kn">import</span> <span class="n">TraitDictObject</span>
+<span class="kn">from</span> <span class="nn">.trait_errors</span> <span class="kn">import</span> <span class="n">TraitError</span>
+<span class="kn">from</span> <span class="nn">.trait_list_object</span> <span class="kn">import</span> <span class="n">TraitListObject</span>
+<span class="kn">from</span> <span class="nn">.trait_set_object</span> <span class="kn">import</span> <span class="n">TraitSetObject</span>
 
 
 <span class="c1">#: Mapping from trait metadata &#39;type&#39; to CTrait &#39;type&#39;:</span>
@@ -257,7 +256,7 @@
     <span class="c1">#: The metadata for the trait.</span>
     <span class="n">metadata</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="n">NoDefaultSpecified</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="n">NoDefaultSpecified</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; TraitType initializer</span>
 
 <span class="sd">        This is the only method normally called directly by client code.</span>
@@ -360,6 +359,11 @@
 <span class="sd">            A dictionary of metadata names and corresponding values as</span>
 <span class="sd">            arbitrary keyword arguments.</span>
 
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        clone : TraitType</span>
+<span class="sd">            Clone of self.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="s2">&quot;parent&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">metadata</span><span class="p">:</span>
             <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;parent&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span>
@@ -417,7 +421,7 @@
 
     <span class="c1"># -- Private Methods ------------------------------------------------------</span>
 
-    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Allows a derivative trait to be defined from this one.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">clone</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span><span class="o">.</span><span class="n">as_ctrait</span><span class="p">()</span>
@@ -443,7 +447,7 @@
 <div class="viewcode-block" id="TraitType.as_ctrait"><a class="viewcode-back" href="../../traits_api_reference/trait_type.html#traits.trait_type.TraitType.as_ctrait">[docs]</a>    <span class="k">def</span> <span class="nf">as_ctrait</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns a CTrait corresponding to the trait defined by this class.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">.traits</span> <span class="k">import</span> <span class="n">CTrait</span>
+        <span class="kn">from</span> <span class="nn">.traits</span> <span class="kn">import</span> <span class="n">CTrait</span>
 
         <span class="n">metadata</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_metadata&quot;</span><span class="p">,</span> <span class="p">{})</span>
         <span class="n">getter</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -525,7 +529,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">()</span><span class="o">.</span><span class="n">as_ctrait</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">name</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;__&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">name</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span> <span class="o">==</span> <span class="s2">&quot;__&quot;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
                 <span class="s2">&quot;&#39;</span><span class="si">%s</span><span class="s2">&#39; object has no attribute &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span>
@@ -552,7 +556,7 @@
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
         </div>
@@ -574,10 +578,10 @@ All rights reserved.
 
       </li>
       <li>
-      Last updated on Jan 20, 2021.
+      Last updated on Oct 08, 2021.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
       </li>
     </ul>
     </div>

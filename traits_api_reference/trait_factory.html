@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.trait_factory Module &mdash; Traits 6.2 Documentation</title>
+    <title>traits.trait_factory Module &mdash; Traits 6.3 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,10 +13,10 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.2.0',
+        VERSION:     '6.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        LINK_SUFFIX: '',
+        LINK_SUFFIX: '.html',
         SOURCELINK_SUFFIX: '.txt',
         HAS_SOURCE:  true
       };
@@ -24,13 +24,12 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.2 Documentation" href="../index.html" >
+    <link rel="top" title="Traits 6.3 Documentation" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
     <link rel="next" title="traits.trait_handler Module" href="trait_handler.html" >
     <link rel="prev" title="traits.trait_errors Module" href="trait_errors.html" > 
@@ -50,7 +49,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.2 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 6.3 Documentation</a></li>
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
     </ul>
@@ -95,24 +94,24 @@ so that the trait conversion functions can generate CTrait instances in a
 standard way.</p>
 <div class="section" id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="traits.trait_factory.TraitFactory">
-<em class="property">class </em><code class="sig-prename descclassname">traits.trait_factory.</code><code class="sig-name descname">TraitFactory</code><span class="sig-paren">(</span><em class="sig-param">maker_function=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_factory.html#TraitFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_factory.TraitFactory" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">traits.trait_factory.</span></code><code class="sig-name descname"><span class="pre">TraitFactory</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maker_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_factory.html#TraitFactory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_factory.TraitFactory" title="Permalink to this definition">¶</a></dt>
 <dd><p>A factory class that allows deferred creation of traits</p>
 <p>Traits created by TraitFactory instances are cached, and the cached
 trait is returned by all subsequent calls to the same TraitFactory
 instance.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="traits.trait_factory.TraitFactory.as_ctrait">
-<code class="sig-name descname">as_ctrait</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_factory.html#TraitFactory.as_ctrait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_factory.TraitFactory.as_ctrait" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">as_ctrait</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_factory.html#TraitFactory.as_ctrait"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_factory.TraitFactory.as_ctrait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the CTrait instance from the factory.</p>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="traits.trait_factory.TraitImportError">
-<em class="property">class </em><code class="sig-prename descclassname">traits.trait_factory.</code><code class="sig-name descname">TraitImportError</code><span class="sig-paren">(</span><em class="sig-param">message</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_factory.html#TraitImportError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_factory.TraitImportError" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">traits.trait_factory.</span></code><code class="sig-name descname"><span class="pre">TraitImportError</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_factory.html#TraitImportError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_factory.TraitImportError" title="Permalink to this definition">¶</a></dt>
 <dd><p>TraitFactory subclass that always fails when creating a CTrait</p>
 <p>This class is designed for uses such as deferring import problems until
 encountering code that actually tries to use the unimportable trait.</p>
@@ -121,9 +120,9 @@ encountering code that actually tries to use the unimportable trait.</p>
 </div>
 <div class="section" id="functions">
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
+<dl class="py function">
 <dt id="traits.trait_factory.trait_factory">
-<code class="sig-prename descclassname">traits.trait_factory.</code><code class="sig-name descname">trait_factory</code><span class="sig-paren">(</span><em class="sig-param">trait</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_factory.html#trait_factory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_factory.trait_factory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">traits.trait_factory.</span></code><code class="sig-name descname"><span class="pre">trait_factory</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trait</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_factory.html#trait_factory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_factory.trait_factory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a trait created from a TraitFactory instance</p>
 </dd></dl>
 
@@ -168,7 +167,7 @@ encountering code that actually tries to use the unimportable trait.</p>
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
         </div>
@@ -190,10 +189,10 @@ All rights reserved.
 
       </li>
       <li>
-      Last updated on Jan 20, 2021.
+      Last updated on Oct 08, 2021.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
       </li>
     </ul>
     </div>

@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.trait_numeric &mdash; Traits 6.2 Documentation</title>
+    <title>traits.trait_numeric &mdash; Traits 6.3 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-extend.css">
@@ -13,10 +13,10 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '6.2.0',
+        VERSION:     '6.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        LINK_SUFFIX: '',
+        LINK_SUFFIX: '.html',
         SOURCELINK_SUFFIX: '.txt',
         HAS_SOURCE:  true
       };
@@ -24,13 +24,12 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
     <script type="text/javascript" src="../../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../genindex.html" >
     <link rel="search" title="Search" href="../../search.html" >
-    <link rel="top" title="Traits 6.2 Documentation" href="../../index.html" >
+    <link rel="top" title="Traits 6.3 Documentation" href="../../index.html" >
     <link rel="up" title="Module code" href="../index.html" > 
   </head>
   <body>
@@ -48,7 +47,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../index.html">Traits 6.2 Documentation</a></li>
+        <li class="active"><a href="../../index.html">Traits 6.3 Documentation</a></li>
 	
           <li class="active"><a href="../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -92,11 +91,11 @@
 
 <span class="kn">import</span> <span class="nn">warnings</span>
 
-<span class="kn">from</span> <span class="nn">.constants</span> <span class="k">import</span> <span class="n">ComparisonMode</span><span class="p">,</span> <span class="n">DefaultValue</span>
-<span class="kn">from</span> <span class="nn">.trait_base</span> <span class="k">import</span> <span class="n">SequenceTypes</span>
-<span class="kn">from</span> <span class="nn">.trait_errors</span> <span class="k">import</span> <span class="n">TraitError</span>
-<span class="kn">from</span> <span class="nn">.trait_type</span> <span class="k">import</span> <span class="n">TraitType</span>
-<span class="kn">from</span> <span class="nn">.trait_types</span> <span class="k">import</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Int</span> <span class="k">as</span> <span class="n">TInt</span><span class="p">,</span> <span class="n">Float</span> <span class="k">as</span> <span class="n">TFloat</span>
+<span class="kn">from</span> <span class="nn">.constants</span> <span class="kn">import</span> <span class="n">ComparisonMode</span><span class="p">,</span> <span class="n">DefaultValue</span>
+<span class="kn">from</span> <span class="nn">.trait_base</span> <span class="kn">import</span> <span class="n">SequenceTypes</span>
+<span class="kn">from</span> <span class="nn">.trait_errors</span> <span class="kn">import</span> <span class="n">TraitError</span>
+<span class="kn">from</span> <span class="nn">.trait_type</span> <span class="kn">import</span> <span class="n">TraitType</span>
+<span class="kn">from</span> <span class="nn">.trait_types</span> <span class="kn">import</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Int</span> <span class="k">as</span> <span class="n">TInt</span><span class="p">,</span> <span class="n">Float</span> <span class="k">as</span> <span class="n">TFloat</span>
 
 
 <span class="c1"># Deferred imports from numpy:</span>
@@ -127,7 +126,7 @@
     <span class="sd">&quot;&quot;&quot; Abstract base class for defining numpy-based arrays.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -148,7 +147,7 @@
                 <span class="s2">&quot;numpy package to be installed.&quot;</span>
             <span class="p">)</span>
 
-        <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">asarray</span><span class="p">,</span> <span class="n">ndarray</span>
+        <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">asarray</span><span class="p">,</span> <span class="n">ndarray</span>
 
         <span class="c1"># Mark this as being an &#39;array&#39; trait:</span>
         <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;array&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
@@ -292,11 +291,11 @@
         <span class="n">enter_set</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">enter_set</span> <span class="ow">or</span> <span class="kc">False</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">ArrayEditor</span>
+            <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="kn">import</span> <span class="n">ArrayEditor</span>
 
             <span class="n">editor</span> <span class="o">=</span> <span class="n">ArrayEditor</span><span class="p">(</span><span class="n">auto_set</span><span class="o">=</span><span class="n">auto_set</span><span class="p">,</span> <span class="n">enter_set</span><span class="o">=</span><span class="n">enter_set</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">TupleEditor</span>
+            <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="kn">import</span> <span class="n">TupleEditor</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">types</span> <span class="o">=</span> <span class="n">Any</span>
@@ -334,7 +333,7 @@
 
     <span class="k">def</span> <span class="nf">_default_for_dtype_and_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Invent a suitable default value for a given dtype and shape. &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">zeros</span>
+        <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">zeros</span>
 
         <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># Compatibility with the default of Traits 2.0</span>
@@ -403,7 +402,7 @@
 <span class="sd">        Default is &quot;unsafe&quot;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -470,7 +469,7 @@
 <span class="sd">        Default is &quot;unsafe&quot;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -500,7 +499,7 @@
 <span class="sd">    The default value is None.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
         <span class="c1"># Normally use object identity to detect array values changing:</span>
         <span class="n">metadata</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;comparison_mode&quot;</span><span class="p">,</span> <span class="n">ComparisonMode</span><span class="o">.</span><span class="n">identity</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
@@ -547,7 +546,7 @@
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
         </div>
@@ -569,10 +568,10 @@ All rights reserved.
 
       </li>
       <li>
-      Last updated on Jan 20, 2021.
+      Last updated on Oct 08, 2021.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
       </li>
     </ul>
     </div>

@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.util.resource &mdash; Traits 6.2 Documentation</title>
+    <title>traits.util.resource &mdash; Traits 6.3 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
@@ -13,10 +13,10 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '6.2.0',
+        VERSION:     '6.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        LINK_SUFFIX: '',
+        LINK_SUFFIX: '.html',
         SOURCELINK_SUFFIX: '.txt',
         HAS_SOURCE:  true
       };
@@ -24,13 +24,12 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../_static/language_data.js"></script>
     <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../../genindex.html" >
     <link rel="search" title="Search" href="../../../search.html" >
-    <link rel="top" title="Traits 6.2 Documentation" href="../../../index.html" >
+    <link rel="top" title="Traits 6.3 Documentation" href="../../../index.html" >
     <link rel="up" title="Module code" href="../../index.html" > 
   </head>
   <body>
@@ -48,7 +47,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../../index.html">Traits 6.2 Documentation</a></li>
+        <li class="active"><a href="../../../index.html">Traits 6.3 Documentation</a></li>
 	
           <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -108,8 +107,8 @@
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-
-<span class="kn">from</span> <span class="nn">distutils.sysconfig</span> <span class="k">import</span> <span class="n">get_python_lib</span>
+<span class="kn">import</span> <span class="nn">sysconfig</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
 
 
 <div class="viewcode-block" id="get_path"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.resource.get_path">[docs]</a><span class="k">def</span> <span class="nf">get_path</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
@@ -170,6 +169,8 @@
 <span class="sd">    find/open the resource, find_resource will use the sys.path[0] to find the</span>
 <span class="sd">    resource if alt_path is defined.</span>
 
+<span class="sd">    .. deprecated:: 6.3.0</span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    project : str</span>
@@ -196,6 +197,11 @@
 <span class="sd">        will be the full path to the resource. If the file is not found or</span>
 <span class="sd">        cannot be opened, None is returned.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+        <span class="s2">&quot;find_resource is deprecated. Use importlib.resources instead.&quot;</span><span class="p">,</span>
+        <span class="ne">DeprecationWarning</span><span class="p">,</span>
+        <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="c1"># Get the image using the pkg_resources resource_stream module, which</span>
@@ -203,7 +209,7 @@
         <span class="c1"># the image path. This method works in all cases as long as setuptools</span>
         <span class="c1"># is installed. If setuptools isn&#39;t installed, the backup sys.path[0]</span>
         <span class="c1"># method is used.</span>
-        <span class="kn">from</span> <span class="nn">pkg_resources</span> <span class="k">import</span> <span class="n">resource_stream</span><span class="p">,</span> <span class="n">working_set</span><span class="p">,</span> <span class="n">Requirement</span>
+        <span class="kn">from</span> <span class="nn">pkg_resources</span> <span class="kn">import</span> <span class="n">resource_stream</span><span class="p">,</span> <span class="n">working_set</span><span class="p">,</span> <span class="n">Requirement</span>
 
         <span class="c1"># Get a requirement for the project</span>
         <span class="n">requirement</span> <span class="o">=</span> <span class="n">Requirement</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">project</span><span class="p">)</span>
@@ -223,8 +229,8 @@
     <span class="k">except</span><span class="p">:</span>
         <span class="c1"># Setuptools was either not installed, or it failed to find the file.</span>
         <span class="c1"># First check to see if the package was installed using egginst by</span>
-        <span class="c1"># looking for the file at: site-packages\\resouce_path</span>
-        <span class="n">full_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">get_python_lib</span><span class="p">(),</span> <span class="n">resource_path</span><span class="p">)</span>
+        <span class="c1"># looking for the file at: site-packages\\resource_path</span>
+        <span class="n">full_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sysconfig</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;purelib&#39;</span><span class="p">),</span> <span class="n">resource_path</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">full_path</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">return_path</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">full_path</span>
@@ -258,7 +264,15 @@
 <span class="sd">        argument (filename) is the name of the file which will be created,</span>
 <span class="sd">        or overwritten if it already exists.</span>
 <span class="sd">        The return value in always None.</span>
+
+<span class="sd">        .. deprecated:: 6.3.0</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+        <span class="s2">&quot;store_resource is deprecated. Use importlib.resources instead.&quot;</span><span class="p">,</span>
+        <span class="ne">DeprecationWarning</span><span class="p">,</span>
+        <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="p">)</span>
+
     <span class="n">fi</span> <span class="o">=</span> <span class="n">find_resource</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">resource_path</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">fi</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
@@ -289,7 +303,7 @@
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
         </div>
@@ -311,10 +325,10 @@ All rights reserved.
 
       </li>
       <li>
-      Last updated on Jan 20, 2021.
+      Last updated on Oct 08, 2021.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
       </li>
     </ul>
     </div>

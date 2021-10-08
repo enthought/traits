@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>Trait Notification with on_trait_change &mdash; Traits 6.2 Documentation</title>
+    <title>Trait Notification with on_trait_change &mdash; Traits 6.3 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,10 +13,10 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.2.0',
+        VERSION:     '6.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        LINK_SUFFIX: '',
+        LINK_SUFFIX: '.html',
         SOURCELINK_SUFFIX: '.txt',
         HAS_SOURCE:  true
       };
@@ -24,13 +24,12 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.2 Documentation" href="../index.html" >
+    <link rel="top" title="Traits 6.3 Documentation" href="../index.html" >
     <link rel="up" title="Appendix" href="appendix.html" >
     <link rel="next" title="API Reference" href="../traits_api_reference/index.html" >
     <link rel="prev" title="Appendix" href="appendix.html" > 
@@ -50,9 +49,9 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.2 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 6.3 Documentation</a></li>
 	
-          <li class="active"><a href="index.html" >Traits 6.2 User Manual</a></li>
+          <li class="active"><a href="index.html" >Traits 6.3 User Manual</a></li>
           <li class="active"><a href="appendix.html" accesskey="U">Appendix</a></li> 
     </ul>
               
@@ -112,14 +111,14 @@ or function, and then invoke the on_trait_change() or on_trait_event() method
 to register that handler with the object being monitored. Multiple handlers can
 be defined for the same object, or even for the same trait attribute on the
 same object. The handler registration methods have the following signatures:</p>
-<span class="target" id="index-2"></span><dl class="method">
+<span class="target" id="index-2"></span><dl class="py method">
 <dt id="on_trait_change">
-<code class="sig-name descname">on_trait_change</code><span class="sig-paren">(</span><em class="sig-param">handler</em><span class="optional">[</span>, <em class="sig-param">name=None</em>, <em class="sig-param">remove=False</em>, <em class="sig-param">dispatch='same'</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#on_trait_change" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">on_trait_change</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">handler</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">name=None</span></em>, <em class="sig-param"><span class="pre">remove=False</span></em>, <em class="sig-param"><span class="pre">dispatch='same'</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#on_trait_change" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<span class="target" id="index-3"></span><dl class="method">
+<span class="target" id="index-3"></span><dl class="py method">
 <dt id="on_trait_event">
-<code class="sig-name descname">on_trait_event</code><span class="sig-paren">(</span><em class="sig-param">handler</em><span class="optional">[</span>, <em class="sig-param">name=None</em>, <em class="sig-param">remove=False</em>, <em class="sig-param">dispatch='same'</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#on_trait_event" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">on_trait_event</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">handler</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">name=None</span></em>, <em class="sig-param"><span class="pre">remove=False</span></em>, <em class="sig-param"><span class="pre">dispatch='same'</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#on_trait_event" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p>In these signatures:</p>
@@ -142,7 +141,7 @@ on non-default values.</p></li>
 <p>Setting up a dynamic trait attribute change notification handler is illustrated
 in the following example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># dynamic_notification.py --- Example of dynamic notification</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Float</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">Float</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span>
 
 <span class="k">class</span> <span class="nc">Part</span> <span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
   <span class="n">cost</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
@@ -152,7 +151,7 @@ in the following example:</p>
   <span class="n">part2</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">Part</span><span class="p">)</span>
   <span class="n">cost</span>  <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
 
-  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">part1</span> <span class="o">=</span> <span class="n">Part</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">part2</span> <span class="o">=</span> <span class="n">Part</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">part1</span><span class="o">.</span><span class="n">on_trait_change</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update_cost</span><span class="p">,</span> <span class="s1">&#39;cost&#39;</span><span class="p">)</span>
@@ -418,7 +417,7 @@ use the “new style” behavior of zero-parameter handlers, be sure to include
 some aspect of the extended trait name syntax in the name specifier.</p>
 <div class="highlight-default notranslate" id="index-16"><div class="highlight"><pre><span></span><span class="c1"># list_notifier.py -- Example of zero-parameter handlers for an object</span>
 <span class="c1">#                     containing a list</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">List</span>
 
 <span class="k">class</span> <span class="nc">Employee</span><span class="p">:</span> <span class="k">pass</span>
 
@@ -507,7 +506,7 @@ state. When an instance is constructed with a trait value that is different
 from the default, that is considered a change and will fire the associated
 change handlers. The <code class="docutils literal notranslate"><span class="pre">post_init</span></code> argument in &#64;on_trait_change can be used
 to delay registering the handler to after the state is set.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Float</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">on_trait_change</span><span class="p">,</span> <span class="n">Str</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">Float</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">on_trait_change</span><span class="p">,</span> <span class="n">Str</span>
 
 
 <span class="k">class</span> <span class="nc">Part</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
@@ -546,7 +545,7 @@ named _anytrait_changed().</p>
 illustrated in the following example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># static_notification.py --- Example of static attribute</span>
 <span class="c1">#                            notification</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Float</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Float</span>
 
 <span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">weight_kg</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
@@ -582,29 +581,41 @@ _anytrait_changed() to be called for that attribute.</p>
 <p>The arguments that are passed to the trait attribute change notification
 method depend on the method signature and on which type of static notification
 handler it is.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.on_trait_change" title="traits.has_traits.on_trait_change"><code class="xref py py-func docutils literal notranslate"><span class="pre">on_trait_change()</span></code></a> and <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.observe" title="traits.has_traits.observe"><code class="xref py py-func docutils literal notranslate"><span class="pre">observe()</span></code></a> decorators nullify
+the effect of special naming. A method that looks like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@observe</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">_foo_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+    <span class="n">do_something_with</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>will only be called once when <code class="docutils literal notranslate"><span class="pre">foo</span></code> changes, as a result of the
+<code class="docutils literal notranslate"><span class="pre">observe</span></code> decorator.</p>
+</div>
 </div>
 <div class="section" id="attribute-specific-handler-signatures">
 <span id="id13"></span><h3>Attribute-specific Handler Signatures<a class="headerlink" href="#attribute-specific-handler-signatures" title="Permalink to this headline">¶</a></h3>
 <p>For an attribute specific notification handler, the method signatures supported
 are:</p>
-<dl class="method">
-<dt id="_name_changed">
-<code class="sig-name descname">_name_changed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_name_changed" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt id="name_changed">
+<span id="_name_changed"></span><code class="sig-name descname"><span class="pre">_name_changed</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#name_changed" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt>
-<code class="sig-name descname">_name_changed</code><span class="sig-paren">(</span><em class="sig-param">new</em><span class="sig-paren">)</span></dt>
+<code class="sig-name descname"><span class="pre">_name_changed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new</span></span></em><span class="sig-paren">)</span></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt>
-<code class="sig-name descname">_name_changed</code><span class="sig-paren">(</span><em class="sig-param">old</em>, <em class="sig-param">new</em><span class="sig-paren">)</span></dt>
+<code class="sig-name descname"><span class="pre">_name_changed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new</span></span></em><span class="sig-paren">)</span></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt>
-<code class="sig-name descname">_name_changed</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">old</em>, <em class="sig-param">new</em><span class="sig-paren">)</span></dt>
+<code class="sig-name descname"><span class="pre">_name_changed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new</span></span></em><span class="sig-paren">)</span></dt>
 <dd></dd></dl>
 
 <p>The method name can also be _<em>name</em>_fired(), with the same set of
@@ -662,24 +673,24 @@ the following table.</p>
 <span id="id14"></span><h3>General Static Handler Signatures<a class="headerlink" href="#general-static-handler-signatures" title="Permalink to this headline">¶</a></h3>
 <p>In the case of a non-attribute specific handler, the method signatures
 supported are:</p>
-<dl class="method">
-<dt id="_anytrait_changed">
-<code class="sig-name descname">_anytrait_changed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_anytrait_changed" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt id="anytrait_changed">
+<span id="_anytrait_changed"></span><code class="sig-name descname"><span class="pre">_anytrait_changed</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#anytrait_changed" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt>
-<code class="sig-name descname">_anytrait_changed</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span></dt>
+<code class="sig-name descname"><span class="pre">_anytrait_changed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt>
-<code class="sig-name descname">_anytrait_changed</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">new</em><span class="sig-paren">)</span></dt>
+<code class="sig-name descname"><span class="pre">_anytrait_changed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new</span></span></em><span class="sig-paren">)</span></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt>
-<code class="sig-name descname">_anytrait_changed</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">old</em>, <em class="sig-param">new</em><span class="sig-paren">)</span></dt>
+<code class="sig-name descname"><span class="pre">_anytrait_changed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new</span></span></em><span class="sig-paren">)</span></dt>
 <dd></dd></dl>
 
 <p>The meanings for <em>name</em>, <em>new</em>, and <em>old</em> are the same as for
@@ -706,7 +717,7 @@ results in a TraitError exception, because an event has no value.</p></li>
 </ul>
 <p id="index-25">As an example of an event, consider:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># event.py --- Example of trait event</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Event</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">Event</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="n">point_2d</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
@@ -756,7 +767,7 @@ in-place.  To listen to internal changes, you need to either use a dynamic
 handler with the <code class="docutils literal notranslate"><span class="pre">[]</span></code> suffix as noted in the Table
 <a class="reference internal" href="#semantics-of-extended-name-notation-table"><span class="std std-ref">Semantics of extended name notation</span></a>, or you can define an
 <em>name</em>_items event handler.</p>
-<p>For these trait types, an auxilliary <em>name</em>_items Event trait is defined which
+<p>For these trait types, an auxiliary <em>name</em>_items Event trait is defined which
 you can listen to either with a static handler _<em>name</em>_items_changed()
 or a dynamic handler which matches <em>name</em>_items, and these handlers will be
 called with notifications of changes to the contents of the list, set or
@@ -902,7 +913,7 @@ and logged, so not to prevent other handlers to be called.</p>
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
         </div>
@@ -924,10 +935,10 @@ All rights reserved.
 
       </li>
       <li>
-      Last updated on Jan 20, 2021.
+      Last updated on Oct 08, 2021.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
       </li>
     </ul>
     </div>

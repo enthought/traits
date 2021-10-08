@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.ctraits Module &mdash; Traits 6.2 Documentation</title>
+    <title>traits.ctraits Module &mdash; Traits 6.3 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,10 +13,10 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.2.0',
+        VERSION:     '6.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        LINK_SUFFIX: '',
+        LINK_SUFFIX: '.html',
         SOURCELINK_SUFFIX: '.txt',
         HAS_SOURCE:  true
       };
@@ -24,13 +24,12 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.2 Documentation" href="../index.html" >
+    <link rel="top" title="Traits 6.3 Documentation" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
     <link rel="next" title="traits.editor_factories Module" href="editor_factories.html" >
     <link rel="prev" title="traits.ctrait Module" href="ctrait.html" > 
@@ -50,7 +49,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.2 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 6.3 Documentation</a></li>
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
     </ul>
@@ -96,20 +95,20 @@ they should use the API-complete HasTraits and CTrait subclasses of
 CHasTraits and cTrait (respectively).</p>
 <div class="section" id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="traits.ctraits.CHasTraits">
-<em class="property">class </em><code class="sig-prename descclassname">traits.ctraits.</code><code class="sig-name descname">CHasTraits</code><a class="headerlink" href="#traits.ctraits.CHasTraits" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">traits.ctraits.</span></code><code class="sig-name descname"><span class="pre">CHasTraits</span></code><a class="headerlink" href="#traits.ctraits.CHasTraits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for HasTraits.</p>
 <p>The CHasTraits class is not intended to be instantiated directly.
 Instead, it serves as a base class for the HasTraits class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>**traits</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – Dictionary mapping trait names to trait values.</p>
+<dd class="field-odd"><p><strong>**traits</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dictionary mapping trait names to trait values.</p>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="traits.ctraits.CHasTraits._class_traits">
-<code class="sig-name descname">_class_traits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.CHasTraits._class_traits" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">_class_traits</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.CHasTraits._class_traits" title="Permalink to this definition">¶</a></dt>
 <dd><p>_instance_traits()</p>
 <p>Return this object’s class traits dictionary.</p>
 <dl class="field-list simple">
@@ -117,14 +116,14 @@ Instead, it serves as a base class for the HasTraits class.</p>
 <dd class="field-odd"><p><strong>class_traits</strong> – Dictionary mapping trait names to corresponding CTrait instances.</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="traits.ctraits.CHasTraits._instance_traits">
-<code class="sig-name descname">_instance_traits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.CHasTraits._instance_traits" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">_instance_traits</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.CHasTraits._instance_traits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return this object’s instance traits dictionary.</p>
 <p>The object’s instance traits dictionary is created if it doesn’t
 already exist.</p>
@@ -133,21 +132,21 @@ already exist.</p>
 <dd class="field-odd"><p><strong>instance_traits</strong> – Dictionary mapping trait names to corresponding CTrait instances.</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="traits.ctraits.CHasTraits.trait_items_event">
-<code class="sig-name descname">trait_items_event</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">event_object</em>, <em class="sig-param">event_trait</em><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.CHasTraits.trait_items_event" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">trait_items_event</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_trait</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.CHasTraits.trait_items_event" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fire an items event for changes to a Traits collection.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Name of the item trait for which an event is being fired. (The name
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the item trait for which an event is being fired. (The name
 will usually end in ‘_items’.)</p></li>
-<li><p><strong>event_object</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><em>object</em></a>) – Object of type <code class="docutils literal notranslate"><span class="pre">TraitListEvent</span></code>, <code class="docutils literal notranslate"><span class="pre">TraitDictEvent</span></code> or <code class="docutils literal notranslate"><span class="pre">TraitSetEvent</span></code>
+<li><p><strong>event_object</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)"><em>object</em></a>) – Object of type <code class="docutils literal notranslate"><span class="pre">TraitListEvent</span></code>, <code class="docutils literal notranslate"><span class="pre">TraitDictEvent</span></code> or <code class="docutils literal notranslate"><span class="pre">TraitSetEvent</span></code>
 describing the changes to the underlying collection trait value.</p></li>
 <li><p><strong>event_trait</strong> (<a class="reference internal" href="ctrait.html#traits.ctrait.CTrait" title="traits.ctrait.CTrait"><em>CTrait</em></a>) – The items trait, of trait type <code class="docutils literal notranslate"><span class="pre">Event</span></code>.</p></li>
 </ul>
@@ -155,15 +154,15 @@ describing the changes to the underlying collection trait value.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="traits.ctraits.CHasTraits.trait_property_changed">
-<code class="sig-name descname">trait_property_changed</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">old_value</em><span class="optional">[</span>, <em class="sig-param">new_value</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.CHasTraits.trait_property_changed" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">trait_property_changed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">name</span></em>, <em class="sig-param"><span class="pre">old_value</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">new_value</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.CHasTraits.trait_property_changed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call notifiers when a trait property value is explicitly changed.</p>
 <p>Calls trait and object notifiers for a property value change.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Name of the trait whose value has changed</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the trait whose value has changed</p></li>
 <li><p><strong>old_value</strong> (<em>any</em>) – Old value for this trait.</p></li>
 <li><p><strong>new_value</strong> (<em>any</em><em>, </em><em>optional</em>) – New value for this trait. If the new value is not provided,
 it’s looked up on the object.</p></li>
@@ -172,47 +171,47 @@ it’s looked up on the object.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="traits.ctraits.CHasTraits.traits_init">
-<code class="sig-name descname">traits_init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.CHasTraits.traits_init" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">traits_init</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.CHasTraits.traits_init" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform any final object initialization needed.</p>
 <p>For the CHasTraits base class, this method currently does nothing.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="traits.ctraits.CHasTraits.traits_inited">
-<code class="sig-name descname">traits_inited</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.CHasTraits.traits_inited" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">traits_inited</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.CHasTraits.traits_inited" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the initialization state of this object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><strong>initialized</strong> – True if the object is initialized, else False.</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="traits.ctraits.cTrait">
-<em class="property">class </em><code class="sig-prename descclassname">traits.ctraits.</code><code class="sig-name descname">cTrait</code><a class="headerlink" href="#traits.ctraits.cTrait" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">traits.ctraits.</span></code><code class="sig-name descname"><span class="pre">cTrait</span></code><a class="headerlink" href="#traits.ctraits.cTrait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for CTrait.</p>
 <p>The cTrait class is not intended to be instantiated directly.
 Instead, it serves as a base class for CTrait.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>kind</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – Integer between 0 and 8 representing the kind of this trait, with
+<dd class="field-odd"><p><strong>kind</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – Integer between 0 and 8 representing the kind of this trait, with
 the default value being 0. The kind determines how attribute get
 and set operations behave for attributes using this trait. The
 values for <em>kind</em> correspond to the members of the <code class="docutils literal notranslate"><span class="pre">TraitKind</span></code>
 enumeration type.</p>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="traits.ctraits.cTrait.clone">
-<code class="sig-name descname">clone</code><span class="sig-paren">(</span><em class="sig-param">source</em><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.cTrait.clone" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">clone</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.cTrait.clone" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clone state of another trait into this one.</p>
 <p>This method copies all of the state of the <em>source</em> trait into
 this trait, with the exception of the trait notifiers and the
@@ -226,17 +225,17 @@ object as the handler for the <em>source</em> trait.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="traits.ctraits.cTrait.comparison_mode">
-<code class="sig-name descname">comparison_mode</code><a class="headerlink" href="#traits.ctraits.cTrait.comparison_mode" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">comparison_mode</span></code><a class="headerlink" href="#traits.ctraits.cTrait.comparison_mode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Integer constant indicating when notifiers are executed.</p>
 <p>The value of this constant is the integer corresponding to a member
 of the <a class="reference internal" href="constants.html#traits.constants.ComparisonMode" title="traits.constants.ComparisonMode"><code class="xref py py-data docutils literal notranslate"><span class="pre">ComparisonMode</span></code></a> enumeration.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="traits.ctraits.cTrait.default_value">
-<code class="sig-name descname">default_value</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.cTrait.default_value" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">default_value</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.cTrait.default_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return tuple giving default value information for this trait.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -249,16 +248,16 @@ of the <a class="reference internal" href="constants.html#traits.constants.Compa
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="traits.ctraits.cTrait.default_value_for">
-<code class="sig-name descname">default_value_for</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.cTrait.default_value_for" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">default_value_for</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.cTrait.default_value_for" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the default value of this CTrait instance for a specified object
 and trait name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>object</strong> (<a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><em>HasTraits</em></a>) – The object the trait is attached to.</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the trait.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the trait.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -270,18 +269,18 @@ and trait name.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="traits.ctraits.cTrait.delegate">
-<code class="sig-name descname">delegate</code><span class="sig-paren">(</span><em class="sig-param">delegate_name</em>, <em class="sig-param">prefix</em>, <em class="sig-param">prefix_type</em>, <em class="sig-param">modify_delegate</em><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.cTrait.delegate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">delegate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delegate_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modify_delegate</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.cTrait.delegate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set another trait as the delegate of this trait.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>delegate_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Name of an attribute on the current object with references the
+<li><p><strong>delegate_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of an attribute on the current object with references the
 object that is the trait’s delegate.</p></li>
-<li><p><strong>delegate_prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – A prefix or substitution applied to the original attribute when
+<li><p><strong>delegate_prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A prefix or substitution applied to the original attribute when
 looking up the delegated attribute.</p></li>
-<li><p><strong>prefix_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – <p>An integer between 0 and 3, inclusive. This controls how the
+<li><p><strong>prefix_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – <p>An integer between 0 and 3, inclusive. This controls how the
 delegator attribute name is mapped to an attribute name on the
 delegate object. The meanings of the values are as follows:</p>
 <dl class="simple">
@@ -301,16 +300,16 @@ the delegator attribute name.</p>
 </dd>
 </dl>
 </p></li>
-<li><p><strong>modify_delegate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Whether to modify the delegate when the value of this trait
+<li><p><strong>modify_delegate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to modify the delegate when the value of this trait
 is modified.</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="traits.ctraits.cTrait.get_validate">
-<code class="sig-name descname">get_validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.cTrait.get_validate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_validate</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.cTrait.get_validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the validator of a CTrait instance.</p>
 <p>Returns the current validator for a CTrait instance, or None
 if the trait has no validator. See also the set_validate
@@ -320,43 +319,43 @@ method.</p>
 <dd class="field-odd"><p><strong>validator</strong></p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)">tuple</a>, callable, or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.10)">tuple</a>, callable, or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)">None</a></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="traits.ctraits.cTrait.handler">
-<code class="sig-name descname">handler</code><a class="headerlink" href="#traits.ctraits.cTrait.handler" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">handler</span></code><a class="headerlink" href="#traits.ctraits.cTrait.handler" title="Permalink to this definition">¶</a></dt>
 <dd><p>The trait handler underlying this trait.</p>
 <p>The value of this property should be an instance of
 <code class="docutils literal notranslate"><span class="pre">BaseTraitHandler</span></code>.</p>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="traits.ctraits.cTrait.is_mapped">
-<code class="sig-name descname">is_mapped</code><a class="headerlink" href="#traits.ctraits.cTrait.is_mapped" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">is_mapped</span></code><a class="headerlink" href="#traits.ctraits.cTrait.is_mapped" title="Permalink to this definition">¶</a></dt>
 <dd><p>True if this is a mapped trait, else False.</p>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="traits.ctraits.cTrait.is_property">
-<code class="sig-name descname">is_property</code><a class="headerlink" href="#traits.ctraits.cTrait.is_property" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">is_property</span></code><a class="headerlink" href="#traits.ctraits.cTrait.is_property" title="Permalink to this definition">¶</a></dt>
 <dd><p>True if this trait is a property trait, else False.</p>
 <p>This property is read-only.</p>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="traits.ctraits.cTrait.modify_delegate">
-<code class="sig-name descname">modify_delegate</code><a class="headerlink" href="#traits.ctraits.cTrait.modify_delegate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">modify_delegate</span></code><a class="headerlink" href="#traits.ctraits.cTrait.modify_delegate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicate whether modifications affect the delegate.</p>
 <p>For delegated traits, this is a boolean indicating whether
 modifications to this trait also modify the delegated trait.</p>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="traits.ctraits.cTrait.post_setattr">
-<code class="sig-name descname">post_setattr</code><a class="headerlink" href="#traits.ctraits.cTrait.post_setattr" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">post_setattr</span></code><a class="headerlink" href="#traits.ctraits.cTrait.post_setattr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Callable called after a successful value assignment to this trait.</p>
 <p>The value of this property is either a callable or <em>None</em>.
 If the value is a callable, this callable allows the trait to do
@@ -365,36 +364,36 @@ The callable is called with arguments (object, name, value), and the
 return value of the callable is ignored.</p>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="traits.ctraits.cTrait.post_setattr_original_value">
-<code class="sig-name descname">post_setattr_original_value</code><a class="headerlink" href="#traits.ctraits.cTrait.post_setattr_original_value" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">post_setattr_original_value</span></code><a class="headerlink" href="#traits.ctraits.cTrait.post_setattr_original_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Whether post_setattr receives the original or the validated value.</p>
 <p>If true, the post_setattr callable for this trait (if defined)
 receives the original, unvalidated value assigned to the trait.
 If false, the validated value is provided to post_setattr.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="traits.ctraits.cTrait.set_default_value">
-<code class="sig-name descname">set_default_value</code><span class="sig-paren">(</span><em class="sig-param">default_value_type</em>, <em class="sig-param">default_value</em><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.cTrait.set_default_value" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">set_default_value</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default_value_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.cTrait.set_default_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the default value information for this trait.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>default_value_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – An integer representing the kind of the default value</p></li>
+<li><p><strong>default_value_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – An integer representing the kind of the default value</p></li>
 <li><p><strong>default_value</strong> (<em>value</em>) – A value or callable providing the default</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="traits.ctraits.cTrait.set_validate">
-<code class="sig-name descname">set_validate</code><span class="sig-paren">(</span><em class="sig-param">validator</em><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.cTrait.set_validate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">set_validate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">validator</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.cTrait.set_validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the validator of a CTrait instance</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>validator</strong> (<em>callable</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a>) – <p>Either a callable used for validation, or a tuple representing
+<dd class="field-odd"><p><strong>validator</strong> (<em>callable</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.10)"><em>tuple</em></a>) – <p>Either a callable used for validation, or a tuple representing
 validation information.</p>
 <p>A callable used for validation should have signature
 validator(obj, name, value) -&gt; value, and should return the
@@ -407,30 +406,30 @@ to the validation type</p>
 </p>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.9)"><strong>ValueError</strong></a> – If the given tuple does not have any of the expected forms.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.10)"><strong>ValueError</strong></a> – If the given tuple does not have any of the expected forms.</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="traits.ctraits.cTrait.setattr_original_value">
-<code class="sig-name descname">setattr_original_value</code><a class="headerlink" href="#traits.ctraits.cTrait.setattr_original_value" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">setattr_original_value</span></code><a class="headerlink" href="#traits.ctraits.cTrait.setattr_original_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Whether setattr stores the original or the validated value.</p>
 <p>If true, setattr will store the original, unvalidated, value set on
 the trait to the object’s dictionary. If false, the value returned
 from the validator will be stored.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="traits.ctraits.cTrait.validate">
-<code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.cTrait.validate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">validate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.cTrait.validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform validation and appropriate conversions on a value for this trait.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>object</strong> (<a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><em>HasTraits</em></a>) – The HasTraits object that validation is being performed for.</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the trait.</p></li>
-<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><em>object</em></a>) – The value to be validated.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the trait.</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)"><em>object</em></a>) – The value to be validated.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -487,7 +486,7 @@ from the validator will be stored.</p>
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
         </div>
@@ -509,10 +508,10 @@ All rights reserved.
 
       </li>
       <li>
-      Last updated on Jan 20, 2021.
+      Last updated on Oct 08, 2021.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
       </li>
     </ul>
     </div>

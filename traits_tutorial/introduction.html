@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>Introduction &mdash; Traits 6.2 Documentation</title>
+    <title>Introduction &mdash; Traits 6.3 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,10 +13,10 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.2.0',
+        VERSION:     '6.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        LINK_SUFFIX: '',
+        LINK_SUFFIX: '.html',
         SOURCELINK_SUFFIX: '.txt',
         HAS_SOURCE:  true
       };
@@ -24,16 +24,15 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.2 Documentation" href="../index.html" >
-    <link rel="up" title="Traits 6.2 Tutorial" href="index.html" >
-    <link rel="next" title="Traits 6.2 User Manual" href="../traits_user_manual/index.html" >
-    <link rel="prev" title="Traits 6.2 Tutorial" href="index.html" > 
+    <link rel="top" title="Traits 6.3 Documentation" href="../index.html" >
+    <link rel="up" title="Traits 6.3 Tutorial" href="index.html" >
+    <link rel="next" title="Traits 6.3 User Manual" href="../traits_user_manual/index.html" >
+    <link rel="prev" title="Traits 6.3 Tutorial" href="index.html" > 
   </head>
   <body>
   <div class="container">
@@ -50,9 +49,9 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.2 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 6.3 Documentation</a></li>
 	
-          <li class="active"><a href="index.html" accesskey="U">Traits 6.2 Tutorial</a></li> 
+          <li class="active"><a href="index.html" accesskey="U">Traits 6.3 Tutorial</a></li> 
     </ul>
               
               
@@ -66,11 +65,11 @@
            >modules</a>
       </li>
       <li class="active">
-        <a href="../traits_user_manual/index.html" title="Traits 6.2 User Manual"
+        <a href="../traits_user_manual/index.html" title="Traits 6.3 User Manual"
            accesskey="N">next</a>
       </li>
       <li class="active">
-        <a href="index.html" title="Traits 6.2 Tutorial"
+        <a href="index.html" title="Traits 6.3 Tutorial"
            accesskey="P">previous</a>
       </li>
     </ul>
@@ -90,7 +89,7 @@
 <h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
 <p>This tutorial is intended to introduce you to the basics of Traits
 and to give you an idea of what capabilities the Traits library provides.
-This tutorial assumes that you are confortable with the Python
+This tutorial assumes that you are comfortable with the Python
 programming language, object-oriented programming, and the core tools of
 the Python scientific ecosystem, such as NumPy.</p>
 <p>This tutorial is designed to introduce the basics of Traits, but also to
@@ -123,13 +122,13 @@ to simplify and improve the code here.</p>
 <span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">PIL</span> <span class="k">import</span> <span class="n">Image</span> <span class="k">as</span> <span class="n">PILImage</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span> <span class="k">as</span> <span class="n">PILImage</span>
 
 
 <span class="k">class</span> <span class="nc">Image</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot; An SEM image stored in a file. &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">sample_id</span><span class="p">,</span> <span class="n">date_acquired</span><span class="p">,</span> <span class="n">operator</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">sample_id</span><span class="p">,</span> <span class="n">date_acquired</span><span class="p">,</span> <span class="n">operator</span><span class="p">,</span>
                  <span class="n">scan_size</span><span class="o">=</span><span class="p">(</span><span class="mf">1e-5</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">)):</span>
         <span class="c1"># initialize the primary attributes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span>
@@ -207,7 +206,7 @@ to simplify and improve the code here.</p>
 <div class="section" id="links">
 <h3>Links<a class="headerlink" href="#links" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><p><a class="reference download internal" download="" href="../_downloads/56bca7b5bd2cbb545198a049497417f3/0_introduction.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a></p></li>
+<li><p><a class="reference download internal" download="" href="../_downloads/6db3fa790a1cd696638609b955845280/0_introduction.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a></p></li>
 </ul>
 </div>
 </div>
@@ -230,7 +229,7 @@ rather than just any NumPy array.  And so on.</p>
 classes: as part of your class definition you _declare_ what you expect your
 data to be.  To do this, the first thing you want to do is inherit from the
 base <code class="docutils literal notranslate"><span class="pre">HasTraits</span></code> class which enables all of the validation machinery:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span>
 
 <span class="k">class</span> <span class="nc">Image</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39; An SEM image stored in a file. &#39;&#39;&#39;</span>
@@ -240,7 +239,7 @@ base <code class="docutils literal notranslate"><span class="pre">HasTraits</spa
 attributes of an <code class="docutils literal notranslate"><span class="pre">Image</span></code> class.  For example, we expect that the operator
 name should be a string, so we can use the standard Traits <code class="docutils literal notranslate"><span class="pre">Str</span></code> trait
 type:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span>
 
 <span class="k">class</span> <span class="nc">Image</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39; An SEM image stored in a file. &#39;&#39;&#39;</span>
@@ -263,7 +262,7 @@ There is an <code class="docutils literal notranslate"><span class="pre">Instanc
 Python class.  Traits also provides a rich set of trait types that cover
 many common data types, for example:</p>
 <ul class="simple">
-<li><p>we can use a <code class="docutils literal notranslate"><span class="pre">Date</span></code> trait type for the date_aquired</p></li>
+<li><p>we can use a <code class="docutils literal notranslate"><span class="pre">Date</span></code> trait type for the date_acquired</p></li>
 <li><p>we can specify that the scan size is not just a tuple, but a pair of
 floating point values by specifying <code class="docutils literal notranslate"><span class="pre">Tuple(Float,</span> <span class="pre">Float)</span></code>.</p></li>
 <li><p>we can use a <code class="docutils literal notranslate"><span class="pre">File</span></code> trait for the filename, and we can require that the
@@ -274,7 +273,7 @@ with <code class="docutils literal notranslate"><span class="pre">Array(shape=(N
 <p>Everything else can remain unchanged in the class, and it will still work as
 expected, however just as with regular Python classes, we need to remember
 to call <code class="docutils literal notranslate"><span class="pre">super()</span></code> in the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">sample_id</span><span class="p">,</span> <span class="n">date_aquired</span><span class="p">,</span> <span class="n">operator</span><span class="p">,</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">sample_id</span><span class="p">,</span> <span class="n">date_acquired</span><span class="p">,</span> <span class="n">operator</span><span class="p">,</span>
              <span class="n">scan_size</span><span class="o">=</span><span class="p">(</span><span class="mf">1e-5</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">)):</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
@@ -307,7 +306,7 @@ the class.  Declare trait types for <code class="docutils literal notranslate"><
 <h3>Links<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p><a class="reference internal" href="../traits_user_manual/defining.html#defining-traits-initialization-and-validation"><span class="std std-ref">Defining Traits: Initialization and Validation</span></a></p></li>
-<li><p><a class="reference download internal" download="" href="../_downloads/92582700f28fa5f022ba0121110ad869/1_validation.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a></p></li>
+<li><p><a class="reference download internal" download="" href="../_downloads/1b1944b4e95104834a7db7d5e0ede7b0/1_validation.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a></p></li>
 </ul>
 </div>
 </div>
@@ -318,7 +317,7 @@ programming, you may have noticed that your <code class="docutils literal notran
 have a lot of boilerplate.  In our original example, the code copies all of
 the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> arguments to corresponding attributes before doing any
 real work:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">sample_id</span><span class="p">,</span> <span class="n">date_aquired</span><span class="p">,</span> <span class="n">operator</span><span class="p">,</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">sample_id</span><span class="p">,</span> <span class="n">date_acquired</span><span class="p">,</span> <span class="n">operator</span><span class="p">,</span>
              <span class="n">scan_size</span><span class="o">=</span><span class="p">(</span><span class="mf">1e-5</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">)):</span>
     <span class="c1"># initialize the primary attributes</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span>
@@ -411,8 +410,8 @@ in subsequent sections of the tutorial.</p>
 <code class="docutils literal notranslate"><span class="pre">HasTraits</span></code> subclass, you can always choose to do so.  If you do, you
 <strong>must</strong> call <code class="docutils literal notranslate"><span class="pre">super()</span></code> to ensure that Traits has a chance to set up
 its machinery.  In our example the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method is also used to set
-up some auxilliary values. This doesn’t have to change:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span><span class="p">):</span>
+up some auxiliary values. This doesn’t have to change:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span><span class="p">):</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">traits</span><span class="p">)</span>
 
     <span class="c1"># useful secondary attributes</span>
@@ -440,7 +439,7 @@ initialized to this default using a dynamic default method.</p>
 <h3>Links<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p><a class="reference internal" href="../traits_user_manual/defining.html#defining-traits-initialization-and-validation"><span class="std std-ref">Defining Traits: Initialization and Validation</span></a></p></li>
-<li><p><a class="reference download internal" download="" href="../_downloads/8a3d8609007080c0cb9a1de685361063/2_initialization.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a></p></li>
+<li><p><a class="reference download internal" download="" href="../_downloads/acd9994bbbe0408f9434c891ce0a132d/2_initialization.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a></p></li>
 </ul>
 </div>
 </div>
@@ -541,7 +540,7 @@ update whenever <code class="docutils literal notranslate"><span class="pre">sca
 <h3>Links<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p><a class="reference internal" href="../traits_user_manual/notification.html#observe-notification"><span class="std std-ref">Trait Notification</span></a></p></li>
-<li><p><a class="reference download internal" download="" href="../_downloads/2e48b58fff645a67b4c8775cb040ae02/3_observation.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a></p></li>
+<li><p><a class="reference download internal" download="" href="../_downloads/dc8ca8e34a03dfbe4de8792448dcffd6/3_observation.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a></p></li>
 </ul>
 </div>
 </div>
@@ -634,7 +633,7 @@ with a multi-gigabyte array.</p>
 <h3>Links<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p><a class="reference internal" href="../traits_user_manual/advanced.html#property-traits"><span class="std std-ref">Property Traits</span></a></p></li>
-<li><p><a class="reference download internal" download="" href="../_downloads/ffab0e37cdaefa3acf2addbed2feb9c8/4_properties.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a></p></li>
+<li><p><a class="reference download internal" download="" href="../_downloads/c0255fa37d8175105dbfc767423ed818/4_properties.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a></p></li>
 </ul>
 </div>
 </div>
@@ -710,7 +709,7 @@ If we use:</p>
 <h3>Links<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p><a class="reference internal" href="../traits_user_manual/advanced.html#hasstricttraits"><span class="std std-ref">HasStrictTraits</span></a></p></li>
-<li><p><a class="reference download internal" download="" href="../_downloads/226e73a636448abbc59b092ddf2d1380/5_documentation.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a></p></li>
+<li><p><a class="reference download internal" download="" href="../_downloads/154e1281a2b547aa81d354bc31130a4b/5_documentation.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a></p></li>
 </ul>
 </div>
 </div>
@@ -728,7 +727,7 @@ your class by simply doing:</p>
 but it usually is not what you would want to provide for your users.</p>
 <p>With a little more effort using the features of TraitsUI, you can
 design a dialog which is more pleasing:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">Item</span><span class="p">,</span> <span class="n">View</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="kn">import</span> <span class="n">Item</span><span class="p">,</span> <span class="n">View</span>
 
 <span class="k">class</span> <span class="nc">Image</span><span class="p">(</span><span class="n">HasStrictTraits</span><span class="p">):</span>
     <span class="o">...</span>
@@ -749,7 +748,7 @@ applications, including 2D and 3D plotting.</p>
 <h3>Links<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p><a class="reference external" href="https://docs.enthought.com/traitsui/">TraitsUI Documentation</a></p></li>
-<li><p><a class="reference download internal" download="" href="../_downloads/eb9569a5c742b16b01993f90bbaf6460/6_visualization.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a></p></li>
+<li><p><a class="reference download internal" download="" href="../_downloads/61769cfac20855186edf9751000db4e1/6_visualization.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a></p></li>
 </ul>
 </div>
 </div>
@@ -815,10 +814,10 @@ applications, including 2D and 3D plotting.</p>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="index.html"
-                        title="previous chapter">Traits 6.2 Tutorial</a></p>
+                        title="previous chapter">Traits 6.3 Tutorial</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="../traits_user_manual/index.html"
-                        title="next chapter">Traits 6.2 User Manual</a></p>
+                        title="next chapter">Traits 6.3 User Manual</a></p>
   <h3>This Page</h3>
   <div>
     <a href="../_sources/traits_tutorial/introduction.rst.txt"
@@ -833,7 +832,7 @@ applications, including 2D and 3D plotting.</p>
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
         </div>
@@ -855,10 +854,10 @@ All rights reserved.
 
       </li>
       <li>
-      Last updated on Jan 20, 2021.
+      Last updated on Oct 08, 2021.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
       </li>
     </ul>
     </div>

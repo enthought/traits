@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>Testing &mdash; Traits 6.2 Documentation</title>
+    <title>Testing &mdash; Traits 6.3 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,10 +13,10 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.2.0',
+        VERSION:     '6.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        LINK_SUFFIX: '',
+        LINK_SUFFIX: '.html',
         SOURCELINK_SUFFIX: '.txt',
         HAS_SOURCE:  true
       };
@@ -24,14 +24,13 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.2 Documentation" href="../index.html" >
-    <link rel="up" title="Traits 6.2 User Manual" href="index.html" >
+    <link rel="top" title="Traits 6.3 Documentation" href="../index.html" >
+    <link rel="up" title="Traits 6.3 User Manual" href="index.html" >
     <link rel="next" title="Tips for debugging Traits" href="debugging.html" >
     <link rel="prev" title="Advanced Topics" href="advanced.html" > 
   </head>
@@ -50,9 +49,9 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.2 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 6.3 Documentation</a></li>
 	
-          <li class="active"><a href="index.html" accesskey="U">Traits 6.2 User Manual</a></li> 
+          <li class="active"><a href="index.html" accesskey="U">Traits 6.3 User Manual</a></li> 
     </ul>
               
               
@@ -128,8 +127,8 @@ names of the traits that we need to assert the behaviour.</p>
 <p>The following example demonstrates the basic usage of the mixin class in a
 TestCase:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">unittest</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">on_trait_change</span>
-<span class="kn">from</span> <span class="nn">traits.testing.api</span> <span class="k">import</span> <span class="n">UnittestTools</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">on_trait_change</span>
+<span class="kn">from</span> <span class="nn">traits.testing.api</span> <span class="kn">import</span> <span class="n">UnittestTools</span>
 
 
 <span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
@@ -197,8 +196,8 @@ because the <a class="reference internal" href="../traits_api_reference/has_trai
 the methods and attributes of a <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasStrictTraits" title="traits.has_traits.HasStrictTraits"><code class="xref py py-class docutils literal notranslate"><span class="pre">HasStrictTraits</span></code></a> instance. To circumvent the
 <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasStrictTraits" title="traits.has_traits.HasStrictTraits"><code class="xref py py-class docutils literal notranslate"><span class="pre">HasStrictTraits</span></code></a> machinery, and mock methods using <code class="docutils literal notranslate"><span class="pre">unittest.mock</span></code> or
 <a class="reference external" href="https://pypi.python.org/pypi/mock">the mock library</a>, please follow the logic in the example below:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasStrictTraits</span><span class="p">,</span> <span class="n">Float</span>
-<span class="kn">from</span> <span class="nn">unittest.mock</span> <span class="k">import</span> <span class="n">Mock</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasStrictTraits</span><span class="p">,</span> <span class="n">Float</span>
+<span class="kn">from</span> <span class="nn">unittest.mock</span> <span class="kn">import</span> <span class="n">Mock</span>
 
 <span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">HasStrictTraits</span><span class="p">):</span>
 
@@ -265,7 +264,7 @@ getters and validators.</p>
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
         </div>
@@ -287,10 +286,10 @@ All rights reserved.
 
       </li>
       <li>
-      Last updated on Jan 20, 2021.
+      Last updated on Oct 08, 2021.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
       </li>
     </ul>
     </div>

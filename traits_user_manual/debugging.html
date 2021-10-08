@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>Tips for debugging Traits &mdash; Traits 6.2 Documentation</title>
+    <title>Tips for debugging Traits &mdash; Traits 6.3 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,10 +13,10 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.2.0',
+        VERSION:     '6.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        LINK_SUFFIX: '',
+        LINK_SUFFIX: '.html',
         SOURCELINK_SUFFIX: '.txt',
         HAS_SOURCE:  true
       };
@@ -24,14 +24,13 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.2 Documentation" href="../index.html" >
-    <link rel="up" title="Traits 6.2 User Manual" href="index.html" >
+    <link rel="top" title="Traits 6.3 Documentation" href="../index.html" >
+    <link rel="up" title="Traits 6.3 User Manual" href="index.html" >
     <link rel="next" title="Traits internals" href="internals.html" >
     <link rel="prev" title="Testing" href="testing.html" > 
   </head>
@@ -50,9 +49,9 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.2 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 6.3 Documentation</a></li>
 	
-          <li class="active"><a href="index.html" accesskey="U">Traits 6.2 User Manual</a></li> 
+          <li class="active"><a href="index.html" accesskey="U">Traits 6.3 User Manual</a></li> 
     </ul>
               
               
@@ -123,7 +122,7 @@ logged:</p>
 makes debugging a bit difficult. You can force exceptions to be re-raised
 by adding a custom exception handler:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">push_exception_handler</span>
-<span class="n">push_exception_handler</span><span class="p">(</span><span class="n">reraise_exceptions</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">push_exception_handler</span><span class="p">(</span><span class="n">reraise_exceptions</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>(For example, you could add this to the top of the original code block.)</p>
@@ -249,7 +248,7 @@ local folder. The file contents will be similar to the lines below:</p>
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
         </div>
@@ -271,10 +270,10 @@ All rights reserved.
 
       </li>
       <li>
-      Last updated on Jan 20, 2021.
+      Last updated on Oct 08, 2021.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
       </li>
     </ul>
     </div>

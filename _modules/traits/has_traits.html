@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.has_traits &mdash; Traits 6.2 Documentation</title>
+    <title>traits.has_traits &mdash; Traits 6.3 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-extend.css">
@@ -13,10 +13,10 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '6.2.0',
+        VERSION:     '6.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        LINK_SUFFIX: '',
+        LINK_SUFFIX: '.html',
         SOURCELINK_SUFFIX: '.txt',
         HAS_SOURCE:  true
       };
@@ -24,13 +24,12 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
     <script type="text/javascript" src="../../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../genindex.html" >
     <link rel="search" title="Search" href="../../search.html" >
-    <link rel="top" title="Traits 6.2 Documentation" href="../../index.html" >
+    <link rel="top" title="Traits 6.3 Documentation" href="../../index.html" >
     <link rel="up" title="Module code" href="../index.html" > 
   </head>
   <body>
@@ -48,7 +47,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../index.html">Traits 6.2 Documentation</a></li>
+        <li class="active"><a href="../../index.html">Traits 6.3 Documentation</a></li>
 	
           <li class="active"><a href="../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -101,31 +100,31 @@
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">import</span> <span class="nn">weakref</span>
 
-<span class="kn">from</span> <span class="nn">types</span> <span class="k">import</span> <span class="n">FunctionType</span>
+<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">FunctionType</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">TraitsVersion</span>
-<span class="kn">from</span> <span class="nn">.adaptation.adaptation_error</span> <span class="k">import</span> <span class="n">AdaptationError</span>
-<span class="kn">from</span> <span class="nn">.constants</span> <span class="k">import</span> <span class="n">DefaultValue</span><span class="p">,</span> <span class="n">TraitKind</span>
-<span class="kn">from</span> <span class="nn">.ctrait</span> <span class="k">import</span> <span class="n">CTrait</span><span class="p">,</span> <span class="n">__newobj__</span>
-<span class="kn">from</span> <span class="nn">.ctraits</span> <span class="k">import</span> <span class="n">CHasTraits</span>
-<span class="kn">from</span> <span class="nn">.observation</span> <span class="k">import</span> <span class="n">api</span> <span class="k">as</span> <span class="n">observe_api</span>
-<span class="kn">from</span> <span class="nn">.traits</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">TraitsVersion</span>
+<span class="kn">from</span> <span class="nn">.adaptation.adaptation_error</span> <span class="kn">import</span> <span class="n">AdaptationError</span>
+<span class="kn">from</span> <span class="nn">.constants</span> <span class="kn">import</span> <span class="n">DefaultValue</span><span class="p">,</span> <span class="n">TraitKind</span>
+<span class="kn">from</span> <span class="nn">.ctrait</span> <span class="kn">import</span> <span class="n">CTrait</span><span class="p">,</span> <span class="n">__newobj__</span>
+<span class="kn">from</span> <span class="nn">.ctraits</span> <span class="kn">import</span> <span class="n">CHasTraits</span>
+<span class="kn">from</span> <span class="nn">.observation</span> <span class="kn">import</span> <span class="n">api</span> <span class="k">as</span> <span class="n">observe_api</span>
+<span class="kn">from</span> <span class="nn">.traits</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">ForwardProperty</span><span class="p">,</span>
     <span class="n">Property</span><span class="p">,</span>
     <span class="n">Trait</span><span class="p">,</span>
     <span class="n">generic_trait</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.trait_types</span> <span class="k">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">Disallow</span><span class="p">,</span> <span class="n">Event</span><span class="p">,</span> <span class="n">Python</span>
-<span class="kn">from</span> <span class="nn">.trait_notifiers</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">.trait_types</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">Disallow</span><span class="p">,</span> <span class="n">Event</span><span class="p">,</span> <span class="n">Python</span><span class="p">,</span> <span class="n">Str</span>
+<span class="kn">from</span> <span class="nn">.trait_notifiers</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">ExtendedTraitChangeNotifyWrapper</span><span class="p">,</span>
     <span class="n">FastUITraitChangeNotifyWrapper</span><span class="p">,</span>
     <span class="n">NewTraitChangeNotifyWrapper</span><span class="p">,</span>
-    <span class="n">StaticAnyTraitChangeNotifyWrapper</span><span class="p">,</span>
+    <span class="n">StaticAnytraitChangeNotifyWrapper</span><span class="p">,</span>
     <span class="n">StaticTraitChangeNotifyWrapper</span><span class="p">,</span>
     <span class="n">TraitChangeNotifyWrapper</span><span class="p">,</span>
     <span class="n">ui_dispatch</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.trait_base</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">.trait_base</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">SequenceTypes</span><span class="p">,</span>
     <span class="n">TraitsCache</span><span class="p">,</span>
     <span class="n">Undefined</span><span class="p">,</span>
@@ -133,10 +132,10 @@
     <span class="n">not_event</span><span class="p">,</span>
     <span class="n">not_false</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.trait_errors</span> <span class="k">import</span> <span class="n">TraitError</span>
-<span class="kn">from</span> <span class="nn">.util.deprecated</span> <span class="k">import</span> <span class="n">deprecated</span>
-<span class="kn">from</span> <span class="nn">.util._traitsui_helpers</span> <span class="k">import</span> <span class="n">check_traitsui_major_version</span>
-<span class="kn">from</span> <span class="nn">.trait_converters</span> <span class="k">import</span> <span class="n">check_trait</span><span class="p">,</span> <span class="n">mapped_trait_for</span><span class="p">,</span> <span class="n">trait_for</span>
+<span class="kn">from</span> <span class="nn">.trait_errors</span> <span class="kn">import</span> <span class="n">TraitError</span>
+<span class="kn">from</span> <span class="nn">.util.deprecated</span> <span class="kn">import</span> <span class="n">deprecated</span>
+<span class="kn">from</span> <span class="nn">.util._traitsui_helpers</span> <span class="kn">import</span> <span class="n">check_traitsui_major_version</span>
+<span class="kn">from</span> <span class="nn">.trait_converters</span> <span class="kn">import</span> <span class="n">check_trait</span><span class="p">,</span> <span class="n">mapped_trait_for</span><span class="p">,</span> <span class="n">trait_for</span>
 
 
 <span class="c1">#  Set CHECK_INTERFACES to one of the following values:</span>
@@ -168,7 +167,7 @@
 <span class="c1"># Constants</span>
 
 <span class="n">WrapperTypes</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">StaticAnyTraitChangeNotifyWrapper</span><span class="p">,</span>
+    <span class="n">StaticAnytraitChangeNotifyWrapper</span><span class="p">,</span>
     <span class="n">StaticTraitChangeNotifyWrapper</span><span class="p">,</span>
 <span class="p">)</span>
 
@@ -241,6 +240,7 @@
         <span class="p">(</span><span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
         <span class="ow">and</span> <span class="n">is_unbound_method_type</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
         <span class="ow">and</span> <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s2">&quot;on_trait_change&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s2">&quot;_observe_inputs&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
     <span class="p">):</span>
         <span class="k">return</span> <span class="n">result</span>
 
@@ -250,6 +250,7 @@
             <span class="p">(</span><span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
             <span class="ow">and</span> <span class="n">is_unbound_method_type</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
             <span class="ow">and</span> <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s2">&quot;on_trait_change&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s2">&quot;_observe_inputs&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
         <span class="p">):</span>
             <span class="k">return</span> <span class="n">result</span>
 
@@ -343,10 +344,10 @@
 
 
 <span class="k">class</span> <span class="nc">_SimpleTest</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
 
-    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">test</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
 
 
@@ -409,32 +410,33 @@
     <span class="k">def</span> <span class="nf">handler_getter</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">types</span><span class="o">.</span><span class="n">MethodType</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>
 
-    <span class="n">expressions</span> <span class="o">=</span> <span class="n">_parse_expression</span><span class="p">(</span><span class="n">observe</span><span class="p">)</span>
+    <span class="n">graphs</span> <span class="o">=</span> <span class="n">_compile_expression</span><span class="p">(</span><span class="n">observe</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
-        <span class="n">expression</span><span class="o">=</span><span class="n">expressions</span><span class="p">,</span>
+        <span class="n">graphs</span><span class="o">=</span><span class="n">graphs</span><span class="p">,</span>
         <span class="n">dispatch</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">,</span>
         <span class="n">handler_getter</span><span class="o">=</span><span class="n">handler_getter</span><span class="p">,</span>
         <span class="n">post_init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_parse_expression</span><span class="p">(</span><span class="n">expression</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Parse a given expression or list of expressions to convert them into</span>
-<span class="sd">    ObserveExpression objects if needed.</span>
+<span class="k">def</span> <span class="nf">_compile_expression</span><span class="p">(</span><span class="n">expression</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Compile a user-supplied expression or list of expressions.</span>
+
+<span class="sd">    Converts a list of strings or ObserverExpressions to a list of</span>
+<span class="sd">    ObserverGraphs representing the observation patterns to be applied.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    expression : str or list or ObserverExpression</span>
 <span class="sd">        A description of what traits are being observed.</span>
-<span class="sd">        If this is a list, each item must be a string or an Expression.</span>
+<span class="sd">        If this is a list, each item must be a string or an ObserverExpression.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    expressions : list of ObserverExpression</span>
-<span class="sd">        List of parsed expression(s) obtained by calling the parse function on</span>
-<span class="sd">        each expression input string expression, and leaving</span>
-<span class="sd">        ObserverExpression objects as is.</span>
+<span class="sd">    graphs : list of ObserverGraph</span>
+<span class="sd">        List of graphs representing the observation patterns to be applied</span>
+<span class="sd">        to the relevant objects and handlers.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Handle the overloaded signature.</span>
     <span class="c1"># Support list to be consistent with on_trait_change.</span>
@@ -443,11 +445,13 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">expressions</span> <span class="o">=</span> <span class="p">[</span><span class="n">expression</span><span class="p">]</span>
 
-    <span class="n">expressions</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">observe_api</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">expr</span>
-        <span class="k">for</span> <span class="n">expr</span> <span class="ow">in</span> <span class="n">expressions</span>
-    <span class="p">]</span>
-    <span class="k">return</span> <span class="n">expressions</span>
+    <span class="n">graphs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">expr</span> <span class="ow">in</span> <span class="n">expressions</span><span class="p">:</span>
+        <span class="n">graphs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+            <span class="n">observe_api</span><span class="o">.</span><span class="n">compile_str</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+            <span class="k">else</span> <span class="n">observe_api</span><span class="o">.</span><span class="n">compile_expr</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">graphs</span>
 
 
 <span class="c1"># This really should be &#39;HasTraits&#39;, but it&#39;s not defined yet:</span>
@@ -470,7 +474,7 @@
     <span class="c1"># { Str class_name : Callable listener }</span>
     <span class="n">_listeners</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">class_name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">class_dict</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">class_name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">class_dict</span><span class="p">):</span>
         <span class="n">update_traits_class_dict</span><span class="p">(</span><span class="n">class_name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">class_dict</span><span class="p">)</span>
 
         <span class="c1"># Finish building the class using the updated class dictionary:</span>
@@ -493,13 +497,25 @@
 
 <span class="sd">        If the class name is the empty string then the listener will be called</span>
 <span class="sd">        when *any* class is created.</span>
+
+<span class="sd">        .. deprecated:: 6.3.0</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;add_listener is deprecated&quot;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span>
+        <span class="p">)</span>
+
         <span class="n">MetaHasTraits</span><span class="o">.</span><span class="n">_listeners</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">class_name</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">listener</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MetaHasTraits.remove_listener"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.MetaHasTraits.remove_listener">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">remove_listener</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">listener</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Removes a class creation listener.</span>
+
+<span class="sd">        .. deprecated:: 6.3.0</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;remove_listener is deprecated&quot;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span>
+        <span class="p">)</span>
+
         <span class="n">MetaHasTraits</span><span class="o">.</span><span class="n">_listeners</span><span class="p">[</span><span class="n">class_name</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">listener</span><span class="p">)</span></div></div>
 
 
@@ -722,7 +738,7 @@
     <span class="c1"># Make sure the trait prefixes are sorted longest to shortest</span>
     <span class="c1"># so that we can easily bind dynamic traits to the longest matching</span>
     <span class="c1"># prefix:</span>
-    <span class="n">prefix_list</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="n">prefix_list</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># Get the list of all possible &#39;Instance&#39;/&#39;List(Instance)&#39; handlers:</span>
     <span class="n">instance_traits</span> <span class="o">=</span> <span class="n">_get_instance_handlers</span><span class="p">(</span><span class="n">class_dict</span><span class="p">,</span> <span class="n">hastraits_bases</span><span class="p">)</span>
@@ -731,7 +747,7 @@
     <span class="c1"># it can be attached to all traits in the class:</span>
     <span class="n">anytrait</span> <span class="o">=</span> <span class="n">_get_def</span><span class="p">(</span><span class="n">class_name</span><span class="p">,</span> <span class="n">class_dict</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="s2">&quot;_anytrait_changed&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">anytrait</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">anytrait</span> <span class="o">=</span> <span class="n">StaticAnyTraitChangeNotifyWrapper</span><span class="p">(</span><span class="n">anytrait</span><span class="p">)</span>
+        <span class="n">anytrait</span> <span class="o">=</span> <span class="n">StaticAnytraitChangeNotifyWrapper</span><span class="p">(</span><span class="n">anytrait</span><span class="p">)</span>
 
         <span class="c1"># Save it in the prefix traits dictionary so that any dynamically</span>
         <span class="c1"># created traits (e.g. &#39;prefix traits&#39;) can re-use it:</span>
@@ -903,6 +919,8 @@
 <span class="sd">    HasTraits.observe</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">graphs</span> <span class="o">=</span> <span class="n">_compile_expression</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">observe_decorator</span><span class="p">(</span><span class="n">handler</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Create input arguments for HasTraits.observe and attach the input</span>
 <span class="sd">        to the callable.</span>
@@ -913,18 +931,35 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        handler : callable</span>
-<span class="sd">            Method of a subclass of HasTraits</span>
+<span class="sd">            Method of a subclass of HasTraits, with signature of the form</span>
+<span class="sd">            ``my_method(self, event)``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Warn on a dubious handler signature. The handler should accept a call</span>
+        <span class="c1"># that passes a single positional argument (conventionally named</span>
+        <span class="c1"># &quot;event&quot;) in addition to the usual &quot;self&quot;.</span>
+        <span class="n">handler_signature</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">handler_signature</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">&quot;self&quot;</span><span class="p">,</span> <span class="s2">&quot;event&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="p">(</span>
+                    <span class="s2">&quot;Dubious signature for observe-decorated method. &quot;</span>
+                    <span class="s2">&quot;The decorated method should be callable with a &quot;</span>
+                    <span class="s2">&quot;single positional argument in addition to &#39;self&#39;. &quot;</span>
+                    <span class="s2">&quot;Did you forget to add an &#39;event&#39; parameter?&quot;</span>
+                <span class="p">),</span>
+                <span class="ne">UserWarning</span><span class="p">,</span>
+                <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="p">)</span>
+
         <span class="k">try</span><span class="p">:</span>
             <span class="n">observe_inputs</span> <span class="o">=</span> <span class="n">handler</span><span class="o">.</span><span class="n">_observe_inputs</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
             <span class="n">observe_inputs</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">handler</span><span class="o">.</span><span class="n">_observe_inputs</span> <span class="o">=</span> <span class="n">observe_inputs</span>
 
-        <span class="n">expressions</span> <span class="o">=</span> <span class="n">_parse_expression</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
-
         <span class="n">observe_input</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-            <span class="n">expression</span><span class="o">=</span><span class="n">expressions</span><span class="p">,</span>
+            <span class="n">graphs</span><span class="o">=</span><span class="n">graphs</span><span class="p">,</span>
             <span class="n">dispatch</span><span class="o">=</span><span class="n">dispatch</span><span class="p">,</span>
             <span class="n">post_init</span><span class="o">=</span><span class="n">post_init</span><span class="p">,</span>
             <span class="n">handler_getter</span><span class="o">=</span><span class="nb">getattr</span><span class="p">,</span>
@@ -1168,12 +1203,13 @@
 
     <span class="c1"># -- Trait Definitions ----------------------------------------------------</span>
 
-    <span class="c1">#: An event fired when a new trait is dynamically added to the object</span>
-    <span class="n">trait_added</span> <span class="o">=</span> <span class="n">Event</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+    <span class="c1">#: An event fired when a new trait is dynamically added to the object. The</span>
+    <span class="c1">#: value is the name of the trait that was added.</span>
+    <span class="n">trait_added</span> <span class="o">=</span> <span class="n">Event</span><span class="p">(</span><span class="n">Str</span><span class="p">())</span>
 
     <span class="c1">#: An event that can be fired to indicate that the state of the object has</span>
-    <span class="c1">#: been modified</span>
-    <span class="n">trait_modified</span> <span class="o">=</span> <span class="n">Event</span>
+    <span class="c1">#: been modified.</span>
+    <span class="n">trait_modified</span> <span class="o">=</span> <span class="n">Event</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_trait_added_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Handles a &#39;trait_added&#39; event being fired.</span>
@@ -1191,6 +1227,8 @@
 <div class="viewcode-block" id="HasTraits.add_class_trait"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.add_class_trait">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">add_class_trait</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">trait</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Adds a named trait attribute to this class.</span>
+
+<span class="sd">        Also adds the same attribute to all subclasses.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1214,14 +1252,39 @@
             <span class="n">trait</span> <span class="o">=</span> <span class="n">trait_for</span><span class="p">(</span><span class="n">trait</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
         <span class="c1"># Add the trait to the class:</span>
-        <span class="bp">cls</span><span class="o">.</span><span class="n">_add_class_trait</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">trait</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_add_class_trait</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">trait</span><span class="p">,</span> <span class="n">is_subclass</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="c1"># Also add the trait to all subclasses of this class:</span>
         <span class="k">for</span> <span class="n">subclass</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">trait_subclasses</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
-            <span class="n">subclass</span><span class="o">.</span><span class="n">_add_class_trait</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">trait</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div>
+            <span class="n">subclass</span><span class="o">.</span><span class="n">_add_class_trait</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">trait</span><span class="p">,</span> <span class="n">is_subclass</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_add_class_trait</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">trait</span><span class="p">,</span> <span class="n">is_subclass</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a named trait attribute to this class.</span>
+
+<span class="sd">        Does not affect subclasses.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name : str</span>
+<span class="sd">            Name of the attribute to add.</span>
+<span class="sd">        trait : CTrait</span>
+<span class="sd">            The trait to be added.</span>
+<span class="sd">        is_subclass : bool</span>
+<span class="sd">            True if we&#39;re adding the trait to a strict subclass of the</span>
+<span class="sd">            original class that add_class_trait was called for. This is used</span>
+<span class="sd">            to decide how to behave if ``cls`` already has a trait named</span>
+<span class="sd">            ``name``: in that circumstance, if ``is_subclass`` is False, an</span>
+<span class="sd">            error will be raised, while if ``is_subclass`` is True, no trait</span>
+<span class="sd">            will be added.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        TraitError</span>
+<span class="sd">            If a trait with the given name already exists, and is_subclass</span>
+<span class="sd">            is ``False``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Get a reference to the class&#39;s dictionary and &#39;prefix&#39; traits:</span>
         <span class="n">class_dict</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__dict__</span>
         <span class="n">prefix_traits</span> <span class="o">=</span> <span class="n">class_dict</span><span class="p">[</span><span class="n">PrefixTraits</span><span class="p">]</span>
@@ -1240,7 +1303,7 @@
             <span class="n">prefix_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 
             <span class="c1"># Resort the list from longest to shortest:</span>
-            <span class="n">prefix_list</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+            <span class="n">prefix_list</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
             <span class="k">return</span>
 
@@ -1256,9 +1319,17 @@
         <span class="n">handler</span> <span class="o">=</span> <span class="n">trait</span><span class="o">.</span><span class="n">handler</span>
         <span class="k">if</span> <span class="n">handler</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">handler</span><span class="o">.</span><span class="n">has_items</span><span class="p">:</span>
-                <span class="bp">cls</span><span class="o">.</span><span class="n">add_class_trait</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_items&quot;</span><span class="p">,</span> <span class="n">handler</span><span class="o">.</span><span class="n">items_event</span><span class="p">())</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">_add_class_trait</span><span class="p">(</span>
+                    <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_items&quot;</span><span class="p">,</span>
+                    <span class="n">handler</span><span class="o">.</span><span class="n">items_event</span><span class="p">(),</span>
+                    <span class="n">is_subclass</span><span class="o">=</span><span class="n">is_subclass</span><span class="p">,</span>
+                <span class="p">)</span>
             <span class="k">if</span> <span class="n">handler</span><span class="o">.</span><span class="n">is_mapped</span><span class="p">:</span>
-                <span class="bp">cls</span><span class="o">.</span><span class="n">add_class_trait</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">mapped_trait_for</span><span class="p">(</span><span class="n">trait</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">_add_class_trait</span><span class="p">(</span>
+                    <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span><span class="p">,</span>
+                    <span class="n">mapped_trait_for</span><span class="p">(</span><span class="n">trait</span><span class="p">,</span> <span class="n">name</span><span class="p">),</span>
+                    <span class="n">is_subclass</span><span class="o">=</span><span class="n">is_subclass</span><span class="p">,</span>
+                <span class="p">)</span>
 
         <span class="c1"># Make the new trait inheritable (if allowed):</span>
         <span class="k">if</span> <span class="n">trait</span><span class="o">.</span><span class="n">is_base</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
@@ -1425,26 +1496,43 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_trait_set_inited</span><span class="p">()</span>
 
 <div class="viewcode-block" id="HasTraits.trait_get"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.trait_get">[docs]</a>    <span class="k">def</span> <span class="nf">trait_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">names</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Shortcut for getting object trait attributes.</span>
+        <span class="sd">&quot;&quot;&quot; Retrieve trait values for one or more traits.</span>
 
-<span class="sd">        Looks up the value of each trait whose name is passed as an argument</span>
-<span class="sd">        and returns a dictionary containing the resulting name/value pairs.</span>
-<span class="sd">        If any name does not correspond to a defined trait, it is not included</span>
-<span class="sd">        in the result.</span>
+<span class="sd">        This function can be called in one of three ways. In the first form,</span>
+<span class="sd">        the user passes the names of one or more traits to be retrieved::</span>
 
-<span class="sd">        If no names are specified, the result is a dictionary containing</span>
-<span class="sd">        name/value pairs for *all* traits defined on the object.</span>
+<span class="sd">            my_object.trait_get(&quot;trait_name1&quot;, &quot;trait_name2&quot;)</span>
+
+<span class="sd">        In the second form, the user passes a list of zero or more names of</span>
+<span class="sd">        traits::</span>
+
+<span class="sd">            my_object.trait_get([&quot;trait_name1&quot;, &quot;trait_name2&quot;])</span>
+
+<span class="sd">        In the final form, no trait names are passed, and all trait names</span>
+<span class="sd">        and trait values are returned, subject to the given metadata filters::</span>
+
+<span class="sd">            my_object.trait_get(transient=True, frombicated=False)</span>
+
+<span class="sd">        In all cases, a dictionary mapping trait names to trait values is</span>
+<span class="sd">        returned.</span>
+
+<span class="sd">        For the first two forms, if any name does not correspond to a defined</span>
+<span class="sd">        trait, it is not included in the result.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        names : list of strings</span>
-<span class="sd">            A list of trait attribute names whose values are requested.</span>
+<span class="sd">        *names</span>
+<span class="sd">            Names of the traits to look up, or a single positional argument</span>
+<span class="sd">            providing a sequence of trait names.</span>
+<span class="sd">        **metadata</span>
+<span class="sd">            Metadata information used to filter the traits to return. This</span>
+<span class="sd">            information is used only when no names are provided.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        result : dict</span>
-<span class="sd">            A dictionary whose keys are the names passed as arguments and whose</span>
-<span class="sd">            values are the corresponding trait values.</span>
+<span class="sd">            A dictionary mapping the selected trait names to their</span>
+<span class="sd">            corresponding values.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
@@ -1601,7 +1689,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class_traits__</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
 
-    <span class="k">def</span> <span class="nf">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns the list of trait names when calling the dir() builtin on</span>
 <span class="sd">            the object. This enables tab-completion in IPython.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1957,7 +2045,7 @@
 
         <span class="c1"># Otherwise, create and return a View based on the set of editable</span>
         <span class="c1"># traits defined for the object:</span>
-        <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">View</span>
+        <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="kn">import</span> <span class="n">View</span>
 
         <span class="k">return</span> <span class="n">View</span><span class="p">(</span><span class="n">trait_selector_f</span><span class="p">(),</span> <span class="n">buttons</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;OK&quot;</span><span class="p">,</span> <span class="s2">&quot;Cancel&quot;</span><span class="p">])</span>
 
@@ -2020,7 +2108,7 @@
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_init_trait_view_elements</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Lazily Initialize the ViewElements object from a dictionary. &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">traitsui.view_elements</span> <span class="k">import</span> <span class="n">ViewElements</span>
+        <span class="kn">from</span> <span class="nn">traitsui.view_elements</span> <span class="kn">import</span> <span class="n">ViewElements</span>
 
         <span class="n">hastraits_bases</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">base</span> <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__bases__</span>
@@ -2160,7 +2248,7 @@
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">edit</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">toolkit</span>
+            <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="kn">import</span> <span class="n">toolkit</span>
 
             <span class="k">if</span> <span class="n">context</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">context</span> <span class="o">=</span> <span class="bp">self</span>
@@ -2397,17 +2485,20 @@
 <span class="sd">                        event queue.</span>
 <span class="sd">            =========== =======================================================</span>
 
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotifierNotFound</span>
+<span class="sd">            When attempting to remove a handler that doesn&#39;t exist.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">expressions</span> <span class="o">=</span> <span class="n">_parse_expression</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
+        <span class="n">graphs</span> <span class="o">=</span> <span class="n">_compile_expression</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">expr</span> <span class="ow">in</span> <span class="n">expressions</span><span class="p">:</span>
-            <span class="n">observe_api</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span>
-                <span class="nb">object</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-                <span class="n">expression</span><span class="o">=</span><span class="n">expr</span><span class="p">,</span>
-                <span class="n">handler</span><span class="o">=</span><span class="n">handler</span><span class="p">,</span>
-                <span class="n">remove</span><span class="o">=</span><span class="n">remove</span><span class="p">,</span>
-                <span class="n">dispatcher</span><span class="o">=</span><span class="n">_ObserverDispatchers</span><span class="p">[</span><span class="n">dispatch</span><span class="p">],</span>
-            <span class="p">)</span></div>
+        <span class="n">observe_api</span><span class="o">.</span><span class="n">apply_observers</span><span class="p">(</span>
+            <span class="nb">object</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+            <span class="n">graphs</span><span class="o">=</span><span class="n">graphs</span><span class="p">,</span>
+            <span class="n">handler</span><span class="o">=</span><span class="n">handler</span><span class="p">,</span>
+            <span class="n">dispatcher</span><span class="o">=</span><span class="n">_ObserverDispatchers</span><span class="p">[</span><span class="n">dispatch</span><span class="p">],</span>
+            <span class="n">remove</span><span class="o">=</span><span class="n">remove</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="HasTraits.on_trait_change"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.on_trait_change">[docs]</a>    <span class="k">def</span> <span class="nf">on_trait_change</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -2639,7 +2730,7 @@
 
             <span class="k">return</span>
 
-        <span class="kn">from</span> <span class="nn">.traits_listener</span> <span class="k">import</span> <span class="p">(</span>
+        <span class="kn">from</span> <span class="nn">.traits_listener</span> <span class="kn">import</span> <span class="p">(</span>
             <span class="n">TraitsListener</span><span class="p">,</span>
             <span class="n">ListenerParser</span><span class="p">,</span>
             <span class="n">ListenerHandler</span><span class="p">,</span>
@@ -2685,20 +2776,25 @@
                 <span class="k">if</span> <span class="n">wrapper</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="n">handler</span><span class="p">):</span>
                     <span class="k">break</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">listener</span> <span class="o">=</span> <span class="n">ListenerParser</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">listener</span>
-                <span class="n">lnw</span> <span class="o">=</span> <span class="n">ListenerNotifyWrapper</span><span class="p">(</span>
-                    <span class="n">handler</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">listener</span><span class="p">,</span> <span class="n">target</span>
-                <span class="p">)</span>
-                <span class="n">listeners</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lnw</span><span class="p">)</span>
-                <span class="n">listener</span><span class="o">.</span><span class="n">trait_set</span><span class="p">(</span>
+                <span class="c1"># The listener notify wrapper needs a reference to the</span>
+                <span class="c1"># listener, and the listener needs a (weak) reference to the</span>
+                <span class="c1"># wrapper. We first construct the wrapper with a listener of</span>
+                <span class="c1"># `None`, then construct the listener with its reference to the</span>
+                <span class="c1"># wrapper, then we replace the `None` listener with the correct</span>
+                <span class="c1"># one.</span>
+                <span class="n">lnw</span> <span class="o">=</span> <span class="n">ListenerNotifyWrapper</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+                <span class="n">listener</span> <span class="o">=</span> <span class="n">ListenerParser</span><span class="p">(</span>
+                    <span class="n">name</span><span class="p">,</span>
                     <span class="n">handler</span><span class="o">=</span><span class="n">ListenerHandler</span><span class="p">(</span><span class="n">handler</span><span class="p">),</span>
                     <span class="n">wrapped_handler_ref</span><span class="o">=</span><span class="n">weakref</span><span class="o">.</span><span class="n">ref</span><span class="p">(</span><span class="n">lnw</span><span class="p">),</span>
-                    <span class="nb">type</span><span class="o">=</span><span class="n">lnw</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
                     <span class="n">dispatch</span><span class="o">=</span><span class="n">dispatch</span><span class="p">,</span>
                     <span class="n">priority</span><span class="o">=</span><span class="n">priority</span><span class="p">,</span>
                     <span class="n">deferred</span><span class="o">=</span><span class="n">deferred</span><span class="p">,</span>
-                <span class="p">)</span>
-                <span class="n">listener</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+                    <span class="n">handler_type</span><span class="o">=</span><span class="n">lnw</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">listener</span>
+                <span class="n">lnw</span><span class="o">.</span><span class="n">listener</span> <span class="o">=</span> <span class="n">listener</span>
+                <span class="n">listener</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                <span class="n">listeners</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lnw</span><span class="p">)</span></div>
 
     <span class="c1"># A synonym for &#39;on_trait_change&#39;</span>
     <span class="n">on_trait_event</span> <span class="o">=</span> <span class="n">on_trait_change</span>
@@ -2715,6 +2811,11 @@
 <span class="sd">        In one-way synchronization, any change to the value of the attribute</span>
 <span class="sd">        on this object causes the corresponding trait attribute of *object* to</span>
 <span class="sd">        be updated, but not vice versa.</span>
+
+<span class="sd">        For ``List`` traits, the list&#39;s items are also synchronized, so that</span>
+<span class="sd">        mutations to this trait&#39;s list will be reflected in the synchronized</span>
+<span class="sd">        list (and vice versa in the case of mutual synchronization). For</span>
+<span class="sd">        ``Dict`` and ``Set`` traits, items are not synchronized.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -3068,7 +3169,7 @@
         <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">trait</span> <span class="ow">in</span> <span class="n">traits</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">meta_name</span><span class="p">,</span> <span class="n">meta_eval</span> <span class="ow">in</span> <span class="n">metadata</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">meta_eval</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">trait</span><span class="p">,</span> <span class="n">meta_name</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">meta_eval</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">trait</span><span class="p">,</span> <span class="n">meta_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)):</span>
                     <span class="k">break</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">result</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">trait</span>
@@ -3117,7 +3218,7 @@
 
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">trait</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__base_traits__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">meta_name</span><span class="p">,</span> <span class="n">meta_eval</span> <span class="ow">in</span> <span class="n">metadata</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">meta_eval</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">trait</span><span class="p">,</span> <span class="n">meta_name</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">meta_eval</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">trait</span><span class="p">,</span> <span class="n">meta_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)):</span>
                     <span class="k">break</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">result</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">trait</span>
@@ -3460,10 +3561,11 @@
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">states</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">__observer_traits__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;post_init&quot;</span><span class="p">]:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span>
-                        <span class="n">expression</span><span class="o">=</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;expression&quot;</span><span class="p">],</span>
+                    <span class="n">observe_api</span><span class="o">.</span><span class="n">apply_observers</span><span class="p">(</span>
+                        <span class="nb">object</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
                         <span class="n">handler</span><span class="o">=</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;handler_getter&quot;</span><span class="p">](</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">),</span>
-                        <span class="n">dispatch</span><span class="o">=</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;dispatch&quot;</span><span class="p">],</span>
+                        <span class="n">graphs</span><span class="o">=</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;graphs&quot;</span><span class="p">],</span>
+                        <span class="n">dispatcher</span><span class="o">=</span><span class="n">_ObserverDispatchers</span><span class="p">[</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;dispatch&quot;</span><span class="p">]],</span>
                     <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_post_init_trait_observers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -3472,10 +3574,11 @@
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">states</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">__observer_traits__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;post_init&quot;</span><span class="p">]:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span>
-                        <span class="n">expression</span><span class="o">=</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;expression&quot;</span><span class="p">],</span>
+                    <span class="n">observe_api</span><span class="o">.</span><span class="n">apply_observers</span><span class="p">(</span>
+                        <span class="nb">object</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
                         <span class="n">handler</span><span class="o">=</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;handler_getter&quot;</span><span class="p">](</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">),</span>
-                        <span class="n">dispatch</span><span class="o">=</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;dispatch&quot;</span><span class="p">],</span>
+                        <span class="n">graphs</span><span class="o">=</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;graphs&quot;</span><span class="p">],</span>
+                        <span class="n">dispatcher</span><span class="o">=</span><span class="n">_ObserverDispatchers</span><span class="p">[</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;dispatch&quot;</span><span class="p">]],</span>
                     <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_trait_delegate_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">pattern</span><span class="p">):</span>
@@ -3542,7 +3645,7 @@
 <span class="sd">    provided: required_trait.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span><span class="p">):</span>
 
         <span class="n">missing_required_traits</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">name</span>
@@ -3621,7 +3724,7 @@
 
     <span class="nd">@deprecated</span><span class="p">(</span><span class="s2">&quot;SingletonHasTraits has been deprecated and will be removed &quot;</span>
                 <span class="s2">&quot;in the future. Avoid using it&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span><span class="p">):</span>
         <span class="k">if</span> <span class="s2">&quot;_the_instance&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
             <span class="bp">cls</span><span class="o">.</span><span class="n">_the_instance</span> <span class="o">=</span> <span class="n">HasTraits</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_the_instance</span></div>
@@ -3635,7 +3738,7 @@
 
     <span class="nd">@deprecated</span><span class="p">(</span><span class="s2">&quot;SingletonHasStrictTraits has been deprecated and will be &quot;</span>
                 <span class="s2">&quot;removed in the future. Avoid using it&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">SingletonHasTraits</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span><span class="p">)</span></div>
 
 
@@ -3646,7 +3749,7 @@
 
     <span class="nd">@deprecated</span><span class="p">(</span><span class="s2">&quot;SingletonHasPrivateTraits has been deprecated and will be &quot;</span>
                 <span class="s2">&quot;removed in the future. Avoid using it&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">SingletonHasTraits</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span><span class="p">)</span></div>
 
 
@@ -3675,7 +3778,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="MetaInterface.__call__"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.MetaInterface.__call__">[docs]</a>    <span class="nd">@deprecated</span><span class="p">(</span><span class="s1">&#39;use &quot;adapt(adaptee, protocol)&quot; instead.&#39;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adaptee</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">AdaptationError</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adaptee</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">AdaptationError</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Attempt to adapt the adaptee to this interface.</span>
 
 <span class="sd">        Note that this means that (intentionally ;^) that interfaces</span>
@@ -3683,7 +3786,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="kn">from</span> <span class="nn">traits.adaptation.api</span> <span class="k">import</span> <span class="n">adapt</span>
+        <span class="kn">from</span> <span class="nn">traits.adaptation.api</span> <span class="kn">import</span> <span class="n">adapt</span>
 
         <span class="k">return</span> <span class="n">adapt</span><span class="p">(</span><span class="n">adaptee</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">default</span><span class="p">)</span></div></div>
 
@@ -3704,7 +3807,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="kn">from</span> <span class="nn">abc</span> <span class="k">import</span> <span class="n">ABCMeta</span>
+    <span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABCMeta</span>
 
     <span class="c1"># Exit immediately if there is nothing to do.</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">protocols</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -3726,7 +3829,7 @@
 
         <span class="c1"># Make sure the class does provide the protocols it claims to.</span>
         <span class="k">if</span> <span class="n">CHECK_INTERFACES</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">.interface_checker</span> <span class="k">import</span> <span class="n">check_implements</span>
+            <span class="kn">from</span> <span class="nn">.interface_checker</span> <span class="kn">import</span> <span class="n">check_implements</span>
 
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
                 <span class="p">(</span>
@@ -3773,7 +3876,7 @@
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
         </div>
@@ -3795,10 +3898,10 @@ All rights reserved.
 
       </li>
       <li>
-      Last updated on Jan 20, 2021.
+      Last updated on Oct 08, 2021.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
       </li>
     </ul>
     </div>

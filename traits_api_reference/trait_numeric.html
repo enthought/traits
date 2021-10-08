@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.trait_numeric Module &mdash; Traits 6.2 Documentation</title>
+    <title>traits.trait_numeric Module &mdash; Traits 6.3 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,10 +13,10 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.2.0',
+        VERSION:     '6.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        LINK_SUFFIX: '',
+        LINK_SUFFIX: '.html',
         SOURCELINK_SUFFIX: '.txt',
         HAS_SOURCE:  true
       };
@@ -24,13 +24,12 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.2 Documentation" href="../index.html" >
+    <link rel="top" title="Traits 6.3 Documentation" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
     <link rel="next" title="traits.trait_type Module" href="trait_type.html" >
     <link rel="prev" title="traits.trait_list_object Module" href="trait_list_object.html" > 
@@ -50,7 +49,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.2 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 6.3 Documentation</a></li>
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
     </ul>
@@ -91,48 +90,48 @@
 <p>Trait definitions related to the numpy library.</p>
 <div class="section" id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="traits.trait_numeric.AbstractArray">
-<em class="property">class </em><code class="sig-prename descclassname">traits.trait_numeric.</code><code class="sig-name descname">AbstractArray</code><span class="sig-paren">(</span><em class="sig-param">dtype=None</em>, <em class="sig-param">shape=None</em>, <em class="sig-param">value=None</em>, <em class="sig-param">coerce=False</em>, <em class="sig-param">typecode=None</em>, <em class="sig-param">*</em>, <em class="sig-param">casting='unsafe'</em>, <em class="sig-param">**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_numeric.html#AbstractArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_numeric.AbstractArray" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">traits.trait_numeric.</span></code><code class="sig-name descname"><span class="pre">AbstractArray</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coerce</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typecode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">casting</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'unsafe'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">metadata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_numeric.html#AbstractArray"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_numeric.AbstractArray" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="trait_type.html#traits.trait_type.TraitType" title="traits.trait_type.TraitType"><code class="xref py py-class docutils literal notranslate"><span class="pre">traits.trait_type.TraitType</span></code></a></p>
 <p>Abstract base class for defining numpy-based arrays.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="traits.trait_numeric.AbstractArray.validate">
-<code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_numeric.html#AbstractArray.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_numeric.AbstractArray.validate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">validate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_numeric.html#AbstractArray.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_numeric.AbstractArray.validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates that the value is a valid array.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="traits.trait_numeric.AbstractArray.info">
-<code class="sig-name descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_numeric.html#AbstractArray.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_numeric.AbstractArray.info" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">info</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_numeric.html#AbstractArray.info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_numeric.AbstractArray.info" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns descriptive information about the trait.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="traits.trait_numeric.AbstractArray.create_editor">
-<code class="sig-name descname">create_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_numeric.html#AbstractArray.create_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_numeric.AbstractArray.create_editor" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">create_editor</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_numeric.html#AbstractArray.create_editor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_numeric.AbstractArray.create_editor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the default UI editor for the trait.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="traits.trait_numeric.AbstractArray.get_default_value">
-<code class="sig-name descname">get_default_value</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_numeric.html#AbstractArray.get_default_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_numeric.AbstractArray.get_default_value" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_default_value</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_numeric.html#AbstractArray.get_default_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_numeric.AbstractArray.get_default_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the default value constructor for the type (called from the
 trait factory.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="traits.trait_numeric.AbstractArray.copy_default_value">
-<code class="sig-name descname">copy_default_value</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_numeric.html#AbstractArray.copy_default_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_numeric.AbstractArray.copy_default_value" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">copy_default_value</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_numeric.html#AbstractArray.copy_default_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_numeric.AbstractArray.copy_default_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a copy of the default value (called from the C code on
 first reference to a trait with no current value).</p>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="traits.trait_numeric.Array">
-<em class="property">class </em><code class="sig-prename descclassname">traits.trait_numeric.</code><code class="sig-name descname">Array</code><span class="sig-paren">(</span><em class="sig-param">dtype=None</em>, <em class="sig-param">shape=None</em>, <em class="sig-param">value=None</em>, <em class="sig-param">typecode=None</em>, <em class="sig-param">*</em>, <em class="sig-param">casting='unsafe'</em>, <em class="sig-param">**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_numeric.html#Array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_numeric.Array" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">traits.trait_numeric.</span></code><code class="sig-name descname"><span class="pre">Array</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typecode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">casting</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'unsafe'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">metadata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_numeric.html#Array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_numeric.Array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#traits.trait_numeric.AbstractArray" title="traits.trait_numeric.AbstractArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">traits.trait_numeric.AbstractArray</span></code></a></p>
 <p>A trait type whose value must be a NumPy array.</p>
 <p>An Array trait allows only upcasting of assigned values that are
@@ -159,7 +158,7 @@ bound. (For example, <code class="docutils literal notranslate"><span class="pre
 first dimension must be in the range 3 to 5 (inclusive), and the
 second dimension must be at least 2.)</p></li>
 <li><p><strong>value</strong> (<em>numpy array</em>) – A default value for the array.</p></li>
-<li><p><strong>casting</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – <p>Casting rule for the array’s dtype. If <code class="docutils literal notranslate"><span class="pre">dtype</span></code> is set, a value can
+<li><p><strong>casting</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – <p>Casting rule for the array’s dtype. If <code class="docutils literal notranslate"><span class="pre">dtype</span></code> is set, a value can
 only be assigned if it passes the casting rule. Values can be:</p>
 <ul>
 <li><p>”no”: No casting is allowed</p></li>
@@ -177,32 +176,32 @@ to “float32”) are allowed</p></li>
 </dl>
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="traits.trait_numeric.ArrayOrNone">
-<em class="property">class </em><code class="sig-prename descclassname">traits.trait_numeric.</code><code class="sig-name descname">ArrayOrNone</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_numeric.html#ArrayOrNone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_numeric.ArrayOrNone" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">traits.trait_numeric.</span></code><code class="sig-name descname"><span class="pre">ArrayOrNone</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">metadata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_numeric.html#ArrayOrNone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_numeric.ArrayOrNone" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#traits.trait_numeric.CArray" title="traits.trait_numeric.CArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">traits.trait_numeric.CArray</span></code></a></p>
 <p>A coercing trait whose value may be either a NumPy array or None.</p>
 <p>This trait is designed to avoid the comparison issues with numpy arrays
 that can arise from the use of constructs like Either(None, Array).</p>
 <p>The default value is None.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="traits.trait_numeric.ArrayOrNone.validate">
-<code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_numeric.html#ArrayOrNone.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_numeric.ArrayOrNone.validate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">validate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_numeric.html#ArrayOrNone.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_numeric.ArrayOrNone.validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates that the value is a valid array.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="traits.trait_numeric.ArrayOrNone.get_default_value">
-<code class="sig-name descname">get_default_value</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_numeric.html#ArrayOrNone.get_default_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_numeric.ArrayOrNone.get_default_value" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_default_value</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_numeric.html#ArrayOrNone.get_default_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_numeric.ArrayOrNone.get_default_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the default value constructor for the type (called from the
 trait factory.</p>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="traits.trait_numeric.CArray">
-<em class="property">class </em><code class="sig-prename descclassname">traits.trait_numeric.</code><code class="sig-name descname">CArray</code><span class="sig-paren">(</span><em class="sig-param">dtype=None</em>, <em class="sig-param">shape=None</em>, <em class="sig-param">value=None</em>, <em class="sig-param">typecode=None</em>, <em class="sig-param">*</em>, <em class="sig-param">casting='unsafe'</em>, <em class="sig-param">**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_numeric.html#CArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_numeric.CArray" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">traits.trait_numeric.</span></code><code class="sig-name descname"><span class="pre">CArray</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typecode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">casting</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'unsafe'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">metadata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_numeric.html#CArray"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_numeric.CArray" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#traits.trait_numeric.AbstractArray" title="traits.trait_numeric.AbstractArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">traits.trait_numeric.AbstractArray</span></code></a></p>
 <p>A coercing trait type whose value is a NumPy array.</p>
 <p>The trait returned by CArray() is similar to that returned by Array(),
@@ -229,7 +228,7 @@ bound. (For example, <code class="docutils literal notranslate"><span class="pre
 first dimension must be in the range 3 to 5 (inclusive), and the
 second dimension must be at least 2.)</p></li>
 <li><p><strong>value</strong> (<em>numpy array</em>) – A default value for the array.</p></li>
-<li><p><strong>casting</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – <p>Casting rule for the array’s dtype. If <code class="docutils literal notranslate"><span class="pre">dtype</span></code> is set, a value can
+<li><p><strong>casting</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – <p>Casting rule for the array’s dtype. If <code class="docutils literal notranslate"><span class="pre">dtype</span></code> is set, a value can
 only be assigned if it passes the casting rule. Values can be:</p>
 <ul>
 <li><p>”no”: No casting is allowed</p></li>
@@ -250,9 +249,9 @@ to “float32”) are allowed</p></li>
 </div>
 <div class="section" id="function">
 <h2>Function<a class="headerlink" href="#function" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
+<dl class="py function">
 <dt id="traits.trait_numeric.dtype2trait">
-<code class="sig-prename descclassname">traits.trait_numeric.</code><code class="sig-name descname">dtype2trait</code><span class="sig-paren">(</span><em class="sig-param">dtype</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_numeric.html#dtype2trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_numeric.dtype2trait" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">traits.trait_numeric.</span></code><code class="sig-name descname"><span class="pre">dtype2trait</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dtype</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_numeric.html#dtype2trait"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_numeric.dtype2trait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the corresponding trait for a numpy dtype.</p>
 </dd></dl>
 
@@ -297,7 +296,7 @@ to “float32”) are allowed</p></li>
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
         </div>
@@ -319,10 +318,10 @@ All rights reserved.
 
       </li>
       <li>
-      Last updated on Jan 20, 2021.
+      Last updated on Oct 08, 2021.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
       </li>
     </ul>
     </div>

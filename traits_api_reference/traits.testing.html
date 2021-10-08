@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.testing Package &mdash; Traits 6.2 Documentation</title>
+    <title>traits.testing Package &mdash; Traits 6.3 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,10 +13,10 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.2.0',
+        VERSION:     '6.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        LINK_SUFFIX: '',
+        LINK_SUFFIX: '.html',
         SOURCELINK_SUFFIX: '.txt',
         HAS_SOURCE:  true
       };
@@ -24,13 +24,12 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.2 Documentation" href="../index.html" >
+    <link rel="top" title="Traits 6.3 Documentation" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
     <link rel="next" title="traits.util Package" href="traits.util.html" >
     <link rel="prev" title="traits.observation Package" href="traits.observation.html" > 
@@ -50,7 +49,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.2 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 6.3 Documentation</a></li>
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
     </ul>
@@ -97,16 +96,16 @@ aggregating the results.</p>
 <p>Eclipse’s PyDev plugin will run your unittest files for you very nicely.
 The doctest_for_module function allows you to easily run the doctest for a
 module along side your standard unit tests within Eclipse.</p>
-<dl class="function">
+<dl class="py function">
 <dt id="traits.testing.doctest_tools.doctest_for_module">
-<code class="sig-prename descclassname">traits.testing.doctest_tools.</code><code class="sig-name descname">doctest_for_module</code><span class="sig-paren">(</span><em class="sig-param">module</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/doctest_tools.html#doctest_for_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.doctest_tools.doctest_for_module" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">traits.testing.doctest_tools.</span></code><code class="sig-name descname"><span class="pre">doctest_for_module</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/doctest_tools.html#doctest_for_module"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.testing.doctest_tools.doctest_for_module" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a TestCase from a module’s doctests that will be run by the
 standard unittest.main().</p>
 <p>Example tests/test_foo.py:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">unittest</span>
 
 <span class="kn">import</span> <span class="nn">foo</span>
-<span class="kn">from</span> <span class="nn">traits.testing.api</span> <span class="k">import</span> <span class="n">doctest_for_module</span>
+<span class="kn">from</span> <span class="nn">traits.testing.api</span> <span class="kn">import</span> <span class="n">doctest_for_module</span>
 
 <span class="k">class</span> <span class="nc">FooTestCase</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
     <span class="o">...</span>
@@ -139,9 +138,9 @@ standard unittest.main().</p>
 <div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 6.1.0.</span></p>
 </div>
-<dl class="function">
+<dl class="py function">
 <dt id="traits.testing.nose_tools.skip">
-<code class="sig-prename descclassname">traits.testing.nose_tools.</code><code class="sig-name descname">skip</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/nose_tools.html#skip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.nose_tools.skip" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">traits.testing.nose_tools.</span></code><code class="sig-name descname"><span class="pre">skip</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/nose_tools.html#skip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.testing.nose_tools.skip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stub replacement for marking a unit test to be skipped in the
 absence of ‘nose’.</p>
 <div class="deprecated">
@@ -149,9 +148,9 @@ absence of ‘nose’.</p>
 </div>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="traits.testing.nose_tools.deprecated">
-<code class="sig-prename descclassname">traits.testing.nose_tools.</code><code class="sig-name descname">deprecated</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/nose_tools.html#deprecated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.nose_tools.deprecated" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">traits.testing.nose_tools.</span></code><code class="sig-name descname"><span class="pre">deprecated</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/nose_tools.html#deprecated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.testing.nose_tools.deprecated" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stub replacement for marking a unit test deprecated in the absence
 of ‘nose’.</p>
 <div class="deprecated">
@@ -159,9 +158,9 @@ of ‘nose’.</p>
 </div>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="traits.testing.nose_tools.performance">
-<code class="sig-prename descclassname">traits.testing.nose_tools.</code><code class="sig-name descname">performance</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/nose_tools.html#performance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.nose_tools.performance" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">traits.testing.nose_tools.</span></code><code class="sig-name descname"><span class="pre">performance</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/nose_tools.html#performance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.testing.nose_tools.performance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decorator to add an attribute to the test to mark it as
 a performance-measuring test.</p>
 <div class="deprecated">
@@ -172,9 +171,9 @@ a performance-measuring test.</p>
 </div>
 <div class="section" id="module-traits.testing.optional_dependencies">
 <span id="traits-testing-optional-dependencies-module"></span><h2><a class="reference internal" href="#module-traits.testing.optional_dependencies" title="traits.testing.optional_dependencies"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.testing.optional_dependencies</span></code></a> Module<a class="headerlink" href="#module-traits.testing.optional_dependencies" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
+<dl class="py function">
 <dt id="traits.testing.optional_dependencies.optional_import">
-<code class="sig-prename descclassname">traits.testing.optional_dependencies.</code><code class="sig-name descname">optional_import</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/optional_dependencies.html#optional_import"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.optional_dependencies.optional_import" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">traits.testing.optional_dependencies.</span></code><code class="sig-name descname"><span class="pre">optional_import</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/optional_dependencies.html#optional_import"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.testing.optional_dependencies.optional_import" title="Permalink to this definition">¶</a></dt>
 <dd><p>Optionally import a module, returning None if that module is unavailable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -184,7 +183,7 @@ a performance-measuring test.</p>
 <dd class="field-even"><p>None if the module is not available, and the module otherwise.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a> or module</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)">None</a> or module</p>
 </dd>
 </dl>
 </dd></dl>
@@ -194,20 +193,20 @@ a performance-measuring test.</p>
 <span id="traits-testing-unittest-tools-module"></span><h2><a class="reference internal" href="#module-traits.testing.unittest_tools" title="traits.testing.unittest_tools"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.testing.unittest_tools</span></code></a> Module<a class="headerlink" href="#module-traits.testing.unittest_tools" title="Permalink to this headline">¶</a></h2>
 <p>Trait assert mixin class to simplify test implementation for Trait
 Classes.</p>
-<dl class="function">
+<dl class="py function">
 <dt id="traits.testing.unittest_tools.reverse_assertion">
-<code class="sig-prename descclassname">traits.testing.unittest_tools.</code><code class="sig-name descname">reverse_assertion</code><span class="sig-paren">(</span><em class="sig-param">context</em>, <em class="sig-param">msg</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#reverse_assertion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.unittest_tools.reverse_assertion" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">traits.testing.unittest_tools.</span></code><code class="sig-name descname"><span class="pre">reverse_assertion</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#reverse_assertion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.testing.unittest_tools.reverse_assertion" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="traits.testing.unittest_tools.UnittestTools">
-<em class="property">class </em><code class="sig-prename descclassname">traits.testing.unittest_tools.</code><code class="sig-name descname">UnittestTools</code><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">traits.testing.unittest_tools.</span></code><code class="sig-name descname"><span class="pre">UnittestTools</span></code><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Mixin class to augment the unittest.TestCase class with useful trait
 related assert methods.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="traits.testing.unittest_tools.UnittestTools.assertTraitChanges">
-<code class="sig-name descname">assertTraitChanges</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">trait</em>, <em class="sig-param">count=None</em>, <em class="sig-param">callableObj=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools.assertTraitChanges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools.assertTraitChanges" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">assertTraitChanges</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trait</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callableObj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools.assertTraitChanges"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools.assertTraitChanges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assert an object trait changes a given number of times.</p>
 <p>Assert that the class trait changes exactly <cite>count</cite> times during
 execution of the provided function.</p>
@@ -240,8 +239,8 @@ not well-defined, and may depend on dictionary ordering.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>obj</strong> (<a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><em>HasTraits</em></a>) – The HasTraits class instance whose class trait will change.</p></li>
-<li><p><strong>trait</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The extended trait name of trait changes to listen to.</p></li>
-<li><p><strong>count</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a><em>, </em><em>optional</em>) – The expected number of times the event should be fired. When None
+<li><p><strong>trait</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The extended trait name of trait changes to listen to.</p></li>
+<li><p><strong>count</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><em>None</em></a><em>, </em><em>optional</em>) – The expected number of times the event should be fired. When None
 (default value) there is no check for the number of times the
 change event was fired.</p></li>
 <li><p><strong>callableObj</strong> (<em>callable</em><em>, </em><em>optional</em>) – A callable object that will trigger the expected trait change.
@@ -258,7 +257,7 @@ Otherwise, the context is used internally with <code class="docutils literal not
 the trigger, in which case None is returned.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>context manager or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a></p>
+<dd class="field-odd"><p>context manager or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)">None</a></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -270,9 +269,9 @@ the class is not implemented yet.</p></li>
 </ul>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="traits.testing.unittest_tools.UnittestTools.assertTraitDoesNotChange">
-<code class="sig-name descname">assertTraitDoesNotChange</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">trait</em>, <em class="sig-param">callableObj=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools.assertTraitDoesNotChange"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools.assertTraitDoesNotChange" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">assertTraitDoesNotChange</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trait</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callableObj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools.assertTraitDoesNotChange"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools.assertTraitDoesNotChange" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assert an object trait does not change.</p>
 <p>Assert that the class trait does not change during
 execution of the provided function.</p>
@@ -280,7 +279,7 @@ execution of the provided function.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>obj</strong> (<a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><em>HasTraits</em></a>) – The HasTraits class instance whose class trait will change.</p></li>
-<li><p><strong>trait</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The extended trait name of trait changes to listen to.</p></li>
+<li><p><strong>trait</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The extended trait name of trait changes to listen to.</p></li>
 <li><p><strong>callableObj</strong> (<em>callable</em><em>, </em><em>optional</em>) – A callable object that should not trigger a change in the
 passed trait.  When None (default value) a trigger is expected
 to be called under the context manger returned by this method.</p></li>
@@ -295,14 +294,14 @@ Otherwise, the context is used internally with <code class="docutils literal not
 the trigger, in which case None is returned.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>context manager or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a></p>
+<dd class="field-odd"><p>context manager or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)">None</a></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="traits.testing.unittest_tools.UnittestTools.assertMultiTraitChanges">
-<code class="sig-name descname">assertMultiTraitChanges</code><span class="sig-paren">(</span><em class="sig-param">objects</em>, <em class="sig-param">traits_modified</em>, <em class="sig-param">traits_not_modified</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools.assertMultiTraitChanges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools.assertMultiTraitChanges" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">assertMultiTraitChanges</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objects</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traits_modified</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traits_not_modified</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools.assertMultiTraitChanges"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools.assertMultiTraitChanges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assert that traits on multiple objects do or do not change.</p>
 <p>This combines some of the functionality of <cite>assertTraitChanges</cite> and
 <cite>assertTraitDoesNotChange</cite>.</p>
@@ -317,9 +316,9 @@ the trigger, in which case None is returned.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="traits.testing.unittest_tools.UnittestTools.assertTraitChangesAsync">
-<code class="sig-name descname">assertTraitChangesAsync</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">trait</em>, <em class="sig-param">count=1</em>, <em class="sig-param">timeout=5.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools.assertTraitChangesAsync"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools.assertTraitChangesAsync" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">assertTraitChangesAsync</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trait</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools.assertTraitChangesAsync"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools.assertTraitChangesAsync" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assert an object trait eventually changes.</p>
 <p>Context manager used to assert that the given trait changes at
 least <cite>count</cite> times within the given timeout, as a result of
@@ -335,44 +334,44 @@ execution of the body of the corresponding with block.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>obj</strong> (<a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><em>HasTraits</em></a>) – The HasTraits class instance whose class trait will change.</p></li>
-<li><p><strong>trait</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The extended trait name of trait changes to listen to.</p></li>
-<li><p><strong>count</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – The expected number of times the event should be fired.</p></li>
-<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a><em>, </em><em>optional</em>) – The amount of time in seconds to wait for the specified number
+<li><p><strong>trait</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The extended trait name of trait changes to listen to.</p></li>
+<li><p><strong>count</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – The expected number of times the event should be fired.</p></li>
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><em>None</em></a><em>, </em><em>optional</em>) – The amount of time in seconds to wait for the specified number
 of changes. None can be used to indicate no timeout.</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="traits.testing.unittest_tools.UnittestTools.assertEventuallyTrue">
-<code class="sig-name descname">assertEventuallyTrue</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">trait</em>, <em class="sig-param">condition</em>, <em class="sig-param">timeout=5.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools.assertEventuallyTrue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools.assertEventuallyTrue" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">assertEventuallyTrue</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trait</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools.assertEventuallyTrue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools.assertEventuallyTrue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assert that the given condition is eventually true.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>obj</strong> (<a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><em>HasTraits</em></a>) – The HasTraits class instance whose traits will change.</p></li>
-<li><p><strong>trait</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The extended trait name of trait changes to listen to.</p></li>
+<li><p><strong>trait</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The extended trait name of trait changes to listen to.</p></li>
 <li><p><strong>condition</strong> (<em>callable</em>) – A function that will be called when the specified trait
 changes.  This should accept <code class="docutils literal notranslate"><span class="pre">obj</span></code> and should return a
 Boolean indicating whether the condition is satisfied or not.</p></li>
-<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a><em>, </em><em>optional</em>) – The amount of time in seconds to wait for the condition to
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><em>None</em></a><em>, </em><em>optional</em>) – The amount of time in seconds to wait for the condition to
 become true.  None can be used to indicate no timeout.</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="traits.testing.unittest_tools.UnittestTools.assertDeprecated">
-<code class="sig-name descname">assertDeprecated</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools.assertDeprecated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools.assertDeprecated" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">assertDeprecated</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools.assertDeprecated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools.assertDeprecated" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assert that the code inside the with block is deprecated.  Intended
 for testing uses of traits.util.deprecated.deprecated.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="traits.testing.unittest_tools.UnittestTools.assertNotDeprecated">
-<code class="sig-name descname">assertNotDeprecated</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools.assertNotDeprecated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools.assertNotDeprecated" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">assertNotDeprecated</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools.assertNotDeprecated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools.assertNotDeprecated" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assert that the code inside the with block is not deprecated.  Intended
 for testing uses of traits.util.deprecated.deprecated.</p>
 </dd></dl>
@@ -422,7 +421,7 @@ for testing uses of traits.util.deprecated.deprecated.</p>
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
         </div>
@@ -444,10 +443,10 @@ All rights reserved.
 
       </li>
       <li>
-      Last updated on Jan 20, 2021.
+      Last updated on Oct 08, 2021.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
       </li>
     </ul>
     </div>

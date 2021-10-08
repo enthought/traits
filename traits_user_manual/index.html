@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>Traits 6.2 User Manual &mdash; Traits 6.2 Documentation</title>
+    <title>Traits 6.3 User Manual &mdash; Traits 6.3 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,10 +13,10 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.2.0',
+        VERSION:     '6.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        LINK_SUFFIX: '',
+        LINK_SUFFIX: '.html',
         SOURCELINK_SUFFIX: '.txt',
         HAS_SOURCE:  true
       };
@@ -24,13 +24,12 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.2 Documentation" href="../index.html" >
+    <link rel="top" title="Traits 6.3 Documentation" href="../index.html" >
     <link rel="next" title="Introduction" href="intro.html" >
     <link rel="prev" title="Introduction" href="../traits_tutorial/introduction.html" > 
   </head>
@@ -49,7 +48,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.2 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 6.3 Documentation</a></li>
 	 
     </ul>
               
@@ -85,7 +84,7 @@
           <div class="body" id="spc-section-body" role="main">
             
   <div class="section" id="traits-version-user-manual">
-<h1>Traits 6.2 User Manual<a class="headerlink" href="#traits-version-user-manual" title="Permalink to this headline">¶</a></h1>
+<h1>Traits 6.3 User Manual<a class="headerlink" href="#traits-version-user-manual" title="Permalink to this headline">¶</a></h1>
 <dl class="field-list">
 <dt class="field-odd">Authors</dt>
 <dd class="field-odd"><p>David C. Morrill, Janet M. Swisher, and Enthought developers</p>
@@ -104,6 +103,10 @@
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="intro.html#what-are-traits">What Are Traits?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="intro.html#background">Background</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#installation-from-source-on-macos">Installation from source on macOS</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="defining.html">Defining Traits: Initialization and Validation</a><ul>
@@ -225,7 +228,7 @@
 <li class="toctree-l2"><a class="reference internal" href="advanced.html#useful-methods-on-hastraits">Useful Methods on HasTraits</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="advanced.html#add-trait">add_trait()</a></li>
 <li class="toctree-l3"><a class="reference internal" href="advanced.html#clone-traits">clone_traits()</a></li>
-<li class="toctree-l3"><a class="reference internal" href="advanced.html#set">set()</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advanced.html#trait-set">trait_set()</a></li>
 <li class="toctree-l3"><a class="reference internal" href="advanced.html#add-class-trait">add_class_trait()</a></li>
 </ul>
 </li>
@@ -323,7 +326,7 @@ owners.</p>
             </a></p>
   <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Traits 6.2 User Manual</a><ul>
+<li><a class="reference internal" href="#">Traits 6.3 User Manual</a><ul>
 <li><a class="reference internal" href="#contents">Contents</a></li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 <li><a class="reference internal" href="#license">License</a></li>
@@ -351,7 +354,7 @@ owners.</p>
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
         </div>
@@ -373,10 +376,10 @@ All rights reserved.
 
       </li>
       <li>
-      Last updated on Jan 20, 2021.
+      Last updated on Oct 08, 2021.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
       </li>
     </ul>
     </div>

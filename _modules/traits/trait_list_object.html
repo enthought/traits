@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.trait_list_object &mdash; Traits 6.2 Documentation</title>
+    <title>traits.trait_list_object &mdash; Traits 6.3 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-extend.css">
@@ -13,10 +13,10 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '6.2.0',
+        VERSION:     '6.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        LINK_SUFFIX: '',
+        LINK_SUFFIX: '.html',
         SOURCELINK_SUFFIX: '.txt',
         HAS_SOURCE:  true
       };
@@ -24,13 +24,12 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
     <script type="text/javascript" src="../../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../genindex.html" >
     <link rel="search" title="Search" href="../../search.html" >
-    <link rel="top" title="Traits 6.2 Documentation" href="../../index.html" >
+    <link rel="top" title="Traits 6.3 Documentation" href="../../index.html" >
     <link rel="up" title="Module code" href="../index.html" > 
   </head>
   <body>
@@ -48,7 +47,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../index.html">Traits 6.2 Documentation</a></li>
+        <li class="active"><a href="../../index.html">Traits 6.3 Documentation</a></li>
 	
           <li class="active"><a href="../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -89,11 +88,11 @@
 
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">operator</span>
-<span class="kn">from</span> <span class="nn">weakref</span> <span class="k">import</span> <span class="n">ref</span>
+<span class="kn">from</span> <span class="nn">weakref</span> <span class="kn">import</span> <span class="n">ref</span>
 
-<span class="kn">from</span> <span class="nn">traits.observation.i_observable</span> <span class="k">import</span> <span class="n">IObservable</span>
-<span class="kn">from</span> <span class="nn">traits.trait_base</span> <span class="k">import</span> <span class="n">class_of</span><span class="p">,</span> <span class="n">Undefined</span><span class="p">,</span> <span class="n">_validate_everything</span>
-<span class="kn">from</span> <span class="nn">traits.trait_errors</span> <span class="k">import</span> <span class="n">TraitError</span>
+<span class="kn">from</span> <span class="nn">traits.observation.i_observable</span> <span class="kn">import</span> <span class="n">IObservable</span>
+<span class="kn">from</span> <span class="nn">traits.trait_base</span> <span class="kn">import</span> <span class="n">class_of</span><span class="p">,</span> <span class="n">Undefined</span><span class="p">,</span> <span class="n">_validate_everything</span>
+<span class="kn">from</span> <span class="nn">traits.trait_errors</span> <span class="kn">import</span> <span class="n">TraitError</span>
 
 
 <div class="viewcode-block" id="TraitListEvent"><a class="viewcode-back" href="../../traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitListEvent">[docs]</a><span class="k">class</span> <span class="nc">TraitListEvent</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -121,7 +120,7 @@
 <span class="sd">        this is an empty list.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">removed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">added</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">removed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">added</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">index</span>
 
         <span class="k">if</span> <span class="n">removed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -132,12 +131,12 @@
             <span class="n">added</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">added</span> <span class="o">=</span> <span class="n">added</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span>
-            <span class="n">f</span><span class="s2">&quot;</span><span class="si">{self.__class__.__name__}</span><span class="s2">(&quot;</span>
-            <span class="n">f</span><span class="s2">&quot;index=</span><span class="si">{self.index!r}</span><span class="s2">, &quot;</span>
-            <span class="n">f</span><span class="s2">&quot;removed=</span><span class="si">{self.removed!r}</span><span class="s2">, &quot;</span>
-            <span class="n">f</span><span class="s2">&quot;added=</span><span class="si">{self.added!r}</span><span class="s2">)&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;index=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="si">!r}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;removed=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">removed</span><span class="si">!r}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;added=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">added</span><span class="si">!r}</span><span class="s2">)&quot;</span>
         <span class="p">)</span></div>
 
 
@@ -277,7 +276,7 @@
 <span class="sd">            notifier(trait_list, index, removed, added)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="c1"># We need a __new__ in addition to __init__ in order to properly</span>
         <span class="c1"># support unpickling: the &#39;append&#39; or &#39;extend&#39; methods may be</span>
         <span class="c1"># called during unpickling, triggering item validation.</span>
@@ -286,7 +285,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">notifiers</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">return</span> <span class="bp">self</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iterable</span><span class="o">=</span><span class="p">(),</span> <span class="o">*</span><span class="p">,</span> <span class="n">item_validator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">notifiers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iterable</span><span class="o">=</span><span class="p">(),</span> <span class="o">*</span><span class="p">,</span> <span class="n">item_validator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">notifiers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">item_validator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">item_validator</span> <span class="o">=</span> <span class="n">item_validator</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">item_validator</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">iterable</span><span class="p">)</span>
@@ -317,7 +316,7 @@
 
     <span class="c1"># -- list interface -------------------------------------------------------</span>
 
-    <span class="k">def</span> <span class="nf">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Delete self[key].</span>
 
 <span class="sd">        Parameters</span>
@@ -343,7 +342,7 @@
                 <span class="n">removed</span> <span class="o">=</span> <span class="n">removed</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="n">normalized_key</span><span class="p">,</span> <span class="n">removed</span><span class="p">,</span> <span class="p">[])</span>
 
-    <span class="k">def</span> <span class="nf">__iadd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__iadd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Implement self += value.</span>
 
 <span class="sd">        Parameters</span>
@@ -364,7 +363,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="n">original_length</span><span class="p">,</span> <span class="p">[],</span> <span class="n">added</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">extended</span>
 
-    <span class="k">def</span> <span class="nf">__imul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__imul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Implement self *= value.</span>
 
 <span class="sd">        Parameters</span>
@@ -391,7 +390,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="n">original_length</span><span class="p">,</span> <span class="p">[],</span> <span class="n">added</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">multiplied</span>
 
-    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Set self[key] to value.</span>
 
 <span class="sd">        Parameters</span>
@@ -645,7 +644,7 @@
 <span class="sd">        The initial value of the list.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trait</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trait</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">trait</span> <span class="o">=</span> <span class="n">trait</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="n">ref</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
@@ -701,7 +700,7 @@
 
     <span class="c1"># -- list interface -------------------------------------------------------</span>
 
-    <span class="k">def</span> <span class="nf">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Delete self[key].</span>
 
 <span class="sd">        Parameters</span>
@@ -719,7 +718,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_validate_length</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-</span> <span class="n">removed_count</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__delitem__</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__iadd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__iadd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Implement self += value.</span>
 
 <span class="sd">        Parameters</span>
@@ -738,7 +737,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_validate_length</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__iadd__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__imul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__imul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Implement self *= value.</span>
 
 <span class="sd">        Parameters</span>
@@ -755,7 +754,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_validate_length</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">*</span> <span class="n">value</span><span class="p">))</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__imul__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Set self[key] to value.</span>
 
 <span class="sd">        Parameters</span>
@@ -996,7 +995,7 @@
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
         </div>
@@ -1018,10 +1017,10 @@ All rights reserved.
 
       </li>
       <li>
-      Last updated on Jan 20, 2021.
+      Last updated on Oct 08, 2021.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
       </li>
     </ul>
     </div>

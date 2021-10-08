@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.trait_errors Module &mdash; Traits 6.2 Documentation</title>
+    <title>traits.trait_errors Module &mdash; Traits 6.3 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,10 +13,10 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.2.0',
+        VERSION:     '6.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        LINK_SUFFIX: '',
+        LINK_SUFFIX: '.html',
         SOURCELINK_SUFFIX: '.txt',
         HAS_SOURCE:  true
       };
@@ -24,13 +24,12 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.2 Documentation" href="../index.html" >
+    <link rel="top" title="Traits 6.3 Documentation" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
     <link rel="next" title="traits.trait_factory Module" href="trait_factory.html" >
     <link rel="prev" title="traits.trait_dict_object Module" href="trait_dict_object.html" > 
@@ -50,7 +49,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.2 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 6.3 Documentation</a></li>
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
     </ul>
@@ -91,9 +90,9 @@
 <p>Defines the standard exceptions raised by the Traits package.</p>
 <div class="section" id="functions">
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
+<dl class="py function">
 <dt id="traits.trait_errors.repr_type">
-<code class="sig-prename descclassname">traits.trait_errors.</code><code class="sig-name descname">repr_type</code><span class="sig-paren">(</span><em class="sig-param">obj</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_errors.html#repr_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_errors.repr_type" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">traits.trait_errors.</span></code><code class="sig-name descname"><span class="pre">repr_type</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_errors.html#repr_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_errors.repr_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a string representation of a value and its type for readable
 error messages.</p>
 </dd></dl>
@@ -101,19 +100,19 @@ error messages.</p>
 </div>
 <div class="section" id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="traits.trait_errors.TraitError">
-<em class="property">class </em><code class="sig-prename descclassname">traits.trait_errors.</code><code class="sig-name descname">TraitError</code><span class="sig-paren">(</span><em class="sig-param">args=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">info=None</em>, <em class="sig-param">value=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_errors.html#TraitError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_errors.TraitError" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">traits.trait_errors.</span></code><code class="sig-name descname"><span class="pre">TraitError</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_errors.html#TraitError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_errors.TraitError" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="traits.trait_errors.TraitNotificationError">
-<em class="property">class </em><code class="sig-prename descclassname">traits.trait_errors.</code><code class="sig-name descname">TraitNotificationError</code><a class="reference internal" href="../_modules/traits/trait_errors.html#TraitNotificationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_errors.TraitNotificationError" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">traits.trait_errors.</span></code><code class="sig-name descname"><span class="pre">TraitNotificationError</span></code><a class="reference internal" href="../_modules/traits/trait_errors.html#TraitNotificationError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_errors.TraitNotificationError" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="traits.trait_errors.DelegationError">
-<em class="property">class </em><code class="sig-prename descclassname">traits.trait_errors.</code><code class="sig-name descname">DelegationError</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_errors.html#DelegationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_errors.DelegationError" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">traits.trait_errors.</span></code><code class="sig-name descname"><span class="pre">DelegationError</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_errors.html#DelegationError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_errors.DelegationError" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
@@ -157,7 +156,7 @@ error messages.</p>
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
         </div>
@@ -179,10 +178,10 @@ All rights reserved.
 
       </li>
       <li>
-      Last updated on Jan 20, 2021.
+      Last updated on Oct 08, 2021.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
       </li>
     </ul>
     </div>

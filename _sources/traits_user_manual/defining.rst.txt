@@ -278,7 +278,9 @@ the table.
 +------------------+----------------------------------------------------------+
 | Name             | Callable Signature                                       |
 +==================+==========================================================+
-| Any              | Any( [*value* = None, \*\*\ *metadata*] )                |
+| Any              | Any( [*default_value* = None, \*,                        |
+|                  | *factory* = None, *args* = (), *kw* = {},                |
+|                  | \*\*\ *metadata* )                                       |
 +------------------+----------------------------------------------------------+
 | Array            | Array( [*dtype* = None, *shape* = None, *value* = None,  |
 |                  | *typecode* = None, \*\*\ *metadata*] )                   |
@@ -988,7 +990,7 @@ on a HasTraits object to get a reference to a specific trait, and then access
 the metadata attribute::
 
     # metadata.py --- Example of accessing trait metadata attributes
-    from traits.api import HasTraits, Int, List, Float, \
+    from traits.api import HasTraits, Int, List, Float, Str, \
                                      Instance, Any, TraitType
 
     class Foo( HasTraits ): pass
@@ -997,7 +999,7 @@ the metadata attribute::
         i = Int(99)
         lf = List(Float)
         foo = Instance( Foo, () )
-        any = Any( [1, 2, 3 ] )
+        any = Any( "123" )
 
     t = Test()
 
@@ -1022,11 +1024,11 @@ the metadata attribute::
     print(t.trait( 'foo' ).is_trait_type( Instance ))  # True
     print(t.trait( 'foo' ).is_trait_type( List  ))     # False
 
-    print(t.trait( 'any' ).default)                    # [1, 2, 3]
-    print(t.trait( 'any' ).default_kind)               # list
+    print(t.trait( 'any' ).default)                    # 123
+    print(t.trait( 'any' ).default_kind)               # value
     print(t.trait( 'any' ).inner_traits)               # ()
     print(t.trait( 'any' ).is_trait_type( Any ))       # True
-    print(t.trait( 'any' ).is_trait_type( List ))      # False
+    print(t.trait( 'any' ).is_trait_type( Str ))       # False
 
 .. rubric:: Footnotes
 .. [2] Most callable predefined traits are classes, but a few are functions.

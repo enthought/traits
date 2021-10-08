@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.trait_type Module &mdash; Traits 6.2 Documentation</title>
+    <title>traits.trait_type Module &mdash; Traits 6.3 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,10 +13,10 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.2.0',
+        VERSION:     '6.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        LINK_SUFFIX: '',
+        LINK_SUFFIX: '.html',
         SOURCELINK_SUFFIX: '.txt',
         HAS_SOURCE:  true
       };
@@ -24,13 +24,12 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.2 Documentation" href="../index.html" >
+    <link rel="top" title="Traits 6.3 Documentation" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
     <link rel="next" title="traits.trait_types Module" href="trait_types.html" >
     <link rel="prev" title="traits.trait_numeric Module" href="trait_numeric.html" > 
@@ -50,7 +49,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.2 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 6.3 Documentation</a></li>
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
     </ul>
@@ -94,17 +93,17 @@ traits, and provides a richer API than the old-style traits derived from
 <code class="docutils literal notranslate"><span class="pre">TraitHandler</span></code>.</p>
 <div class="section" id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
-<dl class="data">
+<dl class="py data">
 <dt id="traits.trait_type.NoDefaultSpecified">
-<code class="sig-prename descclassname">traits.trait_type.</code><code class="sig-name descname">NoDefaultSpecified</code><em class="property"> = &lt;traits.trait_type._NoDefaultSpecifiedType object&gt;</em><a class="headerlink" href="#traits.trait_type.NoDefaultSpecified" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">traits.trait_type.</span></code><code class="sig-name descname"><span class="pre">NoDefaultSpecified</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;traits.trait_type._NoDefaultSpecifiedType</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#traits.trait_type.NoDefaultSpecified" title="Permalink to this definition">¶</a></dt>
 <dd><p>Singleton object that can be passed for the <code class="docutils literal notranslate"><span class="pre">default_value</span></code> argument
 in the <a class="reference internal" href="#traits.trait_type.TraitType" title="traits.trait_type.TraitType"><code class="xref py py-class docutils literal notranslate"><span class="pre">TraitType</span></code></a> constructor, to indicate that no default value
 was specified.</p>
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="traits.trait_type.TraitType">
-<em class="property">class </em><code class="sig-prename descclassname">traits.trait_type.</code><code class="sig-name descname">TraitType</code><span class="sig-paren">(</span><em class="sig-param">default_value=&lt;traits.trait_type._NoDefaultSpecifiedType object&gt;</em>, <em class="sig-param">**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#TraitType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_type.TraitType" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">traits.trait_type.</span></code><code class="sig-name descname"><span class="pre">TraitType</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">default_value=&lt;traits.trait_type._NoDefaultSpecifiedType</span> <span class="pre">object&gt;</span></em>, <em class="sig-param"><span class="pre">**metadata</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#TraitType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_type.TraitType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for new trait types.</p>
 <p>This class enables you to define new traits using a class-based
 approach, instead of by calling the Trait() factory function with an
@@ -193,27 +192,27 @@ normally used for creating “shadow” (i.e., “mapped” traits), but
 other uses may arise as well. This method does not need to return
 a value, and should normally not raise any exceptions.</p>
 </div></blockquote>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="traits.trait_type.TraitType.metadata">
-<code class="sig-name descname">metadata</code><em class="property"> = {}</em><a class="headerlink" href="#traits.trait_type.TraitType.metadata" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">metadata</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{}</span></em><a class="headerlink" href="#traits.trait_type.TraitType.metadata" title="Permalink to this definition">¶</a></dt>
 <dd><p>The metadata for the trait.</p>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="traits.trait_type.TraitType.default_value">
-<code class="sig-name descname">default_value</code><em class="property"> = &lt;undefined&gt;</em><a class="headerlink" href="#traits.trait_type.TraitType.default_value" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">default_value</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;undefined&gt;</span></em><a class="headerlink" href="#traits.trait_type.TraitType.default_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>The default value for the trait type.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="traits.trait_type.TraitType.init">
-<code class="sig-name descname">init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#TraitType.init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_type.TraitType.init" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">init</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#TraitType.init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_type.TraitType.init" title="Permalink to this definition">¶</a></dt>
 <dd><p>Allows the trait to perform any additional initialization needed.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="traits.trait_type.TraitType.get_default_value">
-<code class="sig-name descname">get_default_value</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#TraitType.get_default_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_type.TraitType.get_default_value" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_default_value</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#TraitType.get_default_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_type.TraitType.get_default_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get information about the default value.</p>
 <p>The default implementation analyzes the value of the trait’s
 <code class="docutils literal notranslate"><span class="pre">default_value</span></code> attribute and determines an appropriate
@@ -252,14 +251,14 @@ the type of default value, and the corresponding default value
 as described above.</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a>, any</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a>, any</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="traits.trait_type.TraitType.clone">
-<code class="sig-name descname">clone</code><span class="sig-paren">(</span><em class="sig-param">default_value=&lt;traits.trait_type._NoDefaultSpecifiedType object&gt;</em>, <em class="sig-param">**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#TraitType.clone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_type.TraitType.clone" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">clone</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">default_value=&lt;traits.trait_type._NoDefaultSpecifiedType</span> <span class="pre">object&gt;</span></em>, <em class="sig-param"><span class="pre">**metadata</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#TraitType.clone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_type.TraitType.clone" title="Permalink to this definition">¶</a></dt>
 <dd><p>Copy, optionally modifying default value and metadata.</p>
 <p>Clones the contents of this object into a new instance of the same
 class, and then modifies the cloned copy using the specified
@@ -271,35 +270,41 @@ needed, but should always call the ‘super’ method if possible.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>default_value</strong> (<em>any</em>) – The new default value for the trait.</p></li>
-<li><p><strong>**metadata</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – A dictionary of metadata names and corresponding values as
+<li><p><strong>**metadata</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – A dictionary of metadata names and corresponding values as
 arbitrary keyword arguments.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>clone</strong> – Clone of self.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#traits.trait_type.TraitType" title="traits.trait_type.TraitType">TraitType</a></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="traits.trait_type.TraitType.get_value">
-<code class="sig-name descname">get_value</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">trait=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#TraitType.get_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_type.TraitType.get_value" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_value</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trait</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#TraitType.get_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_type.TraitType.get_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the current value of a property-based trait.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="traits.trait_type.TraitType.set_value">
-<code class="sig-name descname">set_value</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#TraitType.set_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_type.TraitType.set_value" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">set_value</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#TraitType.set_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_type.TraitType.set_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the cached value of a property-based trait and fires the
 appropriate trait change event.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="traits.trait_type.TraitType.as_ctrait">
-<code class="sig-name descname">as_ctrait</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#TraitType.as_ctrait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_type.TraitType.as_ctrait" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">as_ctrait</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#TraitType.as_ctrait"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_type.TraitType.as_ctrait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a CTrait corresponding to the trait defined by this class.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="traits.trait_type.TraitType.instantiate_and_get_ctrait">
-<em class="property">classmethod </em><code class="sig-name descname">instantiate_and_get_ctrait</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#TraitType.instantiate_and_get_ctrait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_type.TraitType.instantiate_and_get_ctrait" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">instantiate_and_get_ctrait</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#TraitType.instantiate_and_get_ctrait"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_type.TraitType.instantiate_and_get_ctrait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Instantiate the class an return a CTrait instance</p>
 <p>This is primarily to allow traits to be defined within
 classes without having to explicitly call them.</p>
@@ -310,21 +315,21 @@ classes without having to explicitly call them.</p>
 </div>
 <div class="section" id="private-functions">
 <h2>Private Functions<a class="headerlink" href="#private-functions" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
+<dl class="py function">
 <dt id="traits.trait_type._infer_default_value_type">
-<code class="sig-prename descclassname">traits.trait_type.</code><code class="sig-name descname">_infer_default_value_type</code><span class="sig-paren">(</span><em class="sig-param">default_value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#_infer_default_value_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_type._infer_default_value_type" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">traits.trait_type.</span></code><code class="sig-name descname"><span class="pre">_infer_default_value_type</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#_infer_default_value_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_type._infer_default_value_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Figure out the default value type given a default value.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="traits.trait_type._write_only">
-<code class="sig-prename descclassname">traits.trait_type.</code><code class="sig-name descname">_write_only</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#_write_only"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_type._write_only" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">traits.trait_type.</span></code><code class="sig-name descname"><span class="pre">_write_only</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#_write_only"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_type._write_only" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raise a trait error for a write-only trait.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="traits.trait_type._read_only">
-<code class="sig-prename descclassname">traits.trait_type.</code><code class="sig-name descname">_read_only</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#_read_only"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_type._read_only" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">traits.trait_type.</span></code><code class="sig-name descname"><span class="pre">_read_only</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#_read_only"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_type._read_only" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raise a trait error for a read-only trait.</p>
 </dd></dl>
 
@@ -369,7 +374,7 @@ classes without having to explicitly call them.</p>
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
         </div>
@@ -391,10 +396,10 @@ All rights reserved.
 
       </li>
       <li>
-      Last updated on Jan 20, 2021.
+      Last updated on Oct 08, 2021.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
       </li>
     </ul>
     </div>

@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>Deferring Trait Definitions &mdash; Traits 6.2 Documentation</title>
+    <title>Deferring Trait Definitions &mdash; Traits 6.3 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,10 +13,10 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.2.0',
+        VERSION:     '6.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        LINK_SUFFIX: '',
+        LINK_SUFFIX: '.html',
         SOURCELINK_SUFFIX: '.txt',
         HAS_SOURCE:  true
       };
@@ -24,14 +24,13 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.2 Documentation" href="../index.html" >
-    <link rel="up" title="Traits 6.2 User Manual" href="index.html" >
+    <link rel="top" title="Traits 6.3 Documentation" href="../index.html" >
+    <link rel="up" title="Traits 6.3 User Manual" href="index.html" >
     <link rel="next" title="Custom Traits" href="custom.html" >
     <link rel="prev" title="Trait Notification" href="notification.html" > 
   </head>
@@ -50,9 +49,9 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.2 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 6.3 Documentation</a></li>
 	
-          <li class="active"><a href="index.html" accesskey="U">Traits 6.2 User Manual</a></li> 
+          <li class="active"><a href="index.html" accesskey="U">Traits 6.3 User Manual</a></li> 
     </ul>
               
               
@@ -109,9 +108,9 @@ broken, and the two attributes can change independently. This is essentially a
 by two classes derived from TraitType: DelegatesTo and PrototypedFrom. <a class="footnote-reference brackets" href="#id8" id="id1">5</a></p>
 <div class="section" id="delegatesto">
 <span id="id2"></span><h2>DelegatesTo<a class="headerlink" href="#delegatesto" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="DelegatesTo">
-<em class="property">class </em><code class="sig-name descname">DelegatesTo</code><span class="sig-paren">(</span><em class="sig-param">delegate</em><span class="optional">[</span>, <em class="sig-param">prefix=''</em>, <em class="sig-param">listenable=True</em>, <em class="sig-param">**metadata</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#DelegatesTo" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">DelegatesTo</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">delegate</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">prefix=''</span></em>, <em class="sig-param"><span class="pre">listenable=True</span></em>, <em class="sig-param"><span class="pre">**metadata</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#DelegatesTo" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p id="index-2">The <em>delegate</em> parameter is a string that specifies the name of an attribute
@@ -175,9 +174,9 @@ reflect the new value.</p>
 </div>
 <div class="section" id="prototypedfrom">
 <span id="id3"></span><h2>PrototypedFrom<a class="headerlink" href="#prototypedfrom" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="PrototypedFrom">
-<em class="property">class </em><code class="sig-name descname">PrototypedFrom</code><span class="sig-paren">(</span><em class="sig-param">prototype</em><span class="optional">[</span>, <em class="sig-param">prefix=''</em>, <em class="sig-param">listenable=True</em>, <em class="sig-param">**metadata</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#PrototypedFrom" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">PrototypedFrom</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">prototype</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">prefix=''</span></em>, <em class="sig-param"><span class="pre">listenable=True</span></em>, <em class="sig-param"><span class="pre">**metadata</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#PrototypedFrom" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p id="index-4">The <em>prototype</em> parameter is a string that specifies the name of an attribute on
@@ -211,7 +210,7 @@ attribute name when looking up the object attribute.</p></li>
 PrototypedFrom:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># prototype_prefix.py --- Examples of PrototypedFrom()</span>
 <span class="c1">#                         prefix parameter</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> \
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> \
     <span class="n">PrototypedFrom</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">Str</span>
 
 <span class="k">class</span> <span class="nc">Parent</span> <span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
@@ -373,7 +372,7 @@ incongruous.</p>
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
         </div>
@@ -395,10 +394,10 @@ All rights reserved.
 
       </li>
       <li>
-      Last updated on Jan 20, 2021.
+      Last updated on Oct 08, 2021.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
       </li>
     </ul>
     </div>

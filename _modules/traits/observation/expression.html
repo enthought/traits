@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.observation.expression &mdash; Traits 6.2 Documentation</title>
+    <title>traits.observation.expression &mdash; Traits 6.3 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
@@ -13,10 +13,10 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '6.2.0',
+        VERSION:     '6.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        LINK_SUFFIX: '',
+        LINK_SUFFIX: '.html',
         SOURCELINK_SUFFIX: '.txt',
         HAS_SOURCE:  true
       };
@@ -24,13 +24,12 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../_static/language_data.js"></script>
     <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../../genindex.html" >
     <link rel="search" title="Search" href="../../../search.html" >
-    <link rel="top" title="Traits 6.2 Documentation" href="../../../index.html" >
+    <link rel="top" title="Traits 6.3 Documentation" href="../../../index.html" >
     <link rel="up" title="Module code" href="../../index.html" > 
   </head>
   <body>
@@ -48,7 +47,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../../index.html">Traits 6.2 Documentation</a></li>
+        <li class="active"><a href="../../../index.html">Traits 6.3 Documentation</a></li>
 	
           <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -89,16 +88,21 @@
 
 <span class="kn">import</span> <span class="nn">functools</span>
 
-<span class="kn">from</span> <span class="nn">traits.observation._dict_item_observer</span> <span class="k">import</span> <span class="n">DictItemObserver</span>
-<span class="kn">from</span> <span class="nn">traits.observation._filtered_trait_observer</span> <span class="k">import</span> <span class="n">FilteredTraitObserver</span>
-<span class="kn">from</span> <span class="nn">traits.observation._list_item_observer</span> <span class="k">import</span> <span class="n">ListItemObserver</span>
-<span class="kn">from</span> <span class="nn">traits.observation._metadata_filter</span> <span class="k">import</span> <span class="n">MetadataFilter</span>
-<span class="kn">from</span> <span class="nn">traits.observation._named_trait_observer</span> <span class="k">import</span> <span class="n">NamedTraitObserver</span>
-<span class="kn">from</span> <span class="nn">traits.observation._observer_graph</span> <span class="k">import</span> <span class="n">ObserverGraph</span>
-<span class="kn">from</span> <span class="nn">traits.observation._set_item_observer</span> <span class="k">import</span> <span class="n">SetItemObserver</span>
+<span class="kn">from</span> <span class="nn">traits.observation._anytrait_filter</span> <span class="kn">import</span> <span class="n">anytrait_filter</span>
+<span class="kn">from</span> <span class="nn">traits.observation._dict_item_observer</span> <span class="kn">import</span> <span class="n">DictItemObserver</span>
+<span class="kn">from</span> <span class="nn">traits.observation._filtered_trait_observer</span> <span class="kn">import</span> <span class="n">FilteredTraitObserver</span>
+<span class="kn">from</span> <span class="nn">traits.observation._list_item_observer</span> <span class="kn">import</span> <span class="n">ListItemObserver</span>
+<span class="kn">from</span> <span class="nn">traits.observation._metadata_filter</span> <span class="kn">import</span> <span class="n">MetadataFilter</span>
+<span class="kn">from</span> <span class="nn">traits.observation._named_trait_observer</span> <span class="kn">import</span> <span class="n">NamedTraitObserver</span>
+<span class="kn">from</span> <span class="nn">traits.observation._observer_graph</span> <span class="kn">import</span> <span class="n">ObserverGraph</span>
+<span class="kn">from</span> <span class="nn">traits.observation._set_item_observer</span> <span class="kn">import</span> <span class="n">SetItemObserver</span>
+
+
+<span class="c1">#: Maximum number of parsed observer expressions stored in the LRU caches</span>
+<span class="n">_OBSERVER_EXPRESSION_CACHE_MAXSIZE</span> <span class="o">=</span> <span class="mi">256</span>
+
 
 <span class="c1"># ObserverExpression is a public user interface for constructing ObserverGraph.</span>
-
 
 <div class="viewcode-block" id="ObserverExpression"><a class="viewcode-back" href="../../../traits_api_reference/traits.observation.html#traits.observation.expression.ObserverExpression">[docs]</a><span class="k">class</span> <span class="nc">ObserverExpression</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -110,19 +114,9 @@
 <span class="sd">    functions provided in this module, e.g. ``trait``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="ObserverExpression.__eq__"><a class="viewcode-back" href="../../../traits_api_reference/traits.observation.html#traits.observation.expression.ObserverExpression.__eq__">[docs]</a>    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Return true if the other value is an ObserverExpression with</span>
-<span class="sd">        equivalent content.</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
 
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        bool</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">return</span> <span class="kc">False</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_as_graphs</span><span class="p">()</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_as_graphs</span><span class="p">()</span></div>
-
-<div class="viewcode-block" id="ObserverExpression.__or__"><a class="viewcode-back" href="../../../traits_api_reference/traits.observation.html#traits.observation.expression.ObserverExpression.__or__">[docs]</a>    <span class="k">def</span> <span class="nf">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expression</span><span class="p">):</span>
+<div class="viewcode-block" id="ObserverExpression.__or__"><a class="viewcode-back" href="../../../traits_api_reference/traits.observation.html#traits.observation.expression.ObserverExpression.__or__">[docs]</a>    <span class="k">def</span> <span class="fm">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expression</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Create a new expression that matches this expression OR</span>
 <span class="sd">        the given expression.</span>
 
@@ -179,6 +173,23 @@
 <span class="sd">        new_expression : ObserverExpression</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">then</span><span class="p">(</span><span class="n">match</span><span class="p">(</span><span class="nb">filter</span><span class="o">=</span><span class="nb">filter</span><span class="p">,</span> <span class="n">notify</span><span class="o">=</span><span class="n">notify</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="ObserverExpression.anytrait"><a class="viewcode-back" href="../../../traits_api_reference/traits.observation.html#traits.observation.expression.ObserverExpression.anytrait">[docs]</a>    <span class="k">def</span> <span class="nf">anytrait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">notify</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Create a new expression for observing all traits.</span>
+
+<span class="sd">        Events emitted (if any) will be instances of</span>
+<span class="sd">        :class:`~traits.observation.events.TraitChangeEvent`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        notify : bool, optional</span>
+<span class="sd">            Whether to notify for changes. Default is to notify.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        new_expression : ObserverExpression</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="nb">filter</span><span class="o">=</span><span class="n">anytrait_filter</span><span class="p">,</span> <span class="n">notify</span><span class="o">=</span><span class="n">notify</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ObserverExpression.metadata"><a class="viewcode-back" href="../../../traits_api_reference/traits.observation.html#traits.observation.expression.ObserverExpression.metadata">[docs]</a>    <span class="k">def</span> <span class="nf">metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata_name</span><span class="p">,</span> <span class="n">notify</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Return a new expression for observing traits where the given</span>
@@ -339,12 +350,23 @@
     <span class="sd">&quot;&quot;&quot; Container of ObserverExpression for wrapping a single observer.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observer</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">observer</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;_observer&quot;</span><span class="p">,)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observer</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_observer</span> <span class="o">=</span> <span class="n">observer</span>
+
+    <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">((</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_observer</span><span class="p">))</span>
+
+<div class="viewcode-block" id="SingleObserverExpression.__eq__"><a class="viewcode-back" href="../../../traits_api_reference/traits.observation.html#traits.observation.expression.SingleObserverExpression.__eq__">[docs]</a>    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_observer</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_observer</span>
+        <span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_create_graphs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">branches</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[</span>
-            <span class="n">ObserverGraph</span><span class="p">(</span><span class="n">node</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="n">branches</span><span class="p">),</span>
+            <span class="n">ObserverGraph</span><span class="p">(</span><span class="n">node</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_observer</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="n">branches</span><span class="p">),</span>
         <span class="p">]</span></div>
 
 
@@ -359,9 +381,21 @@
 <span class="sd">        Right expression to be joined in series.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">):</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;_first&quot;</span><span class="p">,</span> <span class="s2">&quot;_second&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_first</span> <span class="o">=</span> <span class="n">first</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_second</span> <span class="o">=</span> <span class="n">second</span>
+
+    <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">((</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_first</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_second</span><span class="p">))</span>
+
+<div class="viewcode-block" id="SeriesObserverExpression.__eq__"><a class="viewcode-back" href="../../../traits_api_reference/traits.observation.html#traits.observation.expression.SeriesObserverExpression.__eq__">[docs]</a>    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_first</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_first</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_second</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_second</span>
+        <span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_create_graphs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">branches</span><span class="p">):</span>
         <span class="n">branches</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_second</span><span class="o">.</span><span class="n">_create_graphs</span><span class="p">(</span><span class="n">branches</span><span class="o">=</span><span class="n">branches</span><span class="p">)</span>
@@ -379,9 +413,21 @@
 <span class="sd">        Right expression to be joined in parallel.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;_left&quot;</span><span class="p">,</span> <span class="s2">&quot;_right&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_left</span> <span class="o">=</span> <span class="n">left</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_right</span> <span class="o">=</span> <span class="n">right</span>
+
+    <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">((</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_left</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_right</span><span class="p">))</span>
+
+<div class="viewcode-block" id="ParallelObserverExpression.__eq__"><a class="viewcode-back" href="../../../traits_api_reference/traits.observation.html#traits.observation.expression.ParallelObserverExpression.__eq__">[docs]</a>    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_left</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_left</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_right</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_right</span>
+        <span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_create_graphs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">branches</span><span class="p">):</span>
         <span class="n">left_graphs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_left</span><span class="o">.</span><span class="n">_create_graphs</span><span class="p">(</span><span class="n">branches</span><span class="o">=</span><span class="n">branches</span><span class="p">)</span>
@@ -490,6 +536,21 @@
     <span class="k">return</span> <span class="n">SingleObserverExpression</span><span class="p">(</span><span class="n">observer</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="anytrait"><a class="viewcode-back" href="../../../traits_api_reference/traits.observation.html#traits.observation.expression.anytrait">[docs]</a><span class="k">def</span> <span class="nf">anytrait</span><span class="p">(</span><span class="n">notify</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Create a new expression for observing all traits on an object.</span>
+
+<span class="sd">    Events emitted (if any) will be instances of</span>
+<span class="sd">    :class:`~traits.observation.events.TraitChangeEvent`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    notify : bool, optional</span>
+<span class="sd">        Whether to notify for changes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">observer</span> <span class="o">=</span> <span class="n">FilteredTraitObserver</span><span class="p">(</span><span class="n">notify</span><span class="o">=</span><span class="n">notify</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="n">anytrait_filter</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">SingleObserverExpression</span><span class="p">(</span><span class="n">observer</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="metadata"><a class="viewcode-back" href="../../../traits_api_reference/traits.observation.html#traits.observation.expression.metadata">[docs]</a><span class="k">def</span> <span class="nf">metadata</span><span class="p">(</span><span class="n">metadata_name</span><span class="p">,</span> <span class="n">notify</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Return a new expression for observing traits where the given metadata</span>
 <span class="sd">    is not None.</span>
@@ -565,6 +626,21 @@
     <span class="n">observer</span> <span class="o">=</span> <span class="n">NamedTraitObserver</span><span class="p">(</span>
         <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">notify</span><span class="o">=</span><span class="n">notify</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="n">optional</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">SingleObserverExpression</span><span class="p">(</span><span class="n">observer</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="compile_expr"><a class="viewcode-back" href="../../../traits_api_reference/traits.observation.html#traits.observation.expression.compile_expr">[docs]</a><span class="nd">@functools</span><span class="o">.</span><span class="n">lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="n">_OBSERVER_EXPRESSION_CACHE_MAXSIZE</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">compile_expr</span><span class="p">(</span><span class="n">expr</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Compile an ObserverExpression to a list of ObserverGraphs.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    expr : ObserverExpression</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list of ObserverGraph</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">expr</span><span class="o">.</span><span class="n">_as_graphs</span><span class="p">()</span></div>
 </pre></div>
 
           </div>
@@ -584,7 +660,7 @@
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
         </div>
@@ -606,10 +682,10 @@ All rights reserved.
 
       </li>
       <li>
-      Last updated on Jan 20, 2021.
+      Last updated on Oct 08, 2021.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
       </li>
     </ul>
     </div>

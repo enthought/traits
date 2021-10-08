@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.etsconfig.etsconfig &mdash; Traits 6.2 Documentation</title>
+    <title>traits.etsconfig.etsconfig &mdash; Traits 6.3 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
@@ -13,10 +13,10 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '6.2.0',
+        VERSION:     '6.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        LINK_SUFFIX: '',
+        LINK_SUFFIX: '.html',
         SOURCELINK_SUFFIX: '.txt',
         HAS_SOURCE:  true
       };
@@ -24,13 +24,12 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../_static/language_data.js"></script>
     <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../../genindex.html" >
     <link rel="search" title="Search" href="../../../search.html" >
-    <link rel="top" title="Traits 6.2 Documentation" href="../../../index.html" >
+    <link rel="top" title="Traits 6.3 Documentation" href="../../../index.html" >
     <link rel="up" title="Module code" href="../../index.html" > 
   </head>
   <body>
@@ -48,7 +47,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../../index.html">Traits 6.2 Documentation</a></li>
+        <li class="active"><a href="../../../index.html">Traits 6.3 Documentation</a></li>
 	
           <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -93,8 +92,8 @@
 <span class="c1"># Standard library imports.</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">os</span> <span class="k">import</span> <span class="n">path</span>
-<span class="kn">from</span> <span class="nn">contextlib</span> <span class="k">import</span> <span class="n">contextmanager</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">path</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
 
 
 <span class="k">class</span> <span class="nc">ETSToolkitError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
@@ -109,7 +108,7 @@
 <span class="sd">        The toolkit associated with the error.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">toolkit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">toolkit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">toolkit</span><span class="p">:</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;could not import toolkit &#39;</span><span class="si">{0}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">toolkit</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">toolkit</span> <span class="o">=</span> <span class="n">toolkit</span>
@@ -136,7 +135,7 @@
 
     <span class="c1">#### operator methods #####################################################</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Note that this constructor can only ever be called from within this</span>
         <span class="c1"># module, since we don&#39;t expose the class.</span>
 
@@ -181,12 +180,14 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_application_data</span>
 
-    <span class="k">def</span> <span class="nf">_get_application_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">application_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Property getter, see get_application_data&#39;s docstring.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_application_data</span><span class="p">(</span><span class="n">create</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_set_application_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">application_data</span><span class="p">):</span>
+    <span class="nd">@application_data</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">application_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">application_data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Property setter.</span>
 
@@ -237,14 +238,14 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_application_home</span>
 
-    <span class="n">application_data</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_get_application_data</span><span class="p">,</span> <span class="n">_set_application_data</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">_get_application_home</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">application_home</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Property getter, see get_application_home&#39;s docstring.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_application_home</span><span class="p">(</span><span class="n">create</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_set_application_home</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">application_home</span><span class="p">):</span>
+    <span class="nd">@application_home</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">application_home</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">application_home</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Property setter.</span>
 
@@ -252,9 +253,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_application_home</span> <span class="o">=</span> <span class="n">application_home</span>
 
-    <span class="n">application_home</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_get_application_home</span><span class="p">,</span> <span class="n">_set_application_home</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">_get_company</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">company</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Property getter.</span>
 
@@ -265,15 +265,14 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_company</span>
 
-    <span class="k">def</span> <span class="nf">_set_company</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">company</span><span class="p">):</span>
+    <span class="nd">@company</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">company</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">company</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Property setter for the company name.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_company</span> <span class="o">=</span> <span class="n">company</span>
-
-    <span class="n">company</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_get_company</span><span class="p">,</span> <span class="n">_set_company</span><span class="p">)</span>
 
     <span class="nd">@contextmanager</span>
     <span class="k">def</span> <span class="nf">provisional_toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">toolkit</span><span class="p">):</span>
@@ -307,7 +306,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
             <span class="k">raise</span>
 
-    <span class="k">def</span> <span class="nf">_get_toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Property getter for the GUI toolkit.  The value returned is, in order</span>
 <span class="sd">        of preference: the value set by the application; the value specified by</span>
@@ -320,7 +320,8 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_set_toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">toolkit</span><span class="p">):</span>
+    <span class="nd">@toolkit</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">toolkit</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Property setter for the GUI toolkit.  The toolkit can be set more than</span>
 <span class="sd">        once, but only if it is the same one each time.  An application that is</span>
@@ -337,9 +338,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span> <span class="o">=</span> <span class="n">toolkit</span>
 
-    <span class="n">toolkit</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_get_toolkit</span><span class="p">,</span> <span class="n">_set_toolkit</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">_get_enable_toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">enable_toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Deprecated: This property is no longer used.</span>
 
@@ -348,13 +348,14 @@
 <span class="sd">        specified by the &#39;ENABLE_TOOLKIT&#39; environment variable; otherwise the</span>
 <span class="sd">        empty string.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">warnings</span> <span class="k">import</span> <span class="n">warn</span>
+        <span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
 
         <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Use of the enable_toolkit attribute is deprecated.&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolkit</span>
 
-    <span class="k">def</span> <span class="nf">_set_enable_toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">toolkit</span><span class="p">):</span>
+    <span class="nd">@enable_toolkit</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">enable_toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">toolkit</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Deprecated.</span>
 
@@ -363,13 +364,12 @@
 <span class="sd">        that is written for a particular toolkit can explicitly set it before</span>
 <span class="sd">        any other module that gets the value is imported.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">warnings</span> <span class="k">import</span> <span class="n">warn</span>
+        <span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
 
         <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Use of the enable_toolkit attribute is deprecated.&quot;</span><span class="p">)</span>
 
-    <span class="n">enable_toolkit</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_get_enable_toolkit</span><span class="p">,</span> <span class="n">_set_enable_toolkit</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">_get_kiva_backend</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">kiva_backend</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Property getter for the Kiva backend. The value returned is dependent</span>
 <span class="sd">        on the value of the toolkit property. If toolkit specifies a kiva</span>
@@ -393,18 +393,15 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">_kiva_backend</span> <span class="o">=</span> <span class="p">(</span>
                         <span class="s2">&quot;quartz&quot;</span> <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;darwin&quot;</span> <span class="k">else</span> <span class="s2">&quot;image&quot;</span>
                     <span class="p">)</span>
-                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolkit</span> <span class="o">==</span> <span class="s2">&quot;qt4&quot;</span><span class="p">:</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolkit</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;qt4&quot;</span><span class="p">,</span> <span class="s2">&quot;qt&quot;</span><span class="p">]:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_kiva_backend</span> <span class="o">=</span> <span class="s2">&quot;image&quot;</span>
-                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolkit</span> <span class="o">==</span> <span class="s2">&quot;pyglet&quot;</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_kiva_backend</span> <span class="o">=</span> <span class="s2">&quot;gl&quot;</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_kiva_backend</span> <span class="o">=</span> <span class="s2">&quot;image&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kiva_backend</span>
 
-    <span class="n">kiva_backend</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_get_kiva_backend</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">_get_user_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">user_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Property getter.</span>
 
@@ -420,15 +417,14 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_user_data</span>
 
-    <span class="k">def</span> <span class="nf">_set_user_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_data</span><span class="p">):</span>
+    <span class="nd">@user_data</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">user_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Property setter.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_user_data</span> <span class="o">=</span> <span class="n">user_data</span>
-
-    <span class="n">user_data</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_get_user_data</span><span class="p">,</span> <span class="n">_set_user_data</span><span class="p">)</span>
 
     <span class="c1">#### private methods #####################################################</span>
 
@@ -482,7 +478,7 @@
         <span class="n">parent_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">environment_variable</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">parent_directory</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">parent_directory</span> <span class="o">==</span> <span class="s2">&quot;/root&quot;</span><span class="p">:</span>
             <span class="kn">import</span> <span class="nn">tempfile</span>
-            <span class="kn">from</span> <span class="nn">warnings</span> <span class="k">import</span> <span class="n">warn</span>
+            <span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
 
             <span class="n">parent_directory</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">()</span>
             <span class="n">user</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;USER&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -543,7 +539,7 @@
 
         <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;win32&quot;</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="kn">from</span> <span class="nn">win32com.shell</span> <span class="k">import</span> <span class="n">shell</span><span class="p">,</span> <span class="n">shellcon</span>
+                <span class="kn">from</span> <span class="nn">win32com.shell</span> <span class="kn">import</span> <span class="n">shell</span><span class="p">,</span> <span class="n">shellcon</span>
 
                 <span class="c1"># Due to the fact that the user&#39;s My Documents directory can</span>
                 <span class="c1"># be in some pretty strange places, it&#39;s safest to just ask</span>
@@ -606,7 +602,7 @@
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
         </div>
@@ -628,10 +624,10 @@ All rights reserved.
 
       </li>
       <li>
-      Last updated on Jan 20, 2021.
+      Last updated on Oct 08, 2021.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
       </li>
     </ul>
     </div>

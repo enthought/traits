@@ -494,7 +494,7 @@ To notify about changes to any trait attribute on a class, define a method
 named _anytrait_changed().
 
 .. index::
-   pair: examples; _any_trait_changed()
+   pair: examples; _anytrait_changed()
    pair: static notification; examples
 
 Both of these types of static trait attribute notification methods are
@@ -538,6 +538,17 @@ _anytrait_changed() to be called for that attribute.
 The arguments that are passed to the trait attribute change notification
 method depend on the method signature and on which type of static notification
 handler it is.
+
+.. note::
+    The :func:`~.on_trait_change` and :func:`~.observe` decorators nullify
+    the effect of special naming. A method that looks like::
+
+        @observe("foo")
+        def _foo_changed(self, event):
+            do_something_with(event)
+
+    will only be called once when ``foo`` changes, as a result of the
+    ``observe`` decorator.
 
 .. _attribute-specific-handler-signatures:
 
@@ -703,7 +714,7 @@ handler with the ``[]`` suffix as noted in the Table
 :ref:`semantics-of-extended-name-notation-table`, or you can define an
 *name*\ _items event handler.
 
-For these trait types, an auxilliary *name*\ _items Event trait is defined which
+For these trait types, an auxiliary *name*\ _items Event trait is defined which
 you can listen to either with a static handler _\ *name*\ _items_changed()
 or a dynamic handler which matches *name*\ _items, and these handlers will be
 called with notifications of changes to the contents of the list, set or
