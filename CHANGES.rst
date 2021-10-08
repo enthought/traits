@@ -186,7 +186,7 @@ Fixes
   (#1495)
 * Use of ``add_class_trait`` to add a ``List`` trait was broken in the presence
   of subclasses. This has been fixed. (#1461)
-* A use of the (deprecated) ``distutils`` library has been replcaed with
+* A use of the (deprecated) ``distutils`` library has been replaced with
   ``sysconfig``. (#1452)
 * Dynamic default handing has been fixed in the ``_instance_handler_factory``
   used by the TraitsUI ``TableEditor``. (#1446, #1450)
