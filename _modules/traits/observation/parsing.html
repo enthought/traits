@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>traits.observation.parsing &mdash; Traits 6.3 Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '6.3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        LINK_SUFFIX: '.html',
+        SOURCELINK_SUFFIX: '.txt',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="Traits 6.3 Documentation" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../index.html">Traits 6.3 Documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body" role="main">
+            
+  <h1>Source code for traits.observation.parsing</h1><div class="highlight"><pre>
+<span></span><span class="c1"># (C) Copyright 2005-2021 Enthought, Inc., Austin, TX</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in LICENSE.txt and may be redistributed only under</span>
+<span class="c1"># the conditions described in the aforementioned license. The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1">#</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span>
+
+<span class="kn">from</span> <span class="nn">traits.observation</span> <span class="kn">import</span> <span class="n">_generated_parser</span>
+<span class="kn">import</span> <span class="nn">traits.observation.expression</span> <span class="k">as</span> <span class="nn">expression_module</span>
+
+
+<span class="n">_LARK_PARSER</span> <span class="o">=</span> <span class="n">_generated_parser</span><span class="o">.</span><span class="n">Lark_StandAlone</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">_handle_series</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">notify</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Handle an expression of the form &quot;a.b&quot; or &quot;a:b&quot;.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    trees : list of lark.tree.Tree</span>
+<span class="sd">        The children tree for the &quot;series&quot; rule. It should always</span>
+<span class="sd">        contain exactly three items.</span>
+<span class="sd">    notify : bool</span>
+<span class="sd">        True if the final target should notify, else False.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    expression : ObserverExpression</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">left</span><span class="p">,</span> <span class="n">connector</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">trees</span>
+    <span class="n">notify_left</span> <span class="o">=</span> <span class="n">connector</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="s2">&quot;notify&quot;</span>
+    <span class="k">return</span> <span class="n">_handle_tree</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">notify_left</span><span class="p">)</span><span class="o">.</span><span class="n">then</span><span class="p">(</span><span class="n">_handle_tree</span><span class="p">(</span><span class="n">right</span><span class="p">,</span> <span class="n">notify</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">_handle_parallel</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">notify</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Handle an expression of the form &quot;a, b&quot;.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    trees : list of lark.tree.Tree</span>
+<span class="sd">        The children tree for the &quot;parallel&quot; rule. It should always</span>
+<span class="sd">        contain exactly two items.</span>
+<span class="sd">    notify : bool</span>
+<span class="sd">        True if the final target should notify, else False.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    expression : ObserverExpression</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">trees</span>
+    <span class="k">return</span> <span class="n">_handle_tree</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">notify</span><span class="p">)</span> <span class="o">|</span> <span class="n">_handle_tree</span><span class="p">(</span><span class="n">right</span><span class="p">,</span> <span class="n">notify</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_handle_trait</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">notify</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Handle an element for a named trait.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    trees : list of lark.tree.Tree</span>
+<span class="sd">        The children tree for the &quot;trait&quot; rule.</span>
+<span class="sd">        It contains only one item.</span>
+<span class="sd">    notify : bool</span>
+<span class="sd">        True if the final target should notify, else False.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    expression : ObserverExpression</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">token</span><span class="p">,</span> <span class="o">=</span> <span class="n">trees</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">value</span>
+    <span class="k">return</span> <span class="n">expression_module</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">notify</span><span class="o">=</span><span class="n">notify</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_handle_anytrait</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">notify</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Handle an anytrait element.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    trees : list of lark.tree.Tree</span>
+<span class="sd">        The children tree for the &quot;trait&quot; rule. This should be empty.</span>
+<span class="sd">    notify : bool</span>
+<span class="sd">        True if the final target should notify, else False.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    expression : ObserverExpression</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">expression_module</span><span class="o">.</span><span class="n">anytrait</span><span class="p">(</span><span class="n">notify</span><span class="o">=</span><span class="n">notify</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_handle_metadata</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">notify</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Handle an element for filtering existing metadata.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    trees : list of lark.tree.Tree</span>
+<span class="sd">        The children tree for the &quot;metadata&quot; rule.</span>
+<span class="sd">        It contains only one item.</span>
+<span class="sd">    notify : bool</span>
+<span class="sd">        True if the final target should notify, else False.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    expression : ObserverExpression</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">token</span><span class="p">,</span> <span class="o">=</span> <span class="n">trees</span>
+    <span class="n">metadata_name</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">value</span>
+    <span class="k">return</span> <span class="n">expression_module</span><span class="o">.</span><span class="n">metadata</span><span class="p">(</span><span class="n">metadata_name</span><span class="p">,</span> <span class="n">notify</span><span class="o">=</span><span class="n">notify</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_handle_items</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">notify</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Handle keyword &quot;items&quot;.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    trees : list of lark.tree.Tree</span>
+<span class="sd">        The children tree for the &quot;items&quot; rule.</span>
+<span class="sd">        It should be empty.</span>
+<span class="sd">    notify : bool</span>
+<span class="sd">        True if the final target should notify, else False.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    expression : ObserverExpression</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">trees</span><span class="p">:</span>
+        <span class="c1"># Nothing should be wrapped in items</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unexpected tree: </span><span class="si">{!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">trees</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">expression_module</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="s2">&quot;items&quot;</span><span class="p">,</span> <span class="n">notify</span><span class="o">=</span><span class="n">notify</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="o">|</span> <span class="n">expression_module</span><span class="o">.</span><span class="n">dict_items</span><span class="p">(</span><span class="n">notify</span><span class="o">=</span><span class="n">notify</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="o">|</span> <span class="n">expression_module</span><span class="o">.</span><span class="n">list_items</span><span class="p">(</span><span class="n">notify</span><span class="o">=</span><span class="n">notify</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="o">|</span> <span class="n">expression_module</span><span class="o">.</span><span class="n">set_items</span><span class="p">(</span><span class="n">notify</span><span class="o">=</span><span class="n">notify</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_handle_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">notify</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Handle a tree using the specified rule.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    tree : lark.tree.Tree</span>
+<span class="sd">        Tree to be converted to an ObserverExpression.</span>
+<span class="sd">    notify : bool</span>
+<span class="sd">        True if the final target should notify, else False.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    expression: ObserverExpression</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># All handlers must be callable</span>
+    <span class="c1"># with the signature (list of Tree, notify)</span>
+    <span class="n">handlers</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;series&quot;</span><span class="p">:</span> <span class="n">_handle_series</span><span class="p">,</span>
+        <span class="s2">&quot;series_terminal&quot;</span><span class="p">:</span> <span class="n">_handle_series</span><span class="p">,</span>
+        <span class="s2">&quot;parallel&quot;</span><span class="p">:</span> <span class="n">_handle_parallel</span><span class="p">,</span>
+        <span class="s2">&quot;parallel_terminal&quot;</span><span class="p">:</span> <span class="n">_handle_parallel</span><span class="p">,</span>
+        <span class="s2">&quot;trait&quot;</span><span class="p">:</span> <span class="n">_handle_trait</span><span class="p">,</span>
+        <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="n">_handle_metadata</span><span class="p">,</span>
+        <span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="n">_handle_items</span><span class="p">,</span>
+        <span class="s2">&quot;anytrait&quot;</span><span class="p">:</span> <span class="n">_handle_anytrait</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">handlers</span><span class="p">[</span><span class="n">tree</span><span class="o">.</span><span class="n">data</span><span class="p">](</span><span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">,</span> <span class="n">notify</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="parse"><a class="viewcode-back" href="../../../traits_api_reference/traits.observation.html#traits.observation.parsing.parse">[docs]</a><span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="n">expression_module</span><span class="o">.</span><span class="n">_OBSERVER_EXPRESSION_CACHE_MAXSIZE</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Top-level function for parsing user&#39;s text to an ObserverExpression.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    text : str</span>
+<span class="sd">        Text to be parsed.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    expression : ObserverExpression</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the text is not a valid observe expression.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">_LARK_PARSER</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">_generated_parser</span><span class="o">.</span><span class="n">LarkError</span> <span class="k">as</span> <span class="n">parser_exception</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid expression: </span><span class="si">{</span><span class="n">text</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">parser_exception</span>
+
+    <span class="k">return</span> <span class="n">_handle_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">notify</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="compile_str"><a class="viewcode-back" href="../../../traits_api_reference/traits.observation.html#traits.observation.parsing.compile_str">[docs]</a><span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="n">expression_module</span><span class="o">.</span><span class="n">_OBSERVER_EXPRESSION_CACHE_MAXSIZE</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">compile_str</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Compile a mini-language string to a list of ObserverGraphs.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    text : str</span>
+<span class="sd">        Text to be parsed.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list of ObserverGraph</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">expression_module</span><span class="o">.</span><span class="n">compile_expr</span><span class="p">(</span><span class="n">parse</span><span class="p">(</span><span class="n">text</span><span class="p">))</span></div>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+All rights reserved.
+
+      </li>
+      <li>
+      Last updated on Oct 08, 2021.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>
