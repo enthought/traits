@@ -249,7 +249,7 @@ Build and development workflow
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * Python 3.10 is supported and tested, and wheels are built for Python 3.10.
-  (#1569, #1567, #1425)
+  (#1425, #1567, #1569, #1571)
 * Wheels are now built for Linux/aarch64. (#1567)
 * Universal wheels are now built for macOS, to support Apple Silicon. (#1567)
 * Cron jobs now send failure/success Slack notifications to Enthought's
