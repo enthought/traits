@@ -1,6 +1,265 @@
 Traits CHANGELOG
 ================
 
+Release 6.3.0
+-------------
+
+Released: 2021-10-08
+
+Traits 6.3 is the latest feature release in the Traits 6 series, with several
+improvements and fixes over Traits 6.2.
+
+
+Highlights of this release
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* There have been various minor performance improvements to the core
+  ``on_trait_change`` and ``observe`` machinery. These may improve
+  startup time for some Traits-using applications.
+* The ``observe`` mini-language now has in-language support for listening
+  to all traits, using the ``*`` character.
+* Support for Python 3.10 has been added.
+
+
+Migration guide
+~~~~~~~~~~~~~~~
+
+Traits 6.3 is intended to be fully backwards compatible with Traits 6.2, and
+most projects should have no difficulties upgrading. However, you may see
+some new deprecation warnings for existing code, warning about behaviour
+that will be changed in Traits 7.0. There are two particular sets of changes
+to look out for:
+
+* Starting with Traits 7.0, the ``Any`` trait type will treat a default
+  value of type ``list`` or ``dict`` differently. Currently, instances of
+  ``list`` and ``dict`` are special-cased, and a per-instance copy of the
+  default is provided to each ``HasTraits`` instance. In Traits 7.0, this
+  special-casing will be removed, and the default value will be shared between
+  all instances. For the 6.3 release of Traits, a deprecation warning is issued
+  whenever a trait definition of the form ``Any([1, 2, 3])`` or ``Any({})``
+  is encountered. Users can retain the existing behaviour and suppress the
+  warning by changing their code to use the new ``factory`` argument to the
+  ``Any`` trait type, for example replacing a trait declaration ``foo =
+  Any({})`` with ``foo = Any(factory=dict)``, and a trait declaration ``foo =
+  Any([1, 2, 3])`` with ``foo = Any(factory=list, args=([1, 2, 3],))``.
+
+* Starting with Traits 7.0, the ``Date`` trait type will no longer accept
+  ``datetime`` instances by default. Traits 6.3 will issue a deprecation
+  warning whenever a ``datetime`` instance is assigned as a value for
+  a ``Date`` trait. The existing behaviour can be preserved and the warning
+  silenced by using ``Date(allow_datetime=True)``; alternatively, you can
+  use ``Date(allow_datetime=False)`` to adopt the Traits 7.0 behaviour
+  right now.
+
+
+Detailed PR-by-PR changes
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Over 80 pull requests went into this release. The following people contributed
+to the release:
+
+* 0xflotus
+* Aaron Ayres
+* Kit Choi
+* Mark Dickinson
+* Chigozie Nri
+* Poruri Sai Rahul
+* Corran Webster
+* John Wiggins
+* Peter Zahemszky
+
+Thank you to all who contributed!
+
+
+Features
+~~~~~~~~
+
+* The ``observe`` mini-language now supports use of ``"*"`` for listening to
+  all traits on a ``HasTraits`` object. Currently this support is limited to
+  cases where the ``"*"`` appears in a terminal position. For example,
+  ``observe("foo:*")`` is supported, but ``observe("*:foo")`` is not.
+  (#1496, #1525)
+* The ``Any`` trait type now supports a ``factory`` argument (with accompanying
+  ``args`` and ``kw`` arguments). This can be used to specify a per-instance
+  default, for example with ``Any(factory=dict)``. (#1557, #1558)
+* The ``DefaultValue`` enumeration has a new member ``DefaultValue.disallow``
+  intended to be used for trait types that don't have a meaningful default. For
+  traits using this default value type, an attempt to retrieve the
+  corresponding default using ``default_value_for`` will raise ``ValueError``.
+  (#1546)
+* When a method is decorated with an ``observe`` decorator, the method
+  signature is now checked, and a warning issued if it doesn't match the
+  expected signature. This should catch the common error of forgetting to
+  provide the ``event`` parameter. (#1529)
+* In ``ETSToolkit``, the ``"qt"`` toolkit name is now supported as a synonym
+  for ``"qt4"``. (#1436)
+* The ``Date``, ``Datetime`` and ``Time`` trait types have a new argument
+  ``allow_none``. In the future, these trait types will not accept ``None``
+  unless ``allow_none=True`` is specified. (#1432)
+* The ``Date`` trait type has a new argument ``allow_datetime``. In the future,
+  ``datetime`` instances will not be valid values for a ``Date`` trait unless
+  ``allow_datetime=True`` is specified. (#1429)
+
+
+Performance
+~~~~~~~~~~~
+
+* The ``ObserverGraph`` instances that result from compiling
+  ``ObserverExpression`` objects and observe mini-language strings are now
+  cached. This should speed up creation and instantiation of ``HasTraits``
+  subclasses that involve listening for the same pattern in multiple places.
+  (#1516, #1528)
+* The equality definition on ``ObserverExpression`` has been simplified.
+  (#1517)
+* The ``ObserverExpression``, ``ObserverGraph`` and related
+  classes now use ``__slots__`` to improve speed and memory use. (#1513, #1515)
+* The ``on_trait_change`` method has been sped up by almost a factor of two,
+  by removing unnecessary internal usage of Traits in the parsing and listener
+  functionality. (#1490, #1491, #1492, #1493)
+
+
+Changes
+~~~~~~~
+
+* An invalid static default value in a ``PrefixList`` or ``PrefixMap`` trait
+  declaration now raises ``ValueError`` rather than ``TraitError``. (#1564)
+* ``PrefixList`` and ``PrefixMap`` no longer cache completions. (#1564)
+* A failure to parse an ``observe`` mini-language string now raises
+  ``ValueError`` rather than ``LarkError``. (#1507)
+* The ``NotifierNotFound`` exception is now published in
+  ``traits.observation.api``. (#1498)
+* An attempt to access a nonexistent "dunder" attribute (an attribute whose
+  name starts and ends with "__") on a ``CTrait`` instance will now raise
+  ``AttributeError``. Previously, it would return ``None``. (#1469, #1474,
+  #1477)
+
+
+Deprecations
+~~~~~~~~~~~~
+
+* The ``Any`` trait type currently implicitly makes a per-``HasTraits``-instance
+  copy of the default value if that value is an instance of either ``list`` or
+  ``dict``. This behaviour is deprecated, and will be removed in Traits 7.0.
+  For a per-instance default, use the new ``factory`` argument to ``Any``
+  instead. (#1548, #1532)
+* The ``Date``, ``Datetime`` and ``Time`` trait types will no longer accept
+  ``None`` as a valid trait value in the future. To keep the existing
+  behaviour, use the new ``allow_none`` keyword argument to these trait types.
+  (#1444)
+* The ``Date`` trait type will no longer accept ``datetime`` instances by
+  default in the future. To keep the existing behaviour, use the new
+  ``allow_datetime`` keyword argument. (#1441)
+* The ``Symbol`` trait type is deprecated. For resolution of a string
+  representing a package/module/object combination, use ``import_symbol``
+  instead. (#1542)
+* The ``MetaHasTraits.add_listener`` and ``MetaHasTraits.remove_listener``
+  methods are deprecated. (#1550)
+* The ``clean_filename`` and ``clean_timestamp`` utilities are deprecated. If
+  you need these utilities in your own project, you're advised to copy the
+  code directly into your project. (#1527)
+* The ``find_resource`` and ``store_resource`` functions are deprecated. New
+  code should use ``importlib.resources`` or ``importlib_resources`` instead
+  of either of these functions. (#1501)
+
+
+Fixes
+~~~~~
+
+* Invalid assignments to ``PrefixList`` and ``PrefixMap`` traits produced
+  an unnecessarily nested exception. This has been fixed. (#1564)
+* An ``observe``-decorated listener method whose name has the special form
+  ``"_traitname_changed"`` will no longer be triggered both as as result
+  of the ``observe`` decorator *and* the special naming: it will only be
+  triggered via the ``observe`` decorator. (#1560)
+* The ``delegate`` parameter was mistyped in the typing stubs for the
+  ``Delegate`` trait type. This has been fixed. (#1556)
+* The ``Function`` and ``Method`` trait types will no longer fail when
+  arguments are passed. Note that these trait types are already deprecated, and
+  should not be used in new code. (#1543)
+* Inner traits of a ``Union`` trait are now validated properly. Previously, in
+  trait declarations like ``foo = Union(List(Int), Str)``, the list entries
+  would not be validated. (#1522, #1534)
+* Traits with a dynamic default that appear as inner traits of a ``Tuple``
+  trait are now validated properly. (#1521)
+* A potential race condition in ``ListenerHandler`` has been fixed. The
+  race condition is hard to exercise and has not been witnessed in the wild.
+  (#1495)
+* Use of ``add_class_trait`` to add a ``List`` trait was broken in the presence
+  of subclasses. This has been fixed. (#1461)
+* A use of the (deprecated) ``distutils`` library has been replaced with
+  ``sysconfig``. (#1452)
+* Dynamic default handing has been fixed in the ``_instance_handler_factory``
+  used by the TraitsUI ``TableEditor``. (#1446, #1450)
+* The trait descriptions (the "info" text) for the ``File`` and ``Directory``
+  traits have been fixed to avoid giving a misleading error message when
+  ``exists=True``. (#1440)
+* Clones of ``BaseInstance`` traits didn't correctly respect the ``allow_none``
+  parameter. This is now fixed. (#1433)
+* An outdated reference to the "pyglet" Kiva backend has been removed. (#1431)
+
+
+Documentation
+~~~~~~~~~~~~~
+
+* Brief installation docs have been added. (#1559)
+* Occurrences of ``Any(some_list)`` in docs have been replaced. (#1547)
+* The documentation for ``sync_trait`` has been updated to note that it only
+  synchronises items for ``List`` traits, not for ``Dict`` and ``Set`` traits.
+  (#1519)
+* A configuration file for Read the Docs has been added. (#1478)
+* A ``DeprecationWarning`` arising from an unnecessary override of the
+  ``add_content`` method in the ``TraitDocumenter`` has been fixed. (#1475)
+* The Sphinx version was temporarily pinned to avoid build failures arising
+  from bugs in Sphinx 4.0.1. That pin has since been reverted.
+  (#1471, #1462)
+* Various docstring fixes have been applied. (#1468, #1465)
+* Various typo fixes have been applied. (#1458, #1442)
+* References to ``HasTraits.set`` have been replaced with
+  ``HasTraits.trait_set``. (#1451)
+* Some issues with the tutorial CSS used in the ETS demo application have been
+  fixed; the colour scheme has been changed to Enthought colours. (#1421,
+  #1419)
+
+
+Cleanup and refactoring
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* All built-in TraitType subclasses now provide the default value type directly
+  rather than inferring it. (#1555, #1536, #1531, #1539, #1532, #1540)
+* The ``trait_added`` and ``trait_modified`` traits on ``HasTraits`` now
+  have proper trait type declarations. (#1552)
+* Redundant ``unittest.main blocks`` have been removed. (#1545)
+* Style fixes have been applied to ``trait_types.pyi``. (#1523)
+* ``ObserverExpression`` and other key observation classes now have more
+  debug-friendly ``repr`` implementations. (#1514)
+* The ``observer`` parsing internals have been reworked to make
+  ``ObserverGraph`` the key "compiled" object that the rest of Traits cares
+  about, rather than ``ObserverExpression``. (#1512)
+* The grammar and parser for the observe mini-language have been simplified.
+  (#1506)
+* Confusion between "any_trait" and "anytrait" in non-user-facing
+  functions and classes has been cleaned up. (#1497)
+* Unnecessary ``noqa`` markers have been removed. (#1499)
+* A use of the ``property`` callable has been replaced with a ``property``
+  decorator. (#1470)
+* A bad observe-decorated listener signature in a test has been fixed. (#1530)
+
+
+Build and development workflow
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Python 3.10 is supported and tested, and wheels are built for Python 3.10.
+  (#1425, #1567, #1569, #1571)
+* Wheels are now built for Linux/aarch64. (#1567)
+* Universal wheels are now built for macOS, to support Apple Silicon. (#1567)
+* Cron jobs now send failure/success Slack notifications to Enthought's
+  internal channel. (#1481)
+* All cron jobs now include a ``workflow_dispatch`` trigger. (#1480)
+* The main development branch is now called "main" rather than "master".
+  (#1467)
+* Automated tests have been added for PyPI wheels. (#1417)
+
+
 Release 6.2.0
 -------------
 
