@@ -20,7 +20,7 @@ import setuptools
 # into the package source.
 MAJOR = 6
 MINOR = 3
-MICRO = 0
+MICRO = 1
 PRERELEASE = ""
 IS_RELEASED = False
 
