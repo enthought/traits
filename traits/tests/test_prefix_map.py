@@ -236,3 +236,12 @@ class TestPrefixMap(unittest.TestCase):
         default_value_callable = reconstituted.default_value()[1]
 
         self.assertEqual(default_value_callable(p), 1)
+
+    def test_existence_of__map(self):
+        # This test can be removed once Mayavi no longer depends on the
+        # existence of the _map attribute.
+        # xref: enthought/traits#1577
+        # xref: enthought/mayavi#1094
+
+        prefix_map = PrefixMap({"yes": 1, "yeah": 1, "no": 0, "nah": 0})
+        self.assertEqual(prefix_map._map["yes"], "yes")

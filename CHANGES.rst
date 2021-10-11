@@ -1,6 +1,21 @@
 Traits CHANGELOG
 ================
 
+Release 6.3.1
+-------------
+
+Released: 2021-10-12
+
+Traits 6.3.1 is a bugfix release, fixing an incompatibility between
+Traits 6.3.0 and Mayavi <= 4.7.3.
+
+Fixes
+~~~~~
+
+* Make ``PrefixMap._map`` available again, for compatibility with Mayavi.
+  (#1578)
+
+
 Release 6.3.0
 -------------
 
