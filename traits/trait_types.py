@@ -3294,6 +3294,13 @@ class PrefixMap(TraitType):
         if not map:
             raise ValueError("map must be nonempty")
         self.map = map
+        # Provide backwards compatibility for Mayavi, which currently
+        # subclasses PrefixMap and depends on the existence of the _map
+        # attribute. This attribute can be removed as soon as RevPrefixMap in
+        # Mayavi has been fixed.
+        # xref: enthought/traits#1577
+        # xref: enthought/mayavi#1094
+        self._map = {value: value for value in map}
 
         if default_value is not None:
             default_value = self._complete_value(default_value)
