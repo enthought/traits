@@ -197,7 +197,7 @@ def parse(text):
 
 @lru_cache(maxsize=expression_module._OBSERVER_EXPRESSION_CACHE_MAXSIZE)
 def compile_str(text):
-    """ Compile a mini-language string to a list of ObserverGraphs.
+    """ Compile a mini-language string to a list of ObserverGraph objects.
 
     Parameters
     ----------
