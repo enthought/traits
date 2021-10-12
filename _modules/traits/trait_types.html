@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '6.3.0',
+        VERSION:     '6.3.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -3372,6 +3372,13 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">map</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;map must be nonempty&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">map</span> <span class="o">=</span> <span class="nb">map</span>
+        <span class="c1"># Provide backwards compatibility for Mayavi, which currently</span>
+        <span class="c1"># subclasses PrefixMap and depends on the existence of the _map</span>
+        <span class="c1"># attribute. This attribute can be removed as soon as RevPrefixMap in</span>
+        <span class="c1"># Mayavi has been fixed.</span>
+        <span class="c1"># xref: enthought/traits#1577</span>
+        <span class="c1"># xref: enthought/mayavi#1094</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">value</span><span class="p">:</span> <span class="n">value</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">map</span><span class="p">}</span>
 
         <span class="k">if</span> <span class="n">default_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">default_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_complete_value</span><span class="p">(</span><span class="n">default_value</span><span class="p">)</span>
@@ -5000,7 +5007,7 @@ All rights reserved.
 
       </li>
       <li>
-      Last updated on Oct 08, 2021.
+      Last updated on Oct 12, 2021.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.

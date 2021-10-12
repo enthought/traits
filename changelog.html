@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '6.3.0',
+        VERSION:     '6.3.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -80,6 +80,19 @@
             
   <div class="section" id="traits-changelog">
 <h1>Traits CHANGELOG<a class="headerlink" href="#traits-changelog" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="release-6-3-1">
+<h2>Release 6.3.1<a class="headerlink" href="#release-6-3-1" title="Permalink to this headline">¶</a></h2>
+<p>Released: 2021-10-12</p>
+<p>Traits 6.3.1 is a bugfix release, fixing an incompatibility between
+Traits 6.3.0 and Mayavi &lt;= 4.7.3.</p>
+<div class="section" id="fixes">
+<h3>Fixes<a class="headerlink" href="#fixes" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Make <code class="docutils literal notranslate"><span class="pre">PrefixMap._map</span></code> available again, for compatibility with Mayavi.
+(#1578)</p></li>
+</ul>
+</div>
+</div>
 <div class="section" id="release-6-3-0">
 <h2>Release 6.3.0<a class="headerlink" href="#release-6-3-0" title="Permalink to this headline">¶</a></h2>
 <p>Released: 2021-10-08</p>
@@ -233,8 +246,8 @@ code should use <code class="docutils literal notranslate"><span class="pre">imp
 of either of these functions. (#1501)</p></li>
 </ul>
 </div>
-<div class="section" id="fixes">
-<h3>Fixes<a class="headerlink" href="#fixes" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id1">
+<h3>Fixes<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Invalid assignments to <code class="docutils literal notranslate"><span class="pre">PrefixList</span></code> and <code class="docutils literal notranslate"><span class="pre">PrefixMap</span></code> traits produced
 an unnecessarily nested exception. This has been fixed. (#1564)</p></li>
@@ -341,8 +354,8 @@ suitable for event-driven dataflow programming and for immediate use as models
 for graphical user interfaces, like those provided by the TraitsUI library.</p>
 <p>Traits 6.2 is the latest feature release in the Traits 6 series, with several
 improvements and fixes over Traits 6.1.</p>
-<div class="section" id="id1">
-<h3>Highlights of this release<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id2">
+<h3>Highlights of this release<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>The Traits examples are now distributed as part of the Traits egg, and
 are contributed to the <code class="docutils literal notranslate"><span class="pre">etsdemo</span></code> application. (The latter can be
@@ -359,8 +372,8 @@ something you need that’s not available from one of the <code class="docutils 
 please let the Traits developers know.</p></li>
 </ul>
 </div>
-<div class="section" id="id2">
-<h3>Detailed PR-by-PR changes<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id3">
+<h3>Detailed PR-by-PR changes<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <p>More than 60 PRs went into this release. The following people contributed to
 this release:</p>
 <ul class="simple">
@@ -379,8 +392,8 @@ this release:</p>
 <li><p>Corran Webster</p></li>
 </ul>
 </div>
-<div class="section" id="id3">
-<h3>Features<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h3>Features<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>The <code class="docutils literal notranslate"><span class="pre">Property</span></code> trait type now supports the <code class="docutils literal notranslate"><span class="pre">observe</span></code> keyword. (#1175,
 #1400)</p></li>
@@ -391,16 +404,16 @@ contributed to <code class="docutils literal notranslate"><span class="pre">etsd
 <li><p>The Traits examples package now includes a beginner’s tutorial. (#1061)</p></li>
 </ul>
 </div>
-<div class="section" id="id4">
-<h3>Performance<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h3>Performance<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Parsing of the <code class="docutils literal notranslate"><span class="pre">observe</span></code> string was previously a performance bottleneck.
 This has been fixed, by removing some redundant parsing calls and by caching
 parsing results. (#1343, #1344, #1345)</p></li>
 </ul>
 </div>
-<div class="section" id="id5">
-<h3>Changes<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h3>Changes<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>The <code class="docutils literal notranslate"><span class="pre">NoDefaultSpecified</span></code> constant (used as a default value for
 the <code class="docutils literal notranslate"><span class="pre">TraitType</span></code> <code class="docutils literal notranslate"><span class="pre">default_value</span></code> argument) is now public, made
@@ -419,8 +432,8 @@ the default default value (which used to be <code class="docutils literal notran
 in a <code class="docutils literal notranslate"><span class="pre">List</span></code>, <code class="docutils literal notranslate"><span class="pre">Dict</span></code> or <code class="docutils literal notranslate"><span class="pre">Set</span></code>. (#1165, #1328, #1240)</p></li>
 </ul>
 </div>
-<div class="section" id="id6">
-<h3>Deprecations<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id7">
+<h3>Deprecations<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>The <code class="docutils literal notranslate"><span class="pre">Function</span></code> and <code class="docutils literal notranslate"><span class="pre">Method</span></code> trait types are deprecated. Use
 <code class="docutils literal notranslate"><span class="pre">Callable</span></code> or <code class="docutils literal notranslate"><span class="pre">Instance</span></code> instead. (#1399, #1397)</p></li>
@@ -430,8 +443,8 @@ in a <code class="docutils literal notranslate"><span class="pre">List</span></c
 interface checking has been deprecated. (#1231)</p></li>
 </ul>
 </div>
-<div class="section" id="id7">
-<h3>Fixes<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id8">
+<h3>Fixes<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Non-<code class="docutils literal notranslate"><span class="pre">TraitError</span></code> exceptions raised during <code class="docutils literal notranslate"><span class="pre">Tuple</span></code> validation are now
 propagated. Previously they were converted into <code class="docutils literal notranslate"><span class="pre">TraitError</span></code>. (#1393)</p></li>
@@ -450,8 +463,8 @@ trait. (#1278)</p></li>
 the <code class="docutils literal notranslate"><span class="pre">_TraitChangeCollector</span></code> class. (#1411)</p></li>
 </ul>
 </div>
-<div class="section" id="id8">
-<h3>Documentation<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id9">
+<h3>Documentation<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Add “Tutorial” section to the main documentation, based on the
 new <code class="docutils literal notranslate"><span class="pre">traits.examples</span></code> tutorial content. (#1374)</p></li>
@@ -536,8 +549,8 @@ from PyPI. (#1406)</p></li>
 test-related issues with the Traits 6.1.0 release. There are no API-breaking
 changes in this release. It’s recommended that all users of Traits 6.1.0
 upgrade to Traits 6.1.1.</p>
-<div class="section" id="id9">
-<h3>Fixes<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id10">
+<h3>Fixes<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Don’t mutate global state at import time in a test module. (#1222)</p></li>
 <li><p>Standardize and fix copyright years in source files. (#1227, #1198)</p></li>
@@ -566,8 +579,8 @@ suitable for event-driven dataflow programming and for immediate use as models
 for graphical user interfaces, like those provided by the TraitsUI library.</p>
 <p>Traits 6.1 is the latest feature release in the Traits 6 series, and contains
 several major improvements.</p>
-<div class="section" id="id10">
-<h3>Highlights of this release<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id11">
+<h3>Highlights of this release<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>A new <a class="reference internal" href="traits_api_reference/traits.observation.html#module-traits.observation" title="traits.observation"><code class="xref py py-mod docutils literal notranslate"><span class="pre">observation</span></code></a> framework for observing traited
 attributes and other observable objects has been introduced. This is intended
@@ -677,8 +690,8 @@ present in an object’s <code class="docutils literal notranslate"><span class=
 Avoid using these names for your own traits.</p></li>
 </ul>
 </div>
-<div class="section" id="id11">
-<h3>Detailed PR-by-PR changes<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id12">
+<h3>Detailed PR-by-PR changes<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
 <p>More than 160 PRs went into this release. The following people contributed
 code changes for this release:</p>
 <ul class="simple">
@@ -693,8 +706,8 @@ code changes for this release:</p>
 <li><p>Corran Webster</p></li>
 </ul>
 </div>
-<div class="section" id="id12">
-<h3>Features<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id13">
+<h3>Features<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Add <code class="docutils literal notranslate"><span class="pre">os.PathLike</span></code> support for <code class="docutils literal notranslate"><span class="pre">Directory</span></code> traits. (#867)</p></li>
 <li><p>Add <code class="docutils literal notranslate"><span class="pre">Union</span></code> trait type. (#779, #1103, #1107, #1116, #1115)</p></li>
@@ -718,8 +731,8 @@ changes. (#976, #1000, #1007, #1065, #1023, #1066, #1070, #1069, #1067,
 #1128, #1129, #1135, #1156)</p></li>
 </ul>
 </div>
-<div class="section" id="id13">
-<h3>Changes<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id14">
+<h3>Changes<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>GUI applications using Traits 6.1 will require TraitsUI &gt;= 7.0. (#1134)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">TraitSetEvent</span></code> and <code class="docutils literal notranslate"><span class="pre">TraitDictEvent</span></code> initialization arguments are now
@@ -733,8 +746,8 @@ logging, and the top-level <code class="docutils literal notranslate"><span clas
 (#1161)</p></li>
 </ul>
 </div>
-<div class="section" id="id14">
-<h3>Fixes<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id15">
+<h3>Fixes<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Allow assigning None to <code class="docutils literal notranslate"><span class="pre">CTrait.post_setattr</span></code>. (#833)</p></li>
 <li><p>Fix reference count error. (#907)</p></li>
@@ -753,8 +766,8 @@ subclasses for mapped traits, used by <code class="docutils literal notranslate"
 subclasses for <code class="docutils literal notranslate"><span class="pre">Expression</span></code> and <code class="docutils literal notranslate"><span class="pre">AdaptsTo</span></code>. (#1088, #1119, #1152)</p></li>
 </ul>
 </div>
-<div class="section" id="id15">
-<h3>Deprecations<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id16">
+<h3>Deprecations<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">traits.testing.nose_tools</span></code> is deprecated. (#880)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">SingletonHasTraits</span></code>, <code class="docutils literal notranslate"><span class="pre">SingletonHasStrictTraits</span></code> and
@@ -772,8 +785,8 @@ TraitsUI instead. (#1022)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">traits_super</span></code> is removed. (#1015)</p></li>
 </ul>
 </div>
-<div class="section" id="id16">
-<h3>Documentation<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id17">
+<h3>Documentation<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Add details on creating custom trait properties. (#387)</p></li>
 <li><p>Cross reference special handler signatures for listening to nested attributes
@@ -796,8 +809,8 @@ in list and dict. (#894)</p></li>
 <li><p>Other minor cleanups and fixes. (#949, #1141, #1178)</p></li>
 </ul>
 </div>
-<div class="section" id="id17">
-<h3>Test suite<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id18">
+<h3>Test suite<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Allow tests to be skipped if TraitsUI is not installed. (#1038)</p></li>
 <li><p>Add <code class="docutils literal notranslate"><span class="pre">extras_require</span></code> entry for testing. (#879)</p></li>
@@ -940,8 +953,8 @@ needing some piece of Traits functionality that isn’t exposed in
 Traits bug tracker.</p></li>
 </ul>
 </div>
-<div class="section" id="id18">
-<h3>Features<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id19">
+<h3>Features<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
 <ul>
 <li><p>Add new <code class="docutils literal notranslate"><span class="pre">Datetime</span></code> trait type. (#737, #814, #813, #815, #848)</p></li>
 <li><p>Support Python Enums as value sets for the <code class="docutils literal notranslate"><span class="pre">Enum</span></code> trait. (#685, #828, #855)</p></li>
@@ -990,8 +1003,8 @@ properties: <code class="docutils literal notranslate"><span class="pre">CTrait.
 <code class="docutils literal notranslate"><span class="pre">CTrait.is_mapped</span></code>, and <code class="docutils literal notranslate"><span class="pre">CTrait.comparison_mode</span></code>. (#666, #693)</p></li>
 </ul>
 </div>
-<div class="section" id="id19">
-<h3>Changes<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id20">
+<h3>Changes<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>When pickling a <code class="docutils literal notranslate"><span class="pre">CTrait</span></code>, the <code class="docutils literal notranslate"><span class="pre">py_post_setattr</span></code> and <code class="docutils literal notranslate"><span class="pre">py_validate</span></code>
 fields are pickled directly. Previously, callables for those fields were
@@ -1027,8 +1040,8 @@ available whenever <code class="docutils literal notranslate"><span class="pre">
 (the now removed) <code class="docutils literal notranslate"><span class="pre">ThisClass</span></code>. (#761)</p></li>
 </ul>
 </div>
-<div class="section" id="id20">
-<h3>Fixes<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id21">
+<h3>Fixes<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Fix a use of the unsupported <code class="docutils literal notranslate"><span class="pre">ValidateTrait.int_range</span></code>. (#805)</p></li>
 <li><p>Remove unnecessary <code class="docutils literal notranslate"><span class="pre">copy</span></code> method override from <code class="docutils literal notranslate"><span class="pre">TraitSetObject</span></code>. (#759)</p></li>
@@ -1053,8 +1066,8 @@ value is now <code class="docutils literal notranslate"><span class="pre">1</spa
 <code class="docutils literal notranslate"><span class="pre">ctraits.c</span></code>. (#844)</p></li>
 </ul>
 </div>
-<div class="section" id="id21">
-<h3>Deprecations<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id22">
+<h3>Deprecations<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>The <code class="docutils literal notranslate"><span class="pre">NO_COMPARE</span></code>, <code class="docutils literal notranslate"><span class="pre">OBJECT_IDENTITY_COMPARE</span></code> and <code class="docutils literal notranslate"><span class="pre">RICH_COMPARE</span></code>
 constants are deprecated. Use the corresponding members of the
@@ -1083,8 +1096,8 @@ deprecated. Use <code class="docutils literal notranslate"><span class="pre">CTr
 <code class="docutils literal notranslate"><span class="pre">comparison_mode</span></code> metadata instead. (#598)</p></li>
 </ul>
 </div>
-<div class="section" id="id22">
-<h3>Removals<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id23">
+<h3>Removals<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Python 2 compatibility support code has been removed. (#638, #644)</p></li>
 <li><p>Traits categories have been removed. (#568)</p></li>
@@ -1110,8 +1123,8 @@ from Traits and moved to TraitsUI instead. (#609)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">DictStrLong</span></code> has been removed. (#573)</p></li>
 </ul>
 </div>
-<div class="section" id="id23">
-<h3>Test suite<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id24">
+<h3>Test suite<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Fix various tests to be repeatable. (#802, #729)</p></li>
 <li><p>Fix deprecation warnings in the test suite output. (#820, #804, #716)</p></li>
@@ -1122,8 +1135,8 @@ from Traits and moved to TraitsUI instead. (#609)</p></li>
 <li><p>Other minor test fixes. (#700, #821)</p></li>
 </ul>
 </div>
-<div class="section" id="id24">
-<h3>Documentation<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id25">
+<h3>Documentation<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Improve documentation of trait container objects. (#810)</p></li>
 <li><p>Improve documentation for the <code class="docutils literal notranslate"><span class="pre">traits.ctraits</span></code> module. (#826, #824,
@@ -1139,8 +1152,8 @@ the new one. (#800, #799)</p></li>
 <li><p>Use SVG badges in README (#567)</p></li>
 </ul>
 </div>
-<div class="section" id="id25">
-<h3>Build and continuous integration<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id26">
+<h3>Build and continuous integration<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Enable C asserts in Travis CI runs. (#791)</p></li>
 <li><p>Abort CI on compiler warnings in Travis CI runs. (#769)</p></li>
@@ -1154,8 +1167,8 @@ the new one. (#800, #799)</p></li>
 configuration option. (#696)</p></li>
 </ul>
 </div>
-<div class="section" id="id26">
-<h3>Maintenance and code organization<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id27">
+<h3>Maintenance and code organization<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h3>
 <p>This release includes a lot of refactoring and many minor improvements
 that will primarily benefit those working with the Traits codebase. These
 changes should not affect user-visible functionality. Here’s a summary
@@ -1606,6 +1619,10 @@ been eliminated and normalized (tabs/spaces, line endings).</p></li>
   <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Traits CHANGELOG</a><ul>
+<li><a class="reference internal" href="#release-6-3-1">Release 6.3.1</a><ul>
+<li><a class="reference internal" href="#fixes">Fixes</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#release-6-3-0">Release 6.3.0</a><ul>
 <li><a class="reference internal" href="#highlights-of-this-release">Highlights of this release</a></li>
 <li><a class="reference internal" href="#migration-guide">Migration guide</a></li>
@@ -1614,43 +1631,43 @@ been eliminated and normalized (tabs/spaces, line endings).</p></li>
 <li><a class="reference internal" href="#performance">Performance</a></li>
 <li><a class="reference internal" href="#changes">Changes</a></li>
 <li><a class="reference internal" href="#deprecations">Deprecations</a></li>
-<li><a class="reference internal" href="#fixes">Fixes</a></li>
+<li><a class="reference internal" href="#id1">Fixes</a></li>
 <li><a class="reference internal" href="#documentation">Documentation</a></li>
 <li><a class="reference internal" href="#cleanup-and-refactoring">Cleanup and refactoring</a></li>
 <li><a class="reference internal" href="#build-and-development-workflow">Build and development workflow</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#release-6-2-0">Release 6.2.0</a><ul>
-<li><a class="reference internal" href="#id1">Highlights of this release</a></li>
-<li><a class="reference internal" href="#id2">Detailed PR-by-PR changes</a></li>
-<li><a class="reference internal" href="#id3">Features</a></li>
-<li><a class="reference internal" href="#id4">Performance</a></li>
-<li><a class="reference internal" href="#id5">Changes</a></li>
-<li><a class="reference internal" href="#id6">Deprecations</a></li>
-<li><a class="reference internal" href="#id7">Fixes</a></li>
-<li><a class="reference internal" href="#id8">Documentation</a></li>
+<li><a class="reference internal" href="#id2">Highlights of this release</a></li>
+<li><a class="reference internal" href="#id3">Detailed PR-by-PR changes</a></li>
+<li><a class="reference internal" href="#id4">Features</a></li>
+<li><a class="reference internal" href="#id5">Performance</a></li>
+<li><a class="reference internal" href="#id6">Changes</a></li>
+<li><a class="reference internal" href="#id7">Deprecations</a></li>
+<li><a class="reference internal" href="#id8">Fixes</a></li>
+<li><a class="reference internal" href="#id9">Documentation</a></li>
 <li><a class="reference internal" href="#cleanup-and-other-maintenance">Cleanup and other maintenance</a></li>
 <li><a class="reference internal" href="#test-suite">Test suite</a></li>
 <li><a class="reference internal" href="#build-and-development-workflow-changes">Build and development workflow changes</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#release-6-1-1">Release 6.1.1</a><ul>
-<li><a class="reference internal" href="#id9">Fixes</a></li>
+<li><a class="reference internal" href="#id10">Fixes</a></li>
 <li><a class="reference internal" href="#documentation-fixes">Documentation fixes</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#release-6-1-0">Release 6.1.0</a><ul>
-<li><a class="reference internal" href="#id10">Highlights of this release</a></li>
+<li><a class="reference internal" href="#id11">Highlights of this release</a></li>
 <li><a class="reference internal" href="#notes-on-upgrading">Notes on upgrading</a></li>
 <li><a class="reference internal" href="#pending-deprecations">Pending deprecations</a></li>
-<li><a class="reference internal" href="#id11">Detailed PR-by-PR changes</a></li>
-<li><a class="reference internal" href="#id12">Features</a></li>
-<li><a class="reference internal" href="#id13">Changes</a></li>
-<li><a class="reference internal" href="#id14">Fixes</a></li>
-<li><a class="reference internal" href="#id15">Deprecations</a></li>
+<li><a class="reference internal" href="#id12">Detailed PR-by-PR changes</a></li>
+<li><a class="reference internal" href="#id13">Features</a></li>
+<li><a class="reference internal" href="#id14">Changes</a></li>
+<li><a class="reference internal" href="#id15">Fixes</a></li>
+<li><a class="reference internal" href="#id16">Deprecations</a></li>
 <li><a class="reference internal" href="#removals">Removals</a></li>
-<li><a class="reference internal" href="#id16">Documentation</a></li>
-<li><a class="reference internal" href="#id17">Test suite</a></li>
+<li><a class="reference internal" href="#id17">Documentation</a></li>
+<li><a class="reference internal" href="#id18">Test suite</a></li>
 <li><a class="reference internal" href="#build-and-continuous-integration">Build and continuous integration</a></li>
 <li><a class="reference internal" href="#maintenance-and-code-organization">Maintenance and code organization</a></li>
 </ul>
@@ -1659,15 +1676,15 @@ been eliminated and normalized (tabs/spaces, line endings).</p></li>
 <li><a class="reference internal" href="#release-6-0-0rc0">Release 6.0.0rc0</a><ul>
 <li><a class="reference internal" href="#release-notes">Release notes</a></li>
 <li><a class="reference internal" href="#porting-guide">Porting guide</a></li>
-<li><a class="reference internal" href="#id18">Features</a></li>
-<li><a class="reference internal" href="#id19">Changes</a></li>
-<li><a class="reference internal" href="#id20">Fixes</a></li>
-<li><a class="reference internal" href="#id21">Deprecations</a></li>
-<li><a class="reference internal" href="#id22">Removals</a></li>
-<li><a class="reference internal" href="#id23">Test suite</a></li>
-<li><a class="reference internal" href="#id24">Documentation</a></li>
-<li><a class="reference internal" href="#id25">Build and continuous integration</a></li>
-<li><a class="reference internal" href="#id26">Maintenance and code organization</a></li>
+<li><a class="reference internal" href="#id19">Features</a></li>
+<li><a class="reference internal" href="#id20">Changes</a></li>
+<li><a class="reference internal" href="#id21">Fixes</a></li>
+<li><a class="reference internal" href="#id22">Deprecations</a></li>
+<li><a class="reference internal" href="#id23">Removals</a></li>
+<li><a class="reference internal" href="#id24">Test suite</a></li>
+<li><a class="reference internal" href="#id25">Documentation</a></li>
+<li><a class="reference internal" href="#id26">Build and continuous integration</a></li>
+<li><a class="reference internal" href="#id27">Maintenance and code organization</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#release-5-2-0">Release 5.2.0</a></li>
@@ -1738,7 +1755,7 @@ All rights reserved.
 
       </li>
       <li>
-      Last updated on Oct 08, 2021.
+      Last updated on Oct 12, 2021.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
