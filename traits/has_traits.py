@@ -758,8 +758,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
                 property_name=name,
                 cached=trait.cached,
             )
-            stack = observers.setdefault(name, [])
-            stack.append(observer_state)
+            observers[name] = [observer_state]
 
     # Add processed traits back into class_dict.
     class_dict[BaseTraits] = base_traits
