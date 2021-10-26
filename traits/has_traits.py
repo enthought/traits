@@ -559,8 +559,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
 
             observer_states = getattr(value, "_observe_inputs", None)
             if observer_states is not None:
-                stack = observers.setdefault(name, [])
-                stack.extend(observer_states)
+                observers[name] = observer_states
 
         elif isinstance(value, property):
             class_traits[name] = generic_trait
@@ -613,9 +612,8 @@ def update_traits_class_dict(class_name, bases, class_dict):
 
         # Merge observer information:
         for name, states in base_dict[ObserverTraits].items():
-            if name not in class_traits and name not in class_dict:
-                stack = observers.setdefault(name, [])
-                stack.extend(states)
+            if (name not in class_traits) and (name not in class_dict):
+                observers[name] = states
 
         # Merge base traits:
         for name, value in base_dict.get(BaseTraits).items():
@@ -758,8 +756,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
                 property_name=name,
                 cached=trait.cached,
             )
-            stack = observers.setdefault(name, [])
-            stack.append(observer_state)
+            observers[name] = [observer_state]
 
     # Add processed traits back into class_dict.
     class_dict[BaseTraits] = base_traits
