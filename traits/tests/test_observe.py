@@ -25,6 +25,7 @@ from traits.api import (
     Int,
     List,
     observe,
+    Property,
     Set,
     Str,
     Undefined,
@@ -882,3 +883,26 @@ class TestObserveAnytrait(unittest.TestCase):
 
         # No additional events.
         self.assertEqual(len(events), 2)
+
+    def test_property_subclass_observe(self):
+        # Regression test for enthought/traits#1586
+        class Base(HasTraits):
+            bar = Int()
+
+            foo = Property(Int(), observe="bar")
+
+            def _get_foo(self):
+                return self.bar
+
+        class Derived(Base):
+            pass
+
+        events = []
+
+        obj = Derived(bar=3)
+        obj.observe(events.append, "foo")
+
+        # Changing bar should result in a single event.
+        self.assertEqual(len(events), 0)
+        obj.bar = 5
+        self.assertEqual(len(events), 1)

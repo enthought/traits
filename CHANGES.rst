@@ -1,6 +1,20 @@
 Traits CHANGELOG
 ================
 
+Release 6.3.2
+-------------
+
+Released: XXXX-XX-XX
+
+Traits 6.3.2 is a bugfix release.
+
+Fixes
+~~~~~
+
+* Fix that ``Property`` traits using ``observe`` metadata could be fired
+  twice in subclasses. (#1587)
+
+
 Release 6.3.1
 -------------
 
