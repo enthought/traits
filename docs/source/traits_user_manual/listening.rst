@@ -217,9 +217,9 @@ Semantics
     there's a difference at the implementation level. The ``"+"`` pattern
     registers one trait-level notifier for each trait on the target object,
     while the ``"-"`` pattern registers a single *object*-level notifier on the
-    target object. As a result, an
-    ``on_trait_change(handler, "some_object:-")`` call may be more performant
-    than the corresponding ``on_trait_change(handler, "some_object:+")`` call.
+    target object. As a result, a
+    ``some_object.on_trait_change(handler, "-")`` call may be more performant
+    than the corresponding ``some_object.on_trait_change(handler, "+")`` call.
 
 .. index:: extended trait names; examples
 
