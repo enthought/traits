@@ -200,7 +200,7 @@ Semantics
 |                              |a metadata attribute called *metadata_name*.  |
 +------------------------------+----------------------------------------------+
 |``+``                         |Matches all traits on the object, via         |
-|                              |per-trait notifiers. (See note below.)        |          |
+|                              |per-trait notifiers. (See note below.)        |
 +------------------------------+----------------------------------------------+
 |``-``                         |Matches all traits on the object, via an      |
 |                              |object notifier. (See note below.)            |
