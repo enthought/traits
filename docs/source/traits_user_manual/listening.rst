@@ -199,13 +199,27 @@ Semantics
 |                              |begins with *prefix* and that does *not* have |
 |                              |a metadata attribute called *metadata_name*.  |
 +------------------------------+----------------------------------------------+
-|``+``                         |Matches all traits on the object.             |
+|``+``                         |Matches all traits on the object, via         |
+|                              |per-trait notifiers. (See note below.)        |          |
++------------------------------+----------------------------------------------+
+|``-``                         |Matches all traits on the object, via an      |
+|                              |object notifier. (See note below.)            |
 +------------------------------+----------------------------------------------+
 |*pattern*\ *                  |Matches object graphs where *pattern* occurs  |
 |                              |one or more times. This option is useful for  |
 |                              |setting up listeners on recursive data        |
 |                              |structures like trees or linked lists.        |
 +------------------------------+----------------------------------------------+
+
+.. note::
+    The patterns ``"+"`` and ``"-"`` both match all traits on a ``HasTraits``
+    object. The two patterns behave almost identically, but
+    there's a difference at the implementation level. The ``"+"`` pattern
+    registers one trait-level notifier for each trait on the target object,
+    while the ``"-"`` pattern registers a single *object*-level notifier on the
+    target object. As a result, an ``on_trait_change("some_object:-")`` call
+    may be more performant than the corresponding
+    ``on_trait_change("some_object:+")`` call.
 
 .. index:: extended trait names; examples
 
