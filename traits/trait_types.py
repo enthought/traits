@@ -24,6 +24,7 @@ import uuid
 import warnings
 
 from .constants import DefaultValue, TraitKind, ValidateTrait
+from .ctraits import _number_to_complex
 from .trait_base import (
     strx,
     get_module_name,
@@ -387,13 +388,10 @@ class BaseComplex(TraitType):
 
         Note: The 'fast validator' version performs this check in C.
         """
-        if isinstance(value, complex):
-            return value
-
-        if isinstance(value, (float, int)):
-            return complex(value)
-
-        self.error(object, name, value)
+        try:
+            return _number_to_complex(value)
+        except TypeError:
+            self.error(object, name, value)
 
     def create_editor(self):
         """ Returns the default traits UI editor for this type of trait.
@@ -409,7 +407,7 @@ class Complex(BaseComplex):
     """
 
     #: The C-level fast validator to use:
-    fast_validate = complex_fast_validate
+    fast_validate = (ValidateTrait.complex_number,)
 
 
 class BaseStr(TraitType):
