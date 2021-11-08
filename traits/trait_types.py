@@ -24,7 +24,7 @@ import uuid
 import warnings
 
 from .constants import DefaultValue, TraitKind, ValidateTrait
-from .ctraits import _number_to_float
+from .ctraits import _validate_float
 from .trait_base import (
     strx,
     get_module_name,
@@ -328,7 +328,7 @@ class BaseFloat(TraitType):
         Note: The 'fast validator' version performs this check in C.
         """
         try:
-            return _number_to_float(value)
+            return _validate_float(value)
         except TypeError:
             self.error(object, name, value)
 
@@ -1858,7 +1858,7 @@ class BaseRange(TraitType):
         # error-reporting purposes.
         original_value = value
         try:
-            value = _number_to_float(value)
+            value = _validate_float(value)
         except TypeError:
             self.error(object, name, original_value)
 
