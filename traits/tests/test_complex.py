@@ -29,7 +29,7 @@ class IntegerLike:
 # Python versions < 3.8 don't support conversion of something with __index__
 # to complex.
 try:
-    complex(IntegerLike())
+    complex(IntegerLike(3))
 except TypeError:
     complex_accepts_index = False
 else:
