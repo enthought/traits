@@ -24,7 +24,7 @@ import uuid
 import warnings
 
 from .constants import DefaultValue, TraitKind, ValidateTrait
-from .ctraits import _number_to_complex
+from .ctraits import _validate_complex_number
 from .trait_base import (
     strx,
     get_module_name,
@@ -389,7 +389,7 @@ class BaseComplex(TraitType):
         Note: The 'fast validator' version performs this check in C.
         """
         try:
-            return _number_to_complex(value)
+            return _validate_complex_number(value)
         except TypeError:
             self.error(object, name, value)
 

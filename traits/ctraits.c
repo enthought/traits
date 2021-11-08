@@ -3377,7 +3377,7 @@ as_float(PyObject *value)
 */
 
 static PyObject *
-number_to_complex(PyObject *value)
+validate_complex_number(PyObject *value)
 {
     Py_complex value_as_complex;
 
@@ -3396,9 +3396,9 @@ number_to_complex(PyObject *value)
 }
 
 static PyObject *
-_ctraits_number_to_complex(PyObject *self, PyObject *value)
+_ctraits_validate_complex_number(PyObject *self, PyObject *value)
 {
-    return number_to_complex(value);
+    return validate_complex_number(value);
 }
 
 /*-----------------------------------------------------------------------------
@@ -3445,7 +3445,7 @@ validate_trait_complex_number(
     trait_object *trait, has_traits_object *obj, PyObject *name,
     PyObject *value)
 {
-    PyObject *result = number_to_complex(value);
+    PyObject *result = validate_complex_number(value);
     /* A TypeError represents a type validation failure, and should be
        re-raised as a TraitError. Other exceptions should be propagated. */
     if (result == NULL && PyErr_ExceptionMatches(PyExc_TypeError)) {
@@ -4228,7 +4228,7 @@ validate_trait_complex(
                 /* A TypeError indicates that we don't have a match.
                    Clear the error and continue with the next item
                    in the complex sequence. */
-                result = number_to_complex(value);
+                result = validate_complex_number(value);
                 if (result == NULL
                     && PyErr_ExceptionMatches(PyExc_TypeError)) {
                     PyErr_Clear();
@@ -5639,8 +5639,8 @@ _ctraits_ctrait(PyObject *self, PyObject *args)
 
 
 PyDoc_STRVAR(
-    _ctraits_number_to_complex_doc,
-    "_number_to_complex(number)\n"
+    _ctraits_validate_complex_number_doc,
+    "_validate_complex_number(number)\n"
     "\n"
     "Return *number* converted to a complex number. Raise TypeError if \n"
     "conversion is not possible.\n"
@@ -5654,8 +5654,8 @@ static PyMethodDef ctraits_methods[] = {
      PyDoc_STR("_adapt(adaptation_function)")},
     {"_ctrait", (PyCFunction)_ctraits_ctrait, METH_VARARGS,
      PyDoc_STR("_ctrait(CTrait_class)")},
-    {"_number_to_complex", (PyCFunction)_ctraits_number_to_complex, METH_O,
-     _ctraits_number_to_complex_doc},
+    {"_validate_complex_number", (PyCFunction)_ctraits_validate_complex_number, METH_O,
+     _ctraits_validate_complex_number_doc},
     {NULL, NULL},
 };
 
