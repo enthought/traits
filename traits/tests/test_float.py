@@ -27,7 +27,7 @@ class IntegerLike:
 
 
 # Python versions < 3.8 don't support conversion of something with __index__
-# to complex.
+# to float.
 try:
     float(IntegerLike(3))
 except TypeError:
