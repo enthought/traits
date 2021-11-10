@@ -4,9 +4,11 @@ Traits CHANGELOG
 Release 6.3.2
 -------------
 
-Released: XXXX-XX-XX
+Released: 2021-11-10
 
-Traits 6.3.2 is a bugfix release.
+Traits 6.3.2 is a bugfix release, fixing an issue with duplicate
+notifications from ``Property`` traits using the ``observe`` framework.
+
 
 Fixes
 ~~~~~
