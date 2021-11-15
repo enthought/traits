@@ -109,6 +109,9 @@ class ValidateTrait(IntEnum):
     #: A callable check.
     callable = 22
 
+    #: A complex number check.
+    complex_number = 23
+
 
 class ComparisonMode(IntEnum):
     """ Comparison mode.

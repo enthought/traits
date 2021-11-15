@@ -3391,6 +3391,77 @@ validate_trait_float(
 }
 
 /*
+   Convert a complex-number-like Python object to a complex number.
+
+   Returns a new object of exact type complex, or raises TypeError
+   if the given object cannot be converted to a complex number.
+
+   Here complex-number-like means:
+
+   - is an instance of complex, or
+   - can be converted to a a complex number via its type's __complex__ method,
+     or
+   - can be converted to a float via its type's __float__ method, or
+   - (for Python >= 3.8) can be converted to an int via its type's __index__
+     method.
+
+   In other words, these should be exactly the Python objects that are
+   accepted by the standard functions in the cmath module.
+*/
+
+static PyObject *
+validate_complex_number(PyObject *value)
+{
+    Py_complex value_as_complex;
+
+    /* Fast path for common case. */
+    if (PyComplex_CheckExact(value)) {
+        Py_INCREF(value);
+        return value;
+    }
+
+    /* General case: defer to the machinations of PyComplex_AsCComplex. */
+    value_as_complex = PyComplex_AsCComplex(value);
+    if (value_as_complex.real == -1.0 && PyErr_Occurred()) {
+        return NULL;
+    }
+    return PyComplex_FromCComplex(value_as_complex);
+}
+
+static PyObject *
+_ctraits_validate_complex_number(PyObject *self, PyObject *value)
+{
+    return validate_complex_number(value);
+}
+
+/*-----------------------------------------------------------------------------
+|  Verifies that a Python value is convertible to a complex number.
+|
+|  Will convert anything whose type has a __complex__, __float__ or (for
+|  Python >= 3.8) __index__ method to a Python complex number. Returns a Python
+|  object of exact type "complex". Raises TraitError with a suitable message if
+|  the given value isn't convertible to a complex number.
+|
+|  Any exception other than TypeError raised by any of the special methods
+|  will be propagated. A TypeError will be caught and turned into TraitError.
++----------------------------------------------------------------------------*/
+
+static PyObject *
+validate_trait_complex_number(
+    trait_object *trait, has_traits_object *obj, PyObject *name,
+    PyObject *value)
+{
+    PyObject *result = validate_complex_number(value);
+    /* A TypeError represents a type validation failure, and should be
+       re-raised as a TraitError. Other exceptions should be propagated. */
+    if (result == NULL && PyErr_ExceptionMatches(PyExc_TypeError)) {
+        PyErr_Clear();
+        return raise_trait_error(trait, obj, name, value);
+    }
+    return result;
+}
+
+/*
    Determine whether `value` lies in the range specified by `range_info`.
 
    * `value` must be of exact type float.
@@ -4159,6 +4230,18 @@ validate_trait_complex(
                     break;
                 }
 
+            case 23: /* Complex number check */
+                /* A TypeError indicates that we don't have a match.
+                   Clear the error and continue with the next item
+                   in the complex sequence. */
+                result = validate_complex_number(value);
+                if (result == NULL
+                    && PyErr_ExceptionMatches(PyExc_TypeError)) {
+                    PyErr_Clear();
+                    break;
+                }
+                return result;
+
             default: /* Should never happen...indicates an internal error: */
                 assert(0);  /* invalid validation type */
                 goto error;
@@ -4198,6 +4281,7 @@ static trait_validate validate_handlers[] = {
     validate_trait_integer, /* case 20: Integer check */
     validate_trait_float,   /* case 21: Float check */
     validate_trait_callable,   /* case 22: Callable check */
+    validate_trait_complex_number,  /* case 23: Complex number check */
 };
 
 static PyObject *
@@ -4354,6 +4438,12 @@ _trait_set_validate(trait_object *trait, PyObject *args)
 
                 case 22: /* Callable check: */
                     if (n == 1 || n == 2) {
+                        goto done;
+                    }
+                    break;
+
+                case 23: /* Complex check: */
+                    if (n == 1) {
                         goto done;
                     }
                     break;
@@ -5553,12 +5643,19 @@ _ctraits_ctrait(PyObject *self, PyObject *args)
 |  'CTrait' instance methods:
 +----------------------------------------------------------------------------*/
 
-
 PyDoc_STRVAR(
     _ctraits_validate_float_doc,
     "_validate_float(number)\n"
     "\n"
     "Return *number* converted to a float. Raise TypeError if \n"
+    "conversion is not possible.\n"
+);
+
+PyDoc_STRVAR(
+    _ctraits_validate_complex_number_doc,
+    "_validate_complex_number(number)\n"
+    "\n"
+    "Return *number* converted to a complex number. Raise TypeError if \n"
     "conversion is not possible.\n"
 );
 
@@ -5572,6 +5669,8 @@ static PyMethodDef ctraits_methods[] = {
      PyDoc_STR("_ctrait(CTrait_class)")},
     {"_validate_float", (PyCFunction)_ctraits_validate_float, METH_O,
      _ctraits_validate_float_doc},
+    {"_validate_complex_number", (PyCFunction)_ctraits_validate_complex_number,
+     METH_O, _ctraits_validate_complex_number_doc},
     {NULL, NULL},
 };
 
