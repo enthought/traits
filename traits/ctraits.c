@@ -3339,7 +3339,7 @@ validate_trait_integer(
 */
 
 static PyObject *
-as_float(PyObject *value)
+validate_float(PyObject *value)
 {
     double value_as_double;
 
@@ -3355,6 +3355,12 @@ as_float(PyObject *value)
         return NULL;
     }
     return PyFloat_FromDouble(value_as_double);
+}
+
+static PyObject *
+_ctraits_validate_float(PyObject *self, PyObject *value)
+{
+    return validate_float(value);
 }
 
 /*-----------------------------------------------------------------------------
@@ -3374,7 +3380,7 @@ validate_trait_float(
     trait_object *trait, has_traits_object *obj, PyObject *name,
     PyObject *value)
 {
-    PyObject *result = as_float(value);
+    PyObject *result = validate_float(value);
     /* A TypeError represents a type validation failure, and should be
        re-raised as a TraitError. Other exceptions should be propagated. */
     if (result == NULL && PyErr_ExceptionMatches(PyExc_TypeError)) {
@@ -3450,7 +3456,7 @@ validate_trait_float_range(
     PyObject *result;
     int in_range;
 
-    result = as_float(value);
+    result = validate_float(value);
     if (result == NULL) {
         if (PyErr_ExceptionMatches(PyExc_TypeError)) {
             /* Reraise any TypeError as a TraitError. */
@@ -3914,7 +3920,7 @@ validate_trait_complex(
                 break;
 
             case 4: /* Floating point range check: */
-                result = as_float(value);
+                result = validate_float(value);
                 if (result == NULL) {
                     if (PyErr_ExceptionMatches(PyExc_TypeError)) {
                         /* A TypeError should ultimately get re-raised
@@ -4132,7 +4138,7 @@ validate_trait_complex(
                 /* A TypeError indicates that we don't have a match.
                    Clear the error and continue with the next item
                    in the complex sequence. */
-                result = as_float(value);
+                result = validate_float(value);
                 if (result == NULL
                     && PyErr_ExceptionMatches(PyExc_TypeError)) {
                     PyErr_Clear();
@@ -5547,6 +5553,15 @@ _ctraits_ctrait(PyObject *self, PyObject *args)
 |  'CTrait' instance methods:
 +----------------------------------------------------------------------------*/
 
+
+PyDoc_STRVAR(
+    _ctraits_validate_float_doc,
+    "_validate_float(number)\n"
+    "\n"
+    "Return *number* converted to a float. Raise TypeError if \n"
+    "conversion is not possible.\n"
+);
+
 static PyMethodDef ctraits_methods[] = {
     {"_list_classes", (PyCFunction)_ctraits_list_classes, METH_VARARGS,
      PyDoc_STR(
@@ -5555,6 +5570,8 @@ static PyMethodDef ctraits_methods[] = {
      PyDoc_STR("_adapt(adaptation_function)")},
     {"_ctrait", (PyCFunction)_ctraits_ctrait, METH_VARARGS,
      PyDoc_STR("_ctrait(CTrait_class)")},
+    {"_validate_float", (PyCFunction)_ctraits_validate_float, METH_O,
+     _ctraits_validate_float_doc},
     {NULL, NULL},
 };
 

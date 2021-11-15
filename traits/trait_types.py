@@ -24,6 +24,7 @@ import uuid
 import warnings
 
 from .constants import DefaultValue, TraitKind, ValidateTrait
+from .ctraits import _validate_float
 from .trait_base import (
     strx,
     get_module_name,
@@ -167,20 +168,6 @@ def _validate_int(value):
         return value
     else:
         return int(operator.index(value))
-
-
-def _validate_float(value):
-    """ Convert an arbitrary Python object to a float, or raise TypeError.
-    """
-    if type(value) is float:  # fast path for common case
-        return value
-    try:
-        nb_float = type(value).__float__
-    except AttributeError:
-        raise TypeError(
-            "Object of type {!r} not convertible to float".format(type(value))
-        )
-    return nb_float(value)
 
 
 # Trait Types
