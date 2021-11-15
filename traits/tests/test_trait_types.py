@@ -53,10 +53,10 @@ class TraitTypesTest(unittest.TestCase):
         # If 'numpy' is available, the numpy validators should be loaded,
         # even if numpy is imported after traits.
         test_script = textwrap.dedent("""
-            from traits.trait_types import float_fast_validate
+            from traits.trait_types import bool_fast_validate
             import numpy
 
-            if numpy.floating in float_fast_validate:
+            if numpy.bool_ in bool_fast_validate:
                 print("Success")
             else:
                 print("Failure")

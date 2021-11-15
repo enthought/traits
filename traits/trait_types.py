@@ -95,35 +95,13 @@ SetTypes = SequenceTypes + (set,)
 
 try:
     # The numpy enhanced definitions:
-    from numpy import integer, floating, complexfloating, bool_
+    from numpy import bool_
 
-    int_fast_validate = (ValidateTrait.coerce, int, integer)
-    float_fast_validate = (
-        ValidateTrait.coerce,
-        float,
-        floating,
-        None,
-        int,
-        integer,
-    )
-    complex_fast_validate = (
-        ValidateTrait.coerce,
-        complex,
-        complexfloating,
-        None,
-        float,
-        floating,
-        int,
-        integer,
-    )
     bool_fast_validate = (ValidateTrait.coerce, bool, None, bool_)
     # Tuple or single type suitable for an isinstance check.
     _BOOL_TYPES = (bool, bool_)
 except ImportError:
     # The standard python definitions (without numpy):
-    int_fast_validate = (ValidateTrait.coerce, int)
-    float_fast_validate = (ValidateTrait.coerce, float, None, int)
-    complex_fast_validate = (ValidateTrait.coerce, complex, None, float, int)
     bool_fast_validate = (ValidateTrait.coerce, bool)
     # Tuple or single type suitable for an isinstance check.
     _BOOL_TYPES = bool

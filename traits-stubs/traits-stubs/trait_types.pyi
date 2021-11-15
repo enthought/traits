@@ -27,9 +27,6 @@ from uuid import UUID as _UUID
 from .trait_type import _TraitType
 
 SetTypes: _Any
-int_fast_validate: _Any
-float_fast_validate: _Any
-complex_fast_validate: _Any
 bool_fast_validate: _Any
 
 
