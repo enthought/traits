@@ -61,10 +61,8 @@ a developer's purpose.
 Changing This File
 ------------------
 
-To change the packages installed during a test run, change the dependencies
-variable below.  To install a package from github, or one which is not yet
-available via EDM, add it to the `ci-src-requirements.txt` file (these will be
-installed by `pip`).
+To change the packages installed during a test run, change the
+``common_dependencies`` variable below.
 
 Other changes to commands should be a straightforward change to the listed
 commands for each task. See the EDM documentation for more information about
