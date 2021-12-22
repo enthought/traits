@@ -4,6 +4,9 @@ on:
 - pull_request
 - workflow_dispatch
 
+env:
+  QT_MAC_WANTS_LAYER: 1
+
 jobs:
   tests:
     strategy:
