@@ -913,7 +913,7 @@ class TestHasTraitsObserveHook(unittest.TestCase):
         self.assertEqual(len(instance.events), 1)
 
     def test_observer_overridden(self):
-        # The handler is overriden, no change event should be registered.
+        # The handler is overridden, no change event should be registered.
         class BaseClass(HasTraits):
             events = List()
 
@@ -921,11 +921,11 @@ class TestHasTraitsObserveHook(unittest.TestCase):
             def handler(self, event):
                 self.events.append(event)
 
-        class SubclassOverriden(BaseClass):
+        class SubclassOverridden(BaseClass):
             value = Int()
             handler = None
 
-        instance = SubclassOverriden()
+        instance = SubclassOverridden()
         instance.value += 1
         self.assertEqual(len(instance.events), 0)
 
