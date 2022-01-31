@@ -1484,7 +1484,7 @@ Fixes
 
 * Fix race condition when removing a traits listener. (#57)
 * Fix ugly interaction between DelegatesTo change handlers, dynamic change
-  handlers and two levels of dynamic intialization. (#63)
+  handlers and two levels of dynamic initialization. (#63)
 * Use a NullHandler for all 'traits' loggers. (#64)
 * Fix race condition in TraitChangeNotifyWrapper.listener_deleted (#66)
 * Fix leaking notifiers. (#68)
