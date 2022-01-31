@@ -276,7 +276,7 @@ def get_property_simple_timing(property_args, cached_property):
     """ Time the cases described by the (cached) property depending on a simple
     trait scenario.  Whether or not the property is cached is based on the
     cached_property argument, and the given property_args argument is used in
-    the Property trait defintion.
+    the Property trait definition.
 
     Parameters
     ----------
@@ -373,7 +373,7 @@ def get_property_extended_timing(property_args, cached_property):
     """ Time the cases described by the (cached) property depending on an
     extended trait scenario. Wether or not the property is cached is determined
     by the cached_property argument, and the given property_args argument is
-    used for the Property trait defintion.
+    used for the Property trait definition.
 
     Parameters
     ----------

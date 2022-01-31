@@ -12,7 +12,7 @@
 
 The CTrait class extends the C-level cTrait type to provide the full CTrait
 API. CTraits are the core objects that are used to generate defaults and
-validate as well as maintining a list of notifiers and calling them when
+validate as well as maintaining a list of notifiers and calling them when
 values are modified.
 """
 
