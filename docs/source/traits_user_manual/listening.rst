@@ -314,12 +314,14 @@ These signatures use the following parameters:
 .. index:: new parameter to the notification handlers
 
 * *new*: The new value of the trait attribute that changed. For changes to
-  List and Dict objects, this is a list of items that were added.
+  List and Dict objects, this is a list of items that were added. For changes
+  to Set objects, this is a set of items that were added.
 
 .. index:: old parameter to the notification handlers
 
 * *old*: The old value of the trait attribute that changed. For changes to List
-  and Dict object, this is a list of items that were deleted. For event traits,
+  and Dict object, this is a list of items that were deleted. For changes to
+  Set objects, this is a set of items that were deleted. For event traits,
   this is Undefined.
 
 If the handler is a bound method, it also implicitly has *self* as a first
