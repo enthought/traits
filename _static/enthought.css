@@ -32,35 +32,35 @@
 }
 
 @font-face{
-  font-family: 'Source Sans Pro';
+  font-family: 'Poppins';
   font-weight: 400;
   font-style: normal;
   font-stretch: normal;
-  src: local('Source Sans Pro'), local('SourceSansPro-Regular'), url('fonts/SourceSansPro-Regular.otf.woff') format('woff');
+  src: local('Poppins'), local('Poppins-Regular'), url('fonts/poppins-v19-latin-regular.woff2') format('woff2');
 }
 
 @font-face{
-  font-family: 'Source Sans Pro';
+  font-family: 'Poppins';
   font-weight: 600;
   font-style: normal;
   font-stretch: normal;
-  src: local('Source Sans Pro Semibold'), local('SourceSansPro-Semibold'), url('fonts/SourceSansPro-Semibold.otf.woff') format('woff');
+  src: local('Poppins Semibold'), local('Poppins-SemiBold'), url('fonts/poppins-v19-latin-600.woff2') format('woff2');
 }
 
 @font-face{
-  font-family: 'Source Sans Pro';
+  font-family: 'Poppins';
   font-weight: 400;
   font-style: italic;
   font-stretch: normal;
-  src: local('Source Sans Pro Italic'), local('SourceSansPro-It'), url('fonts/SourceSansPro-It.otf.woff') format('woff');
+  src: local('Poppins Italic'), local('Poppins-Italic'), url('fonts/poppins-v19-latin-italic.woff2') format('woff2');
 }
 
 @font-face{
-  font-family: 'Source Sans Pro';
+  font-family: 'Poppins';
   font-weight: 600;
   font-style: italic;
   font-stretch: normal;
-  src: local('Source Sans Pro Semibold Italic'), local('SourceSansPro-SemiboldIt'), url('fonts/SourceSansPro-SemiboldIt.otf.woff') format('woff');
+  src: local('Poppins Semibold Italic'), local('Poppins-SemiBoldItalic'), url('fonts/poppins-v19-latin-600italic.woff2') format('woff2');
 }
 
 /*
@@ -192,7 +192,7 @@ pre {
 .nav-pills > .active > a:hover,
 .nav-pills > .active > a:focus {
   color: #ffffff;
-  background-color: #253370;
+  background-color: #0f384d;
 }
 
 .nav-pills.pull-right > li {
@@ -200,7 +200,7 @@ pre {
 }
 
 a {
-  color: #253370;
+  color: #00767c;
   text-decoration: none;
 }
 
@@ -295,12 +295,12 @@ form.search > input[type="text"] {
  * Headers
  */
 
-h1 a { color: #333333; }
-h2 a { color: #333333; }
-h3 a { color: #333333; }
-h4 a { color: #333333; }
-h5 a { color: #333333; }
-h6 a { color: #333333; }
+h1 a { color: #00767c; }
+h2 a { color: #00767c; }
+h3 a { color: #58b1bf; }
+h4 a { color: #58b1bf; }
+h5 a { color: #58b1bf; }
+h6 a { color: #58b1bf; }
 
 h1 tt { font: inherit; border-bottom: none; }
 h2 tt { font: inherit; border-bottom: none; }
@@ -310,17 +310,17 @@ h5 tt { font: inherit; border-bottom: none; }
 h6 tt { font: inherit; border-bottom: none; }
 
 div#spc-section-body h1, h2, h3, h4, h5, h6{
-    color: #444444;
+    color: #00767c;
     font-weight: normal;
     border-bottom: 0px solid #656565;
     margin-bottom: 0.5em;
 }
-div#spc-section-body h1 { font-size: 200%; font-weight: bold; color: #333333; }
-div#spc-section-body h2 { font-size: 160%; font-weight: bold; }
-div#spc-section-body h3 { font-size: 140%; }
-div#spc-section-body h4 { font-size: 120%; border-bottom: none; }
-div#spc-section-body h5 { font-size: 110%; border-bottom: none; }
-div#spc-section-body h6 { font-size: 100%; border-bottom: none; }
+div#spc-section-body h1 { font-size: 200%; font-weight: bold; color: #0f384d; }
+div#spc-section-body h2 { font-size: 160%; font-weight: bold; color: #0f384d; }
+div#spc-section-body h3 { font-size: 140%; color: #00767c; }
+div#spc-section-body h4 { font-size: 120%; border-bottom: none; color: #00767c; }
+div#spc-section-body h5 { font-size: 110%; border-bottom: none; color: #00767c; }
+div#spc-section-body h6 { font-size: 100%; border-bottom: none; color: #00767c; }
 
 /* Styling for hyperlinks */
 div#spc-section-body a{
@@ -336,7 +336,7 @@ div#spc-section-body .align-center{
 }
 
 p.rubric {
-    color: #333333;
+    color: #58b1bf;
     font-size: 120%;
     font-weight: normal;
     border-bottom: 1px solid #DDDDDD;
@@ -385,8 +385,8 @@ p.admonition-title:after {
 }
 
 div.seealso {
-    background-color: #ffc;
-    border: 1px solid #ff6;
+    background-color: #d9d8d7;
+    border: 1px solid #0f384d;
 }
 
 div.seealso dt {
@@ -402,11 +402,19 @@ div.seealso dd {
 }
 
 div.warning {
-    background-color: #ffe4e4;
+    background-color: #e6d358;
     border: 1px solid #f66;
 }
 
 div.note {
-    background-color: #eee;
-    border: 1px solid #ccc;
+    background-color: #d9d8d7;
+    border: 1px solid #0f384d;
+}
+
+.label {
+    background=color: #add3db;
+}
+
+:not(li) > ul > li:first-child > :first-child {
+    margin-top: 2px;
 }
