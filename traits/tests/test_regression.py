@@ -311,6 +311,8 @@ class TestRegression(unittest.TestCase):
             a.bar = "foo"
 
     def test_clone_list_of_enum_trait(self):
+        # Regression test for enthought/traits#1622.
+
         class Company(HasTraits):
             departments = List(Str)
             projects = List(Enum(values="departments"))
