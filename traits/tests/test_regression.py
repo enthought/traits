@@ -28,6 +28,7 @@ from traits.trait_types import (
     DelegatesTo,
     Dict,
     Either,
+    Enum,
     Instance,
     Int,
     List,
@@ -308,6 +309,16 @@ class TestRegression(unittest.TestCase):
 
         with self.assertRaises(ZeroDivisionError):
             a.bar = "foo"
+
+    def test_clone_list_of_enum_trait(self):
+        class Company(HasTraits):
+            departments = List(Str)
+            projects = List(Enum(values="departments"))
+
+        company = Company(departments=["sales"], projects=["sales"])
+        clone = company.clone_traits()
+
+        self.assertEqual(clone.projects, ["sales"])
 
 
 class NestedContainerClass(HasTraits):

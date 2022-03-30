@@ -14,7 +14,7 @@ from unittest import mock
 from traits.api import HasTraits, Set, Str
 from traits.trait_base import _validate_everything
 from traits.trait_errors import TraitError
-from traits.trait_set_object import TraitSet, TraitSetEvent
+from traits.trait_set_object import TraitSet, TraitSetEvent, TraitSetObject
 from traits.trait_types import _validate_int
 
 
@@ -516,6 +516,18 @@ class TestTraitSetObject(unittest.TestCase):
 
         # then
         notifier.assert_not_called()
+
+    def test_disconnected_set(self):
+        # Objects that are disconnected from their HasTraits "owner" can arise
+        # as a result of clone_traits operations, or of serialization and
+        # deserialization.
+        disconnected = TraitSetObject(
+            trait=Set(Str),
+            object=None,
+            name="foo",
+            value=set(),
+        )
+        self.assertEqual(disconnected.object(), None)
 
 
 class TestTraitSetEvent(unittest.TestCase):

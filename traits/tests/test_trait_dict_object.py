@@ -455,3 +455,15 @@ class TestTraitDictEvent(unittest.TestCase):
         differnt_name_subclass = DifferentName()
         self.assertEqual(desired_repr, str(differnt_name_subclass))
         self.assertEqual(desired_repr, repr(differnt_name_subclass))
+
+    def test_disconnected_dict(self):
+        # Objects that are disconnected from their HasTraits "owner" can arise
+        # as a result of clone_traits operations, or of serialization and
+        # deserialization.
+        disconnected = TraitDictObject(
+            trait=Dict(Str, Str),
+            object=None,
+            name="foo",
+            value={},
+        )
+        self.assertEqual(disconnected.object(), None)

@@ -414,8 +414,9 @@ class TraitDictObject(TraitDict):
     trait : CTrait instance
         The CTrait instance associated with the attribute that this dict
         has been set to.
-    object : HasTraits instance
-        The HasTraits instance that the dict has been set as an attribute for.
+    object : HasTraits
+        The object this dict belongs to. Can also be None in cases where the
+        dict has been disconnected from its HasTraits parent.
     name : str
         The name of the attribute on the object.
     value : dict
@@ -426,9 +427,9 @@ class TraitDictObject(TraitDict):
     trait : CTrait instance
         The CTrait instance associated with the attribute that this dict
         has been set to.
-    object : weak reference to a HasTraits instance
-        A weak reference to a HasTraits instance that the dict has been set
-        as an attribute for.
+    object : callable
+        A callable that when called with no arguments returns the HasTraits
+        object that this dict belongs to, or None if there is no such object.
     name : str
         The name of the attribute on the object.
     name_items : str
@@ -438,7 +439,7 @@ class TraitDictObject(TraitDict):
 
     def __init__(self, trait, object, name, value):
         self.trait = trait
-        self.object = ref(object)
+        self.object = (lambda: None) if object is None else ref(object)
         self.name = name
         self.name_items = None
         if trait.has_items:
@@ -585,7 +586,7 @@ class TraitDictObject(TraitDict):
         """
         result = TraitDictObject(
             self.trait,
-            lambda: None,
+            None,
             self.name,
             dict(copy.deepcopy(x, memo) for x in self.items()),
         )

@@ -451,7 +451,8 @@ class TraitSetObject(TraitSet):
     trait : CTrait
         The trait that the set has been assigned to.
     object : HasTraits
-        The object the set belongs to.
+        The object this set belongs to. Can also be None in cases where the
+        set has been disconnected from its HasTraits parent.
     name : str
         The name of the trait on the object.
     value : iterable
@@ -461,8 +462,9 @@ class TraitSetObject(TraitSet):
     ----------
     trait : CTrait
         The trait that the set has been assigned to.
-    object : HasTraits
-        The object the set belongs to.
+    object : callable
+        A callable that when called with no arguments returns the HasTraits
+        object that this set belongs to, or None if there is no such object.
     name : str
         The name of the trait on the object.
     value : iterable
@@ -472,7 +474,7 @@ class TraitSetObject(TraitSet):
     def __init__(self, trait, object, name, value):
 
         self.trait = trait
-        self.object = ref(object)
+        self.object = (lambda: None) if object is None else ref(object)
         self.name = name
         self.name_items = None
         if trait.has_items:
@@ -560,7 +562,7 @@ class TraitSetObject(TraitSet):
 
         result = TraitSetObject(
             self.trait,
-            lambda: None,
+            None,
             self.name,
             {copy.deepcopy(x, memo) for x in self},
         )
