@@ -313,14 +313,14 @@ class TestRegression(unittest.TestCase):
     def test_clone_list_of_enum_trait(self):
         # Regression test for enthought/traits#1622.
 
-        class Company(HasTraits):
-            departments = List(Str)
-            projects = List(Enum(values="departments"))
+        class Order(HasTraits):
+            menu = List(Str)
+            selection = List(Enum(values="menu"))
 
-        company = Company(departments=["sales"], projects=["sales"])
-        clone = company.clone_traits()
+        order = Order(menu=["fish"], selection=["fish"])
+        clone = order.clone_traits()
 
-        self.assertEqual(clone.projects, ["sales"])
+        self.assertEqual(clone.selection, ["fish"])
 
 
 class NestedContainerClass(HasTraits):
