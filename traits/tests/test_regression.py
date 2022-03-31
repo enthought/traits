@@ -328,6 +328,7 @@ class TestRegression(unittest.TestCase):
         with self.assertRaises(TraitError):
             clone.selection.append("bouillabaisse")
 
+
 class NestedContainerClass(HasTraits):
     # Used in regression test for changes to nested containers
 
