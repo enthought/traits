@@ -11,7 +11,14 @@ import pickle
 import unittest
 from unittest import mock
 
-from traits.api import HasTraits, Set, Str
+from traits.api import (
+    DefaultValue,
+    HasTraits,
+    Set,
+    Str,
+    TraitType,
+    ValidateTrait,
+)
 from traits.trait_base import _validate_everything
 from traits.trait_errors import TraitError
 from traits.trait_set_object import TraitSet, TraitSetEvent, TraitSetObject
@@ -528,6 +535,27 @@ class TestTraitSetObject(unittest.TestCase):
             value=set(),
         )
         self.assertEqual(disconnected.object(), None)
+
+    def test_item_validation_uses_ctrait(self):
+        # Regression test for enthought/traits#1619
+
+        class RangeInstance(TraitType):
+            default_value_type = DefaultValue.constant
+
+            default_value = range(10)
+
+            fast_validate = ValidateTrait.coerce, range
+
+        class HasRanges(HasTraits):
+            ranges = Set(RangeInstance())
+
+        obj = HasRanges()
+
+        with self.assertRaises(TraitError):
+            obj.ranges.add(23)
+
+        obj.ranges.add(range(10, 20))
+        self.assertEqual(obj.ranges, {range(10, 20)})
 
 
 class TestTraitSetEvent(unittest.TestCase):

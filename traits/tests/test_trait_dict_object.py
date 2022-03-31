@@ -14,7 +14,7 @@ import sys
 import unittest
 from unittest import mock
 
-from traits.api import HasTraits
+from traits.api import DefaultValue, HasTraits, TraitType, ValidateTrait
 from traits.trait_dict_object import TraitDict, TraitDictEvent, TraitDictObject
 from traits.trait_errors import TraitError
 from traits.trait_types import Dict, Int, Str
@@ -32,6 +32,18 @@ def int_validator(value):
         return value
     else:
         raise TraitError
+
+
+class RangeInstance(TraitType):
+    """
+    Dummy custom trait type for use in validation tests.
+    """
+
+    default_value_type = DefaultValue.constant
+
+    default_value = range(10)
+
+    fast_validate = ValidateTrait.coerce, range
 
 
 class TestTraitDict(unittest.TestCase):
@@ -434,6 +446,46 @@ class TestTraitDictObject(unittest.TestCase):
         tdo_unpickled.value_validator(1)
         tdo_unpickled.value_validator(True)
 
+    def test_disconnected_dict(self):
+        # Objects that are disconnected from their HasTraits "owner" can arise
+        # as a result of clone_traits operations, or of serialization and
+        # deserialization.
+        disconnected = TraitDictObject(
+            trait=Dict(Str, Str),
+            object=None,
+            name="foo",
+            value={},
+        )
+        self.assertEqual(disconnected.object(), None)
+
+    def test_key_validation_uses_ctrait(self):
+        # Regression test for enthought/traits#1619
+
+        class HasRanges(HasTraits):
+            ranges = Dict(RangeInstance(), Int())
+
+        obj = HasRanges()
+
+        with self.assertRaises(TraitError):
+            obj.ranges[3] = 27
+
+        obj.ranges[range(10, 20)] = 3
+        self.assertEqual(obj.ranges, {range(10, 20): 3})
+
+    def test_value_validation_uses_ctrait(self):
+        # Regression test for enthought/traits#1619
+
+        class HasRanges(HasTraits):
+            ranges = Dict(Int(), RangeInstance())
+
+        obj = HasRanges()
+
+        with self.assertRaises(TraitError):
+            obj.ranges[3] = 27
+
+        obj.ranges[3] = range(10, 20)
+        self.assertEqual(obj.ranges, {3: range(10, 20)})
+
 
 class TestTraitDictEvent(unittest.TestCase):
 
@@ -455,15 +507,3 @@ class TestTraitDictEvent(unittest.TestCase):
         differnt_name_subclass = DifferentName()
         self.assertEqual(desired_repr, str(differnt_name_subclass))
         self.assertEqual(desired_repr, repr(differnt_name_subclass))
-
-    def test_disconnected_dict(self):
-        # Objects that are disconnected from their HasTraits "owner" can arise
-        # as a result of clone_traits operations, or of serialization and
-        # deserialization.
-        disconnected = TraitDictObject(
-            trait=Dict(Str, Str),
-            object=None,
-            name="foo",
-            value={},
-        )
-        self.assertEqual(disconnected.object(), None)
