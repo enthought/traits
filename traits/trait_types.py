@@ -3043,6 +3043,8 @@ class Dict(TraitType):
         if (handler is not None) and handler.has_items:
             handler = handler.clone()
             handler.has_items = False
+        # This attribute isn't actually used for anything, but we keep it
+        # for backwards compatibility.
         self.value_handler = handler
 
         super().__init__(value, **metadata)
