@@ -1457,3 +1457,15 @@ class TestTraitListObject(unittest.TestCase):
         self.assertEqual(list_object, [1, 2, 3, 4, 5])
         with self.assertRaises(TraitError):
             list_object.append(4)
+
+    def test_disconnected_list(self):
+        # Objects that are disconnected from their HasTraits "owner" can arise
+        # as a result of clone_traits operations, or of serialization and
+        # deserialization.
+        disconnected = TraitListObject(
+            trait=List(Int),
+            object=None,
+            name="foo",
+            value=[1, 2, 3],
+        )
+        self.assertEqual(disconnected.object(), None)

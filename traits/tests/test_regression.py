@@ -28,6 +28,7 @@ from traits.trait_types import (
     DelegatesTo,
     Dict,
     Either,
+    Enum,
     Instance,
     Int,
     List,
@@ -308,6 +309,24 @@ class TestRegression(unittest.TestCase):
 
         with self.assertRaises(ZeroDivisionError):
             a.bar = "foo"
+
+    def test_clone_list_of_enum_trait(self):
+        # Regression test for enthought/traits#1622.
+
+        class Order(HasTraits):
+            menu = List(Str)
+            selection = List(Enum(values="menu"))
+
+        order = Order(menu=["fish"], selection=["fish"])
+        clone = order.clone_traits()
+
+        self.assertEqual(clone.selection, ["fish"])
+
+        order.selection.append('fish')
+        self.assertEqual(clone.selection, ['fish'])
+
+        with self.assertRaises(TraitError):
+            clone.selection.append("bouillabaisse")
 
 
 class NestedContainerClass(HasTraits):
