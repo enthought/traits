@@ -2515,7 +2515,7 @@ class Tuple(BaseTuple):
         """
         if self.no_type_check:
             if isinstance(value, tuple):
-                return tuple(value)
+                return value
             elif isinstance(value, list):
                 warnings.warn(
                     "In the future, lists will no longer be accepted by "
