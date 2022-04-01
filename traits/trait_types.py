@@ -2501,7 +2501,41 @@ class Tuple(BaseTuple):
         """
         super().init_fast_validate(*args)
 
+        # Don't set fast validation in the no-type-check case; we need
+        # Python-level handling so that we can issue a deprecation warning
+        # for the case of validating a list.
+        # xref: enthought/traits#1626
+        if self.no_type_check:
+            return
+
         self.fast_validate = args
+
+    def validate(self, object, name, value):
+        """ Validates that the value is a valid tuple.
+        """
+        if self.no_type_check:
+            if isinstance(value, tuple):
+                return tuple(value)
+            elif isinstance(value, list):
+                warnings.warn(
+                    "In the future, lists will no longer be accepted by "
+                    "the Tuple trait type. Lists should be converted to "
+                    "tuples prior to validation.",
+                    DeprecationWarning,
+                    stacklevel=2,
+                )
+                return tuple(value)
+
+        elif isinstance(value, tuple) and len(value) == len(self.types):
+            try:
+                return tuple(
+                    type.validate(object, name, item_value)
+                    for type, item_value in zip(self.types, value)
+                )
+            except TraitError:
+                pass
+
+        self.error(object, name, value)
 
 
 class ValidatedTuple(BaseTuple):
