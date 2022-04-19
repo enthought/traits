@@ -3078,34 +3078,23 @@ _trait_set_default_value(trait_object *trait, PyObject *args)
 }
 
 /*-----------------------------------------------------------------------------
-|  Get or set the 'default_value_type' and 'default_value' fields
-|  of a CTrait instance. Use of this function for setting the default
-|  value information is deprecated; use set_default_value instead.
+|  Get or the 'default_value_type' and 'default_value' fields
+|  of a CTrait instance.
 +----------------------------------------------------------------------------*/
 
 static PyObject *
 _trait_default_value(trait_object *trait, PyObject *args)
 {
-    if (PyArg_ParseTuple(args, "")) {
-        if (trait->default_value == NULL) {
-            return Py_BuildValue("iO", 0, Py_None);
-        }
-        else {
-            return Py_BuildValue(
-                "iO", trait->default_value_type, trait->default_value);
-        }
-    }
-
-    PyErr_Clear();
-    if (PyErr_WarnEx(
-            PyExc_DeprecationWarning,
-            "Use of the default_value method with arguments is deprecated. "
-            "To set defaults, use set_default_value instead.",
-            1)
-        != 0) {
+    if (!PyArg_ParseTuple(args, "")) {
         return NULL;
     }
-    return _trait_set_default_value(trait, args);
+    if (trait->default_value == NULL) {
+        return Py_BuildValue("iO", 0, Py_None);
+    }
+    else {
+        return Py_BuildValue(
+            "iO", trait->default_value_type, trait->default_value);
+    }
 }
 
 /*-----------------------------------------------------------------------------
