@@ -10,7 +10,6 @@
 
 import sys
 import unittest.mock
-import warnings
 import weakref
 
 from traits.api import HasTraits
