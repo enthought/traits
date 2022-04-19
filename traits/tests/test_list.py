@@ -214,19 +214,6 @@ class ListTestCase(unittest.TestCase):
         for bar in baz.bars:
             self.assertIn(bar, baz_copy.bars)
 
-    def test_subclass_with_default(self):
-        class A(HasTraits):
-            foo = List(Int)
-
-        class B(A):
-            foo = [1, 2, 3]
-
-        b = B()
-        self.assertEqual(b.foo, [1, 2, 3])
-        # b.foo should still support the usual validation
-        with self.assertRaises(TraitError):
-            b.foo.append("a string")
-
     def test_clone_deep_baz(self):
         baz = Baz()
         for name in ["a", "b", "c", "d"]:
