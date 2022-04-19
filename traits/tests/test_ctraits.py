@@ -56,6 +56,22 @@ class TestCTrait(unittest.TestCase):
             trait.default_value(), (DefaultValue.list_copy, [1, 2, 3])
         )
 
+    def test_validate_default_value_for_callable_and_args(self):
+
+        bad_values = [
+            None,
+            123,
+            (int, (2,)),
+            (int, 2, 3, 4),
+        ]
+
+        trait = CTrait(TraitKind.trait)
+        for value in bad_values:
+            with self.subTest(value=value):
+                with self.assertRaises(ValueError):
+                    trait.set_default_value(
+                        DefaultValue.callable_and_args, value)
+
     def test_default_value_for_set_is_deprecated(self):
         trait = CTrait(TraitKind.trait)
         with warnings.catch_warnings(record=True) as warn_msgs:

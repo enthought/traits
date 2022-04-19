@@ -132,6 +132,20 @@ class TraitTypesTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             ctrait.default_value_for(None, "<dummy>")
 
+    def test_call_sets_default_value_type(self):
+        class FooTrait(TraitType):
+            default_value_type = DefaultValue.callable_and_args
+
+            def __init__(self, default_value=NoDefaultSpecified, **metadata):
+                default_value = (pow, (3, 4), {})
+                super().__init__(default_value, **metadata)
+
+        trait = FooTrait()
+        ctrait = trait.as_ctrait()
+        self.assertEqual(ctrait.default_value_for(None, "dummy"), 81)
+        cloned_ctrait = trait(30)
+        self.assertEqual(cloned_ctrait.default_value_for(None, "dummy"), 30)
+
 
 class TestDeprecatedTraitTypes(unittest.TestCase):
     def test_function_deprecated(self):
