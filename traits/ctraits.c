@@ -3073,7 +3073,7 @@ _trait_set_default_value(trait_object *trait, PyObject *args)
                 PyErr_SetString(
                     PyExc_ValueError,
                     "default value for type DefaultValue.callable_and_args "
-                    "must be a tuple of length 3"
+                    "must be a tuple of the form (callable, args, kwds)"
                 );
                 return NULL;
             }
