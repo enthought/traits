@@ -73,3 +73,22 @@ class TupleTestCase(TupleTestMixin, unittest.TestCase):
         b = A()
         self.assertEqual(a.foo, (0, ("", 0)))
         self.assertIs(a.foo, b.foo)
+
+    def test_lists_not_accepted(self):
+
+        class A(HasTraits):
+            foo = Tuple(Int(), Int())
+
+        a = A()
+        with self.assertRaises(TraitError):
+            a.foo = [2, 3]
+
+    def test_deprecated_list_validation(self):
+        class A(HasTraits):
+            foo = Tuple()
+
+        a = A()
+        with self.assertWarns(DeprecationWarning):
+            a.foo = [2, 3]
+
+        self.assertEqual(a.foo, (2, 3))
