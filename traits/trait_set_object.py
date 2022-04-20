@@ -511,7 +511,7 @@ class TraitSetObject(TraitSet):
         object = object_ref()
 
         # validate the new value(s)
-        validate = trait.item_trait.handler.validate
+        validate = trait.item_trait.validate
 
         if validate is None:
             return value
