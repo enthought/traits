@@ -859,7 +859,7 @@ class TraitListObject(TraitList):
         if object is None:
             return value
 
-        trait_validator = self.trait.item_trait.handler.validate
+        trait_validator = self.trait.item_trait.validate
         if trait_validator is None:
             return value
 
