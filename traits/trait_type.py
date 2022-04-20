@@ -305,14 +305,17 @@ class TraitType(BaseTraitHandler):
         new._metadata.update(metadata)
 
         if default_value is not NoDefaultSpecified:
-            new.default_value = default_value
             if self.validate is not None:
                 try:
-                    new.default_value = self.validate(
-                        None, None, default_value
-                    )
+                    default_value = self.validate(None, None, default_value)
                 except Exception:
                     pass
+
+            # Known issue: this doesn't do the right thing for
+            # List, Dict and Set, where we really want to make a copy.
+            # xref: enthought/traits#1630
+            new.default_value_type = DefaultValue.constant
+            new.default_value = default_value
 
         return new
 

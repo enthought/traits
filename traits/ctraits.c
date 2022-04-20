@@ -3064,6 +3064,22 @@ _trait_set_default_value(trait_object *trait, PyObject *args)
         return NULL;
     }
 
+    /* Validate the value */
+    switch (value_type) {
+        /* We only do sufficient validation to avoid segfaults when
+           unwrapping the value in `default_value_for`. */
+        case CALLABLE_AND_ARGS_DEFAULT_VALUE:
+            if (!PyTuple_Check(value) || PyTuple_GET_SIZE(value) != 3) {
+                PyErr_SetString(
+                    PyExc_ValueError,
+                    "default value for type DefaultValue.callable_and_args "
+                    "must be a tuple of the form (callable, args, kwds)"
+                );
+                return NULL;
+            }
+            break;
+    }
+
     trait->default_value_type = value_type;
 
     /* The DECREF on the old value can call arbitrary code, so take care not to
