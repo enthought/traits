@@ -11,8 +11,6 @@
 """ Trait definitions related to the numpy library.
 """
 
-import warnings
-
 from .constants import ComparisonMode, DefaultValue
 from .trait_base import SequenceTypes
 from .trait_errors import TraitError
@@ -54,7 +52,6 @@ class AbstractArray(TraitType):
         shape=None,
         value=None,
         coerce=False,
-        typecode=None,
         *,
         casting="unsafe",
         **metadata
@@ -76,20 +73,6 @@ class AbstractArray(TraitType):
 
         # Normally use object identity to detect array values changing:
         metadata.setdefault("comparison_mode", ComparisonMode.identity)
-
-        if typecode is not None:
-            warnings.warn(
-                "typecode is a deprecated argument; use dtype " "instead",
-                DeprecationWarning,
-            )
-
-            if (dtype is not None) and (dtype != typecode):
-                raise TraitError(
-                    "Inconsistent usage of the dtype and "
-                    "typecode arguments; use dtype alone."
-                )
-            else:
-                dtype = typecode
 
         if dtype is not None:
             try:
@@ -329,7 +312,6 @@ class Array(AbstractArray):
         dtype=None,
         shape=None,
         value=None,
-        typecode=None,
         *,
         casting="unsafe",
         **metadata
@@ -339,7 +321,6 @@ class Array(AbstractArray):
             shape,
             value,
             False,
-            typecode=typecode,
             casting=casting,
             **metadata
         )
@@ -396,7 +377,6 @@ class CArray(AbstractArray):
         dtype=None,
         shape=None,
         value=None,
-        typecode=None,
         *,
         casting="unsafe",
         **metadata
@@ -406,7 +386,6 @@ class CArray(AbstractArray):
             shape,
             value,
             True,
-            typecode=typecode,
             casting=casting,
             **metadata
         )
