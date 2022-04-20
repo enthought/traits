@@ -13,7 +13,14 @@ import operator
 import pickle
 import unittest.mock
 
-from traits.api import HasTraits, Int, List
+from traits.api import (
+    DefaultValue,
+    HasTraits,
+    Int,
+    List,
+    TraitType,
+    ValidateTrait,
+)
 from traits.testing.optional_dependencies import numpy, requires_numpy
 from traits.trait_base import _validate_everything
 from traits.trait_errors import TraitError
@@ -1469,3 +1476,24 @@ class TestTraitListObject(unittest.TestCase):
             value=[1, 2, 3],
         )
         self.assertEqual(disconnected.object(), None)
+
+    def test_item_validation_uses_ctrait(self):
+        # Regression test for enthought/traits#1619
+
+        class RangeInstance(TraitType):
+            default_value_type = DefaultValue.constant
+
+            default_value = range(10)
+
+            fast_validate = ValidateTrait.coerce, range
+
+        class HasRanges(HasTraits):
+            ranges = List(RangeInstance())
+
+        obj = HasRanges()
+
+        with self.assertRaises(TraitError):
+            obj.ranges.append(23)
+
+        obj.ranges.append(range(10, 20))
+        self.assertEqual(obj.ranges, [range(10, 20)])

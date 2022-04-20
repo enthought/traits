@@ -283,10 +283,10 @@ the table.
 |                  | \*\*\ *metadata* )                                       |
 +------------------+----------------------------------------------------------+
 | Array            | Array( [*dtype* = None, *shape* = None, *value* = None,  |
-|                  | *typecode* = None, \*\*\ *metadata*] )                   |
+|                  | \*\*\ *metadata*] )                                      |
 +------------------+----------------------------------------------------------+
 | ArrayOrNone      | ArrayOrNone( [*dtype* = None, *shape* = None,            |
-|                  | *value* = None, *typecode* = None, \*\*\ *metadata*] )   |
+|                  | *value* = None, \*\*\ *metadata*] )                      |
 +------------------+----------------------------------------------------------+
 | Button           | Button( [*label* = '', *image* = None, *style* =         |
 |                  | 'button', *orientation* = 'vertical', *width_padding* =  |
@@ -295,7 +295,7 @@ the table.
 | Callable         | Callable( [*value* = None, \*\*\ *metadata*] )           |
 +------------------+----------------------------------------------------------+
 | CArray           | CArray( [*dtype* = None, *shape* = None, *value* = None, |
-|                  | *typecode* = None, \*\*\ *metadata*] )                   |
+|                  | \*\*\ *metadata*] )                                      |
 +------------------+----------------------------------------------------------+
 | Code             | Code( [*value* = '', *minlen* = 0,                       |
 |                  | *maxlen* = sys.maxsize, *regex* = '',                    |
