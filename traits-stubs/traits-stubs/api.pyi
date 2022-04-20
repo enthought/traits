@@ -189,7 +189,4 @@ from .trait_handlers import (
     TraitMap as TraitMap,
     TraitPrefixMap as TraitPrefixMap,
     TraitCompound as TraitCompound,
-    TraitList as TraitList,
-    TraitDict as TraitDict,
-    TraitTuple as TraitTuple,
 )

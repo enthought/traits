@@ -207,9 +207,6 @@ from .trait_handlers import (
     TraitMap,
     TraitPrefixMap,
     TraitCompound,
-    TraitList,
-    TraitDict,
-    TraitTuple,
 )
 
 

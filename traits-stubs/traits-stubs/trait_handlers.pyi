@@ -70,28 +70,3 @@ class TraitCompound(TraitHandler):
     def __init__(self,
                  *handlers: _Any) -> None:
         ...
-
-
-class TraitTuple(TraitHandler):
-    def __init__(self,
-                 *args: _Any) -> None:
-        ...
-
-
-class TraitList(TraitHandler):
-    def __init__(self,
-                 trait: _Any = ...,
-                 minlen: int = ...,
-                 maxlen: int = ...,
-                 has_items: bool = ...,
-                 ) -> None:
-        ...
-
-
-class TraitDict(TraitHandler):
-    def __init__(self,
-                 key_trait: _Any = ...,
-                 value_trait: _Any = ...,
-                 has_items: bool = ...,
-                 ) -> None:
-        ...
