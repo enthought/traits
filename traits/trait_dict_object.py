@@ -450,7 +450,7 @@ class TraitDictObject(TraitDict):
                          notifiers=[self.notifier])
 
     def _key_validator(self, key):
-        """ Calls the trait's key_trait.handler.validate.
+        """ Key validator based on the Dict's key_trait.
 
         Parameters
         ----------
@@ -476,7 +476,7 @@ class TraitDictObject(TraitDict):
         if trait is None or object is None:
             return key
 
-        validate = trait.key_trait.handler.validate
+        validate = trait.key_trait.validate
         if validate is None:
             return key
 
@@ -487,7 +487,7 @@ class TraitDictObject(TraitDict):
             raise excep
 
     def _value_validator(self, value):
-        """ Calls the trait's value_handler.validate
+        """ Value validator based on the Dict's value_trait.
 
         Parameters
         ----------
@@ -513,7 +513,7 @@ class TraitDictObject(TraitDict):
         if trait is None or object is None:
             return value
 
-        validate = trait.value_handler.validate
+        validate = trait.value_trait.validate
         if validate is None:
             return value
 

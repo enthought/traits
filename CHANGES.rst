@@ -1,6 +1,30 @@
 Traits CHANGELOG
 ================
 
+Release 7.0.0
+-------------
+
+TBD Release summary
+
+Released: XXXX-XX-XX
+
+Migrating from earlier versions of Traits
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Traits 7.0 should be largely backwards compatible with earlier versions
+of Traits, but there are some things to watch out for.
+
+* Validation of items within a container (e.g., ``foos = List(MyTraitType)``)
+  now always matches the validation used for the item trait at top level (e.g.,
+  ``foo = MyTraitType``). Previously, the validation methods used could differ,
+  thanks to a bug in the container implementations. For most trait types this
+  will make no difference, but for the ``Tuple`` trait type this change has the
+  consequence that lists will no longer be accepted as valid for ``Tuple``
+  traits inside list items. See issue #1619 and PR #1625 for more information.
+
+TBD Release details
+
+
 Release 6.3.2
 -------------
 
