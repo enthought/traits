@@ -3078,7 +3078,7 @@ _trait_set_default_value(trait_object *trait, PyObject *args)
 }
 
 /*-----------------------------------------------------------------------------
-|  Get or the 'default_value_type' and 'default_value' fields
+|  Get the 'default_value_type' and 'default_value' fields
 |  of a CTrait instance.
 +----------------------------------------------------------------------------*/
 
