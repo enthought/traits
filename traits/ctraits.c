@@ -3094,34 +3094,20 @@ _trait_set_default_value(trait_object *trait, PyObject *args)
 }
 
 /*-----------------------------------------------------------------------------
-|  Get or set the 'default_value_type' and 'default_value' fields
-|  of a CTrait instance. Use of this function for setting the default
-|  value information is deprecated; use set_default_value instead.
+|  Get the 'default_value_type' and 'default_value' fields
+|  of a CTrait instance.
 +----------------------------------------------------------------------------*/
 
 static PyObject *
-_trait_default_value(trait_object *trait, PyObject *args)
+_trait_default_value(trait_object *trait, PyObject *Py_UNUSED(ignored))
 {
-    if (PyArg_ParseTuple(args, "")) {
-        if (trait->default_value == NULL) {
-            return Py_BuildValue("iO", 0, Py_None);
-        }
-        else {
-            return Py_BuildValue(
-                "iO", trait->default_value_type, trait->default_value);
-        }
+    if (trait->default_value == NULL) {
+        return Py_BuildValue("iO", 0, Py_None);
     }
-
-    PyErr_Clear();
-    if (PyErr_WarnEx(
-            PyExc_DeprecationWarning,
-            "Use of the default_value method with arguments is deprecated. "
-            "To set defaults, use set_default_value instead.",
-            1)
-        != 0) {
-        return NULL;
+    else {
+        return Py_BuildValue(
+            "iO", trait->default_value_type, trait->default_value);
     }
-    return _trait_set_default_value(trait, args);
 }
 
 /*-----------------------------------------------------------------------------
@@ -5397,7 +5383,7 @@ static PyMethodDef trait_methods[] = {
      PyDoc_STR("__getstate__()")},
     {"__setstate__", (PyCFunction)_trait_setstate, METH_VARARGS,
      PyDoc_STR("__setstate__(state)")},
-    {"default_value", (PyCFunction)_trait_default_value, METH_VARARGS,
+    {"default_value", (PyCFunction)_trait_default_value, METH_NOARGS,
      default_value_doc},
     {"set_default_value", (PyCFunction)_trait_set_default_value, METH_VARARGS,
      set_default_value_doc},

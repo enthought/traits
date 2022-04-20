@@ -10,7 +10,6 @@
 
 import sys
 import unittest.mock
-import warnings
 import weakref
 
 from traits.api import HasTraits
@@ -72,20 +71,10 @@ class TestCTrait(unittest.TestCase):
                     trait.set_default_value(
                         DefaultValue.callable_and_args, value)
 
-    def test_default_value_for_set_is_deprecated(self):
+    def test_default_value_for_set_is_no_longer_supported(self):
         trait = CTrait(TraitKind.trait)
-        with warnings.catch_warnings(record=True) as warn_msgs:
-            warnings.simplefilter("always", DeprecationWarning)
+        with self.assertRaises(TypeError):
             trait.default_value(DefaultValue.constant, 3.7)
-
-        self.assertEqual(len(warn_msgs), 1)
-        warn_msg = warn_msgs[0]
-        self.assertIn(
-            "default_value method with arguments is deprecated",
-            str(warn_msg.message),
-        )
-        _, _, this_module = __name__.rpartition(".")
-        self.assertIn(this_module, warn_msg.filename)
 
     def test_bad_default_value_type(self):
         trait = CTrait(TraitKind.trait)
