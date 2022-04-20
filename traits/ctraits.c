@@ -3083,11 +3083,8 @@ _trait_set_default_value(trait_object *trait, PyObject *args)
 +----------------------------------------------------------------------------*/
 
 static PyObject *
-_trait_default_value(trait_object *trait, PyObject *args)
+_trait_default_value(trait_object *trait, PyObject *Py_UNUSED(ignored))
 {
-    if (!PyArg_ParseTuple(args, "")) {
-        return NULL;
-    }
     if (trait->default_value == NULL) {
         return Py_BuildValue("iO", 0, Py_None);
     }
@@ -5370,7 +5367,7 @@ static PyMethodDef trait_methods[] = {
      PyDoc_STR("__getstate__()")},
     {"__setstate__", (PyCFunction)_trait_setstate, METH_VARARGS,
      PyDoc_STR("__setstate__(state)")},
-    {"default_value", (PyCFunction)_trait_default_value, METH_VARARGS,
+    {"default_value", (PyCFunction)_trait_default_value, METH_NOARGS,
      default_value_doc},
     {"set_default_value", (PyCFunction)_trait_set_default_value, METH_VARARGS,
      set_default_value_doc},
