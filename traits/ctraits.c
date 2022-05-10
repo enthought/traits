@@ -1885,13 +1885,11 @@ getattr_generic(trait_object *trait, has_traits_object *obj, PyObject *name)
 static PyObject *
 getattr_event(trait_object *trait, has_traits_object *obj, PyObject *name)
 {
-    PyErr_Format(
+    return PyErr_Format(
         PyExc_AttributeError,
         "The %.400U"
         " trait of a %.50s instance is an 'event', which is write only.",
         name, Py_TYPE(obj)->tp_name);
-
-    return NULL;
 }
 
 /*-----------------------------------------------------------------------------
@@ -2897,7 +2895,7 @@ static trait_setattr setattr_handlers[] = {
     NULL};
 
 
-trait_object *
+PyObject *
 trait_new(PyTypeObject *trait_type, PyObject *args, PyObject *kw)
 {
     int kind = 0;
@@ -2916,15 +2914,14 @@ trait_new(PyTypeObject *trait_type, PyObject *args, PyObject *kw)
         trait = (trait_object *)PyType_GenericNew(trait_type, args, kw);
         trait->getattr = getattr_handlers[kind];
         trait->setattr = setattr_handlers[kind];
-        return trait;
+        return (PyObject *)trait;
     }
 
-    PyErr_Format(
+    return PyErr_Format(
         TraitError,
         "Invalid argument to trait constructor. The argument `kind` "
         "must be an integer between 0 and 8 but a value of %d was provided.",
         kind);
-    return NULL;
 }
 
 /*-----------------------------------------------------------------------------
@@ -3057,11 +3054,10 @@ _trait_set_default_value(trait_object *trait, PyObject *args)
     }
 
     if ((value_type < 0) || (value_type > MAXIMUM_DEFAULT_VALUE_TYPE)) {
-        PyErr_Format(
+        return PyErr_Format(
             PyExc_ValueError,
             "The default value type must be 0..%d, but %d was specified.",
             MAXIMUM_DEFAULT_VALUE_TYPE, value_type);
-        return NULL;
     }
 
     /* Validate the value */
@@ -5582,7 +5578,7 @@ static PyTypeObject trait_type = {
     sizeof(trait_object) - sizeof(PyObject *), /* tp_dictoffset */
     0,                                         /* tp_init */
     0,                                         /* tp_alloc */
-    (newfunc)trait_new                         /* tp_new */
+    trait_new                                  /* tp_new */
 };
 
 /*-----------------------------------------------------------------------------
