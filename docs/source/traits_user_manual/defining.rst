@@ -261,13 +261,13 @@ trait cannot be used as a simple name, it is omitted from the Name column of
 the table.
 
 .. index:: Any(), Array(), Button(), Callable(), CArray(), Code()
-.. index:: CSet(), Constant(), Dict()
+.. index:: CSet(), Constant(), Date(), Datetime(), Dict()
 .. index:: Directory(), Disallow, Either(), Enum()
 .. index:: Event(), Expression(), false, File()
 .. index:: Instance(), List(), Method(), Module()
 .. index:: Password(), Property(), Python()
 .. index:: PythonValue(), Range(), ReadOnly(), Regex()
-.. index:: Set() String(), This,
+.. index:: Set() String(), This, Time()
 .. index:: ToolbarButton(), true, Tuple(), Type()
 .. index:: undefined, UUID(), ValidatedTuple(), WeakRef()
 
@@ -280,7 +280,7 @@ the table.
 +==================+==========================================================+
 | Any              | Any( [*default_value* = None, \*,                        |
 |                  | *factory* = None, *args* = (), *kw* = {},                |
-|                  | \*\*\ *metadata* )                                       |
+|                  | \*\*\ *metadata*] )                                      |
 +------------------+----------------------------------------------------------+
 | Array            | Array( [*dtype* = None, *shape* = None, *value* = None,  |
 |                  | *typecode* = None, \*\*\ *metadata*] )                   |
@@ -305,6 +305,13 @@ the table.
 |                  | \*\*\ *metadata*] )                                      |
 +------------------+----------------------------------------------------------+
 | Constant         | Constant( *value*\ [, \*\*\ *metadata*] )                |
++------------------+----------------------------------------------------------+
+| Date             | Date( *value*\ [, *default_value* = None,                |
+|                  | *allow_datetime* = None, *allow_none* = None,            |
+|                  | \*\*\ *metadata*] )                                      |
++------------------+----------------------------------------------------------+
+| Datetime         | Datetime( *value*\ [, *default_value* = None,            |
+|                  | *allow_none* = None, \*\*\ *metadata*])                  |
 +------------------+----------------------------------------------------------+
 | Dict             | Dict( [*key_trait* = None, *value_trait* = None,         |
 |                  | *value* = None, *items* = True, \*\*\ *metadata*] )      |
@@ -385,6 +392,9 @@ the table.
 |                  | True, \*\*\ *metadata*] )                                |
 +------------------+----------------------------------------------------------+
 | This             | n/a                                                      |
++------------------+----------------------------------------------------------+
+| Time             | Time( *value*\ [, *default_value* = None,                |
+|                  | *allow_none* = None, \*\*\ *metadata*])                  |
 +------------------+----------------------------------------------------------+
 | ToolbarButton    | ToolbarButton( [*label* = '', *image* = None, *style* =  |
 |                  | 'toolbar', *orientation* = 'vertical', *width_padding* = |
