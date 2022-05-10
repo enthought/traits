@@ -2899,6 +2899,7 @@ PyObject *
 trait_new(PyTypeObject *trait_type, PyObject *args, PyObject *kw)
 {
     int kind = 0;
+    trait_object *trait;
 
     if (kw != NULL && PyDict_Size(kw) != (Py_ssize_t) 0) {
         PyErr_SetString(TraitError, "CTrait takes no keyword arguments");
