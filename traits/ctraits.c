@@ -491,7 +491,7 @@ set_delete_property_error(has_traits_object *obj, PyObject *name)
 static void
 unknown_attribute_error(has_traits_object *obj, PyObject *name)
 {
-    PyErr_Format(
+    return PyErr_Format(
         PyExc_AttributeError, "'%.50s' object has no attribute '%.400U'",
         Py_TYPE(obj)->tp_name, name);
 }
@@ -1885,13 +1885,11 @@ getattr_generic(trait_object *trait, has_traits_object *obj, PyObject *name)
 static PyObject *
 getattr_event(trait_object *trait, has_traits_object *obj, PyObject *name)
 {
-    PyErr_Format(
+    return PyErr_Format(
         PyExc_AttributeError,
         "The %.400U"
         " trait of a %.50s instance is an 'event', which is write only.",
         name, Py_TYPE(obj)->tp_name);
-
-    return NULL;
 }
 
 /*-----------------------------------------------------------------------------
@@ -2919,12 +2917,11 @@ trait_new(PyTypeObject *trait_type, PyObject *args, PyObject *kw)
         return trait;
     }
 
-    PyErr_Format(
+    return PyErr_Format(
         TraitError,
         "Invalid argument to trait constructor. The argument `kind` "
         "must be an integer between 0 and 8 but a value of %d was provided.",
         kind);
-    return NULL;
 }
 
 /*-----------------------------------------------------------------------------
@@ -3057,11 +3054,10 @@ _trait_set_default_value(trait_object *trait, PyObject *args)
     }
 
     if ((value_type < 0) || (value_type > MAXIMUM_DEFAULT_VALUE_TYPE)) {
-        PyErr_Format(
+        return PyErr_Format(
             PyExc_ValueError,
             "The default value type must be 0..%d, but %d was specified.",
             MAXIMUM_DEFAULT_VALUE_TYPE, value_type);
-        return NULL;
     }
 
     /* Validate the value */
