@@ -2917,11 +2917,12 @@ trait_new(PyTypeObject *trait_type, PyObject *args, PyObject *kw)
         return trait;
     }
 
-    return PyErr_Format(
+    PyErr_Format(
         TraitError,
         "Invalid argument to trait constructor. The argument `kind` "
         "must be an integer between 0 and 8 but a value of %d was provided.",
         kind);
+    return NULL;
 }
 
 /*-----------------------------------------------------------------------------
