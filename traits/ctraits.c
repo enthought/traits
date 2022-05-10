@@ -2899,7 +2899,6 @@ PyObject *
 trait_new(PyTypeObject *trait_type, PyObject *args, PyObject *kw)
 {
     int kind = 0;
-    PyObject *trait;
 
     if (kw != NULL && PyDict_Size(kw) != (Py_ssize_t) 0) {
         PyErr_SetString(TraitError, "CTrait takes no keyword arguments");
@@ -2911,10 +2910,10 @@ trait_new(PyTypeObject *trait_type, PyObject *args, PyObject *kw)
     }
 
     if ((kind >= 0) && (kind <= 8)) {
-        trait = (PyObject *)PyType_GenericNew(trait_type, args, kw);
+        trait = (trait_object *)PyType_GenericNew(trait_type, args, kw);
         trait->getattr = getattr_handlers[kind];
         trait->setattr = setattr_handlers[kind];
-        return trait;
+        return (PyObject *)trait;
     }
 
     PyErr_Format(
