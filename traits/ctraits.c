@@ -491,7 +491,7 @@ set_delete_property_error(has_traits_object *obj, PyObject *name)
 static void
 unknown_attribute_error(has_traits_object *obj, PyObject *name)
 {
-    return PyErr_Format(
+    PyErr_Format(
         PyExc_AttributeError, "'%.50s' object has no attribute '%.400U'",
         Py_TYPE(obj)->tp_name, name);
 }
