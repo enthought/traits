@@ -588,15 +588,6 @@ def update_traits_class_dict(class_name, bases, class_dict):
 
                     default_value = value
                     class_traits[name] = value = ictrait(default_value)
-                    # Make sure that the trait now has the default value
-                    # has the correct initializer.
-                    if value.setattr_original_value:
-                        # Set the original, non validated value
-                        value.set_default_value(
-                            DefaultValue.missing, default_value)
-                    else:
-                        value.set_default_value(
-                            DefaultValue.missing, value.default)
                     del class_dict[name]
                     break
 
