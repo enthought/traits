@@ -149,3 +149,9 @@ class TestExpression(unittest.TestCase):
         default_value_callable = reconstituted.default_value()[1]
 
         self.assertEqual(eval(default_value_callable(f)), 1)
+
+    def test_clone(self):
+        expr = Expression(default_value="1")
+        cloned_expr = expr.clone("2")
+
+        self.assertEqual(cloned_expr.default_value, "2")
