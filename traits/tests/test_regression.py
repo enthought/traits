@@ -11,7 +11,6 @@
 """ General regression tests for a variety of bugs. """
 import gc
 import sys
-import types
 import unittest
 
 from traits.constants import DefaultValue

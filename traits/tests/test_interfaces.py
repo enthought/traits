@@ -124,10 +124,6 @@ class TraitsHolderSub(TraitsHolder):
     foo_adapts_to = Sample()
 
 
-class AdaptingDefaultHolder(HasTraits):
-    foo_adapted_to = Supports(IFoo, Sample, (), {})
-    foo_adapts_to = AdaptsTo(IFoo, Sample, (), {})
-
 class SampleListAdapter(Adapter):
     def get_list(self):
         obj = self.adaptee
