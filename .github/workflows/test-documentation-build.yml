@@ -22,8 +22,10 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         python -m pip install Sphinx enthought_sphinx_theme
+        python -m pip install sphinx-lint
         python -m pip install .
     - name: Build HTML documentation with Sphinx
       run: |
         cd docs
         python -m sphinx -b html -W source build
+        sphinx-lint .
