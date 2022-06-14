@@ -303,6 +303,7 @@ setuptools.setup(
         "docs": [
             "enthought-sphinx-theme",
             "Sphinx>=2.1.0,!=3.2.0",
+            "sphinx-copybutton",
         ],
         "test": [
             "Cython",

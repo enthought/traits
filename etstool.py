@@ -101,6 +101,9 @@ common_dependencies = {
     "traitsui",
 }
 
+# Dependencies that need to be installed from PyPO
+pypi_dependencies = {"sphinx-copybutton"}
+
 # Dependencies we install from source for testing
 source_dependencies = {"traitsui"}
 
@@ -188,6 +191,12 @@ def install(edm, runtime, environment, editable, source):
         install_traits,
         install_stubs,
     ]
+
+    if pypi_dependencies:
+        commands += [
+            "{edm} run -e {environment} -- python -m pip install " + dep
+            for dep in pypi_dependencies
+        ]
 
     click.echo("Creating environment '{environment}'".format(**parameters))
     execute(commands, parameters)
