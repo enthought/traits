@@ -745,25 +745,25 @@ class ListThis(_List[_CallableType, _CallableType]):
     ...
 
 
-class DictStrAny(_Dict[str, _Any]):
+class DictStrAny(_Dict[str, _Any, str, _Any]):
     ...
 
 
-class DictStrStr(_Dict[str, str]):
+class DictStrStr(_Dict[str, str, str, str]):
     ...
 
 
-class DictStrInt(_Dict[str, int]):
+class DictStrInt(_Dict[str, int, str, int]):
     ...
 
 
-class DictStrFloat(_Dict[str, float]):
+class DictStrFloat(_Dict[str, float, str, float]):
     ...
 
 
-class DictStrBool(_Dict[str, bool]):
+class DictStrBool(_Dict[str, bool, str, bool]):
     ...
 
 
-class DictStrList(_Dict[str, list]):
+class DictStrList(_Dict[str, _ListType[Any], str, _ListType[Any]]):
     ...
