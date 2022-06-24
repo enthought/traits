@@ -34,8 +34,11 @@ def default_text_editor(trait: _Any, type: Optional[_Any] = ...):
     ...
 
 
-_T = TypeVar("_T")
 _S = TypeVar("_S")
+_T = TypeVar("_T")
+_U = TypeVar("_U")
+_V = TypeVar("_V")
+
 
 _Trait = _Union[_TraitType[_S, _T], _Type[_TraitType[_S, _T]]]
 
@@ -441,21 +444,21 @@ class CSet(Set):
     ...
 
 
-class _Dict(_TraitType[_DictType[_S, _T], _DictType[_S, _T]]):
+class _Dict(_TraitType[_DictType[_S, _T], _DictType[_U, _V]]):
     def __init__(
             self,
             key_trait: _Union[
-                _TraitType[_S, _T], _Type[_TraitType[_S, _T]]] = ...,
+                _TraitType[_S, _U], _Type[_TraitType[_S, _U]]] = ...,
             value_trait: _Union[
-                _TraitType[_S, _T], _Type[_TraitType[_S, _T]]] = ...,
-            value: dict = ...,
+                _TraitType[_T, _V], _Type[_TraitType[_T, _V]]] = ...,
+            value: _DictType[_S, _T] = ...,
             items: bool = ...,
             **metadata: _Any
     ) -> None:
         ...
 
 
-class Dict(_Dict[_S, _T]):
+class Dict(_Dict[_S, _T, _U, _V]):
     ...
 
 
