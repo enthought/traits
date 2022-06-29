@@ -11,6 +11,18 @@
 from traits.api import Float, HasTraits
 
 
+class HasIndex:
+    """Class with __index__ method; instances should be assignable to Float."""
+    def __index__(self):
+        return 1729
+
+
+class HasFloat:
+    """Class with __float__ method; instances should be assignable to Float."""
+    def __float__(self):
+        return 1729.0
+
+
 class Test(HasTraits):
     i = Float()
 
@@ -19,3 +31,5 @@ o = Test()
 o.i = "5"  # E: assignment
 o.i = 5
 o.i = 5.5
+o.i = HasIndex()
+o.i = HasFloat()

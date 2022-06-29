@@ -52,7 +52,12 @@ if __name__ == "__main__":
         long_description=get_long_description(),
         long_description_content_type="text/x-rst",
         download_url="https://pypi.python.org/pypi/traits-stubs",
-        install_requires=["traits"],
+        install_requires=[
+            "traits",
+            # We need typing-extensions for Protocol support; once we no longer
+            # support Python < 3.8, we can use typing instead.
+            'typing-extensions',
+        ],
         extras_require={"test": ["mypy"]},
         packages=[
             "traits-stubs",

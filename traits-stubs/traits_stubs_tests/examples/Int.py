@@ -11,6 +11,12 @@
 from traits.api import HasTraits, Int
 
 
+class HasIndex:
+    """Class with __index__ method; instances should be assignable to Int."""
+    def __index__(self):
+        return 1729
+
+
 class Test(HasTraits):
     i = Int()
     j = Int(default_value="234")  # E: arg-type
@@ -19,6 +25,7 @@ class Test(HasTraits):
 
 o = Test()
 o.i = 5
+o.i = HasIndex()
 
 o.i = "5"  # E: assignment
 o.i = 5.5  # E: assignment

@@ -18,11 +18,16 @@ from typing import (
     Optional,
     Sequence as _Sequence,
     Set as _SetType,
+    SupportsFloat,
     Type as _Type,
     TypeVar,
     Union as _Union,
 )
 from uuid import UUID as _UUID
+
+# Once we no longer support Python 3.6 or Python 3.7, we can import
+# SupportsIndex from typing instead of typing_extensions.
+from typing_extensions import SupportsIndex
 
 from .trait_type import _TraitType
 
@@ -57,7 +62,7 @@ class _BaseInt(_TraitType[_T, int]):
     ...
 
 
-class BaseInt(_BaseInt[int]):
+class BaseInt(_TraitType[SupportsIndex, int]):
     ...
 
 
@@ -69,7 +74,7 @@ class _BaseFloat(_TraitType[_T, float]):
     ...
 
 
-class BaseFloat(_BaseFloat[float]):
+class BaseFloat(_TraitType[_Union[SupportsFloat, SupportsIndex], float]):
     ...
 
 
