@@ -444,6 +444,9 @@ class CSet(Set):
     ...
 
 
+# _Dict accepts a dictionary with key type _S and value type _T,
+# and stores a dictionary with key type _U and value type _V.
+
 class _Dict(_TraitType[_DictType[_S, _T], _DictType[_U, _V]]):
     def __init__(
             self,
