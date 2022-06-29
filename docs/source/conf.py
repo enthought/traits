@@ -117,13 +117,6 @@ autodoc_default_options = {
 
 autodoc_member_order = "bysource"
 
-# Options for Sphinx copybutton extension
-# ---------------------------------------
-
-# Matches prompts - "$ ", ">>>" and "..."
-copybutton_prompt_text = r">>> |\.\.\. |\$ "
-copybutton_prompt_is_regexp = True
-
 # Options for HTML output
 # -----------------------
 
