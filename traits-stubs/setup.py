@@ -54,9 +54,9 @@ if __name__ == "__main__":
         download_url="https://pypi.python.org/pypi/traits-stubs",
         install_requires=[
             "traits",
-            # We need typing-extensions for Protocol support; once we no longer
-            # support Python < 3.8, we can use typing instead.
-            'typing-extensions',
+            # We need typing-extensions for SupportsIndex; once we no longer
+            # support Python < 3.8, we can drop this requirement.
+            'typing-extensions; python_version<"3.8"',
         ],
         extras_require={"test": ["mypy"]},
         packages=[

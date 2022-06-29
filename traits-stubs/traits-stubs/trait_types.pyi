@@ -10,6 +10,7 @@
 
 import datetime
 from pathlib import PurePath as _PurePath
+import sys
 from typing import (
     Any as _Any,
     Callable as _CallableType,
@@ -27,7 +28,10 @@ from uuid import UUID as _UUID
 
 # Once we no longer support Python 3.6 or Python 3.7, we can import
 # SupportsIndex from typing instead of typing_extensions.
-from typing_extensions import SupportsIndex
+if sys.version_info < (3, 8):
+    from typing_extensions import SupportsIndex
+else:
+    from typing import SupportsIndex
 
 from .trait_type import _TraitType
 
