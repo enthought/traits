@@ -65,6 +65,10 @@ version of mypy. To avoid that, you can make sure that you *don't* have mypy
 installed globally, and/or always invoke mypy using ``python -m mypy`` from
 within the environment.
 
+Note: the unittest run can give the wrong result in the presence of a stale
+``.mypy_cache``. If you're getting a pass where you expect to get a failure
+(or vice versa), try deleting the local cache and trying again.
+
 
 
 Dependencies
