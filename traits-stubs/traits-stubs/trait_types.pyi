@@ -34,8 +34,11 @@ def default_text_editor(trait: _Any, type: Optional[_Any] = ...):
     ...
 
 
-_T = TypeVar("_T")
 _S = TypeVar("_S")
+_T = TypeVar("_T")
+_U = TypeVar("_U")
+_V = TypeVar("_V")
+
 
 _Trait = _Union[_TraitType[_S, _T], _Type[_TraitType[_S, _T]]]
 
@@ -441,21 +444,24 @@ class CSet(Set):
     ...
 
 
-class _Dict(_TraitType[_DictType[_S, _T], _DictType[_S, _T]]):
+# _Dict accepts a dictionary with key type _S and value type _T,
+# and stores a dictionary with key type _U and value type _V.
+
+class _Dict(_TraitType[_DictType[_S, _T], _DictType[_U, _V]]):
     def __init__(
             self,
             key_trait: _Union[
-                _TraitType[_S, _T], _Type[_TraitType[_S, _T]]] = ...,
+                _TraitType[_S, _U], _Type[_TraitType[_S, _U]]] = ...,
             value_trait: _Union[
-                _TraitType[_S, _T], _Type[_TraitType[_S, _T]]] = ...,
-            value: dict = ...,
+                _TraitType[_T, _V], _Type[_TraitType[_T, _V]]] = ...,
+            value: _DictType[_S, _T] = ...,
             items: bool = ...,
             **metadata: _Any
     ) -> None:
         ...
 
 
-class Dict(_Dict[_S, _T]):
+class Dict(_Dict[_S, _T, _U, _V]):
     ...
 
 
@@ -742,25 +748,25 @@ class ListThis(_List[_CallableType, _CallableType]):
     ...
 
 
-class DictStrAny(_Dict[str, _Any]):
+class DictStrAny(_Dict[str, _Any, str, _Any]):
     ...
 
 
-class DictStrStr(_Dict[str, str]):
+class DictStrStr(_Dict[str, str, str, str]):
     ...
 
 
-class DictStrInt(_Dict[str, int]):
+class DictStrInt(_Dict[str, int, str, int]):
     ...
 
 
-class DictStrFloat(_Dict[str, float]):
+class DictStrFloat(_Dict[str, float, str, float]):
     ...
 
 
-class DictStrBool(_Dict[str, bool]):
+class DictStrBool(_Dict[str, bool, str, bool]):
     ...
 
 
-class DictStrList(_Dict[str, list]):
+class DictStrList(_Dict[str, _ListType[Any], str, _ListType[Any]]):
     ...
