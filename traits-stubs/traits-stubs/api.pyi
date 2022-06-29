@@ -18,6 +18,12 @@ from .constants import (
     RICH_COMPARE as RICH_COMPARE,
 )
 
+from .trait_errors import (
+    TraitError as TraitError,
+    TraitNotificationError as TraitNotificationError,
+    DelegationError as DelegationError,
+)
+
 from .traits import (
     Color as Color,
     Default as Default,
