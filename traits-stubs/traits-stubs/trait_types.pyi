@@ -484,7 +484,7 @@ class _Map(_TraitType[_S, _T]):
         ...
 
 
-class Map(_Map[_S, _T]):
+class Map(_Map[_Any, _Any]):
     ...
 
 
@@ -497,7 +497,7 @@ class _PrefixMap(_TraitType[_S, _T]):
         ...
 
 
-class PrefixMap(_PrefixMap[_S, _T]):
+class PrefixMap(_PrefixMap[_Any, _Any]):
     ...
 
 
