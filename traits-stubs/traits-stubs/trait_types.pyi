@@ -20,6 +20,7 @@ from typing import (
     Sequence as _Sequence,
     Set as _SetType,
     SupportsFloat,
+    Tuple as _Tuple,
     Type as _Type,
     TypeVar,
     Union as _Union,
@@ -39,7 +40,7 @@ SetTypes: _Any
 bool_fast_validate: _Any
 
 
-def default_text_editor(trait: _Any, type: Optional[_Any] = ...):
+def default_text_editor(trait: _Any, type: Optional[_Any] = ...) -> _Any:
     ...
 
 
@@ -57,9 +58,9 @@ class Any(_TraitType[_Any, _Any]):
         self,
         default_value: _Any = ...,
         *,
-        factory: _CallableType = ...,
-        args: tuple = ...,
-        kw: dict = ...,
+        factory: _CallableType[..., _Any] = ...,
+        args: _Tuple[_Any, ...] = ...,
+        kw: _DictType[str, _Any] = ...,
         **metadata: _Any,
     ) -> None:
         ...
@@ -203,12 +204,12 @@ class _String(_TraitType[_T, str]):
 
 class String(_String[str]):
     def __init__(
-            self,
-            value: str = ...,
-            minlen: int = ...,
-            maxlen: int = ...,
-            regex: str = ...,
-            **metadata: _Any
+        self,
+        value: str = ...,
+        minlen: int = ...,
+        maxlen: int = ...,
+        regex: str = ...,
+        **metadata: _Any
     ) -> None:
         ...
 
@@ -236,7 +237,7 @@ class _BaseCallable(_TraitType[_OptionalCallable, _OptionalCallable]):
     ...
 
 
-class BaseCallable(_BaseCallable[_CallableType[..., _Any]]):
+class BaseCallable(_BaseCallable):
     ...
 
 
@@ -286,12 +287,12 @@ class Constant(_TraitType[_Any, _Any]):
 
 class Delegate(_TraitType[_Any, _Any]):
     def __init__(
-            self,
-            delegate: str = ...,
-            prefix: str = ...,
-            modify: bool = ...,
-            listenable: bool = ...,
-            **metadata: _Any
+        self,
+        delegate: str = ...,
+        prefix: str = ...,
+        modify: bool = ...,
+        listenable: bool = ...,
+        **metadata: _Any
     ) -> None:
         ...
 
@@ -314,13 +315,13 @@ class PythonValue(Any):
 
 class BaseFile(_TraitType[_Union[str, _PurePath], str]):
     def __init__(
-            self,
-            value: str = ...,
-            filter: str = ...,
-            auto_set: bool = ...,
-            entries: int = ...,
-            exists: bool = ...,
-            **metadata: _Any
+        self,
+        value: str = ...,
+        filter: str = ...,
+        auto_set: bool = ...,
+        entries: int = ...,
+        exists: bool = ...,
+        **metadata: _Any
     ) -> None:
         ...
 
@@ -329,7 +330,7 @@ class File(BaseFile):
     ...
 
 
-class BaseDirectory(_BaseStr):
+class BaseDirectory(_TraitType[_Union[str, _PurePath], str]):
     ...
 
 
@@ -340,13 +341,13 @@ class Directory(BaseDirectory):
 # ----------------BaseRange---------------------
 class _BaseRange(_TraitType[_T, _Union[int, float]]):
     def __init__(
-            self,
-            low: _Union[int, float, str] = ...,
-            high: _Union[int, float, str] = ...,
-            value: _Union[int, float, str] = ...,
-            exclude_low: bool = ...,
-            exclude_high: bool = ...,
-            **metadata: _Any
+        self,
+        low: _Union[int, float, str] = ...,
+        high: _Union[int, float, str] = ...,
+        value: _Union[int, float, str] = ...,
+        exclude_low: bool = ...,
+        exclude_high: bool = ...,
+        **metadata: _Any
     ) -> None:
         ...
 
@@ -361,9 +362,9 @@ class Range(BaseRange):
 
 class _BaseEnum(_TraitType[_T, _Any]):
     def __init__(
-            self,
-            *args: _Any,
-            **metadata: _Any,
+        self,
+        *args: _Any,
+        **metadata: _Any,
     ) -> None:
         ...
 
@@ -376,16 +377,16 @@ class Enum(BaseEnum):
     ...
 
 
-class _BaseTuple(_TraitType[_T, tuple]):
+class _BaseTuple(_TraitType[_T, _Tuple[_Any, ...]]):
     def __init__(
-            self,
-            *types: _Any,
-            **metadata: _Any,
+        self,
+        *types: _Any,
+        **metadata: _Any,
     ) -> None:
         ...
 
 
-class BaseTuple(_BaseTuple[tuple]):
+class BaseTuple(_BaseTuple[_Tuple[_Any, ...]]):
     ...
 
 
@@ -395,24 +396,24 @@ class Tuple(BaseTuple):
 
 class ValidatedTuple(BaseTuple):
     def __init__(
-            self,
-            *types: _Any,
-            fvalidate: _OptionalCallable = ...,
-            fvalidate_info: Optional[str] = ...,
-            **metadata: _Any
+        self,
+        *types: _Any,
+        fvalidate: _OptionalCallable = ...,
+        fvalidate_info: Optional[str] = ...,
+        **metadata: _Any,
     ) -> None:
         ...
 
 
 class _List(_TraitType[_Sequence[_S], _ListType[_T]]):
     def __init__(
-            self,
-            trait: _Union[_TraitType[_S, _T], _Type[_TraitType[_S, _T]]] = ...,
-            value: _Sequence[_S] = [],
-            minlen: int = ...,
-            maxlen: int = ...,
-            items: bool = ...,
-            **metadata: _Any
+        self,
+        trait: _Union[_TraitType[_S, _T], _Type[_TraitType[_S, _T]]] = ...,
+        value: _Sequence[_S] = ...,
+        minlen: int = ...,
+        maxlen: int = ...,
+        items: bool = ...,
+        **metadata: _Any
     ) -> None:
         ...
 
@@ -427,20 +428,20 @@ class CList(_List[_S, _T]):
 
 class PrefixList(BaseStr):
     def __init__(
-            self,
-            values: _Sequence[str],
-            **metadata: _Any,
+        self,
+        values: _Sequence[str],
+        **metadata: _Any,
     ) -> None:
         ...
 
 
 class _Set(_TraitType[_SetType[_S], _SetType[_T]]):
     def __init__(
-            self,
-            trait: _Union[_TraitType[_S, _T], _Type[_TraitType[_S, _T]]] = ...,
-            value: _Sequence[_S] = ...,
-            items: bool = ...,
-            **metadata: _Any
+        self,
+        trait: _Union[_TraitType[_S, _T], _Type[_TraitType[_S, _T]]] = ...,
+        value: _Sequence[_S] = ...,
+        items: bool = ...,
+        **metadata: _Any
     ) -> None:
         ...
 
@@ -449,7 +450,7 @@ class Set(_Set[_S, _T]):
     ...
 
 
-class CSet(Set):
+class CSet(Set[_S, _T]):
     ...
 
 
@@ -458,14 +459,14 @@ class CSet(Set):
 
 class _Dict(_TraitType[_DictType[_S, _T], _DictType[_U, _V]]):
     def __init__(
-            self,
-            key_trait: _Union[
-                _TraitType[_S, _U], _Type[_TraitType[_S, _U]]] = ...,
-            value_trait: _Union[
-                _TraitType[_T, _V], _Type[_TraitType[_T, _V]]] = ...,
-            value: _DictType[_S, _T] = ...,
-            items: bool = ...,
-            **metadata: _Any
+        self,
+        key_trait: _Union[
+            _TraitType[_S, _U], _Type[_TraitType[_S, _U]]] = ...,
+        value_trait: _Union[
+            _TraitType[_T, _V], _Type[_TraitType[_T, _V]]] = ...,
+        value: _DictType[_S, _T] = ...,
+        items: bool = ...,
+        **metadata: _Any
     ) -> None:
         ...
 
@@ -476,27 +477,27 @@ class Dict(_Dict[_S, _T, _U, _V]):
 
 class _Map(_TraitType[_S, _T]):
     def __init__(
-            self,
-            map: _DictType[_S, _T],
-            **metadata: _Any
+        self,
+        map: _DictType[_S, _T],
+        **metadata: _Any
     ) -> None:
         ...
 
 
-class Map(_Map):
+class Map(_Map[_S, _T]):
     ...
 
 
 class _PrefixMap(_TraitType[_S, _T]):
     def __init__(
-            self,
-            map: _DictType[_S, _T],
-            **metadata: _Any
+        self,
+        map: _DictType[_S, _T],
+        **metadata: _Any
     ) -> None:
         ...
 
 
-class PrefixMap(_PrefixMap):
+class PrefixMap(_PrefixMap[_S, _T]):
     ...
 
 
@@ -504,7 +505,7 @@ class _BaseClass(_TraitType[_Union[_T, str, None], _Union[_T, str, None]]):
     ...
 
 
-class BaseClass(_BaseClass[_Type]):
+class BaseClass(_BaseClass[_Type[Any]]):
     ...
 
 
@@ -512,10 +513,10 @@ class _BaseInstance(_BaseClass[_T]):
 
     # simplified signature
     def __init__(
-            self,
-            klass: _T,
-            *args,
-            **metadata: _Any,
+        self,
+        klass: _T,
+        *args: _Any,
+        **metadata: _Any,
     ) -> None:
         ...
 
@@ -538,11 +539,11 @@ class AdaptsTo(Supports):
 
 class Type(BaseClass):
     def __init__(
-            self,
-            value: Optional[_Type] = ...,
-            klass: Optional[_Union[_Type, str]] = ...,
-            allow_none: bool = ...,
-            **metadata: _Any
+        self,
+        value: Optional[_Type[_Any]] = ...,
+        klass: Optional[_Union[_Type[_Any], str]] = ...,
+        allow_none: bool = ...,
+        **metadata: _Any
     ) -> None:
         ...
 
@@ -557,48 +558,48 @@ class Event(_TraitType[_Any, _Any]):
 
 class Button(Event):
     def __init__(
-            self,
-            label: str = ...,
-            image: _Any = ...,
-            style: str = ...,
-            values_trait: str = ...,
-            orientation: str = ...,
-            width_padding: int = ...,
-            height_padding: int = ...,
-            view: Optional[_Any] = ...,
-            **metadata: _Any
+        self,
+        label: str = ...,
+        image: _Any = ...,
+        style: str = ...,
+        values_trait: str = ...,
+        orientation: str = ...,
+        width_padding: int = ...,
+        height_padding: int = ...,
+        view: Optional[_Any] = ...,
+        **metadata: _Any
     ) -> None:
         ...
 
 
 class ToolbarButton(Button):
     def __init__(
-            self,
-            label: str = ...,
-            image: _Any = ...,
-            style: str = ...,
-            orientation: str = ...,
-            width_padding: int = ...,
-            height_padding: int = ...,
-            **metadata: _Any
+        self,
+        label: str = ...,
+        image: _Any = ...,
+        style: str = ...,
+        orientation: str = ...,
+        width_padding: int = ...,
+        height_padding: int = ...,
+        **metadata: _Any
     ) -> None:
         ...
 
 
 class Either(_TraitType[_Any, _Any]):
     def __init__(
-            self,
-            *traits: _Any,
-            **metadata: _Any
+        self,
+        *traits: _Any,
+        **metadata: _Any
     ) -> None:
         ...
 
 
 class Union(_TraitType[_Any, _Any]):
     def __init__(
-            self,
-            *traits: _Any,
-            **metadata: _Any
+        self,
+        *traits: _Any,
+        **metadata: _Any
     ) -> None:
         ...
 
@@ -609,20 +610,20 @@ class Symbol(_TraitType[_Any, _Any]):
 
 class UUID(_TraitType[_Union[str, _UUID], _UUID]):
     def __init__(
-            self,
-            can_init: bool = ...,
-            **metadata: _Any
+        self,
+        can_init: bool = ...,
+        **metadata: _Any
     ) -> None:
         ...
 
 
 class WeakRef(Instance):
     def __init__(
-            self,
-            klass: _Any = ...,
-            allow_none: bool = ...,
-            adapt: str = ...,
-            **metadata: _Any
+        self,
+        klass: _Any = ...,
+        allow_none: bool = ...,
+        adapt: str = ...,
+        **metadata: _Any
     ) -> None:
         ...
 
@@ -632,12 +633,12 @@ _OptionalDate = Optional[datetime.date]
 
 class Date(_TraitType[_OptionalDate, _OptionalDate]):
     def __init__(
-            self,
-            default_value: datetime.date = ...,
-            *,
-            allow_datetime: bool = ...,
-            allow_none: bool = ...,
-            **metadata: _Any,
+        self,
+        default_value: datetime.date = ...,
+        *,
+        allow_datetime: bool = ...,
+        allow_none: bool = ...,
+        **metadata: _Any,
     ) -> None:
         ...
 
@@ -647,11 +648,11 @@ _OptionalDatetime = Optional[datetime.datetime]
 
 class Datetime(_TraitType[_OptionalDatetime, _OptionalDatetime]):
     def __init__(
-            self,
-            default_value: datetime.datetime = ...,
-            *,
-            allow_none: bool = ...,
-            **metadata: _Any,
+        self,
+        default_value: datetime.datetime = ...,
+        *,
+        allow_none: bool = ...,
+        **metadata: _Any,
     ) -> None:
         ...
 
@@ -661,11 +662,11 @@ _OptionalTime = Optional[datetime.time]
 
 class Time(_TraitType[_OptionalTime, _OptionalTime]):
     def __init__(
-            self,
-            default_value: datetime.time = ...,
-            *,
-            allow_none: bool = ...,
-            **metadata: _Any,
+        self,
+        default_value: datetime.time = ...,
+        *,
+        allow_none: bool = ...,
+        **metadata: _Any,
     ) -> None:
         ...
 
@@ -716,7 +717,6 @@ class true(Bool):
 
 undefined = _Any
 
-
 class ListInt(_List[int, int]):
     ...
 
@@ -745,15 +745,15 @@ class ListBool(_List[bool, bool]):
     ...
 
 
-class ListFunction(_List[_CallableType, _CallableType]):
+class ListFunction(_List[_CallableType[..., _Any], _CallableType[..., _Any]]):
     ...
 
 
-class ListMethod(_List[_CallableType, _CallableType]):
+class ListMethod(_List[_CallableType[..., _Any], _CallableType[..., _Any]]):
     ...
 
 
-class ListThis(_List[_CallableType, _CallableType]):
+class ListThis(_List[_CallableType[..., _Any], _CallableType[..., _Any]]):
     ...
 
 
