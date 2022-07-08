@@ -400,7 +400,7 @@ class ValidatedTuple(BaseTuple):
         *types: _Any,
         fvalidate: _OptionalCallable = ...,
         fvalidate_info: Optional[str] = ...,
-        **metadata: _Any,
+        **metadata: _Any
     ) -> None:
         ...
 
@@ -716,6 +716,7 @@ class true(Bool):
 
 
 undefined = _Any
+
 
 class ListInt(_List[int, int]):
     ...
