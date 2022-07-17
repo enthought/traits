@@ -49,6 +49,26 @@ class ETSConfig(object):
     This class should not use ANY other package in the tool suite so that it
     will always work no matter which other packages are present.
 
+    Attributes
+    ----------
+    application_data : str
+        Application data directory path. This directory is meant to store
+        non-user accessible data e.g. configuration files.
+    application_home : str
+        Application home directory path. This directory is usually a
+        sub-directory of the application_data directory e.g.
+        "application_data" / "package_name".  This directory is meant to store
+        application-specific files e.g. preferences files, log files.
+    company : str, default="Enthought"
+        The company name.
+    toolkit : str
+        GUI toolkit to use.
+
+        If `None`, the `ETS_TOOLKIT` environment variable will be used.
+    kiva_backend : str
+        Kiva backend to use.
+    user_data : str
+        User data directory path.
     """
 
     ###########################################################################
