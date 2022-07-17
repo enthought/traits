@@ -500,6 +500,17 @@ class ETSConfig(object):
 
         return usr_dir
 
+    def __delattr__(self, name):
+        if name in (
+            "application_data",
+            "application_home",
+            "company",
+            "toolkit",
+            "kiva_backend",
+            "user_data",
+        ):
+            object.__delattr__(self, f"_{name}")
+
 
 # We very purposefully only have one object and do not export the class. We
 # could have just made everything class methods, but that always seems a bit
