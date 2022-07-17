@@ -233,6 +233,18 @@ class ETSConfigTestCase(unittest.TestCase):
         self.assertEqual(dirname, self.ETSConfig.application_data)
         self.assertEqual(app_name, "tests")
 
+    def test_delete_application_home(self):
+        # given
+        self.ETSConfig.application_home = "dummy"
+        self.assertEqual(self.ETSConfig.application_home, "dummy")
+
+        # when
+        del self.ETSConfig.application_home
+
+        # then
+        with self.assertRaises(AttributeError):
+            self.ETSConfig.application_home
+
     def test_toolkit_default_kiva_backend(self):
         self.ETSConfig.toolkit = "qt4"
         self.assertEqual(self.ETSConfig.kiva_backend, "image")
@@ -244,6 +256,18 @@ class ETSConfigTestCase(unittest.TestCase):
     def test_toolkit_explicit_kiva_backend(self):
         self.ETSConfig.toolkit = "wx.celiagg"
         self.assertEqual(self.ETSConfig.kiva_backend, "celiagg")
+
+    def test_delete_kiva_backend(self):
+        # given
+        self.ETSConfig.toolkit = "wx.celiagg"
+        self.assertEqual(self.ETSConfig.kiva_backend, "celiagg")
+
+        # when
+        del self.ETSConfig.kiva_backend
+
+        # then
+        with self.assertRaises(AttributeError):
+            self.ETSConfig.kiva_backend
 
     def test_toolkit_environ(self):
         test_args = ["something"]
