@@ -362,14 +362,3 @@ class ETSConfigTestCase(unittest.TestCase):
         os.remove(path)
 
         self.assertEqual(data, result)
-
-
-# For running as an individual set of tests.
-if __name__ == "__main__":
-
-    # Add the non-default test of application_home...non-default because it
-    # must be run using this module as a script to be valid.
-    suite = unittest.TestLoader().loadTestsFromTestCase(ETSConfigTestCase)
-    suite.addTest(ETSConfigTestCase("_test_default_application_home"))
-
-    unittest.TextTestRunner(verbosity=2).run(suite)
