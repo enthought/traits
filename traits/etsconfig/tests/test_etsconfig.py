@@ -202,7 +202,7 @@ class ETSConfigTestCase(unittest.TestCase):
         self.ETSConfig.company = old
         self.assertEqual(old, self.ETSConfig.company)
 
-    def _test_default_application_home(self):
+    def test_default_application_home(self):
         """
         application home
 
