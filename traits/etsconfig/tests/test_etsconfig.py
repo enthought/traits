@@ -207,15 +207,14 @@ class ETSConfigTestCase(unittest.TestCase):
         application home
 
         """
-
-        # This test is only valid when run with the 'main' at the end of this
-        # file: "python app_dat_locator_test_case.py", in which case the
-        # app_name will be the directory this file is in ('tests').
         app_home = self.ETSConfig.application_home
         (dirname, app_name) = os.path.split(app_home)
 
         self.assertEqual(dirname, self.ETSConfig.application_data)
-        self.assertEqual(app_name, "tests")
+
+        # The assumption here is that the test was run using unittest and not
+        # a different test runner e.g. using "python -m unittest ...".
+        self.assertEqual(app_name, "unittest")
 
     def test_toolkit_default_kiva_backend(self):
         self.ETSConfig.toolkit = "qt4"
