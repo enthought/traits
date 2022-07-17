@@ -117,6 +117,10 @@ class ETSConfig(object):
 
         self._application_data = application_data
 
+    @application_data.deleter
+    def application_data(self):
+        del self._application_data
+
     def get_application_home(self, create=False):
         """ Return the application home directory path.
 
@@ -175,6 +179,10 @@ class ETSConfig(object):
 
         self._application_home = application_home
 
+    @application_home.deleter
+    def application_home(self):
+        del self._application_home
+
     @property
     def company(self):
         """
@@ -195,6 +203,10 @@ class ETSConfig(object):
         """
 
         self._company = company
+
+    @company.deleter
+    def company(self):
+        del self._company
 
     @contextmanager
     def provisional_toolkit(self, toolkit):
@@ -260,6 +272,10 @@ class ETSConfig(object):
 
         self._toolkit = toolkit
 
+    @toolkit.deleter
+    def toolkit(self):
+        del self._toolkit
+
     @property
     def enable_toolkit(self):
         """
@@ -322,6 +338,10 @@ class ETSConfig(object):
 
         return self._kiva_backend
 
+    @kiva_backend.deleter
+    def kiva_backend(self):
+        del self._kiva_backend
+
     @property
     def user_data(self):
         """
@@ -347,6 +367,10 @@ class ETSConfig(object):
         """
 
         self._user_data = user_data
+
+    @user_data.deleter
+    def user_data(self):
+        del self._user_data
 
     #### private methods #####################################################
 
@@ -499,17 +523,6 @@ class ETSConfig(object):
             os.makedirs(usr_dir)
 
         return usr_dir
-
-    def __delattr__(self, name):
-        if name in (
-            "application_data",
-            "application_home",
-            "company",
-            "toolkit",
-            "kiva_backend",
-            "user_data",
-        ):
-            object.__delattr__(self, f"_{name}")
 
 
 # We very purposefully only have one object and do not export the class. We
