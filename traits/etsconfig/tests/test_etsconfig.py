@@ -146,6 +146,14 @@ class ETSConfigTestCase(unittest.TestCase):
         self.ETSConfig.application_data = old
         self.assertEqual(old, self.ETSConfig.application_data)
 
+    def test_delete_application_data(self):
+        # when
+        del self.ETSConfig.application_data
+
+        # then
+        with self.assertRaises(AttributeError):
+            self.ETSConfig.application_data
+
     def test_application_data_is_idempotent(self):
         """
         application data is idempotent
@@ -202,6 +210,14 @@ class ETSConfigTestCase(unittest.TestCase):
         self.ETSConfig.company = old
         self.assertEqual(old, self.ETSConfig.company)
 
+    def test_delete_company(self):
+        # when
+        del self.ETSConfig.company
+
+        # then
+        with self.assertRaises(AttributeError):
+            self.ETSConfig.company
+
     def _test_default_application_home(self):
         """
         application home
@@ -257,6 +273,14 @@ class ETSConfigTestCase(unittest.TestCase):
                 toolkit = self.ETSConfig.toolkit
 
         self.assertEqual(toolkit, "test_direct")
+
+    def test_delete_toolkit(self):
+        # when
+        del self.ETSConfig.toolkit
+
+        # then
+        with self.assertRaises(AttributeError):
+            self.ETSConfig.toolkit
 
     def test_provisional_toolkit(self):
         test_args = []
@@ -330,6 +354,14 @@ class ETSConfigTestCase(unittest.TestCase):
 
         self.ETSConfig.user_data = old
         self.assertEqual(old, self.ETSConfig.user_data)
+
+    def test_delete_user_data(self):
+        # when
+        del self.ETSConfig.user_data
+
+        # then
+        with self.assertRaises(AttributeError):
+            self.ETSConfig.user_data
 
     def test_user_data_is_idempotent(self):
         """
