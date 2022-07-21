@@ -19,6 +19,7 @@ import tempfile
 import time
 
 import unittest
+from unittest.mock import patch
 
 # Enthought library imports.
 from traits.etsconfig.etsconfig import ETSConfig, ETSToolkitError
@@ -147,12 +148,19 @@ class ETSConfigTestCase(unittest.TestCase):
         self.assertEqual(old, self.ETSConfig.application_data)
 
     def test_delete_application_data(self):
-        # when
         del self.ETSConfig.application_data
 
+    def test_mock_application_data(self):
+        # given
+        old_app_data = self.ETSConfig.application_data
+
+        # when
+        with patch.object(self.ETSConfig, "application_data", new="foo"):
+            # then
+            self.assertEqual(self.ETSConfig.application_data, "foo")
+
         # then
-        with self.assertRaises(AttributeError):
-            self.ETSConfig.application_data
+        self.assertEqual(self.ETSConfig.application_data, old_app_data)
 
     def test_application_data_is_idempotent(self):
         """
@@ -211,12 +219,19 @@ class ETSConfigTestCase(unittest.TestCase):
         self.assertEqual(old, self.ETSConfig.company)
 
     def test_delete_company(self):
-        # when
         del self.ETSConfig.company
 
+    def test_mock_company(self):
+        # given
+        old_company = self.ETSConfig.company
+
+        # when
+        with patch.object(self.ETSConfig, "company", new="new company"):
+            # then
+            self.assertEqual(self.ETSConfig.company, "new company")
+
         # then
-        with self.assertRaises(AttributeError):
-            self.ETSConfig.company
+        self.assertEqual(self.ETSConfig.company, old_company)
 
     def _test_default_application_home(self):
         """
@@ -238,12 +253,20 @@ class ETSConfigTestCase(unittest.TestCase):
         self.ETSConfig.application_home = "dummy"
         self.assertEqual(self.ETSConfig.application_home, "dummy")
 
-        # when
+        # check that the property can be deleted
         del self.ETSConfig.application_home
 
+    def test_mock_application_home(self):
+        # given
+        old_app_home = self.ETSConfig.application_home
+
+        # when
+        with patch.object(self.ETSConfig, "application_home", new="foo"):
+            # then
+            self.assertEqual(self.ETSConfig.application_home, "foo")
+
         # then
-        with self.assertRaises(AttributeError):
-            self.ETSConfig.application_home
+        self.assertEqual(self.ETSConfig.application_home, old_app_home)
 
     def test_toolkit_default_kiva_backend(self):
         self.ETSConfig.toolkit = "qt4"
@@ -262,12 +285,14 @@ class ETSConfigTestCase(unittest.TestCase):
         self.ETSConfig.toolkit = "wx.celiagg"
         self.assertEqual(self.ETSConfig.kiva_backend, "celiagg")
 
-        # when
+        # check that the property can be deleted
         del self.ETSConfig.kiva_backend
 
-        # then
-        with self.assertRaises(AttributeError):
-            self.ETSConfig.kiva_backend
+    def test_mock_kiva_backend(self):
+        # when
+        with patch.object(self.ETSConfig, "toolkit", new="test.foo"):
+            # then
+            self.assertEqual(self.ETSConfig.kiva_backend, "foo")
 
     def test_toolkit_environ(self):
         test_args = ["something"]
@@ -299,12 +324,19 @@ class ETSConfigTestCase(unittest.TestCase):
         self.assertEqual(toolkit, "test_direct")
 
     def test_delete_toolkit(self):
-        # when
         del self.ETSConfig.toolkit
 
+    def test_mock_toolkit(self):
+        # given
+        old_toolkit = self.ETSConfig.toolkit
+
+        # when
+        with patch.object(self.ETSConfig, "toolkit", new="foo"):
+            # then
+            self.assertEqual(self.ETSConfig.toolkit, "foo")
+
         # then
-        with self.assertRaises(AttributeError):
-            self.ETSConfig.toolkit
+        self.assertEqual(self.ETSConfig.toolkit, old_toolkit)
 
     def test_provisional_toolkit(self):
         test_args = []
@@ -380,12 +412,19 @@ class ETSConfigTestCase(unittest.TestCase):
         self.assertEqual(old, self.ETSConfig.user_data)
 
     def test_delete_user_data(self):
-        # when
         del self.ETSConfig.user_data
 
+    def test_mock_user_data(self):
+        # given
+        old_user_data = self.ETSConfig.user_data
+
+        # when
+        with patch.object(self.ETSConfig, "user_data", new="foo"):
+            # then
+            self.assertEqual(self.ETSConfig.user_data, "foo")
+
         # then
-        with self.assertRaises(AttributeError):
-            self.ETSConfig.user_data
+        self.assertEqual(self.ETSConfig.user_data, old_user_data)
 
     def test_user_data_is_idempotent(self):
         """
