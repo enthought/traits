@@ -505,7 +505,7 @@ class _BaseClass(_TraitType[_Union[_T, str, None], _Union[_T, str, None]]):
     ...
 
 
-class BaseClass(_BaseClass[_Type[Any]]):
+class BaseClass(_BaseClass[_Type[_Any]]):
     ...
 
 
