@@ -14,9 +14,11 @@ import os
 import tempfile
 import unittest
 
+from traits.testing.optional_dependencies import requires_pkg_resources
 from traits.util.resource import find_resource, store_resource
 
 
+@requires_pkg_resources
 class TestResource(unittest.TestCase):
     def test_find_resource_deprecated(self):
         with self.assertWarns(DeprecationWarning):
