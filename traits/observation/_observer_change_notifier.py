@@ -153,7 +153,7 @@ class ObserverChangeNotifier:
         )
 
     def equals(self, other):
-        """ Return true if the other value is a notifier equivalent to this one.
+        """ Return true if other is a notifier equivalent to this one.
 
         Parameters
         ----------
