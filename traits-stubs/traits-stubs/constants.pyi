@@ -12,11 +12,6 @@ from enum import IntEnum
 from typing import Any
 
 
-# Alias for the built-in int type, to avoid confusion in the ValidateTrait
-# namespace.
-_int = int
-
-
 class TraitKind(IntEnum):
     trait: int = ...
     python: int = ...
@@ -27,6 +22,11 @@ class TraitKind(IntEnum):
     read_only: int = ...
     constant: int = ...
     generic: int = ...
+
+
+# Alias for the built-in int type, to avoid confusion with the 'int' attribute
+# in the ValidateTrait namespace.
+_int = int
 
 class ValidateTrait(IntEnum):
     type: _int = ...
