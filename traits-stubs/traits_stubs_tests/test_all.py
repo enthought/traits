@@ -15,14 +15,15 @@ from unittest import TestCase
 from traits.testing.optional_dependencies import (
     pkg_resources,
     requires_mypy,
+    requires_numpy_testing,
     requires_pkg_resources,
 )
 from traits_stubs_tests.util import MypyAssertions
 
 
+@requires_pkg_resources
 @requires_mypy
 class TestAnnotations(TestCase, MypyAssertions):
-    @requires_pkg_resources
     def test_all(self, filename_suffix=""):
         """ Run mypy for all files contained in traits_stubs_tests/examples
         directory.
@@ -39,5 +40,25 @@ class TestAnnotations(TestCase, MypyAssertions):
             'traits_stubs_tests', 'examples'))
 
         for file_path in examples_dir.glob("*{}.py".format(filename_suffix)):
+            with self.subTest(file_path=file_path):
+                self.assertRaisesMypyError(file_path)
+
+    @requires_numpy_testing
+    def test_numpy_examples(self):
+        """ Run mypy for all files contained in traits_stubs_tests/numpy_examples
+        directory.
+
+        Lines with expected errors are marked inside these files.
+        Any mismatch will raise an assertion error.
+
+        Parameters
+        ----------
+        filename_suffix: str
+            Optional filename suffix filter.
+        """
+        examples_dir = Path(pkg_resources.resource_filename(
+            'traits_stubs_tests', 'numpy_examples'))
+
+        for file_path in examples_dir.glob("*.py"):
             with self.subTest(file_path=file_path):
                 self.assertRaisesMypyError(file_path)

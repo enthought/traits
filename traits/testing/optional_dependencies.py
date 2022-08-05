@@ -45,6 +45,13 @@ requires_mypy = unittest.skipIf(mypy is None, "Mypy not available")
 numpy = optional_import("numpy")
 requires_numpy = unittest.skipIf(numpy is None, "NumPy not available")
 
+if numpy is not None:
+    numpy_testing = optional_import("numpy.testing")
+else:
+    numpy_testing = None
+requires_numpy_testing = unittest.skipIf(
+    numpy_testing is None, "numpy.testing not available")
+
 pkg_resources = optional_import("pkg_resources")
 requires_pkg_resources = unittest.skipIf(
     pkg_resources is None, "pkg_resources not available"
