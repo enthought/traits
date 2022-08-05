@@ -45,7 +45,7 @@ class TestAnnotations(TestCase, MypyAssertions):
 
     @requires_numpy_testing
     def test_numpy_examples(self):
-        """ Run mypy for all files contained in traits_stubs_tests/numpy_examples
+        """ Run mypy for files contained in traits_stubs_tests/numpy_examples
         directory.
 
         Lines with expected errors are marked inside these files.
