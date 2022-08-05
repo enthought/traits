@@ -25,11 +25,14 @@ _Shape = Union[Tuple[_ShapeElement, ...], List[_ShapeElement]]
 # accepts only NumPy arrays, lists and tuples.
 _ArrayLike = Union[List[Any], Tuple[Any, ...], np.ndarray[Any, Any]]
 
+# Synonym for the "stores" type of the trait.
+_Array = np.ndarray[Any, Any]
+
 # Things that are accepted as dtypes. This doesn't attempt to cover
 # all legal possibilities - only those that are common.
 _DTypeLike = Union[np.dtype[Any], Type[Any], str]
 
-class Array(_TraitType[_ArrayLike, np.ndarray[Any, Any]]):
+class Array(_TraitType[_ArrayLike, _Array]):
     def __init__(
         self,
         dtype: Optional[_DTypeLike] = ...,
@@ -41,7 +44,7 @@ class Array(_TraitType[_ArrayLike, np.ndarray[Any, Any]]):
     ) -> None: ...
 
 class ArrayOrNone(
-    _TraitType[Optional[_ArrayLike], Optional[np.ndarray[Any, Any]]]
+    _TraitType[Optional[_ArrayLike], Optional[_Array]]
 ):
     def __init__(
         self,
@@ -53,7 +56,7 @@ class ArrayOrNone(
         **metadata: Any,
     ) -> None: ...
 
-class CArray(_TraitType[_ArrayLike, np.ndarray[Any, Any]]):
+class CArray(_TraitType[_ArrayLike, _Array]):
     def __init__(
         self,
         dtype: Optional[_DTypeLike] = ...,
