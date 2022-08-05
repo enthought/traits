@@ -20,9 +20,6 @@ from weakref import ref
 
 from .etsconfig.api import ETSConfig
 
-# backwards compatibility: trait_base used to provide a patched enumerate
-enumerate = enumerate
-
 # Constants
 
 SequenceTypes = (list, tuple)
