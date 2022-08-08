@@ -94,7 +94,7 @@ class ETSConfig(object):
 
             - The actual location differs between operating systems.
 
-       """
+        """
         if self._application_data is None:
             self._application_data = self._initialize_application_data(
                 create=create
@@ -151,7 +151,7 @@ class ETSConfig(object):
 
             - The actual location differs between operating systems.
 
-       """
+        """
         if self._application_home is None:
             self._application_home = path.join(
                 self.get_application_data(create=create),

@@ -69,7 +69,7 @@ def temporary_home_directory():
     with temporary_directory() as temp_home:
         with restore_mapping_entry(os.environ, home_var):
             os.environ[home_var] = temp_home
-            yield
+            yield temp_home
 
 
 @contextlib.contextmanager
@@ -109,11 +109,9 @@ class ETSConfigTestCase(unittest.TestCase):
 
         # Make a fresh instance each time.
         self.ETSConfig = type(ETSConfig)()
-
-    def run(self, result=None):
-        # Extend TestCase.run to use a temporary home directory.
-        with temporary_home_directory():
-            super().run(result)
+        with contextlib.ExitStack() as stack:
+            self._temp_home = stack.enter_context(temporary_home_directory())
+            self.addCleanup(stack.pop_all().close)
 
     ###########################################################################
     # 'ETSConfigTestCase' interface.
