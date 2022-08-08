@@ -8,8 +8,9 @@
 # Build directories
 *.egg-info/
 /build/
-/traits-stubs/build/
 /dist/
+/traits-stubs/build/
+/traits-stubs/dist/
 /docs/build/
 
 # Coverage artifacts
