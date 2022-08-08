@@ -293,14 +293,6 @@ class ETSConfigTestCase(unittest.TestCase):
         self.ETSConfig.toolkit = "wx.celiagg"
         self.assertEqual(self.ETSConfig.kiva_backend, "celiagg")
 
-    def test_delete_kiva_backend(self):
-        # given
-        self.ETSConfig.toolkit = "wx.celiagg"
-        self.assertEqual(self.ETSConfig.kiva_backend, "celiagg")
-
-        # check that the property can be deleted
-        del self.ETSConfig.kiva_backend
-
     def test_mock_kiva_backend(self):
         # when
         with patch.object(self.ETSConfig, "toolkit", new="test.foo"):

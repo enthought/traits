@@ -338,10 +338,6 @@ class ETSConfig(object):
 
         return self._kiva_backend
 
-    @kiva_backend.deleter
-    def kiva_backend(self):
-        self._kiva_backend = None
-
     @property
     def user_data(self):
         """
