@@ -137,6 +137,10 @@ class ETSConfig(object):
 
         self._application_data = application_data
 
+    @application_data.deleter
+    def application_data(self):
+        self._application_data = None
+
     def get_application_home(self, create=False):
         """ Return the application home directory path.
 
@@ -195,6 +199,10 @@ class ETSConfig(object):
 
         self._application_home = application_home
 
+    @application_home.deleter
+    def application_home(self):
+        self._application_home = None
+
     @property
     def company(self):
         """
@@ -215,6 +223,10 @@ class ETSConfig(object):
         """
 
         self._company = company
+
+    @company.deleter
+    def company(self):
+        self._company = None
 
     @contextmanager
     def provisional_toolkit(self, toolkit):
@@ -280,6 +292,10 @@ class ETSConfig(object):
 
         self._toolkit = toolkit
 
+    @toolkit.deleter
+    def toolkit(self):
+        self._toolkit = None
+
     @property
     def enable_toolkit(self):
         """
@@ -342,6 +358,10 @@ class ETSConfig(object):
 
         return self._kiva_backend
 
+    @kiva_backend.deleter
+    def kiva_backend(self):
+        self._kiva_backend = None
+
     @property
     def user_data(self):
         """
@@ -367,6 +387,10 @@ class ETSConfig(object):
         """
 
         self._user_data = user_data
+
+    @user_data.deleter
+    def user_data(self):
+        self._user_data = None
 
     #### private methods #####################################################
 
