@@ -91,7 +91,7 @@ class ObserverExceptionHandlerStack:
         return self.handlers.pop()
 
     def handle_exception(self, event):
-        """ Handles a traits notification exception using the handler last pushed.
+        """ Handle a notification exception using the handler last pushed.
 
         Parameters
         ----------

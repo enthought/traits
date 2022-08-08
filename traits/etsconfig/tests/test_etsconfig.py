@@ -242,20 +242,19 @@ class ETSConfigTestCase(unittest.TestCase):
         # then
         self.assertEqual(self.ETSConfig.company, old_company)
 
-    def _test_default_application_home(self):
+    def test_default_application_home(self):
         """
         application home
 
         """
-
-        # This test is only valid when run with the 'main' at the end of this
-        # file: "python app_dat_locator_test_case.py", in which case the
-        # app_name will be the directory this file is in ('tests').
         app_home = self.ETSConfig.application_home
         (dirname, app_name) = os.path.split(app_home)
 
         self.assertEqual(dirname, self.ETSConfig.application_data)
-        self.assertEqual(app_name, "tests")
+
+        # The assumption here is that the test was run using unittest and not
+        # a different test runner e.g. using "python -m unittest ...".
+        self.assertEqual(app_name, "unittest")
 
     def test_delete_application_home(self):
         # given
@@ -477,14 +476,3 @@ class ETSConfigTestCase(unittest.TestCase):
         os.remove(path)
 
         self.assertEqual(data, result)
-
-
-# For running as an individual set of tests.
-if __name__ == "__main__":
-
-    # Add the non-default test of application_home...non-default because it
-    # must be run using this module as a script to be valid.
-    suite = unittest.TestLoader().loadTestsFromTestCase(ETSConfigTestCase)
-    suite.addTest(ETSConfigTestCase("_test_default_application_home"))
-
-    unittest.TextTestRunner(verbosity=2).run(suite)
