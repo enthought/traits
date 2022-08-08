@@ -13,6 +13,7 @@
 # Standard library imports.
 import contextlib
 import os
+import pathlib
 import shutil
 import sys
 import tempfile
@@ -209,10 +210,10 @@ class ETSConfigTestCase(unittest.TestCase):
         (dirname, app_name) = os.path.split(app_home)
 
         self.assertEqual(dirname, self.ETSConfig.application_data)
-
-        # The assumption here is that the test was run using unittest and not
-        # a different test runner e.g. using "python -m unittest ...".
-        self.assertEqual(app_name, "unittest")
+        self.assertEqual(
+            app_name,
+            pathlib.Path(sys.modules["__main__"].__file__).parts[-2]
+        )
 
     def test_toolkit_default_kiva_backend(self):
         self.ETSConfig.toolkit = "qt4"
