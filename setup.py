@@ -303,7 +303,7 @@ setuptools.setup(
     extras_require={
         "docs": [
             "enthought-sphinx-theme",
-            "Sphinx>=2.1.0,!=3.2.0",
+            "Sphinx>=2.1.0",
             "sphinx-copybutton",
         ],
         "test": [
@@ -316,7 +316,7 @@ setuptools.setup(
             "PySide2; python_version < '3.8'",
             "PySide6; python_version >= '3.8' and python_version < '3.11'",
             "setuptools",
-            "Sphinx>=2.1.0,!=3.2.0",
+            "Sphinx>=2.1.0",
             "traitsui",
         ],
         "examples": [
