@@ -10,12 +10,21 @@
 
 import numpy as np
 
-from traits.api import Array, ArrayOrNone, HasTraits
+from traits.api import Array, ArrayOrNone, CArray, HasTraits
 
 
 class HasArrayTraits(HasTraits):
     spectrum = Array(shape=(None,), dtype=np.float64)
+    complex_shape = Array(shape=((512, None), (512, None), (3, 4)))
+    str_dtype = Array(dtype="f4")
+    dtype_dtype = Array(dtype=np.dtype("float"))
+    with_default_value = Array(value=np.zeros(5))
+    with_list_default = Array(value=[1, 2, 3, 4, 5])
+    with_tuple_default = Array(value=(1, 2, 3, 4, 5))
+    with_casting = Array(casting="same_kind")
+
     maybe_image = ArrayOrNone(shape=(None, None, 3), dtype=np.float64)
+    cspectrum = CArray(shape=(None,), dtype=np.float64)
 
 
 obj = HasArrayTraits()
