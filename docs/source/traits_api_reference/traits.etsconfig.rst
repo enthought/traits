@@ -10,4 +10,6 @@
 .. automodule:: traits.etsconfig.etsconfig
     :no-members:
 
+.. autoclass:: ETSConfigFactory
+
 .. autodata:: ETSConfig
