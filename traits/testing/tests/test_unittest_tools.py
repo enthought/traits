@@ -38,7 +38,7 @@ def old_and_dull():
     pass
 
 
-class TestObject(HasTraits):
+class ExampleObject(HasTraits):
 
     number = Float(2.0)
     list_of_numbers = List(Float)
@@ -54,7 +54,7 @@ class TestObject(HasTraits):
 
 class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
     def setUp(self):
-        self.test_object = TestObject()
+        self.test_object = ExampleObject()
 
     def test_when_using_with(self):
         """ Check normal use cases as a context manager.
@@ -224,7 +224,7 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
         """ Make sure that the traits context manager does not stop
         regular assertions inside the managed code block from happening.
         """
-        test_object = TestObject(number=16.0)
+        test_object = ExampleObject(number=16.0)
 
         with self.assertTraitDoesNotChange(test_object, "number"):
             self.assertEqual(test_object.number, 16.0)
@@ -236,7 +236,7 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
     def test_special_case_for_count(self):
         """ Count equal to 0 should be valid but it is discouraged.
         """
-        test_object = TestObject(number=16.0)
+        test_object = ExampleObject(number=16.0)
 
         with self.assertTraitChanges(test_object, "number", count=0):
             test_object.flag = True
