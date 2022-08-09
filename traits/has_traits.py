@@ -586,8 +586,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
                             % (ictrait.type, name)
                         )
 
-                    default_value = value
-                    class_traits[name] = value = ictrait(default_value)
+                    class_traits[name] = ictrait(value)
                     del class_dict[name]
                     break
 
