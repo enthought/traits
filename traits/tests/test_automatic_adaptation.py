@@ -38,7 +38,7 @@ def default_foo():
     return Foo(default=True)
 
 
-class TestAutomaticAdaptationBase:
+class AutomaticAdaptationTestMixin:
     """
     Mixin for tests to be applied to both Instance and BaseInstance.
 
@@ -128,7 +128,7 @@ class TestAutomaticAdaptationBase:
 
 
 class TestAutomaticAdaptationInstance(
-    TestAutomaticAdaptationBase, unittest.TestCase
+    AutomaticAdaptationTestMixin, unittest.TestCase
 ):
     """
     Tests for automatic adaptation with Instance.
@@ -139,7 +139,7 @@ class TestAutomaticAdaptationInstance(
 
 
 class TestAutomaticAdaptationBaseInstance(
-    TestAutomaticAdaptationBase, unittest.TestCase
+    AutomaticAdaptationTestMixin, unittest.TestCase
 ):
     """
     Tests for automatic adaptation with BaseInstance.
