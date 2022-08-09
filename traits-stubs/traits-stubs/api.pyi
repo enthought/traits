@@ -18,6 +18,12 @@ from .constants import (
     RICH_COMPARE as RICH_COMPARE,
 )
 
+from .trait_errors import (
+    TraitError as TraitError,
+    TraitNotificationError as TraitNotificationError,
+    DelegationError as DelegationError,
+)
+
 from .traits import (
     Color as Color,
     Default as Default,
@@ -189,4 +195,10 @@ from .trait_handlers import (
     TraitMap as TraitMap,
     TraitPrefixMap as TraitPrefixMap,
     TraitCompound as TraitCompound,
+)
+
+from .trait_numeric import (
+    Array as Array,
+    ArrayOrNone as ArrayOrNone,
+    CArray as CArray,
 )

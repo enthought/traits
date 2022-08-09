@@ -33,7 +33,7 @@ logged::
    Exception occurred in traits notification handler.
    Please check the log file for details.
    Exception occurred in traits notification handler for object:
-   <__main__.Curmudgeon object at 0x107603050>, trait: constant, old value: 0, new value: 42 
+   <__main__.Curmudgeon object at 0x107603050>, trait: constant, old value: 0, new value: 42
      ...
      File "curmudgeon.py", line 12, in _constant_changed
        raise ValueError()
@@ -71,7 +71,7 @@ Tracing Traits Change Events
 
 Occasionally it is necessary to find the chain of event dispatches in traits
 classes. To help with debugging, a |record_events| context manager is provided
-in mod:`traits.util.event_tracer`. Trait change events taking place inside the
+in :mod:`traits.util.event_tracer`. Trait change events taking place inside the
 context block will be recorded in a change event container (see example below)
 and can be saved to files (a file for each thread) for further inspection.
 

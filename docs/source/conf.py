@@ -46,6 +46,7 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
+    "sphinx_copybutton",
     "traits.util.trait_documenter",
 ]
 
@@ -115,7 +116,6 @@ autodoc_default_options = {
 }
 
 autodoc_member_order = "bysource"
-
 
 # Options for HTML output
 # -----------------------

@@ -12,10 +12,9 @@
 
 
 # Standard library imports.
-import sys
+import contextlib
 import os
-from os import path
-from contextlib import contextmanager
+import sys
 
 
 class ETSToolkitError(RuntimeError):
@@ -42,14 +41,20 @@ class ETSToolkitError(RuntimeError):
         self.args = args
 
 
-class ETSConfig(object):
+class ETSConfigType:
     """
     Enthought Tool Suite configuration information.
 
-    This class should not use ANY other package in the tool suite so that it
-    will always work no matter which other packages are present.
+    Instances of this class record state useful for ETS-using applications,
+    including the current GUI toolkit in use, and data and home directory
+    setttings.
 
+    Users typically shouldn't make use of this class directly. Instead, use the
+    module-level :data:`~.ETSConfig` instance of this class, which is shared
+    between the various ETS packages.
     """
+    # This class should not use ANY other package in the tool suite so that it
+    # will always work no matter which other packages are present.
 
     ###########################################################################
     # 'object' interface.
@@ -94,7 +99,7 @@ class ETSConfig(object):
 
             - The actual location differs between operating systems.
 
-       """
+        """
         if self._application_data is None:
             self._application_data = self._initialize_application_data(
                 create=create
@@ -116,6 +121,10 @@ class ETSConfig(object):
         """
 
         self._application_data = application_data
+
+    @application_data.deleter
+    def application_data(self):
+        self._application_data = None
 
     def get_application_home(self, create=False):
         """ Return the application home directory path.
@@ -151,9 +160,9 @@ class ETSConfig(object):
 
             - The actual location differs between operating systems.
 
-       """
+        """
         if self._application_home is None:
-            self._application_home = path.join(
+            self._application_home = os.path.join(
                 self.get_application_data(create=create),
                 self._get_application_dirname(),
             )
@@ -174,6 +183,10 @@ class ETSConfig(object):
         """
 
         self._application_home = application_home
+
+    @application_home.deleter
+    def application_home(self):
+        self._application_home = None
 
     @property
     def company(self):
@@ -196,7 +209,11 @@ class ETSConfig(object):
 
         self._company = company
 
-    @contextmanager
+    @company.deleter
+    def company(self):
+        self._company = None
+
+    @contextlib.contextmanager
     def provisional_toolkit(self, toolkit):
         """ Perform an operation with toolkit provisionally set
 
@@ -260,6 +277,10 @@ class ETSConfig(object):
 
         self._toolkit = toolkit
 
+    @toolkit.deleter
+    def toolkit(self):
+        self._toolkit = None
+
     @property
     def enable_toolkit(self):
         """
@@ -306,21 +327,12 @@ class ETSConfig(object):
                 "which has not been set."
             )
 
-        if self._kiva_backend is None:
-            try:
-                self._kiva_backend = self._toolkit.split(".")[1]
-            except IndexError:
-                # Pick a reasonable default based on the toolkit
-                if self.toolkit == "wx":
-                    self._kiva_backend = (
-                        "quartz" if sys.platform == "darwin" else "image"
-                    )
-                elif self.toolkit in ["qt4", "qt"]:
-                    self._kiva_backend = "image"
-                else:
-                    self._kiva_backend = "image"
-
-        return self._kiva_backend
+        if "." in self._toolkit:
+            return self._toolkit.split(".")[1]
+        elif self.toolkit == "wx" and sys.platform == "darwin":
+            return "quartz"
+        else:
+            return "image"
 
     @property
     def user_data(self):
@@ -347,6 +359,10 @@ class ETSConfig(object):
         """
 
         self._user_data = user_data
+
+    @user_data.deleter
+    def user_data(self):
+        self._user_data = None
 
     #### private methods #####################################################
 
@@ -377,8 +393,8 @@ class ETSConfig(object):
         main_mod = sys.modules.get("__main__", None)
         if main_mod is not None:
             if hasattr(main_mod, "__file__"):
-                main_mod_file = path.abspath(main_mod.__file__)
-                dirname = path.basename(path.dirname(main_mod_file))
+                main_mod_file = os.path.abspath(main_mod.__file__)
+                dirname = os.path.basename(os.path.dirname(main_mod_file))
 
         return dirname
 
@@ -501,7 +517,10 @@ class ETSConfig(object):
         return usr_dir
 
 
-# We very purposefully only have one object and do not export the class. We
-# could have just made everything class methods, but that always seems a bit
-# gorpy, especially with properties etc.
-ETSConfig = ETSConfig()
+#: This single instance of :class:`~.ETSConfigType` is shared between the
+#: various ETS packages, and used to store global state relevant to
+#: ETS-using applications.
+#:
+#: See https://github.com/enthought/traits/discussions/1666 for a discussion
+#: of writing tests that depend on :data:`~.ETSConfig` state.
+ETSConfig = ETSConfigType()

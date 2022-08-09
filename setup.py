@@ -281,6 +281,7 @@ setuptools.setup(
         Programming Language :: Python :: 3.8
         Programming Language :: Python :: 3.9
         Programming Language :: Python :: 3.10
+        Programming Language :: Python :: 3.11
         Programming Language :: Python :: Implementation :: CPython
         Topic :: Scientific/Engineering
         Topic :: Software Development
@@ -302,7 +303,8 @@ setuptools.setup(
     extras_require={
         "docs": [
             "enthought-sphinx-theme",
-            "Sphinx>=2.1.0,!=3.2.0",
+            "Sphinx>=2.1.0",
+            "sphinx-copybutton",
         ],
         "test": [
             "Cython",
@@ -311,9 +313,10 @@ setuptools.setup(
             "mypy",
             "numpy",
             "pyface",
-            "PySide2; python_version<'3.10'",
+            "PySide2; python_version < '3.8'",
+            "PySide6; python_version >= '3.8' and python_version < '3.11'",
             "setuptools",
-            "Sphinx>=2.1.0,!=3.2.0",
+            "Sphinx>=2.1.0",
             "traitsui",
         ],
         "examples": [

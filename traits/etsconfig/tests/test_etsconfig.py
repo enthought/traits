@@ -13,12 +13,13 @@
 # Standard library imports.
 import contextlib
 import os
+import pathlib
 import shutil
 import sys
 import tempfile
 import time
-
 import unittest
+from unittest.mock import patch
 
 # Enthought library imports.
 from traits.etsconfig.etsconfig import ETSConfig, ETSToolkitError
@@ -69,7 +70,7 @@ def temporary_home_directory():
     with temporary_directory() as temp_home:
         with restore_mapping_entry(os.environ, home_var):
             os.environ[home_var] = temp_home
-            yield
+            yield temp_home
 
 
 @contextlib.contextmanager
@@ -109,11 +110,9 @@ class ETSConfigTestCase(unittest.TestCase):
 
         # Make a fresh instance each time.
         self.ETSConfig = type(ETSConfig)()
-
-    def run(self, result=None):
-        # Extend TestCase.run to use a temporary home directory.
-        with temporary_home_directory():
-            super().run(result)
+        with contextlib.ExitStack() as stack:
+            self._temp_home = stack.enter_context(temporary_home_directory())
+            self.addCleanup(stack.pop_all().close)
 
     ###########################################################################
     # 'ETSConfigTestCase' interface.
@@ -145,6 +144,27 @@ class ETSConfigTestCase(unittest.TestCase):
 
         self.ETSConfig.application_data = old
         self.assertEqual(old, self.ETSConfig.application_data)
+
+    def test_delete_application_data(self):
+        default_application_data = self.ETSConfig.application_data
+        self.ETSConfig.application_data = "SomeOtherPath"
+        del self.ETSConfig.application_data
+        self.assertEqual(
+            self.ETSConfig.application_data,
+            default_application_data,
+        )
+
+    def test_mock_application_data(self):
+        # given
+        old_app_data = self.ETSConfig.application_data
+
+        # when
+        with patch.object(self.ETSConfig, "application_data", new="foo"):
+            # then
+            self.assertEqual(self.ETSConfig.application_data, "foo")
+
+        # then
+        self.assertEqual(self.ETSConfig.application_data, old_app_data)
 
     def test_application_data_is_idempotent(self):
         """
@@ -202,20 +222,63 @@ class ETSConfigTestCase(unittest.TestCase):
         self.ETSConfig.company = old
         self.assertEqual(old, self.ETSConfig.company)
 
-    def _test_default_application_home(self):
+    def test_delete_company(self):
+        default_company = self.ETSConfig.company
+        self.ETSConfig.company = "ImaginaryCo"
+        # Deletion restores the default
+        del self.ETSConfig.company
+        self.assertEqual(self.ETSConfig.company, default_company)
+
+    def test_mock_company(self):
+        # given
+        old_company = self.ETSConfig.company
+
+        # when
+        with patch.object(self.ETSConfig, "company", new="new company"):
+            # then
+            self.assertEqual(self.ETSConfig.company, "new company")
+
+        # then
+        self.assertEqual(self.ETSConfig.company, old_company)
+
+    def test_default_application_home(self):
         """
         application home
 
         """
-
-        # This test is only valid when run with the 'main' at the end of this
-        # file: "python app_dat_locator_test_case.py", in which case the
-        # app_name will be the directory this file is in ('tests').
         app_home = self.ETSConfig.application_home
         (dirname, app_name) = os.path.split(app_home)
 
         self.assertEqual(dirname, self.ETSConfig.application_data)
-        self.assertEqual(app_name, "tests")
+        self.assertEqual(
+            app_name,
+            pathlib.Path(sys.modules["__main__"].__file__).parts[-2]
+        )
+
+    def test_delete_application_home(self):
+        # given
+        default_application_home = self.ETSConfig.application_home
+        self.ETSConfig.application_home = "dummy"
+        self.assertEqual(self.ETSConfig.application_home, "dummy")
+
+        # check that the property can be deleted
+        del self.ETSConfig.application_home
+        self.assertEqual(
+            self.ETSConfig.application_home,
+            default_application_home,
+        )
+
+    def test_mock_application_home(self):
+        # given
+        old_app_home = self.ETSConfig.application_home
+
+        # when
+        with patch.object(self.ETSConfig, "application_home", new="foo"):
+            # then
+            self.assertEqual(self.ETSConfig.application_home, "foo")
+
+        # then
+        self.assertEqual(self.ETSConfig.application_home, old_app_home)
 
     def test_toolkit_default_kiva_backend(self):
         self.ETSConfig.toolkit = "qt4"
@@ -228,6 +291,20 @@ class ETSConfigTestCase(unittest.TestCase):
     def test_toolkit_explicit_kiva_backend(self):
         self.ETSConfig.toolkit = "wx.celiagg"
         self.assertEqual(self.ETSConfig.kiva_backend, "celiagg")
+
+    def test_toolkit_kiva_backend_changes_when_toolkit_changed(self):
+        self.ETSConfig.toolkit = "wx.celiagg"
+        self.assertEqual(self.ETSConfig.kiva_backend, "celiagg")
+        del self.ETSConfig.toolkit
+
+        self.ETSConfig.toolkit = "wx.quartz"
+        self.assertEqual(self.ETSConfig.kiva_backend, "quartz")
+
+    def test_mock_kiva_backend(self):
+        # when
+        with patch.object(self.ETSConfig, "toolkit", new="test.foo"):
+            # then
+            self.assertEqual(self.ETSConfig.kiva_backend, "foo")
 
     def test_toolkit_environ(self):
         test_args = ["something"]
@@ -257,6 +334,23 @@ class ETSConfigTestCase(unittest.TestCase):
                 toolkit = self.ETSConfig.toolkit
 
         self.assertEqual(toolkit, "test_direct")
+
+    def test_delete_toolkit(self):
+        default_toolkit = self.ETSConfig.toolkit
+        del self.ETSConfig.toolkit
+        self.assertEqual(self.ETSConfig.toolkit, default_toolkit)
+
+    def test_mock_toolkit(self):
+        # given
+        old_toolkit = self.ETSConfig.toolkit
+
+        # when
+        with patch.object(self.ETSConfig, "toolkit", new="foo"):
+            # then
+            self.assertEqual(self.ETSConfig.toolkit, "foo")
+
+        # then
+        self.assertEqual(self.ETSConfig.toolkit, old_toolkit)
 
     def test_provisional_toolkit(self):
         test_args = []
@@ -331,6 +425,24 @@ class ETSConfigTestCase(unittest.TestCase):
         self.ETSConfig.user_data = old
         self.assertEqual(old, self.ETSConfig.user_data)
 
+    def test_delete_user_data(self):
+        default_user_data = self.ETSConfig.user_data
+        self.ETSConfig.user_data = "SomeOtherPath"
+        del self.ETSConfig.user_data
+        self.assertEqual(self.ETSConfig.user_data, default_user_data)
+
+    def test_mock_user_data(self):
+        # given
+        old_user_data = self.ETSConfig.user_data
+
+        # when
+        with patch.object(self.ETSConfig, "user_data", new="foo"):
+            # then
+            self.assertEqual(self.ETSConfig.user_data, "foo")
+
+        # then
+        self.assertEqual(self.ETSConfig.user_data, old_user_data)
+
     def test_user_data_is_idempotent(self):
         """
         user data is idempotent
@@ -363,14 +475,3 @@ class ETSConfigTestCase(unittest.TestCase):
         os.remove(path)
 
         self.assertEqual(data, result)
-
-
-# For running as an individual set of tests.
-if __name__ == "__main__":
-
-    # Add the non-default test of application_home...non-default because it
-    # must be run using this module as a script to be valid.
-    suite = unittest.TestLoader().loadTestsFromTestCase(ETSConfigTestCase)
-    suite.addTest(ETSConfigTestCase("_test_default_application_home"))
-
-    unittest.TextTestRunner(verbosity=2).run(suite)

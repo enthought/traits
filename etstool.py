@@ -93,12 +93,21 @@ common_dependencies = {
     "enthought_sphinx_theme",
     "flake8",
     "flake8_ets",
-    "lark_parser",
-    "mypy",
     "numpy",
-    "pyqt5",
     "Sphinx",
+    "sphinx_copybutton",
     "traitsui",
+}
+
+# Dependencies on the Python runtime.
+runtime_dependencies = {
+    "3.6": {"pyqt5", "lark_parser", "mypy"},
+    "3.8": {"pyside6"},
+}
+
+# Dependencies that need to be installed from PyPI
+pypi_dependencies = {
+    "3.8": {"lark-parser", "mypy"}
 }
 
 # Dependencies we install from source for testing
@@ -109,8 +118,8 @@ unix_dependencies = {
     "gnureadline",
 }
 
-supported_runtimes = ["3.6"]
-default_runtime = "3.6"
+supported_runtimes = ["3.6", "3.8"]
+default_runtime = "3.8"
 
 github_url_fmt = "git+http://github.com/enthought/{0}.git#egg={0}"
 
@@ -169,6 +178,7 @@ def install(edm, runtime, environment, editable, source):
     """
     parameters = get_parameters(edm, runtime, environment)
     dependencies = common_dependencies.copy()
+    dependencies.update(runtime_dependencies.get(runtime, set()))
     if sys.platform != "win32":
         dependencies.update(unix_dependencies)
 
@@ -188,6 +198,12 @@ def install(edm, runtime, environment, editable, source):
         install_traits,
         install_stubs,
     ]
+
+    if pypi_dependencies:
+        commands += [
+            "{edm} run -e {environment} -- python -m pip install " + dep
+            for dep in pypi_dependencies.get(runtime, set())
+        ]
 
     click.echo("Creating environment '{environment}'".format(**parameters))
     execute(commands, parameters)
