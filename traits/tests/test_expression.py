@@ -12,6 +12,7 @@ import pickle
 import unittest
 
 from traits.api import Expression, HasTraits, Int, TraitError
+from traits.constants import DefaultValue
 
 
 class TestExpression(unittest.TestCase):
@@ -154,4 +155,10 @@ class TestExpression(unittest.TestCase):
         expr = Expression(default_value="1")
         cloned_expr = expr.clone("2")
 
+        self.assertEqual(cloned_expr.default_value_type, DefaultValue.constant)
         self.assertEqual(cloned_expr.default_value, "2")
+
+        self.assertEqual(
+            cloned_expr.as_ctrait().default_value_for(None, "expr"),
+            "2",
+        )

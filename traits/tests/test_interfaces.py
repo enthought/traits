@@ -434,6 +434,9 @@ class InterfacesTest(unittest.TestCase):
         self.assertEqual(default_value_kind, DefaultValue.constant)
         self.assertIsInstance(default_value, SampleFooAdapter)
 
+        ctrait_default = i_foo_clone.as_ctrait().default_value_for(None, "foo")
+        self.assertIsInstance(ctrait_default, SampleFooAdapter)
+
     def test_clone_adapts_to_default(self):
         i_foo_trait = AdaptsTo(IFoo)
         new_default = Sample()
