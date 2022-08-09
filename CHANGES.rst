@@ -69,7 +69,8 @@ The following people contributed code changes for this release:
 Features
 ~~~~~~~~
 * ``ETSConfig`` attributes now support deletion. This makes it easier to make
-  temporary changes to ``ETSConfig`` attributes during unit testing. (#1670)
+  temporary changes to ``ETSConfig`` attributes during unit testing. (#1670,
+  #1686)
 * ``Complex`` trait type validation is now more lenient: any type that
   implements ``__complex__`` will be accepted. (#1594)
 * ``BaseFloat`` validation is now more lenient, and matches ``Float``
@@ -100,6 +101,9 @@ Fixes
   if the ``pkg_resources`` module is not present in the environment. (#1679)
 * An ``ETSConfig`` test has been renamed so that it's properly picked up
   by the test runner. (#1671)
+* Fix some ``ETSConfig`` tests that assume unittest as the test runner. (#1683)
+* Rename various test-related classes to avoid pytest trying to harvest test
+  methods from them. (#1684)
 
 Deprecations
 ~~~~~~~~~~~~
@@ -119,6 +123,7 @@ Type stubs
 
 Documentation
 ~~~~~~~~~~~~~
+* Make ``ETSConfig`` class documentation visible in the API docs. (#1688)
 * Add copy buttons to code samples in documentation. (#1651, #1653)
 * Document ``Date``, ``Datetime`` and ``Time`` trait types. (#1641)
 * Fix some missing mentions of ``Set`` in notification docs. (#1618)
@@ -127,6 +132,10 @@ Documentation
 
 Build and continuous integration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+* Don't collect traits-stubs tests under pytest. As a result of this
+  and other fixes, the test suite now passes under pytest. (#1690)
+* Update ``etstool.py`` for Python 3.8 support. Python 3.8 is now the
+  default Python version for builds. (#1694)
 * Use PySide6 for Python >= 3.8 instead of PySide2 in CI testing. (#1685)
 * Add ``pyproject.toml`` files for both Traits and traits-stubs. (#1689, #1676)
 * Add Python 3.11 to some workflow runs. (#1600, #1660, #1674)
