@@ -42,7 +42,7 @@ class ETSToolkitError(RuntimeError):
         self.args = args
 
 
-class ETSConfigFactory:
+class ETSConfigType:
     """
     Enthought Tool Suite configuration information.
 
@@ -531,10 +531,10 @@ class ETSConfigFactory:
         return usr_dir
 
 
-#: This single instance of :class:`~.ETSConfigFactory` is shared between the
+#: This single instance of :class:`~.ETSConfigType` is shared between the
 #: various ETS packages, and used to store global state relevant to
 #: ETS-using applications.
 #:
 #: See https://github.com/enthought/traits/discussions/1666 for a discussion
 #: of writing tests that depend on :data:`~.ETSConfig` state.
-ETSConfig = ETSConfigFactory()
+ETSConfig = ETSConfigType()
