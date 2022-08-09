@@ -196,3 +196,9 @@ from .trait_handlers import (
     TraitPrefixMap as TraitPrefixMap,
     TraitCompound as TraitCompound,
 )
+
+from .trait_numeric import (
+    Array as Array,
+    ArrayOrNone as ArrayOrNone,
+    CArray as CArray,
+)
