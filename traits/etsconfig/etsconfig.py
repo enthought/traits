@@ -322,21 +322,12 @@ class ETSConfig(object):
                 "which has not been set."
             )
 
-        if self._kiva_backend is None:
-            try:
-                self._kiva_backend = self._toolkit.split(".")[1]
-            except IndexError:
-                # Pick a reasonable default based on the toolkit
-                if self.toolkit == "wx":
-                    self._kiva_backend = (
-                        "quartz" if sys.platform == "darwin" else "image"
-                    )
-                elif self.toolkit in ["qt4", "qt"]:
-                    self._kiva_backend = "image"
-                else:
-                    self._kiva_backend = "image"
-
-        return self._kiva_backend
+        if "." in self._toolkit:
+            return self._toolkit.split(".")[1]
+        elif self.toolkit == "wx" and sys.platform == "darwin":
+            return "quartz"
+        else:
+            return "image"
 
     @property
     def user_data(self):
