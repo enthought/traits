@@ -16,6 +16,7 @@ from traits.api import Array, ArrayOrNone, CArray, HasTraits
 class HasArrayTraits(HasTraits):
     spectrum = Array(shape=(None,), dtype=np.float64)
     complex_shape = Array(shape=((512, None), (512, None), (3, 4)))
+    list_shape = Array(shape=[(512, None), (512, None), (3, 4)])
     str_dtype = Array(dtype="f4")
     dtype_dtype = Array(dtype=np.dtype("float"))
     with_default_value = Array(value=np.zeros(5))
@@ -25,6 +26,12 @@ class HasArrayTraits(HasTraits):
 
     maybe_image = ArrayOrNone(shape=(None, None, 3), dtype=np.float64)
     cspectrum = CArray(shape=(None,), dtype=np.float64)
+
+    # Bad trait declarations
+    bad_dtype = Array(dtype=62)  # E: arg-type
+    bad_default = Array(value=123)  # E: arg-type
+    bad_shape = Array(shape=3)  # E: arg-type
+    bad_shape_element = Array(shape=(3, (None, None)))  # E: arg-type
 
 
 obj = HasArrayTraits()
