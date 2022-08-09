@@ -101,6 +101,12 @@ Fixes
 * An ``ETSConfig`` test has been renamed so that it's properly picked up
   by the test runner. (#1671)
 
+Deprecations
+~~~~~~~~~~~~
+* ``Tuple`` traits currently accept Python ``list`` objects in some (but
+  not all) circumstances. That feature is deprecated, and will be removed
+  in a future version of Traits. (#1627)
+
 Type stubs
 ~~~~~~~~~~
 * Add stubs for ``Array``, ``ArrayOrNone``, and ``CArray``. (#1682)
@@ -110,12 +116,6 @@ Type stubs
   (#1658)
 * Make ``Int`` and ``Float`` type stubs more accurate. (#1656)
 * Fix incorrect type stubs for the ``Dict`` trait type. (#1655)
-
-Deprecations
-~~~~~~~~~~~~
-* ``Tuple`` traits currently accept Python ``list`` objects in some (but
-  not all) circumstances. That feature is deprecated, and will be removed
-  in a future version of Traits. (#1627)
 
 Documentation
 ~~~~~~~~~~~~~
