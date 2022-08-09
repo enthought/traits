@@ -41,14 +41,20 @@ class ETSToolkitError(RuntimeError):
         self.args = args
 
 
-class ETSConfig(object):
+class ETSConfigType:
     """
     Enthought Tool Suite configuration information.
 
-    This class should not use ANY other package in the tool suite so that it
-    will always work no matter which other packages are present.
+    Instances of this class record state useful for ETS-using applications,
+    including the current GUI toolkit in use, and data and home directory
+    setttings.
 
+    Users typically shouldn't make use of this class directly. Instead, use the
+    module-level :data:`~.ETSConfig` instance of this class, which is shared
+    between the various ETS packages.
     """
+    # This class should not use ANY other package in the tool suite so that it
+    # will always work no matter which other packages are present.
 
     ###########################################################################
     # 'object' interface.
@@ -511,7 +517,10 @@ class ETSConfig(object):
         return usr_dir
 
 
-# We very purposefully only have one object and do not export the class. We
-# could have just made everything class methods, but that always seems a bit
-# gorpy, especially with properties etc.
-ETSConfig = ETSConfig()
+#: This single instance of :class:`~.ETSConfigType` is shared between the
+#: various ETS packages, and used to store global state relevant to
+#: ETS-using applications.
+#:
+#: See https://github.com/enthought/traits/discussions/1666 for a discussion
+#: of writing tests that depend on :data:`~.ETSConfig` state.
+ETSConfig = ETSConfigType()
