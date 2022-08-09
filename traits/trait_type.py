@@ -350,10 +350,9 @@ class TraitType(BaseTraitHandler):
                     # TODO: override This.clone() and similar for better
                     # behaviour and raise a TraitError here
                     logger.debug(
-                        "Validation failed cloning %s with default value %s: %s",  # noqa: E501
-                        self,
-                        default_value,
-                        exc,
+                        f"Validation failed cloning {self} with "
+                        f"default value {default_value}: {exc}",
+                        exc_info=True,
                     )
                     pass
 
