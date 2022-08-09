@@ -354,7 +354,6 @@ class TraitType(BaseTraitHandler):
                         f"default value {default_value}: {exc}",
                         exc_info=True,
                     )
-                    pass
 
             if new.default_value_type in clone_copies_default_value:
                 default_value = default_value.copy()
