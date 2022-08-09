@@ -24,6 +24,68 @@ of Traits, but there are some things to watch out for.
 
 TBD Release details
 
+Detailed changes
+~~~~~~~~~~~~~~~~
+
+Remove deprecated TraitList, TraitDict and TraitTuple classes (#1634)
+Remove the use of cTrait.default_value to set the default value (#1632)
+Remove the deprecated 'typecode' parameter to Array trait types (#1633)
+Remove the deprecated nose_tools module (#1636)
+
+
+Release 6.4.0
+-------------
+
+Released: XXXX-XX-XX
+
+Detailed changes
+~~~~~~~~~~~~~~~~
+
+Stubs for Array, ArrayOrNone, and CArray (#1682)
+Use PySide6 instead of PySide2 in CI testing (#1685)
+Ignore the traits-stubs build and dist directories in .gitignore (#1687)
+Add minimal pyproject.toml for the traits-stubs package (#1689)
+Add property deleters for ETSConfig (#1670)
+Remove outdated alias (#1681)
+Minor fixes and updates in trait_types.pyi; new ctraits.pyi (#1661)
+Update .gitignore (#1678)
+Require the pkg_resources module to be present for find_resource and store_resource tests (#1679)
+Fix some long lines in docstrings (#1680)
+Add pyproject.toml (#1676)
+Reveal and fix a masked test (#1671)
+Remove 3.11-dev from test-pypi-wheel matrix (#1674)
+Python 3.11 support (#1660)
+Fix mypy complaints about TraitError (#1658)
+Improve Int and Float type stubs (#1656)
+Fix type stubs for the Dict trait type (#1655)
+Don't configure the "sphinx-copybutton" extension (#1653)
+Use the "sphinx-copybutton" extension in documentation (#1651)
+Fix rst issues identified by "sphinx-lint" (#1652)
+Switch Slack channel used to report failures (#1650)
+Return "PyErr_Format" calls in "traits/ctraits.c" (#1640)
+Document "Date", "Datetime" and "Time" trait types (#1641)
+Make TraitListObject use the CTrait to validate items, not the handler (#1625)
+Fix invalid specification of default_value without regard to default_value_type (#1631)
+Exclude build directory in flake8 configuration (#1635)
+Deprecate acceptance of lists by Tuple traits (#1627)
+Fix more missing mentions of Set in notification docs (#1618)
+Fix cloning issue with container traits (#1624)
+Fix typos (#1611)
+Update copyright headers (#1612)
+Allow running the main test workflow manually (#1607)
+The ci-src-requirements.txt file isn't used; remove it (#1602)
+Remove unused fast validation tuples (#1601)
+Make Complex trait type validation duck-typed. (#1594)
+Fix BaseFloat validation to match Float validation (#1595)
+Run core tests on Python 3.11 (#1600)
+Update the changelog in preparation for a Traits 6.3.2 bugfix release. (#1596)
+Re-include NumPy as a test dependency on Python 3.10 (#1593)
+Document the '-' pattern for on_trait_change. (#1592)
+Fix repeated Property triggering in subclasses (#1587)
+Docstring grammar fix (#1583)
+Backwards compatibility fix: make `PrefixMap._map` available (#1578)
+Include Python 3.10 in install-from-pypi tests (#1576)
+
 
 Release 6.3.2
 -------------
