@@ -332,7 +332,7 @@ class TraitType(BaseTraitHandler):
         if default_value is not NoDefaultSpecified:
             if new.default_value_type in clone_no_override_default_value:
                 raise TraitError(
-                    "Can't override default value of cloned {new} trait",
+                    f"Can't override default value of cloned {new} trait",
                 )
 
             # does the trait want the original value as the default?
