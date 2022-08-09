@@ -35,7 +35,7 @@ from traits.observation.api import (
 )
 
 
-class Test(HasTraits):
+class HasProperty(HasTraits):
 
     output_buffer = Any()
 
@@ -51,7 +51,7 @@ class Test(HasTraits):
     value = Property(__value_get, __value_set)
 
 
-class Test_1(Test):
+class HasPropertySubclass(HasProperty):
     def _value_changed(self, value):
         self.output_buffer.write(value)
 
@@ -60,7 +60,7 @@ class TestPropertyNotifications(unittest.TestCase):
     def test_property_notifications(self):
         output_buffer = io.StringIO()
 
-        test_obj = Test_1(output_buffer=output_buffer)
+        test_obj = HasPropertySubclass(output_buffer=output_buffer)
         test_obj.value = "value_1"
         self.assertEqual(output_buffer.getvalue(), "value_1")
 

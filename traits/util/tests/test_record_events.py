@@ -25,7 +25,7 @@ from traits.util.event_tracer import (
 )
 
 
-class TestObject(HasTraits):
+class ExampleObject(HasTraits):
 
     number = Float(2.0)
     list_of_numbers = List(Float())
@@ -47,7 +47,7 @@ class TestRecordEvents(unittest.TestCase):
         shutil.rmtree(self.directory)
 
     def test_change_event_recorder(self):
-        test_object = TestObject()
+        test_object = ExampleObject()
         container = RecordContainer()
         recorder = ChangeEventRecorder(container=container)
         trait_notifiers.set_change_event_tracers(
@@ -65,14 +65,14 @@ class TestRecordEvents(unittest.TestCase):
             self.assertEqual(len(lines), 4)
             # very basic checking
             self.assertTrue(
-                "-> 'number' changed from 2.0 to 5.0 in 'TestObject'\n"
+                "-> 'number' changed from 2.0 to 5.0 in 'ExampleObject'\n"
                 in lines[0]
             )
             self.assertTrue("CALLING" in lines[1])
             self.assertTrue("EXIT" in lines[2])
 
     def test_multi_thread_change_event_recorder(self):
-        test_object = TestObject()
+        test_object = ExampleObject()
         container = MultiThreadRecordContainer()
         recorder = MultiThreadChangeEventRecorder(container=container)
         trait_notifiers.set_change_event_tracers(
@@ -99,19 +99,19 @@ class TestRecordEvents(unittest.TestCase):
             # very basic checking
             if "MainThread.trace" in filename:
                 self.assertTrue(
-                    "-> 'number' changed from 2.0 to 5.0 in 'TestObject'\n"
+                    "-> 'number' changed from 2.0 to 5.0 in 'ExampleObject'\n"
                     in lines[0]
                 )
             else:
                 self.assertTrue(
-                    "-> 'number' changed from 5.0 to 10.0 in 'TestObject'\n"
+                    "-> 'number' changed from 5.0 to 10.0 in 'ExampleObject'\n"
                     in lines[0]
                 )
             self.assertTrue("CALLING" in lines[1])
             self.assertTrue("EXIT" in lines[2])
 
     def test_record_events(self):
-        test_object = TestObject()
+        test_object = ExampleObject()
         with record_events() as container:
             test_object.number = 5.0
             thread = threading.Thread(
@@ -130,12 +130,12 @@ class TestRecordEvents(unittest.TestCase):
             # very basic checking
             if "MainThread.trace" in filename:
                 self.assertTrue(
-                    "-> 'number' changed from 2.0 to 5.0 in 'TestObject'\n"
+                    "-> 'number' changed from 2.0 to 5.0 in 'ExampleObject'\n"
                     in lines[0]
                 )
             else:
                 self.assertTrue(
-                    "-> 'number' changed from 5.0 to 8.0 in 'TestObject'\n"
+                    "-> 'number' changed from 5.0 to 8.0 in 'ExampleObject'\n"
                     in lines[0]
                 )
             self.assertTrue("CALLING" in lines[1])

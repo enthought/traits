@@ -12,10 +12,9 @@
 
 
 # Standard library imports.
-import sys
+import contextlib
 import os
-from os import path
-from contextlib import contextmanager
+import sys
 
 
 class ETSToolkitError(RuntimeError):
@@ -94,7 +93,7 @@ class ETSConfig(object):
 
             - The actual location differs between operating systems.
 
-       """
+        """
         if self._application_data is None:
             self._application_data = self._initialize_application_data(
                 create=create
@@ -155,9 +154,9 @@ class ETSConfig(object):
 
             - The actual location differs between operating systems.
 
-       """
+        """
         if self._application_home is None:
-            self._application_home = path.join(
+            self._application_home = os.path.join(
                 self.get_application_data(create=create),
                 self._get_application_dirname(),
             )
@@ -208,7 +207,7 @@ class ETSConfig(object):
     def company(self):
         self._company = None
 
-    @contextmanager
+    @contextlib.contextmanager
     def provisional_toolkit(self, toolkit):
         """ Perform an operation with toolkit provisionally set
 
@@ -322,25 +321,12 @@ class ETSConfig(object):
                 "which has not been set."
             )
 
-        if self._kiva_backend is None:
-            try:
-                self._kiva_backend = self._toolkit.split(".")[1]
-            except IndexError:
-                # Pick a reasonable default based on the toolkit
-                if self.toolkit == "wx":
-                    self._kiva_backend = (
-                        "quartz" if sys.platform == "darwin" else "image"
-                    )
-                elif self.toolkit in ["qt4", "qt"]:
-                    self._kiva_backend = "image"
-                else:
-                    self._kiva_backend = "image"
-
-        return self._kiva_backend
-
-    @kiva_backend.deleter
-    def kiva_backend(self):
-        self._kiva_backend = None
+        if "." in self._toolkit:
+            return self._toolkit.split(".")[1]
+        elif self.toolkit == "wx" and sys.platform == "darwin":
+            return "quartz"
+        else:
+            return "image"
 
     @property
     def user_data(self):
@@ -401,8 +387,8 @@ class ETSConfig(object):
         main_mod = sys.modules.get("__main__", None)
         if main_mod is not None:
             if hasattr(main_mod, "__file__"):
-                main_mod_file = path.abspath(main_mod.__file__)
-                dirname = path.basename(path.dirname(main_mod_file))
+                main_mod_file = os.path.abspath(main_mod.__file__)
+                dirname = os.path.basename(os.path.dirname(main_mod_file))
 
         return dirname
 
