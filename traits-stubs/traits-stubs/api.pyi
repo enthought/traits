@@ -199,3 +199,9 @@ from .trait_handlers import (
     TraitDict as TraitDict,
     TraitTuple as TraitTuple,
 )
+
+from .trait_numeric import (
+    Array as Array,
+    ArrayOrNone as ArrayOrNone,
+    CArray as CArray,
+)
