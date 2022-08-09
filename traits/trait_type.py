@@ -338,6 +338,7 @@ class TraitType(BaseTraitHandler):
             # does the trait want the original value as the default?
             # TODO: since this is needed here, it should also be a property of
             # the TraitType, not just the CTrait.
+            # xref: enthought/traits#1695
             setattr_original_value = new.as_ctrait().setattr_original_value
 
             # try to validate the new default value
