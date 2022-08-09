@@ -8,12 +8,36 @@ TBD Release summary
 
 Released: XXXX-XX-XX
 
+TBD Release details
+
+Detailed changes
+~~~~~~~~~~~~~~~~
+
+* Remove deprecated TraitList, TraitDict and TraitTuple classes (#1634)
+* Remove the use of cTrait.default_value to set the default value (#1632)
+* Remove the deprecated 'typecode' parameter to Array trait types (#1633)
+* Remove the deprecated nose_tools module (#1636)
+
+
+Release 6.4.0
+-------------
+
+Released: 2022-08-11
+
+Traits 6.4 is a minor release of Traits, that focuses mainly on typing stub
+and documentation updates.
+
 Migrating from earlier versions of Traits
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Traits 7.0 should be largely backwards compatible with earlier versions
-of Traits, but there are some things to watch out for.
+Traits 6.4 should be largely backwards compatible with earlier versions
+of Traits, but there are a couple of things to watch out for.
 
+* Reminder: while the ``Either`` and ``Trait`` trait types are not yet
+  formally deprecated, the intention is to eventually deprecate and remove
+  them. Projects are encouraged to use ``Union`` instead.
+* Similarly, any uses of the ``Unicode`` trait type in your project should
+  be replaced with ``Str``.
 * Validation of items within a container (e.g., ``foos = List(MyTraitType)``)
   now always matches the validation used for the item trait at top level (e.g.,
   ``foo = MyTraitType``). Previously, the validation methods used could differ,
@@ -21,70 +45,102 @@ of Traits, but there are some things to watch out for.
   will make no difference, but for the ``Tuple`` trait type this change has the
   consequence that lists will no longer be accepted as valid for ``Tuple``
   traits inside list items. See issue #1619 and PR #1625 for more information.
+* Related to the above: a top-level ``Tuple()`` trait declaration currently
+  accepts Python ``list`` objects, while a trait declaration with arguments
+  (for example ``Tuple(Int(), Int()))`` does not. The support for ``list``
+  objects in plain ``Tuple()`` is deprecated, and will be removed in a future
+  version of Traits. See PR #1627 for more information.
 
-TBD Release details
+Detailed PR-by-PR changes
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Detailed changes
-~~~~~~~~~~~~~~~~
+The following people contributed code changes for this release:
 
-Remove deprecated TraitList, TraitDict and TraitTuple classes (#1634)
-Remove the use of cTrait.default_value to set the default value (#1632)
-Remove the deprecated 'typecode' parameter to Array trait types (#1633)
-Remove the deprecated nose_tools module (#1636)
+* Caio Agiani
+* Steve Allen
+* Mark Dickinson
+* Sai Rahul Poruri
+* Corran Webster
 
+Features
+~~~~~~~~
+* ``ETSConfig`` attributes now support deletion. This makes it easier to make
+  temporary changes to ``ETSConfig`` attributes during unit testing. (#1670)
+* ``Complex`` trait type validation is now more lenient: any type that
+  implements ``__complex__`` will be accepted. (#1594)
+* ``BaseFloat`` validation is now more lenient, and matches ``Float``
+  validation: ``BaseFloat`` now also accepts objects whose type has an
+  ``__index__`` method. (#1595)
 
-Release 6.4.0
--------------
+Changes
+~~~~~~~
+* An ``enumerate`` alias has been removed from ``traits.trait_base``. In the
+  unlikely event of code that imports ``enumerate`` from ``traits.trait_base``,
+  use the built-in ``enumerate`` instead. (#1681)
 
-Released: XXXX-XX-XX
+Fixes
+~~~~~
+* ``TraitListObject``, ``TraitDict`` object and ``TraitSetObject`` now use the
+  ``validate`` method of the appropriate ``CTrait`` instances to validate
+  items, keys and values. Previously the handler's ``validate`` method was
+  used; this gave buggy behaviour in cases where the handler's ``validate``
+  method differed from the actual validation in use. (#1625)
+* Fix specification of ``default_value`` that incorrectly disregarded
+  ``default_value_type``. (#1631)
+* Fix incorrect results from  ``clone_traits`` applied to ``List``, ``Dict``
+  and ``Set`` traits. (#1624)
+* The ``find_resource`` and ``store_resource`` tests are now skipped
+  if the ``pkg_resources`` module is not present in the environment. (#1679)
+* An ``ETSConfig`` test has been renamed so that it's properly picked up
+  by the test runner. (#1671)
 
-Detailed changes
-~~~~~~~~~~~~~~~~
+Type stubs
+~~~~~~~~~~
+* Add stubs for ``Array``, ``ArrayOrNone``, and ``CArray``. (#1682)
+* Fix various stubs for ``traits.trait_types``; add stubs for
+  ``traits.ctraits``. (#1661)
+* Fix that ``TraitError`` stubs weren't exposed at ``traits.api`` level.
+  (#1658)
+* Make ``Int`` and ``Float`` type stubs more accurate. (#1656)
+* Fix incorrect type stubs for the ``Dict`` trait type. (#1655)
 
-Stubs for Array, ArrayOrNone, and CArray (#1682)
-Use PySide6 instead of PySide2 in CI testing (#1685)
-Ignore the traits-stubs build and dist directories in .gitignore (#1687)
-Add minimal pyproject.toml for the traits-stubs package (#1689)
-Add property deleters for ETSConfig (#1670)
-Remove outdated alias (#1681)
-Minor fixes and updates in trait_types.pyi; new ctraits.pyi (#1661)
-Update .gitignore (#1678)
-Require the pkg_resources module to be present for find_resource and store_resource tests (#1679)
-Fix some long lines in docstrings (#1680)
-Add pyproject.toml (#1676)
-Reveal and fix a masked test (#1671)
-Remove 3.11-dev from test-pypi-wheel matrix (#1674)
-Python 3.11 support (#1660)
-Fix mypy complaints about TraitError (#1658)
-Improve Int and Float type stubs (#1656)
-Fix type stubs for the Dict trait type (#1655)
-Don't configure the "sphinx-copybutton" extension (#1653)
-Use the "sphinx-copybutton" extension in documentation (#1651)
-Fix rst issues identified by "sphinx-lint" (#1652)
-Switch Slack channel used to report failures (#1650)
-Return "PyErr_Format" calls in "traits/ctraits.c" (#1640)
-Document "Date", "Datetime" and "Time" trait types (#1641)
-Make TraitListObject use the CTrait to validate items, not the handler (#1625)
-Fix invalid specification of default_value without regard to default_value_type (#1631)
-Exclude build directory in flake8 configuration (#1635)
-Deprecate acceptance of lists by Tuple traits (#1627)
-Fix more missing mentions of Set in notification docs (#1618)
-Fix cloning issue with container traits (#1624)
-Fix typos (#1611)
-Update copyright headers (#1612)
-Allow running the main test workflow manually (#1607)
-The ci-src-requirements.txt file isn't used; remove it (#1602)
-Remove unused fast validation tuples (#1601)
-Make Complex trait type validation duck-typed. (#1594)
-Fix BaseFloat validation to match Float validation (#1595)
-Run core tests on Python 3.11 (#1600)
-Update the changelog in preparation for a Traits 6.3.2 bugfix release. (#1596)
-Re-include NumPy as a test dependency on Python 3.10 (#1593)
-Document the '-' pattern for on_trait_change. (#1592)
-Fix repeated Property triggering in subclasses (#1587)
-Docstring grammar fix (#1583)
-Backwards compatibility fix: make `PrefixMap._map` available (#1578)
-Include Python 3.10 in install-from-pypi tests (#1576)
+Deprecations
+~~~~~~~~~~~~
+* ``Tuple`` traits currently accept Python ``list`` objects in some (but
+  not all) circumstances. That feature is deprecated, and will be removed
+  in a future version of Traits. (#1627)
+
+Documentation
+~~~~~~~~~~~~~
+* Add copy buttons to code samples in documentation. (#1651, #1653)
+* Document ``Date``, ``Datetime`` and ``Time`` trait types. (#1641)
+* Docstring grammar fix. (#1583)
+* Fix some long lines in docstrings. (#1680)
+* Fix rst issues identified by "sphinx-lint". (#1652)
+* Fix some missing mentions of ``Set`` in notification docs. (#1618)
+* Fix various typos in docstrings and comments. (#1611)
+* Document the ``'some_trait.-'`` pattern for ``on_trait_change``. (#1592)
+
+Build and continuous integration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+* Use PySide6 for Python >= 3.8 instead of PySide2 in CI testing. (#1685)
+* Add ``pyproject.toml`` files for both Traits and traits-stubs. (#1689, #1676)
+* Add Python 3.11 to some workflow runs. (#1660, #1674)
+* Switch Slack channel used to report failures (#1650)
+* Exclude ``build`` directory in flake8 configuration (#1635)
+* Allow running the main test workflow manually (#1607)
+* Run core tests on Python 3.11 (#1600)
+* Re-include NumPy as a test dependency on Python 3.10 (#1593)
+* Include Python 3.10 in install-from-PyPI tests (#1576)
+
+Maintenance and refactoring
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+* .gitignore cleanup and updates. (#1678, #1687)
+* Return ``PyErr_Format`` calls in ``traits/ctraits.c``. (#1640)
+* Update copyright header end year to 2022. (#1612)
+* The ci-src-requirements.txt file isn't used; remove it (#1602)
+* Remove unused fast validation tuples ``int_fast_validate``,
+  ``float_fast_validate`` and ``complex_fast_validate``. (#1601)
 
 
 Release 6.3.2
