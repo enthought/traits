@@ -121,12 +121,9 @@ Documentation
 ~~~~~~~~~~~~~
 * Add copy buttons to code samples in documentation. (#1651, #1653)
 * Document ``Date``, ``Datetime`` and ``Time`` trait types. (#1641)
-* Docstring grammar fix. (#1583)
-* Fix some long lines in docstrings. (#1680)
-* Fix rst issues identified by "sphinx-lint". (#1652)
 * Fix some missing mentions of ``Set`` in notification docs. (#1618)
-* Fix various typos in docstrings and comments. (#1611)
 * Document the ``'some_trait.-'`` pattern for ``on_trait_change``. (#1592)
+* Miscellaneous minor fixes. (#1583, #1611, #1652, #1680)
 
 Build and continuous integration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
