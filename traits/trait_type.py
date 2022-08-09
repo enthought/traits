@@ -360,12 +360,11 @@ class TraitType(BaseTraitHandler):
                 default_value = default_value.copy()
 
             if new.default_value_type in clone_becomes_constant_default_value:
-                # Known issue: this doesn't do the right thing if the default
-                # value is mutable because the default is shared across
-                # instances and so we will see any mutations from other
-                # instances.
-                # callable_and_args traits should override clone() to do the
-                # right thing if the result is mutable.
+                # Note that a mutable default value will be shared across
+                # instances; this may not always be the desired behaviour,
+                # especially for trait types using a callable_and_args default.
+                # TraitType subclasses that need a different behaviour should
+                # override or extend the clone() method.
                 # xref: enthought/traits#1630
                 new.default_value_type = DefaultValue.constant
 
