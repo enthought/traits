@@ -13,6 +13,7 @@
 # Standard library imports.
 import contextlib
 import os
+import pathlib
 import shutil
 import sys
 import tempfile
@@ -69,7 +70,7 @@ def temporary_home_directory():
     with temporary_directory() as temp_home:
         with restore_mapping_entry(os.environ, home_var):
             os.environ[home_var] = temp_home
-            yield
+            yield temp_home
 
 
 @contextlib.contextmanager
@@ -109,11 +110,9 @@ class ETSConfigTestCase(unittest.TestCase):
 
         # Make a fresh instance each time.
         self.ETSConfig = type(ETSConfig)()
-
-    def run(self, result=None):
-        # Extend TestCase.run to use a temporary home directory.
-        with temporary_home_directory():
-            super().run(result)
+        with contextlib.ExitStack() as stack:
+            self._temp_home = stack.enter_context(temporary_home_directory())
+            self.addCleanup(stack.pop_all().close)
 
     ###########################################################################
     # 'ETSConfigTestCase' interface.
@@ -251,10 +250,10 @@ class ETSConfigTestCase(unittest.TestCase):
         (dirname, app_name) = os.path.split(app_home)
 
         self.assertEqual(dirname, self.ETSConfig.application_data)
-
-        # The assumption here is that the test was run using unittest and not
-        # a different test runner e.g. using "python -m unittest ...".
-        self.assertEqual(app_name, "unittest")
+        self.assertEqual(
+            app_name,
+            pathlib.Path(sys.modules["__main__"].__file__).parts[-2]
+        )
 
     def test_delete_application_home(self):
         # given
