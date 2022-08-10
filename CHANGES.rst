@@ -19,6 +19,9 @@ Detailed changes
 * Remove the deprecated ``typecode`` parameter to ``Array`` trait types.
   (#1633)
 * Remove the deprecated ``nose_tools`` module. (#1636)
+* Remove the deprecated ``Long``, ``CLong``, ``BaseLong`` and ``BaseCLong``
+  trait types. Use ``Int``, ``CInt``, ``BaseInt`` and ``BaseCInt`` instead.
+  (#1701)
 
 
 Release 6.4.0
