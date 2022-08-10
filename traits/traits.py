@@ -148,6 +148,12 @@ class Default(object):
 def Trait(*value_type, **metadata):
     """ Creates a trait definition.
 
+    .. note::
+
+       The :func:`~.Trait` function is not recommended for use in new code,
+       and may eventually be deprecated and removed. Consider using
+       :class:`~.Union` instead.
+
     This function accepts a variety of forms of parameter lists:
 
     +-------------------+---------------+-------------------------------------+
