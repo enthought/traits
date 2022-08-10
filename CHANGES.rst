@@ -22,6 +22,8 @@ Detailed changes
 * Remove the deprecated ``Long``, ``CLong``, ``BaseLong`` and ``BaseCLong``
   trait types. Use ``Int``, ``CInt``, ``BaseInt`` and ``BaseCInt`` instead.
   (#1701)
+* Remove the deprecated ``TraitPrefixList`` and ``TraitPrefixMap`` classes.
+  Use ``PrefixList`` and ``PrefixMap`` instead. (#1703)
 
 
 Release 6.4.0
