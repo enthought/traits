@@ -414,23 +414,6 @@ class TraitType(BaseTraitHandler):
                 trait.post_setattr = post_setattr
                 trait.is_mapped = self.is_mapped
 
-            # Note: The use of 'rich_compare' metadata is deprecated; use
-            # 'comparison_mode' metadata instead. Ref: enthought/traits#602.
-            rich_compare = metadata.get("rich_compare")
-            if rich_compare is not None:
-                warnings.warn(
-                    "The 'rich_compare' metadata has been deprecated. Please "
-                    "use the 'comparison_mode' metadata instead. In a future "
-                    "release, rich_compare will have no effect.",
-                    DeprecationWarning,
-                    stacklevel=6,
-                )
-
-                if rich_compare:
-                    trait.comparison_mode = ComparisonMode.equality
-                else:
-                    trait.comparison_mode = ComparisonMode.identity
-
             comparison_mode = metadata.pop("comparison_mode", None)
             if comparison_mode is not None:
                 trait.comparison_mode = comparison_mode
