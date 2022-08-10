@@ -462,7 +462,7 @@ the traits.trait_handlers module.
 TraitPrefixList
 ```````````````
 
-.. note::
+.. deprecated:: 6.1
     :class:`~.TraitPrefixList` is scheduled for removal
     in Traits 7.0. Use the :class:`~.PrefixList` trait type instead.
 
@@ -505,7 +505,7 @@ For example::
 TraitPrefixMap
 ``````````````
 
-.. note::
+.. deprecated:: 6.1
     :class:`~.TraitPrefixMap` is scheduled for removal
     in Traits 7.0. Use the :class:`~.PrefixMap` trait type instead.
 
