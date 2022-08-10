@@ -349,7 +349,8 @@ class TraitType(BaseTraitHandler):
                     # this is expected for traits which need object or name
                     # information to properly validate (eg. This() trait)
                     # TODO: override This.clone() and similar for better
-                    # behaviour and raise a TraitError here
+                    # behaviour and raise an exception here.
+                    # xref: enthought/traits#1696
                     logger.debug(
                         f"Validation failed cloning {self} with "
                         f"default value {default_value}: {exc}",
