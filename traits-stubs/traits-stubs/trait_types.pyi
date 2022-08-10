@@ -691,22 +691,6 @@ class CUnicode(CStr):
     ...
 
 
-class BaseLong(BaseInt):
-    ...
-
-
-class Long(Int):
-    ...
-
-
-class BaseCLong(BaseCInt):
-    ...
-
-
-class CLong(CInt):
-    ...
-
-
 class false(Bool):
     ...
 
