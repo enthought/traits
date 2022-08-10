@@ -34,10 +34,8 @@ Visualization:
 """
 
 from types import FunctionType, MethodType
-import warnings
 
 from .constants import (
-    ComparisonMode,
     DefaultValue,
     TraitKind,
 )

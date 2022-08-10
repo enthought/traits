@@ -9,7 +9,6 @@
 # Thanks for using Enthought open source!
 
 import unittest
-import warnings
 
 from traits.api import (
     Any, cached_property, ComparisonMode, HasTraits, Property, Str,

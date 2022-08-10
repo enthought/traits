@@ -16,10 +16,8 @@ traits, and provides a richer API than the old-style traits derived from
 ``TraitHandler``.
 """
 
-import warnings
-
 from .base_trait_handler import BaseTraitHandler
-from .constants import ComparisonMode, DefaultValue, TraitKind
+from .constants import DefaultValue, TraitKind
 from .trait_base import Missing, Self, TraitsCache, Undefined, class_of
 from .trait_dict_object import TraitDictObject
 from .trait_errors import TraitError
