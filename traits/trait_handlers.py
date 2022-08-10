@@ -525,6 +525,10 @@ class TraitPrefixList(TraitHandler):
     list of specified string values, or is a unique prefix of one of those
     values.
 
+    .. deprecated:: 6.1
+        :class:`~.TraitPrefixList` is scheduled for removal in Traits
+        7.0. Use the :class:`~.PrefixList` trait type instead.
+
     TraitPrefixList is a variation on TraitEnum. The values that can be
     assigned to a trait attribute defined using a TraitPrefixList handler is
     the set of all strings supplied to the TraitPrefixList constructor, as well
@@ -705,6 +709,10 @@ class TraitMap(TraitHandler):
 
 class TraitPrefixMap(TraitMap):
     """A cross between the TraitPrefixList and TraitMap classes.
+
+    .. deprecated:: 6.1
+        :class:`~.TraitPrefixMap` is scheduled for removal
+        in Traits 7.0. Use the :class:`~.PrefixMap` trait type instead.
 
     Like TraitMap, TraitPrefixMap is created using a dictionary, but in this
     case, the keys of the dictionary must be strings. Like TraitPrefixList,
