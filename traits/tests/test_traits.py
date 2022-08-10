@@ -34,6 +34,7 @@ from traits.api import (
     This,
     Trait,
     TraitError,
+    Tuple,
     pop_exception_handler,
     push_exception_handler,
 )
@@ -938,6 +939,51 @@ try:
     del slow.handler.fast_validate
 except AttributeError:
     pass
+
+
+class complex_value(HasTraits):
+    num1 = Trait(1, Range(1, 5), Range(-5, -1))
+    num4 = Trait(1, Trait(1, Tuple, slow), 10)
+    num5 = Trait(1, 10, Trait(1, Tuple, slow))
+
+
+class test_complex_value(test_base2):
+    def setUp(self):
+        self.obj = complex_value()
+
+    def test_num1(self):
+        self.check_values(
+            "num1",
+            1,
+            [1, 2, 3, 4, 5, -1, -2, -3, -4, -5],
+            [
+                0,
+                6,
+                -6,
+                "0",
+                "6",
+                "-6",
+                0.0,
+                6.0,
+                -6.0,
+                [1],
+                (1,),
+                {1: 1},
+                None,
+            ],
+            [1, 2, 3, 4, 5, -1, -2, -3, -4, -5],
+        )
+
+    def test_enum_exceptions(self):
+        """ Check that enumerated values can be combined with nested
+        TraitCompound handlers.
+        """
+        self.check_values(
+            "num4", 1, [1, 2, 3, -3, -2, -1, 10, ()], [0, 4, 5, -5, -4, 11]
+        )
+        self.check_values(
+            "num5", 1, [1, 2, 3, -3, -2, -1, 10, ()], [0, 4, 5, -5, -4, 11]
+        )
 
 
 class ThisDummy(HasTraits):
