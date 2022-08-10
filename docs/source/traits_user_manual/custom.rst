@@ -219,6 +219,12 @@ API Reference* sections on the TraitType and BaseTraitHandler classes.
 The Trait() Factory Function
 ----------------------------
 
+.. note::
+
+   The :func:`~.Trait` function is not recommended for use in new code, and may
+   eventually be deprecated and removed. Consider using :class:`~.Union`
+   instead.
+
 The Trait() function is a generic factory for trait definitions. It has many
 forms, many of which are redundant with the predefined shortcut traits. For
 example, the simplest form Trait(default_value), is equivalent to the functions
