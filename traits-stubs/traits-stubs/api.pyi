@@ -191,9 +191,7 @@ from .trait_handlers import (
     TraitInstance as TraitInstance,
     TraitFunction as TraitFunction,
     TraitEnum as TraitEnum,
-    TraitPrefixList as TraitPrefixList,
     TraitMap as TraitMap,
-    TraitPrefixMap as TraitPrefixMap,
     TraitCompound as TraitCompound,
 )
 

@@ -82,7 +82,7 @@ class ValidateTrait(IntEnum):
     #: A tuple type check.
     tuple = 9
 
-    #: A prefix map item check.
+    #: A prefix map item check (unused).
     prefix_map = 10
 
     #: A coercable type check.

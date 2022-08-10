@@ -448,87 +448,11 @@ computed value, or raises a TraitError if the assigned value is not valid. Both
 TraitHandler and TraitType derive from BaseTraitHandler; TraitHandler has a more
 limited interface.
 
-The Traits package provides a number of predefined TraitHandler subclasses. A few
-of the predefined trait handler classes are described in the following sections.
-These sections also demonstrate how to define a trait using a trait handler and
-the Trait() factory function. For a complete list and descriptions of predefined
-TraitHandler subclasses, refer to the *Traits API Reference*, in the section on
-the traits.trait_handlers module.
+The Traits package provides a number of predefined TraitHandler subclasses. For
+a complete list and descriptions of predefined TraitHandler subclasses, refer
+to the *Traits API Reference*, in the section on the traits.trait_handlers
+module.
 
-.. index:: TraitPrefixList class
-
-.. _traitprefixlist:
-
-TraitPrefixList
-```````````````
-
-.. deprecated:: 6.1
-    :class:`~.TraitPrefixList` is scheduled for removal
-    in Traits 7.0. Use the :class:`~.PrefixList` trait type instead.
-
-The TraitPrefixList handler accepts not only a specified set of strings as
-values, but also any unique prefix substring of those values. The value assigned
-to the trait attribute is the full string that the substring matches.
-
-.. index::
-   pair: TraitPrefixList class; examples
-
-For example::
-
-    >>> from traits.api import HasTraits, Trait
-    >>> from traits.api import TraitPrefixList
-    >>> class Alien(HasTraits):
-    ...   heads = Trait('one', TraitPrefixList(['one','two','three']))
-    ...
-    >>> alf = Alien()
-    >>> alf.heads = 'o'
-    >>> print(alf.heads)
-    one
-    >>> alf.heads = 'tw'
-    >>> print(alf.heads)
-    two
-    >>> alf.heads = 't'  # Error, not a unique prefix
-    Traceback (most recent call last):
-      File "<stdin>", line 1, in <module>
-      File "c:\svn\ets3\traits_3.0.3\enthought\traits\trait_handlers.py", line 1802,
-     in validate self.error( object, name, value )
-      File "c:\svn\ets3\traits_3.0.3\enthought\traits\trait_handlers.py", line 175,
-    in error value )
-    traits.trait_errors.TraitError: The 'heads' trait of an Alien instance
-     must be 'one' or 'two' or 'three' (or any unique prefix), but a value of 't'
-     <type 'str'> was specified.
-
-.. index:: TraitPrefixMap class
-
-.. _traitprefixmap:
-
-TraitPrefixMap
-``````````````
-
-.. deprecated:: 6.1
-    :class:`~.TraitPrefixMap` is scheduled for removal
-    in Traits 7.0. Use the :class:`~.PrefixMap` trait type instead.
-
-The TraitPrefixMap handler combines the TraitPrefixList with mapped traits. Its
-constructor takes a parameter that is a dictionary whose keys are strings. A
-string is a valid value if it is a unique prefix for a key in the dictionary.
-The value assigned is the dictionary value corresponding to the matched key.
-
-.. index::
-   pair: TraitPrefixMap class; examples
-
-The following example uses TraitPrefixMap to define a Boolean trait that accepts
-any prefix of 'true', 'yes', 'false', or 'no', and maps them to 1 or 0.
-::
-
-    # traitprefixmap.py --- Example of using the TraitPrefixMap handler
-    from traits.api import Trait, TraitPrefixMap
-
-    boolean_map = Trait('true', TraitPrefixMap( {
-                                  'true': 1,
-                                  'yes':  1,
-                                  'false': 0,
-                                  'no':   0 } ) )
 
 .. index:: handler classes; custom
 

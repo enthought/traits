@@ -34,9 +34,6 @@ from traits.api import (
     This,
     Trait,
     TraitError,
-    TraitPrefixList,
-    TraitPrefixMap,
-    Tuple,
     pop_exception_handler,
     push_exception_handler,
 )
@@ -486,67 +483,6 @@ class MappedTest(AnyTraitTest):
     _good_values = ["one", "two", "three"]
     _mapped_values = [1, 2, 3]
     _bad_values = ["four", 1, 2, 3, [1], (1,), {1: 1}, None]
-
-
-# Suppress DeprecationWarning from TraitPrefixList instantiation.
-with warnings.catch_warnings():
-    warnings.filterwarnings(action="ignore", category=DeprecationWarning)
-
-    class PrefixListTrait(HasTraits):
-        value = Trait("one", TraitPrefixList("one", "two", "three"))
-
-
-class PrefixListTest(AnyTraitTest):
-    def setUp(self):
-        self.obj = PrefixListTrait()
-
-    _default_value = "one"
-    _good_values = [
-        "o",
-        "on",
-        "one",
-        "tw",
-        "two",
-        "th",
-        "thr",
-        "thre",
-        "three",
-    ]
-    _bad_values = ["t", "one ", " two", 1, None]
-
-    def coerce(self, value):
-        return {"o": "one", "on": "one", "tw": "two", "th": "three"}[value[:2]]
-
-
-# Suppress DeprecationWarning from TraitPrefixMap instantiation.
-with warnings.catch_warnings():
-    warnings.filterwarnings(action="ignore", category=DeprecationWarning)
-
-    class PrefixMapTrait(HasTraits):
-        value = Trait("one", TraitPrefixMap({"one": 1, "two": 2, "three": 3}))
-
-
-class PrefixMapTest(AnyTraitTest):
-    def setUp(self):
-        self.obj = PrefixMapTrait()
-
-    _default_value = "one"
-    _good_values = [
-        "o",
-        "on",
-        "one",
-        "tw",
-        "two",
-        "th",
-        "thr",
-        "thre",
-        "three",
-    ]
-    _mapped_values = [1, 1, 1, 2, 2, 3, 3, 3]
-    _bad_values = ["t", "one ", " two", 1, None]
-
-    def coerce(self, value):
-        return {"o": "one", "on": "one", "tw": "two", "th": "three"}[value[:2]]
 
 
 # This test a combination of Trait, a default, a mapping and a function
@@ -1002,67 +938,6 @@ try:
     del slow.handler.fast_validate
 except AttributeError:
     pass
-
-
-# Suppress DeprecationWarnings from TraitPrefixList and TraitPrefixMap
-with warnings.catch_warnings():
-    warnings.filterwarnings(action="ignore", category=DeprecationWarning)
-
-    class complex_value(HasTraits):
-        num1 = Trait(1, Range(1, 5), Range(-5, -1))
-        num2 = Trait(
-            1,
-            Range(1, 5),
-            TraitPrefixList("one", "two", "three", "four", "five"),
-        )
-        num3 = Trait(
-            1,
-            Range(1, 5),
-            TraitPrefixMap(
-                {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5}
-            ),
-        )
-        num4 = Trait(1, Trait(1, Tuple, slow), 10)
-        num5 = Trait(1, 10, Trait(1, Tuple, slow))
-
-
-class test_complex_value(test_base2):
-    def setUp(self):
-        self.obj = complex_value()
-
-    def test_num1(self):
-        self.check_values(
-            "num1",
-            1,
-            [1, 2, 3, 4, 5, -1, -2, -3, -4, -5],
-            [
-                0,
-                6,
-                -6,
-                "0",
-                "6",
-                "-6",
-                0.0,
-                6.0,
-                -6.0,
-                [1],
-                (1,),
-                {1: 1},
-                None,
-            ],
-            [1, 2, 3, 4, 5, -1, -2, -3, -4, -5],
-        )
-
-    def test_enum_exceptions(self):
-        """ Check that enumerated values can be combined with nested
-        TraitCompound handlers.
-        """
-        self.check_values(
-            "num4", 1, [1, 2, 3, -3, -2, -1, 10, ()], [0, 4, 5, -5, -4, 11]
-        )
-        self.check_values(
-            "num5", 1, [1, 2, 3, -3, -2, -1, 10, ()], [0, 4, 5, -5, -4, 11]
-        )
 
 
 class ThisDummy(HasTraits):
