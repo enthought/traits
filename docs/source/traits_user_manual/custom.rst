@@ -462,6 +462,10 @@ the traits.trait_handlers module.
 TraitPrefixList
 ```````````````
 
+.. note::
+    :class:`~.TraitPrefixList` is scheduled for removal
+    in Traits 7.0. Use the :class:`~.PrefixList` trait type instead.
+
 The TraitPrefixList handler accepts not only a specified set of strings as
 values, but also any unique prefix substring of those values. The value assigned
 to the trait attribute is the full string that the substring matches.
@@ -500,6 +504,10 @@ For example::
 
 TraitPrefixMap
 ``````````````
+
+.. note::
+    :class:`~.TraitPrefixMap` is scheduled for removal
+    in Traits 7.0. Use the :class:`~.PrefixMap` trait type instead.
 
 The TraitPrefixMap handler combines the TraitPrefixList with mapped traits. Its
 constructor takes a parameter that is a dictionary whose keys are strings. A
