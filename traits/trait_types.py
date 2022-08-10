@@ -4124,10 +4124,12 @@ class ToolbarButton(Button):
 class Either(TraitType):
     """ A trait type whose value can be any of of a specified list of traits.
 
-    Note: this class has many unusual corner-case behaviours and is not
-    recommended for use in new code. It may eventually be deprecated and
-    removed. For new code, consider using the :class:`~.Union` trait type
-    instead.
+    .. note::
+
+        This class has some unusual corner-case behaviours and is not
+        recommended for use in new code. It may eventually be deprecated and
+        removed. For new code, consider using the :class:`~.Union` trait type
+        instead.
 
     Parameters
     ----------

@@ -646,8 +646,9 @@ Either
 ::::::
 
 .. note::
-    :class:`~.Either` may eventually be deprecated, and should not be used in
-    new code. Use the more well-behaved :class:`~.Union` trait type instead.
+   The :class:`~.Either` trait type may eventually be deprecated, and should
+   not be used in new code. Use the more well-behaved :class:`~.Union` trait
+   type instead.
 
 Another predefined trait that merits special explanation is Either. The
 Either trait is intended for attributes that may take a value of more than
@@ -1053,8 +1054,9 @@ the metadata attribute::
        existing traits.
 .. [3] The Function and Method trait types are now deprecated. See |Function|,
        |Method|
-.. [4] The Either trait type is likely to be deprecated at some point in the
-       future. The Union trait type should be preferred to Either in new code.
+.. [4] The :class:`~.Either` trait type is likely to be deprecated at some
+       point in the future. The :class:`~.Union` trait type should be preferred
+       to :class:`~.Either` in new code.
 
 ..
    external urls
