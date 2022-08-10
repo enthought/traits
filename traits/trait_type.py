@@ -16,6 +16,7 @@ traits, and provides a richer API than the old-style traits derived from
 ``TraitHandler``.
 """
 
+import logging
 import warnings
 
 from .base_trait_handler import BaseTraitHandler
@@ -26,9 +27,33 @@ from .trait_errors import TraitError
 from .trait_list_object import TraitListObject
 from .trait_set_object import TraitSetObject
 
+#: Logger instance for this module
+logger = logging.getLogger(__name__)
 
 #: Mapping from trait metadata 'type' to CTrait 'type':
 trait_types = {"python": 1, "event": 2}
+
+#: DefaultValue kinds that have to copy a new default value when cloned
+clone_copies_default_value = {
+    DefaultValue.trait_list_object,
+    DefaultValue.trait_dict_object,
+    DefaultValue.trait_set_object,
+}
+
+#: DefaultValue types that become constant type when given a new default
+clone_becomes_constant_default_value = {
+    DefaultValue.callable_and_args,
+    DefaultValue.callable,
+    DefaultValue.object,
+    # the following are being phased out
+    DefaultValue.list_copy,
+    DefaultValue.dict_copy,
+}
+
+#: DefaultValue types that cannot take a default value when cloned
+clone_no_override_default_value = {
+    DefaultValue.disallow,
+}
 
 
 def _infer_default_value_type(default_value):
@@ -305,16 +330,45 @@ class TraitType(BaseTraitHandler):
         new._metadata.update(metadata)
 
         if default_value is not NoDefaultSpecified:
-            if self.validate is not None:
+            if new.default_value_type in clone_no_override_default_value:
+                raise TraitError(
+                    f"Can't override default value of cloned {new} trait",
+                )
+
+            # does the trait want the original value as the default?
+            # TODO: since this is needed here, it should also be a property of
+            # the TraitType, not just the CTrait.
+            # xref: enthought/traits#1695
+            setattr_original_value = new.as_ctrait().setattr_original_value
+
+            # try to validate the new default value
+            if not (self.validate is None or setattr_original_value):
                 try:
                     default_value = self.validate(None, None, default_value)
-                except Exception:
-                    pass
+                except Exception as exc:
+                    # this is expected for traits which need object or name
+                    # information to properly validate (eg. This() trait)
+                    # TODO: override This.clone() and similar for better
+                    # behaviour and raise an exception here.
+                    # xref: enthought/traits#1696
+                    logger.debug(
+                        f"Validation failed cloning {self} with "
+                        f"default value {default_value}: {exc}",
+                        exc_info=True,
+                    )
 
-            # Known issue: this doesn't do the right thing for
-            # List, Dict and Set, where we really want to make a copy.
-            # xref: enthought/traits#1630
-            new.default_value_type = DefaultValue.constant
+            if new.default_value_type in clone_copies_default_value:
+                default_value = default_value.copy()
+
+            if new.default_value_type in clone_becomes_constant_default_value:
+                # Note that a mutable default value will be shared across
+                # instances; this may not always be the desired behaviour,
+                # especially for trait types using a callable_and_args default.
+                # TraitType subclasses that need a different behaviour should
+                # override or extend the clone() method.
+                # xref: enthought/traits#1630
+                new.default_value_type = DefaultValue.constant
+
             new.default_value = default_value
 
         return new

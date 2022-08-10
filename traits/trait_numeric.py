@@ -395,7 +395,7 @@ class ArrayOrNone(CArray):
     """ A coercing trait whose value may be either a NumPy array or None.
 
     This trait is designed to avoid the comparison issues with numpy arrays
-    that can arise from the use of constructs like Either(None, Array).
+    that can arise from the use of constructs like Union(None, Array).
 
     The default value is None.
     """
