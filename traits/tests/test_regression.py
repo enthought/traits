@@ -34,10 +34,10 @@ from traits.trait_types import (
     Instance,
     Int,
     List,
+    self,
     Set,
     Str,
     Union,
-    self,
 )
 
 if numpy is not None:

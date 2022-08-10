@@ -447,6 +447,9 @@ class InterfacesTest(unittest.TestCase):
         self.assertEqual(default_value_kind, DefaultValue.constant)
         self.assertIs(default_value, new_default)
 
+        ctrait_default = i_foo_clone.as_ctrait().default_value_for(None, "foo")
+        self.assertIs(ctrait_default, new_default)
+
     def test_subclass_supports_default(self):
         s1 = TraitsHolderSub()
         s2 = TraitsHolderSub()
