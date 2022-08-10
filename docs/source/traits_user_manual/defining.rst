@@ -130,7 +130,7 @@ pass it as an argument to the trait::
 
     account_balance = Float(10.0)
 
-Most predefined traits are callable, [2]_ and can accept a default value and
+Most predefined traits are callable [1]_, and can accept a default value and
 possibly other arguments; all that are callable can also accept metadata as
 keyword arguments. (See :ref:`other-predefined-traits` for information on trait
 signatures, and see :ref:`trait-metadata` for information on metadata
@@ -321,7 +321,7 @@ the table.
 +------------------+----------------------------------------------------------+
 | Disallow         | n/a                                                      |
 +------------------+----------------------------------------------------------+
-| Either [4]_      | Either( *val1*\ [, *val2*, ..., *valN*,                  |
+| Either [2]_      | Either( *val1*\ [, *val2*, ..., *valN*,                  |
 |                  | \*\*\ *metadata*] )                                      |
 +------------------+----------------------------------------------------------+
 | Enum             | Enum( *values*\ [, \*\*\ *metadata*] )                   |
@@ -1047,16 +1047,16 @@ the metadata attribute::
     print(t.trait( 'any' ).is_trait_type( Str ))       # False
 
 .. rubric:: Footnotes
-.. [2] Most callable predefined traits are classes, but a few are functions.
+.. [1] Most callable predefined traits are classes, but a few are functions.
        The distinction does not make a difference unless you are trying to
        extend an existing predefined trait. See the *Traits API Reference* for
        details on particular traits, and see Chapter 5 for details on extending
        existing traits.
-.. [3] The Function and Method trait types are now deprecated. See |Function|,
-       |Method|
-.. [4] The :class:`~.Either` trait type is likely to be deprecated at some
+.. [2] The :class:`~.Either` trait type is likely to be deprecated at some
        point in the future. The :class:`~.Union` trait type should be preferred
        to :class:`~.Either` in new code.
+.. [3] The Function and Method trait types are now deprecated. See |Function|,
+       |Method|
 
 ..
    external urls
