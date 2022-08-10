@@ -128,6 +128,11 @@ Documentation
 * Document ``Date``, ``Datetime`` and ``Time`` trait types. (#1641)
 * Fix some missing mentions of ``Set`` in notification docs. (#1618)
 * Document the ``'some_trait.-'`` pattern for ``on_trait_change``. (#1592)
+* Document that ``Either`` should not be used in new code. (#1699)
+* Document that ``TraitPrefixMap`` and ``TraitPrefixList`` are deprecated.
+  (#1702)
+* Document that the Trait factory function should not be used in new code.
+  (#1700)
 * Miscellaneous minor fixes. (#1583, #1611, #1652, #1680)
 
 Build and continuous integration
