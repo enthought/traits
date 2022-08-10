@@ -199,9 +199,7 @@ from .trait_handlers import (
     TraitInstance,
     TraitFunction,
     TraitEnum,
-    TraitPrefixList,
     TraitMap,
-    TraitPrefixMap,
     TraitCompound,
 )
 
