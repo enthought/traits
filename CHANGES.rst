@@ -8,8 +8,6 @@ Released: XXXX-XX-XX
 
 TBD Release summary
 
-TBD Release details
-
 Detailed changes
 ~~~~~~~~~~~~~~~~
 
@@ -104,6 +102,8 @@ Fixes
 * Fix some ``ETSConfig`` tests that assume unittest as the test runner. (#1683)
 * Rename various test-related classes to avoid pytest trying to harvest test
   methods from them. (#1684)
+* Overriding a default for a ``List`` or other collection trait in a subclass
+  now works as expected. Previously, the behaviour was unusably buggy. (#1645)
 
 Deprecations
 ~~~~~~~~~~~~
