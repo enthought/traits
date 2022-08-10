@@ -638,56 +638,6 @@ prefix. Instantiating the class produces the following::
     >>> print(bob.married)
     no
 
-.. index:: Either trait
-
-.. _either:
-
-Either
-::::::
-
-.. note::
-   The :class:`~.Either` trait type may eventually be deprecated, and should
-   not be used in new code. Use the more well-behaved :class:`~.Union` trait
-   type instead.
-
-Another predefined trait that merits special explanation is Either. The
-Either trait is intended for attributes that may take a value of more than
-a single trait type, including None. The default value of Either is None, even
-if None is not one of the types the user explicitly defines in the constructor,
-but a different default value can be provided using the ``default`` argument.
-
-.. index::
-   pair: Either trait; examples
-
-The following is an example of using Either::
-
-    # either.py --- Example of Either predefined trait
-
-    from traits.api import HasTraits, Either, Str
-
-    class Employee(HasTraits):
-        manager_name = Either(Str, None)
-
-This example defines an Employee class, which has a **manager_name** trait
-attribute, which accepts either an Str instance or None as its value, and
-will raise a TraitError if a value of any other type is assigned. For example::
-
-    >>> from traits.api import HasTraits, Either, Str
-    >>> class Employee(HasTraits):
-    ...     manager_name = Either(Str, None)
-    ...
-    >>> steven = Employee(manager_name="Jenni")
-    >>> # Here steven's manager is named "Jenni"
-    >>> steven.manager_name
-    'Jenni'
-    >>> eric = Employee(manager_name=None)
-    >>> # Eric is the boss, so he has no manager.
-    >>> eric.manager_name is None
-    True
-    >>> # Assigning a value that is neither a string nor None will fail.
-    >>> steven.manager_name = 5
-    traits.trait_errors.TraitError: The 'manager_name' trait of an Employee instance must be a string or None, but a value of 5 <type 'int'> was specified.
-
 .. index:: Union trait
 
 .. _union:
@@ -749,6 +699,56 @@ The following example illustrates the difference between `Either` and `Union`::
     >>> class IntegerClass(HasTraits):
     ...     primes = Union([2], None, {'3':6}, 5, 7, 11)
     ValueError: Union trait declaration expects a trait type or an instance of trait type or None, but got [2] instead
+
+.. index:: Either trait
+
+.. _either:
+
+Either
+::::::
+
+.. note::
+   The :class:`~.Either` trait type may eventually be deprecated, and should
+   not be used in new code. Use the more well-behaved :class:`~.Union` trait
+   type instead.
+
+Another predefined trait that merits special explanation is Either. The
+Either trait is intended for attributes that may take a value of more than
+a single trait type, including None. The default value of Either is None, even
+if None is not one of the types the user explicitly defines in the constructor,
+but a different default value can be provided using the ``default`` argument.
+
+.. index::
+   pair: Either trait; examples
+
+The following is an example of using Either::
+
+    # either.py --- Example of Either predefined trait
+
+    from traits.api import HasTraits, Either, Str
+
+    class Employee(HasTraits):
+        manager_name = Either(Str, None)
+
+This example defines an Employee class, which has a **manager_name** trait
+attribute, which accepts either an Str instance or None as its value, and
+will raise a TraitError if a value of any other type is assigned. For example::
+
+    >>> from traits.api import HasTraits, Either, Str
+    >>> class Employee(HasTraits):
+    ...     manager_name = Either(Str, None)
+    ...
+    >>> steven = Employee(manager_name="Jenni")
+    >>> # Here steven's manager is named "Jenni"
+    >>> steven.manager_name
+    'Jenni'
+    >>> eric = Employee(manager_name=None)
+    >>> # Eric is the boss, so he has no manager.
+    >>> eric.manager_name is None
+    True
+    >>> # Assigning a value that is neither a string nor None will fail.
+    >>> steven.manager_name = 5
+    traits.trait_errors.TraitError: The 'manager_name' trait of an Employee instance must be a string or None, but a value of 5 <type 'int'> was specified.
 
 
 .. _migration_either_to_union:
