@@ -30,6 +30,7 @@ from traits.api import (
     TraitError,
 )
 from traits.adaptation.api import reset_global_adaptation_manager
+from traits.constants import DefaultValue
 from traits.interface_checker import InterfaceError
 
 
@@ -116,6 +117,11 @@ class TraitsHolder(HasTraits):
     list_adapts_to = AdaptsTo(IList)
     foo_adapts_to = AdaptsTo(IFoo)
     foo_plus_adapts_to = AdaptsTo(IFooPlus)
+
+
+class TraitsHolderSub(TraitsHolder):
+    foo_adapted_to = Sample()
+    foo_adapts_to = Sample()
 
 
 class SampleListAdapter(Adapter):
@@ -417,6 +423,46 @@ class InterfacesTest(unittest.TestCase):
         provider = UndeclaredAverageProvider()
         with self.assertRaises(TraitError):
             ta.a_no = provider
+
+    def test_clone_supports_defaults(self):
+        i_foo_trait = Supports(IFoo)
+        new_default = Sample()
+        i_foo_clone = i_foo_trait(new_default)
+        default_value_kind, default_value = i_foo_clone.default_value()
+
+        # this is sub-optimal but matches Instance trait, see #1630
+        self.assertEqual(default_value_kind, DefaultValue.constant)
+        self.assertIsInstance(default_value, SampleFooAdapter)
+
+        ctrait_default = i_foo_clone.as_ctrait().default_value_for(None, "foo")
+        self.assertIsInstance(ctrait_default, SampleFooAdapter)
+
+    def test_clone_adapts_to_default(self):
+        i_foo_trait = AdaptsTo(IFoo)
+        new_default = Sample()
+        i_foo_clone = i_foo_trait(new_default)
+        default_value_kind, default_value = i_foo_clone.default_value()
+
+        # this is sub-optimal but matches Instance trait, see #1630
+        self.assertEqual(default_value_kind, DefaultValue.constant)
+        self.assertIs(default_value, new_default)
+
+        ctrait_default = i_foo_clone.as_ctrait().default_value_for(None, "foo")
+        self.assertIs(ctrait_default, new_default)
+
+    def test_subclass_supports_default(self):
+        s1 = TraitsHolderSub()
+        s2 = TraitsHolderSub()
+
+        # this is sub-optimal but matches Instance trait, see #1630
+        self.assertIs(s1.foo_adapted_to, s2.foo_adapted_to)
+
+    def test_subclass_adapts_to_default(self):
+        s1 = TraitsHolderSub()
+        s2 = TraitsHolderSub()
+
+        # this is sub-optimal but matches Instance trait, see #1630
+        self.assertIs(s1.foo_adapts_to, s2.foo_adapts_to)
 
     @contextlib.contextmanager
     def set_check_interfaces(self, check_interfaces_value):
