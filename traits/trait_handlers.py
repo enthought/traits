@@ -522,7 +522,7 @@ class TraitPrefixList(TraitHandler):
     list of specified string values, or is a unique prefix of one of those
     values.
 
-    .. note::
+    .. deprecated:: 6.1
         :class:`~.TraitPrefixList` is scheduled for removal in Traits
         7.0. Use the :class:`~.PrefixList` trait type instead.
 
@@ -707,7 +707,7 @@ class TraitMap(TraitHandler):
 class TraitPrefixMap(TraitMap):
     """A cross between the TraitPrefixList and TraitMap classes.
 
-    .. note::
+    .. deprecated:: 6.1
         :class:`~.TraitPrefixMap` is scheduled for removal
         in Traits 7.0. Use the :class:`~.PrefixMap` trait type instead.
 
