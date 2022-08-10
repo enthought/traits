@@ -238,10 +238,11 @@ Traits
 .. autoclass:: ToolbarButton
    :show-inheritance:
 
-.. autoclass:: Either
+.. autoclass:: Union
    :show-inheritance:
 
-.. autoclass:: Union
+.. autoclass:: Either
+   :show-inheritance:
 
 .. autoclass:: Symbol
    :show-inheritance:

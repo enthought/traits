@@ -269,7 +269,7 @@ the table.
 .. index:: PythonValue(), Range(), ReadOnly(), Regex()
 .. index:: Set() String(), This, Time()
 .. index:: ToolbarButton(), true, Tuple(), Type()
-.. index:: undefined, UUID(), ValidatedTuple(), WeakRef()
+.. index:: undefined, Union(), UUID(), ValidatedTuple(), WeakRef()
 
 .. _predefined-traits-beyond-simple-types-table:
 
@@ -321,7 +321,7 @@ the table.
 +------------------+----------------------------------------------------------+
 | Disallow         | n/a                                                      |
 +------------------+----------------------------------------------------------+
-| Either           | Either( *val1*\ [, *val2*, ..., *valN*,                  |
+| Either [4]_      | Either( *val1*\ [, *val2*, ..., *valN*,                  |
 |                  | \*\*\ *metadata*] )                                      |
 +------------------+----------------------------------------------------------+
 | Enum             | Enum( *values*\ [, \*\*\ *metadata*] )                   |
@@ -408,7 +408,7 @@ the table.
 | Union            | Union( *val1*\ [, *val2*, ..., *valN*,                   |
 |                  | \*\*\ *metadata*] )                                      |
 +------------------+----------------------------------------------------------+
-| UUID [4]_        | UUID( [\*\*\ *metadata*] )                               |
+| UUID             | UUID( [\*\*\ *metadata*] )                               |
 +------------------+----------------------------------------------------------+
 | ValidatedTuple   | ValidatedTuple( [\*\ *traits*, *fvalidate* = None,       |
 |                  | *fvalidate_info* = '' , \*\*\ *metadata*] )              |
@@ -644,6 +644,11 @@ prefix. Instantiating the class produces the following::
 
 Either
 ::::::
+
+.. note::
+    :class:`~.Either` may eventually be deprecated, and should not be used in
+    new code. Use the more well-behaved :class:`~.Union` trait type instead.
+
 Another predefined trait that merits special explanation is Either. The
 Either trait is intended for attributes that may take a value of more than
 a single trait type, including None. The default value of Either is None, even
@@ -687,7 +692,7 @@ will raise a TraitError if a value of any other type is assigned. For example::
 .. _union:
 
 Union
-::::::
+:::::
 The Union trait accepts a value that is considered valid by at least one
 of the traits in its definition. It is a simpler and therefore less error-prone
 alternative to the `Either` trait, which allows more complex constructs and
@@ -719,7 +724,7 @@ attribute, which accepts either an Str instance or None as its value, a
 **salary** trait that accepts an instance of Salary or Float and will raise a
 TraitError if a value of any other type is assigned. For example::
 
-    >>> from traits.api import HasTraits, Either, Str
+    >>> from traits.api import HasTraits, Str, Union
     >>> class Employee(HasTraits):
     ...     manager_name = Union(Str, None)
     ...
@@ -731,7 +736,7 @@ TraitError if a value of any other type is assigned. For example::
 
 The following example illustrates the difference between `Either` and `Union`::
 
-    >>> from traits.api import HasTraits, Either, Union, Str
+    >>> from traits.api import Either, HasTraits, Str, Union
     >>> class IntegerClass(HasTraits):
     ...     primes = Either([2], None, {'3':6}, 5, 7, 11)
     ...
@@ -1048,7 +1053,8 @@ the metadata attribute::
        existing traits.
 .. [3] The Function and Method trait types are now deprecated. See |Function|,
        |Method|
-.. [4] Available in Python 2.5.
+.. [4] The Either trait type is likely to be deprecated at some point in the
+       future. The Union trait type should be preferred to Either in new code.
 
 ..
    external urls
