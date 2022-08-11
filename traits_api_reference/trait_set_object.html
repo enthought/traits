@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>traits.trait_set_object Module &mdash; Traits 6.4 Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '6.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        LINK_SUFFIX: '.html',
+        SOURCELINK_SUFFIX: '.txt',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/clipboard.min.js"></script>
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.png">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Traits 6.4 Documentation" href="../index.html" >
+    <link rel="up" title="API Reference" href="index.html" >
+    <link rel="next" title="traits.traits_listener Module" href="traits_listener.html" >
+    <link rel="prev" title="traits.trait_notifiers Module" href="trait_notifiers.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Traits 6.4 Documentation</a></li>
+	
+          <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="traits_listener.html" title="traits.traits_listener Module"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="trait_notifiers.html" title="traits.trait_notifiers Module"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body" role="main">
+            
+  <section id="module-traits.trait_set_object">
+<span id="traits-trait-set-object-module"></span><h1><a class="reference internal" href="#module-traits.trait_set_object" title="traits.trait_set_object"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_set_object</span></code></a> Module<a class="headerlink" href="#module-traits.trait_set_object" title="Permalink to this headline">¶</a></h1>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="traits.trait_set_object.TraitSetEvent">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">traits.trait_set_object.</span></code><code class="sig-name descname"><span class="pre">TraitSetEvent</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">removed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">added</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_set_object.html#TraitSetEvent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_set_object.TraitSetEvent" title="Permalink to this definition">¶</a></dt>
+<dd><p>An object reporting in-place changes to a traits sets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>removed</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.10)"><em>set</em></a><em>, </em><em>optional</em>) – Old values that were removed from the set.</p></li>
+<li><p><strong>added</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.10)"><em>set</em></a><em>, </em><em>optional</em>) – New values added to the set.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="traits.trait_set_object.TraitSetEvent.removed">
+<code class="sig-name descname"><span class="pre">removed</span></code><a class="headerlink" href="#traits.trait_set_object.TraitSetEvent.removed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Old values that were removed from the set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.10)">set</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="traits.trait_set_object.TraitSetEvent.added">
+<code class="sig-name descname"><span class="pre">added</span></code><a class="headerlink" href="#traits.trait_set_object.TraitSetEvent.added" title="Permalink to this definition">¶</a></dt>
+<dd><p>New values added to the set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.10)">set</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="traits.trait_set_object.TraitSet">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">traits.trait_set_object.</span></code><code class="sig-name descname"><span class="pre">TraitSet</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_set_object.html#TraitSet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_set_object.TraitSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>A subclass of set that validates and notifies listeners of changes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>iterable</em><em>, </em><em>optional</em>) – Iterable providing the items for the set.</p></li>
+<li><p><strong>item_validator</strong> (<em>callable</em><em>, </em><em>optional</em>) – Called to validate and/or transform items added to the set. The
+callable should accept a single item and return the transformed
+item, raising TraitError for invalid items. If not given, no
+item validation is performed.</p></li>
+<li><p><strong>notifiers</strong> (<em>list of callable</em><em>, </em><em>optional</em>) – <p>A list of callables with the signature:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">notifier</span><span class="p">(</span><span class="n">trait_set</span><span class="p">,</span> <span class="n">removed</span><span class="p">,</span> <span class="n">added</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Where ‘added’ is a set containing new values that have been added.
+And ‘removed’ is a set containing old values that have been removed.</p>
+<p>If this argument is not given, the list of notifiers is initially
+empty.</p>
+</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="traits.trait_set_object.TraitSet.item_validator">
+<code class="sig-name descname"><span class="pre">item_validator</span></code><a class="headerlink" href="#traits.trait_set_object.TraitSet.item_validator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called to validate and/or transform items added to the set. The
+callable should accept a single item and return the transformed
+item, raising TraitError for invalid items.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>callable</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="traits.trait_set_object.TraitSet.notifiers">
+<code class="sig-name descname"><span class="pre">notifiers</span></code><a class="headerlink" href="#traits.trait_set_object.TraitSet.notifiers" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of callables with the signature:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">notifier</span><span class="p">(</span><span class="n">trait_set</span><span class="p">,</span> <span class="n">removed</span><span class="p">,</span> <span class="n">added</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where ‘added’ is a set containing new values that have been added
+and ‘removed’ is a set containing old values that have been removed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list of callable</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="traits.trait_set_object.TraitSet.notify">
+<code class="sig-name descname"><span class="pre">notify</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">removed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">added</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_set_object.html#TraitSet.notify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_set_object.TraitSet.notify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call all notifiers.</p>
+<p>This simply calls all notifiers provided by the class, if any.
+The notifiers are expected to have the signature:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">notifier</span><span class="p">(</span><span class="n">trait_set</span><span class="p">,</span> <span class="n">removed</span><span class="p">,</span> <span class="n">added</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Any return values are ignored. Any exceptions raised are not
+handled. Notifiers are therefore expected not to raise any
+exceptions under normal use.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>removed</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.10)"><em>set</em></a>) – The items that have been removed.</p></li>
+<li><p><strong>added</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.10)"><em>set</em></a>) – The new items that have been added to the set.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="traits.trait_set_object.TraitSet.add">
+<code class="sig-name descname"><span class="pre">add</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_set_object.html#TraitSet.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_set_object.TraitSet.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an element to a set.</p>
+<p>This has no effect if the element is already present.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>any</em>) – The value to add to the set.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="traits.trait_set_object.TraitSet.clear">
+<code class="sig-name descname"><span class="pre">clear</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_set_object.html#TraitSet.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_set_object.TraitSet.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all elements from this set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="traits.trait_set_object.TraitSet.discard">
+<code class="sig-name descname"><span class="pre">discard</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_set_object.html#TraitSet.discard"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_set_object.TraitSet.discard" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove an element from the set if it is a member.</p>
+<p>If the element is not a member, do nothing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>any</em>) – An item in the set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="traits.trait_set_object.TraitSet.difference_update">
+<code class="sig-name descname"><span class="pre">difference_update</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_set_object.html#TraitSet.difference_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_set_object.TraitSet.difference_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all elements of another set from this set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>args</strong> (<em>iterables</em>) – The other iterables.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="traits.trait_set_object.TraitSet.intersection_update">
+<code class="sig-name descname"><span class="pre">intersection_update</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_set_object.html#TraitSet.intersection_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_set_object.TraitSet.intersection_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the set with the intersection of itself and another set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>args</strong> (<em>iterables</em>) – The other iterables.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="traits.trait_set_object.TraitSet.pop">
+<code class="sig-name descname"><span class="pre">pop</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_set_object.html#TraitSet.pop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_set_object.TraitSet.pop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove and return an arbitrary set element.</p>
+<p>Raises KeyError if the set is empty.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>item</strong> – An element from the set.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>any</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#KeyError" title="(in Python v3.10)"><strong>KeyError</strong></a> – If the set is empty.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="traits.trait_set_object.TraitSet.remove">
+<code class="sig-name descname"><span class="pre">remove</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_set_object.html#TraitSet.remove"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_set_object.TraitSet.remove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove an element that is a member of the set.</p>
+<p>If the element is not a member, raise a KeyError.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>any</em>) – An element in the set</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#KeyError" title="(in Python v3.10)"><strong>KeyError</strong></a> – If the value is not found in the set.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="traits.trait_set_object.TraitSet.symmetric_difference_update">
+<code class="sig-name descname"><span class="pre">symmetric_difference_update</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_set_object.html#TraitSet.symmetric_difference_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_set_object.TraitSet.symmetric_difference_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the set with the symmetric difference of itself and another.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>iterable</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="traits.trait_set_object.TraitSet.update">
+<code class="sig-name descname"><span class="pre">update</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_set_object.html#TraitSet.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_set_object.TraitSet.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the set with the union of itself and others.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>args</strong> (<em>iterables</em>) – The other iterables.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="traits.trait_set_object.TraitSetObject">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">traits.trait_set_object.</span></code><code class="sig-name descname"><span class="pre">TraitSetObject</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_set_object.html#TraitSetObject"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_set_object.TraitSetObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>A specialization of TraitSet with a default validator and notifier
+for compatibility with Traits versions before 6.0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trait</strong> (<a class="reference internal" href="ctrait.html#traits.ctrait.CTrait" title="traits.ctrait.CTrait"><em>CTrait</em></a>) – The trait that the set has been assigned to.</p></li>
+<li><p><strong>object</strong> (<a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><em>HasTraits</em></a>) – The object this set belongs to. Can also be None in cases where the
+set has been disconnected from its HasTraits parent.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the trait on the object.</p></li>
+<li><p><strong>value</strong> (<em>iterable</em>) – The initial value of the set.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="traits.trait_set_object.TraitSetObject.trait">
+<code class="sig-name descname"><span class="pre">trait</span></code><a class="headerlink" href="#traits.trait_set_object.TraitSetObject.trait" title="Permalink to this definition">¶</a></dt>
+<dd><p>The trait that the set has been assigned to.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="ctrait.html#traits.ctrait.CTrait" title="traits.ctrait.CTrait">CTrait</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="traits.trait_set_object.TraitSetObject.object">
+<code class="sig-name descname"><span class="pre">object</span></code><a class="headerlink" href="#traits.trait_set_object.TraitSetObject.object" title="Permalink to this definition">¶</a></dt>
+<dd><p>A callable that when called with no arguments returns the HasTraits
+object that this set belongs to, or None if there is no such object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>callable</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="traits.trait_set_object.TraitSetObject.name">
+<code class="sig-name descname"><span class="pre">name</span></code><a class="headerlink" href="#traits.trait_set_object.TraitSetObject.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the trait on the object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="traits.trait_set_object.TraitSetObject.value">
+<code class="sig-name descname"><span class="pre">value</span></code><a class="headerlink" href="#traits.trait_set_object.TraitSetObject.value" title="Permalink to this definition">¶</a></dt>
+<dd><p>The initial value of the set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>iterable</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="traits.trait_set_object.TraitSetObject.notifier">
+<code class="sig-name descname"><span class="pre">notifier</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trait_set</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">removed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">added</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_set_object.html#TraitSetObject.notifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_set_object.TraitSetObject.notifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts and consolidates the parameters to a TraitSetEvent and
+then fires the event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trait_set</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.10)"><em>set</em></a>) – The complete set</p></li>
+<li><p><strong>removed</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.10)"><em>set</em></a>) – Set of values that were removed.</p></li>
+<li><p><strong>added</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.10)"><em>set</em></a>) – Set of values that were added.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_set_object</span></code> Module</a><ul>
+<li><a class="reference internal" href="#classes">Classes</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="trait_notifiers.html"
+                        title="previous chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_notifiers</span></code> Module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="traits_listener.html"
+                        title="next chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.traits_listener</span></code> Module</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/traits_api_reference/trait_set_object.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
+All rights reserved.
+
+      </li>
+      <li>
+      Last updated on Aug 11, 2022.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>
