@@ -11,7 +11,6 @@
 #  Imports
 
 import unittest
-import warnings
 
 from traits.api import (
     Any,
