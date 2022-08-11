@@ -15,7 +15,7 @@ from unittest import TestCase
 from traits.testing.optional_dependencies import (
     pkg_resources,
     requires_mypy,
-    requires_numpy_testing,
+    requires_numpy_typing,
     requires_pkg_resources,
 )
 from traits_stubs_tests.util import MypyAssertions
@@ -43,7 +43,7 @@ class TestAnnotations(TestCase, MypyAssertions):
             with self.subTest(file_path=file_path):
                 self.assertRaisesMypyError(file_path)
 
-    @requires_numpy_testing
+    @requires_numpy_typing
     def test_numpy_examples(self):
         """ Run mypy for files contained in traits_stubs_tests/numpy_examples
         directory.
