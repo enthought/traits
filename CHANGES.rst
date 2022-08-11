@@ -1,33 +1,6 @@
 Traits CHANGELOG
 ================
 
-Release 7.0.0
--------------
-
-Released: XXXX-XX-XX
-
-TBD Release summary
-
-Detailed changes
-~~~~~~~~~~~~~~~~
-
-* Remove deprecated ``rich_compare`` Trait metadata. (#1698)
-* Remove deprecated ``find_resource`` and ``store_resource`` functions. (#1697)
-* Remove deprecated ``TraitList``, ``TraitDict`` and ``TraitTuple`` classes.
-  (#1634)
-* Remove the deprecated ability of ``cTrait.default_value`` to set the default
-  value of a trait. It can now only be used for getting, not for setting.
-  (#1632)
-* Remove the deprecated ``typecode`` parameter to ``Array`` trait types.
-  (#1633)
-* Remove the deprecated ``nose_tools`` module. (#1636)
-* Remove the deprecated ``Long``, ``CLong``, ``BaseLong`` and ``BaseCLong``
-  trait types. Use ``Int``, ``CInt``, ``BaseInt`` and ``BaseCInt`` instead.
-  (#1701)
-* Remove the deprecated ``TraitPrefixList`` and ``TraitPrefixMap`` classes.
-  Use ``PrefixList`` and ``PrefixMap`` instead. (#1703)
-
-
 Release 6.4.0
 -------------
 
