@@ -11,6 +11,8 @@ TBD Release summary
 Detailed changes
 ~~~~~~~~~~~~~~~~
 
+* Remove deprecated ``rich_compare`` Trait metadata. (#1698)
+* Remove deprecated ``find_resource`` and ``store_resource`` functions. (#1697)
 * Remove deprecated ``TraitList``, ``TraitDict`` and ``TraitTuple`` classes.
   (#1634)
 * Remove the deprecated ability of ``cTrait.default_value`` to set the default
