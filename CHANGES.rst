@@ -31,7 +31,7 @@ Detailed changes
 Release 6.4.0
 -------------
 
-Released: 2022-08-11
+Released: 2022-08-12
 
 Traits 6.4 is a minor feature release of Traits, which focuses mainly on typing
 stub and documentation updates.
