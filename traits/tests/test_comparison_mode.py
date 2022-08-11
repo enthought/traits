@@ -11,19 +11,44 @@
 import unittest
 
 from traits.api import (
-    Any, cached_property, ComparisonMode, HasTraits, Property, Str,
+    Any,
+    cached_property,
+    ComparisonMode,
+    HasTraits,
+    Property,
+    Str,
 )
+
+
+class NoneCompare(HasTraits):
+    bar = Any(comparison_mode=ComparisonMode.none)
 
 
 class IdentityCompare(HasTraits):
     bar = Any(comparison_mode=ComparisonMode.identity)
 
 
-class RichCompare(HasTraits):
+class EqualityCompare(HasTraits):
     bar = Any(comparison_mode=ComparisonMode.equality)
 
 
-class RichCompareTests:
+class Foo(HasTraits):
+    """
+    Class implementing custom equality.
+    """
+
+    name = Str
+
+    def __eq__(self, other):
+        return self.name == other.name
+
+
+class TestComparisonMode(unittest.TestCase):
+    def setUp(self):
+        self.a = Foo(name="a")
+        self.same_as_a = Foo(name="a")
+        self.different_from_a = Foo(name="not a")
+
     def bar_changed(self, object, trait, old, new):
         self.changed_object = object
         self.changed_trait = trait
@@ -45,7 +70,17 @@ class RichCompareTests:
         self.assertIs(old, self.changed_old)
         self.assertIs(new, self.changed_new)
 
-    def test_id_first_assignment(self):
+    def test_none_first_assignment(self):
+        nc = NoneCompare()
+        nc.on_trait_change(self.bar_changed, "bar")
+
+        self.reset_change_tracker()
+
+        default_value = nc.bar
+        nc.bar = self.a
+        self.check_tracker(nc, "bar", default_value, self.a, 1)
+
+    def test_identity_first_assignment(self):
         ic = IdentityCompare()
         ic.on_trait_change(self.bar_changed, "bar")
 
@@ -55,17 +90,30 @@ class RichCompareTests:
         ic.bar = self.a
         self.check_tracker(ic, "bar", default_value, self.a, 1)
 
-    def test_rich_first_assignment(self):
-        rich = RichCompare()
-        rich.on_trait_change(self.bar_changed, "bar")
+    def test_equality_first_assignment(self):
+        ec = EqualityCompare()
+        ec.on_trait_change(self.bar_changed, "bar")
 
         self.reset_change_tracker()
 
-        default_value = rich.bar
-        rich.bar = self.a
-        self.check_tracker(rich, "bar", default_value, self.a, 1)
+        default_value = ec.bar
+        ec.bar = self.a
+        self.check_tracker(ec, "bar", default_value, self.a, 1)
 
-    def test_id_same_object(self):
+    def test_none_same_object(self):
+        nc = NoneCompare()
+        nc.on_trait_change(self.bar_changed, "bar")
+
+        self.reset_change_tracker()
+
+        default_value = nc.bar
+        nc.bar = self.a
+        self.check_tracker(nc, "bar", default_value, self.a, 1)
+
+        nc.bar = self.a
+        self.check_tracker(nc, "bar", self.a, self.a, 2)
+
+    def test_identity_same_object(self):
         ic = IdentityCompare()
         ic.on_trait_change(self.bar_changed, "bar")
 
@@ -78,20 +126,33 @@ class RichCompareTests:
         ic.bar = self.a
         self.check_tracker(ic, "bar", default_value, self.a, 1)
 
-    def test_rich_same_object(self):
-        rich = RichCompare()
-        rich.on_trait_change(self.bar_changed, "bar")
+    def test_equality_same_object(self):
+        ec = EqualityCompare()
+        ec.on_trait_change(self.bar_changed, "bar")
 
         self.reset_change_tracker()
 
-        default_value = rich.bar
-        rich.bar = self.a
-        self.check_tracker(rich, "bar", default_value, self.a, 1)
+        default_value = ec.bar
+        ec.bar = self.a
+        self.check_tracker(ec, "bar", default_value, self.a, 1)
 
-        rich.bar = self.a
-        self.check_tracker(rich, "bar", default_value, self.a, 1)
+        ec.bar = self.a
+        self.check_tracker(ec, "bar", default_value, self.a, 1)
 
-    def test_id_different_object(self):
+    def test_none_different_object(self):
+        nc = NoneCompare()
+        nc.on_trait_change(self.bar_changed, "bar")
+
+        self.reset_change_tracker()
+
+        default_value = nc.bar
+        nc.bar = self.a
+        self.check_tracker(nc, "bar", default_value, self.a, 1)
+
+        nc.bar = self.different_from_a
+        self.check_tracker(nc, "bar", self.a, self.different_from_a, 2)
+
+    def test_identity_different_object(self):
         ic = IdentityCompare()
         ic.on_trait_change(self.bar_changed, "bar")
 
@@ -104,20 +165,33 @@ class RichCompareTests:
         ic.bar = self.different_from_a
         self.check_tracker(ic, "bar", self.a, self.different_from_a, 2)
 
-    def test_rich_different_object(self):
-        rich = RichCompare()
-        rich.on_trait_change(self.bar_changed, "bar")
+    def test_equality_different_object(self):
+        ec = EqualityCompare()
+        ec.on_trait_change(self.bar_changed, "bar")
 
         self.reset_change_tracker()
 
-        default_value = rich.bar
-        rich.bar = self.a
-        self.check_tracker(rich, "bar", default_value, self.a, 1)
+        default_value = ec.bar
+        ec.bar = self.a
+        self.check_tracker(ec, "bar", default_value, self.a, 1)
 
-        rich.bar = self.different_from_a
-        self.check_tracker(rich, "bar", self.a, self.different_from_a, 2)
+        ec.bar = self.different_from_a
+        self.check_tracker(ec, "bar", self.a, self.different_from_a, 2)
 
-    def test_id_different_object_same_as(self):
+    def test_none_different_object_same_as(self):
+        nc = NoneCompare()
+        nc.on_trait_change(self.bar_changed, "bar")
+
+        self.reset_change_tracker()
+
+        default_value = nc.bar
+        nc.bar = self.a
+        self.check_tracker(nc, "bar", default_value, self.a, 1)
+
+        nc.bar = self.same_as_a
+        self.check_tracker(nc, "bar", self.a, self.same_as_a, 2)
+
+    def test_identity_different_object_same_as(self):
         ic = IdentityCompare()
         ic.on_trait_change(self.bar_changed, "bar")
 
@@ -130,50 +204,21 @@ class RichCompareTests:
         ic.bar = self.same_as_a
         self.check_tracker(ic, "bar", self.a, self.same_as_a, 2)
 
-    def test_rich_different_object_same_as(self):
-        rich = RichCompare()
-        rich.on_trait_change(self.bar_changed, "bar")
+    def test_equality_different_object_same_as(self):
+        ec = EqualityCompare()
+        ec.on_trait_change(self.bar_changed, "bar")
 
         self.reset_change_tracker()
 
-        default_value = rich.bar
-        rich.bar = self.a
-        self.check_tracker(rich, "bar", default_value, self.a, 1)
+        default_value = ec.bar
+        ec.bar = self.a
+        self.check_tracker(ec, "bar", default_value, self.a, 1)
 
         # Values of a and same_as_a are the same and should therefore not
         # be considered a change.
-        rich.bar = self.same_as_a
-        self.check_tracker(rich, "bar", default_value, self.a, 1)
+        ec.bar = self.same_as_a
+        self.check_tracker(ec, "bar", default_value, self.a, 1)
 
-
-class Foo(HasTraits):
-    name = Str
-
-    def __ne__(self, other):
-        # Traits uses != to do the rich compare.  The default implementation
-        # of __ne__ is to compare the object identities.
-        return self.name != other.name
-
-    def __eq__(self, other):
-        # Not required, but a good idea to make __eq__ and __ne__ compatible
-        return self.name == other.name
-
-
-class RichCompareHasTraitsTestCase(unittest.TestCase, RichCompareTests):
-    def setUp(self):
-        self.a = Foo(name="a")
-        self.same_as_a = Foo(name="a")
-        self.different_from_a = Foo(name="not a")
-
-    def test_assumptions(self):
-        self.assertIsNot(self.a, self.same_as_a)
-        self.assertIsNot(self.a, self.different_from_a)
-
-        self.assertEqual(self.a.name, self.same_as_a.name)
-        self.assertNotEqual(self.a.name, self.different_from_a.name)
-
-
-class OldRichCompareTestCase(unittest.TestCase):
     def test_comparison_mode_none_with_cached_property(self):
         # Even though the property is cached such that old value equals new
         # value, its change event is tied to the dependent.
