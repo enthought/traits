@@ -50,20 +50,10 @@ class TraitEnum(TraitHandler):
         ...
 
 
-class TraitPrefixList(TraitHandler):
-    def __init__(self,
-                 *values: _Any) -> None:
-        ...
-
-
 class TraitMap(TraitHandler):
     def __init__(self,
                  map: _Dict = ...) -> None:
         ...
-
-
-class TraitPrefixMap(TraitMap):
-    ...
 
 
 class TraitCompound(TraitHandler):

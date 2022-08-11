@@ -238,10 +238,11 @@ Traits
 .. autoclass:: ToolbarButton
    :show-inheritance:
 
-.. autoclass:: Either
+.. autoclass:: Union
    :show-inheritance:
 
-.. autoclass:: Union
+.. autoclass:: Either
+   :show-inheritance:
 
 .. autoclass:: Symbol
    :show-inheritance:
@@ -279,14 +280,6 @@ and may be removed in a future version of Traits.
 .. autodata:: BaseCUnicode
 
 .. autodata:: CUnicode
-
-.. autodata:: BaseLong
-
-.. autodata:: Long
-
-.. autodata:: BaseCLong
-
-.. autodata:: CLong
 
 .. autodata:: false
 

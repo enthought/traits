@@ -132,10 +132,6 @@ from .trait_types import (
     Unicode as Unicode,
     BaseCUnicode as BaseCUnicode,
     CUnicode as CUnicode,
-    BaseLong as BaseLong,
-    Long as Long,
-    BaseCLong as BaseCLong,
-    CLong as CLong,
     false as false,
     true as true,
     undefined as undefined,
@@ -191,9 +187,7 @@ from .trait_handlers import (
     TraitInstance as TraitInstance,
     TraitFunction as TraitFunction,
     TraitEnum as TraitEnum,
-    TraitPrefixList as TraitPrefixList,
     TraitMap as TraitMap,
-    TraitPrefixMap as TraitPrefixMap,
     TraitCompound as TraitCompound,
 )
 

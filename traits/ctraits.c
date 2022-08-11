@@ -3588,27 +3588,6 @@ validate_trait_map(
 }
 
 /*-----------------------------------------------------------------------------
-|  Verifies a Python value is in a specified prefix map (i.e. dictionary):
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-validate_trait_prefix_map(
-    trait_object *trait, has_traits_object *obj, PyObject *name,
-    PyObject *value)
-{
-    PyObject *type_info = trait->py_validate;
-    PyObject *mapped_value =
-        PyDict_GetItem(PyTuple_GET_ITEM(type_info, 1), value);
-    if (mapped_value != NULL) {
-        Py_INCREF(mapped_value);
-        return mapped_value;
-    }
-
-    return call_validator(
-        PyTuple_GET_ITEM(trait->py_validate, 2), obj, name, value);
-}
-
-/*-----------------------------------------------------------------------------
 |  Verifies a Python value is a tuple of a specified type and content:
 +----------------------------------------------------------------------------*/
 
@@ -4055,20 +4034,6 @@ validate_trait_complex(
                 PyErr_Clear();
                 break;
 
-            case 10: /* Prefix map item check: */
-                result = PyDict_GetItem(PyTuple_GET_ITEM(type_info, 1), value);
-                if (result != NULL) {
-                    Py_INCREF(result);
-                    return result;
-                }
-                result = call_validator(
-                    PyTuple_GET_ITEM(type_info, 2), obj, name, value);
-                if (result != NULL) {
-                    return result;
-                }
-                PyErr_Clear();
-                break;
-
             case 11: /* Coercable type check: */
                 type = PyTuple_GET_ITEM(type_info, 1);
                 if (PyObject_TypeCheck(value, (PyTypeObject *)type)) {
@@ -4267,7 +4232,7 @@ static trait_validate validate_handlers[] = {
     validate_trait_complex,     /* case 7: TraitComplex item check */
     NULL,                       /* case 8: 'Slow' validate check */
     validate_trait_tuple,       /* case 9: TupleOf item check */
-    validate_trait_prefix_map,  /* case 10: Prefix map item check */
+    NULL,                       /* case 10: Prefix map item check (unused) */
     validate_trait_coerce_type, /* case 11: Coercable type check */
     validate_trait_cast_type,   /* case 12: Castable type check */
     validate_trait_function,    /* case 13: Function validator check */
@@ -4374,15 +4339,6 @@ _trait_set_validate(trait_object *trait, PyObject *args)
                     if (n == 2) {
                         v1 = PyTuple_GET_ITEM(validate, 1);
                         if (PyTuple_CheckExact(v1)) {
-                            goto done;
-                        }
-                    }
-                    break;
-
-                case 10: /* Prefix map item check: */
-                    if (n == 3) {
-                        v1 = PyTuple_GET_ITEM(validate, 1);
-                        if (PyDict_Check(v1)) {
                             goto done;
                         }
                     }

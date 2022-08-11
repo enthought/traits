@@ -22,16 +22,19 @@ from traits.has_traits import (
 )
 from traits.testing.optional_dependencies import numpy, requires_numpy
 from traits.trait_errors import TraitError
-from traits.trait_type import TraitType
+from traits.trait_list_object import TraitListObject
+from traits.trait_type import NoDefaultSpecified, TraitType
 from traits.trait_types import (
     Bool,
     DelegatesTo,
     Dict,
     Either,
     Enum,
+    Expression,
     Instance,
     Int,
     List,
+    self,
     Set,
     Str,
     Union,
@@ -144,6 +147,115 @@ class RaisingValidator(TraitType):
 
     def validate(self, object, name, value):
         raise ZeroDivisionError("Just testing")
+
+
+class Wrapper(HasTraits):
+
+    value = Str()
+
+
+class WrapperTrait(TraitType):
+
+    def __init__(self, default_value="", **metadata):
+        self.default_value_type, default_value = self._get_default_value(
+            self.validate(None, None, default_value)
+        )
+        super().__init__(default_value, **metadata)
+
+    def validate(self, object, name, value):
+        if isinstance(value, str):
+            return Wrapper(value=value)
+        elif isinstance(value, Wrapper):
+            return value
+        else:
+            self.error(None, None, value)
+
+    def _get_default_value(self, value):
+        return (
+            DefaultValue.callable_and_args,
+            (Wrapper, (), {"value": value.value}),
+        )
+
+
+class CloneWrapperTrait(TraitType):
+
+    def __init__(self, default_value="", **metadata):
+        self.default_value_type, default_value = self._get_default_value(
+            self.validate(None, None, default_value)
+        )
+        super().__init__(default_value, **metadata)
+
+    def validate(self, object, name, value):
+        if isinstance(value, str):
+            return Wrapper(value=value)
+        elif isinstance(value, Wrapper):
+            return value
+        else:
+            self.error(None, None, value)
+
+    def _get_default_value(self, value):
+        return (
+            DefaultValue.callable_and_args,
+            (Wrapper, (), {"value": value.value}),
+        )
+
+    def clone(self, default_value=NoDefaultSpecified, **metadata):
+        new = super().clone(default_value, **metadata)
+        if default_value is not NoDefaultSpecified:
+            default_value = new.validate(None, None, default_value)
+            type, value = new._get_default_value(default_value)
+            new.default_value_type = type
+            new.default_value = value
+        return new
+
+
+class DisallowDefaultValue(TraitType):
+    default_value_type = DefaultValue.disallow
+
+
+class SubclassDefaultsSuper(HasTraits):
+
+    a_str = Str()
+
+    an_expr = Expression("[]")
+
+    a_list = List()
+
+    an_instance = Instance(Wrapper)
+
+    a_wrapper_1 = WrapperTrait("bar")
+
+    a_wrapper_2 = WrapperTrait()
+
+    clone_wrapper_1 = CloneWrapperTrait("bar")
+
+    clone_wrapper_2 = CloneWrapperTrait()
+
+    disallow_default = DisallowDefaultValue()
+
+    self_trait = self()
+
+
+class SubclassDefaultsSub(SubclassDefaultsSuper):
+
+    a_str = "foo"
+
+    an_expr = Expression("[1, 2, 3]")
+
+    a_list = [1, 2, 3]
+
+    an_instance = Wrapper()
+
+    a_wrapper_1 = "foo"
+
+    a_wrapper_2 = Wrapper(value="foo")
+
+    clone_wrapper_1 = "foo"
+
+    clone_wrapper_2 = Wrapper(value="foo")
+
+    # self effectively becomes a This() trait if default is overriden
+    self_trait = SubclassDefaultsSuper()
 
 
 class TestRegression(unittest.TestCase):
@@ -327,6 +439,122 @@ class TestRegression(unittest.TestCase):
 
         with self.assertRaises(TraitError):
             clone.selection.append("bouillabaisse")
+
+    def test_clone_list_trait_default(self):
+        # Regression test for #1630
+        t = List()
+        new_default = [1, 2, 3]
+        t_clone = t(new_default)
+        default_value_kind, default_value = t_clone.default_value()
+
+        self.assertEqual(default_value_kind, DefaultValue.trait_list_object)
+        self.assertEqual(default_value, new_default)
+        self.assertIsNot(default_value, new_default)
+
+    def test_clone_dict_trait_default(self):
+        # Regression test for #1630
+        t = Dict()
+        new_default = {'a': 1, 'b': 2, 'c': 3}
+        t_clone = t(new_default)
+        default_value_kind, default_value = t_clone.default_value()
+
+        self.assertEqual(default_value_kind, DefaultValue.trait_dict_object)
+        self.assertEqual(default_value, new_default)
+        self.assertIsNot(default_value, new_default)
+
+    def test_clone_set_trait_default(self):
+        # Regression test for #1630
+        t = Set()
+        new_default = {1, 2, 3}
+        t_clone = t(new_default)
+        default_value_kind, default_value = t_clone.default_value()
+
+        self.assertEqual(default_value_kind, DefaultValue.trait_set_object)
+        self.assertEqual(default_value, new_default)
+        self.assertIsNot(default_value, new_default)
+
+    def test_clone_disallow_default_value(self):
+        t = DisallowDefaultValue()
+        with self.assertRaises(TraitError):
+            t("default value")
+
+    def test_clone_setattr_original_value(self):
+        t = Expression()
+        t_clone = t("3")
+        default_value_kind, default_value = t_clone.default_value()
+
+        self.assertEqual(default_value_kind, DefaultValue.constant)
+        self.assertEqual(default_value, "3")
+
+    def test_subclass_default_constant(self):
+        # Regression test for #1630 and similar issues
+        s1 = SubclassDefaultsSub()
+        s2 = SubclassDefaultsSub()
+
+        # existing behaviour that should not be affected
+        self.assertEqual(s1.a_str, "foo")
+        self.assertEqual(s1.an_expr, "[1, 2, 3]")
+        self.assertEqual(s2.an_expr, "[1, 2, 3]")
+
+    def test_subclass_default_callable_and_args(self):
+        # Regression test for #1630 and similar issues
+        s1 = SubclassDefaultsSub()
+        s2 = SubclassDefaultsSub()
+
+        # the following is a bit questionable, but is existing behaviour
+        self.assertIsInstance(s1.an_instance, Wrapper)
+        self.assertIsInstance(s2.an_instance, Wrapper)
+        self.assertIs(s1.an_instance, s2.an_instance)
+
+        self.assertIsInstance(s1.a_wrapper_1, Wrapper)
+        self.assertIsInstance(s2.a_wrapper_1, Wrapper)
+        self.assertIs(s1.a_wrapper_1, s2.a_wrapper_1)
+
+        self.assertIsInstance(s1.a_wrapper_2, Wrapper)
+        self.assertIsInstance(s2.a_wrapper_2, Wrapper)
+        self.assertIs(s1.a_wrapper_2, s2.a_wrapper_2)
+
+    def test_subclass_default_object_kind(self):
+        # Regression test for #1630 and similar issues
+        s1 = SubclassDefaultsSub()
+        s2 = SubclassDefaultsSub()
+
+        # the following is a bit odd, but is existing behaviour
+        self.assertIsInstance(s1.self_trait, SubclassDefaultsSuper)
+        self.assertIsInstance(s2.self_trait, SubclassDefaultsSuper)
+        self.assertIs(s1.self_trait, s2.self_trait)
+        self.assertIsNot(s1, s1.self_trait)
+
+    def test_subclass_default_trait_list_object(self):
+        # Regression test for #1630 and similar issues
+        s1 = SubclassDefaultsSub()
+        s2 = SubclassDefaultsSub()
+
+        # behaviour which is broken in #1630
+        # things which need to be copied:
+        self.assertEqual(s1.a_list, [1, 2, 3])
+        self.assertEqual(s2.a_list, [1, 2, 3])
+        self.assertIsNot(s1.a_list, s2.a_list)
+        self.assertIsInstance(s1.a_list, TraitListObject)
+
+    def test_subclass_callable_and_args_overrides_clone(self):
+        # Regression test for #1630 and similar issues
+        s1 = SubclassDefaultsSub()
+        s2 = SubclassDefaultsSub()
+
+        # callable_with_args case - handle overriding clone
+        self.assertIsInstance(s1.clone_wrapper_1, Wrapper)
+        self.assertIsInstance(s2.clone_wrapper_1, Wrapper)
+        self.assertIsNot(s1.clone_wrapper_1, s2.clone_wrapper_1)
+
+        self.assertIsInstance(s1.clone_wrapper_2, Wrapper)
+        self.assertIsInstance(s2.clone_wrapper_2, Wrapper)
+        self.assertIsNot(s1.clone_wrapper_2, s2.clone_wrapper_2)
+
+    def test_subclass_disallow_default_value(self):
+        with self.assertRaises(TraitError):
+            class OverrideDisallow(SubclassDefaultsSuper):
+                disallow_default = "a default value"
 
 
 class NestedContainerClass(HasTraits):
