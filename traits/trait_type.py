@@ -17,10 +17,9 @@ traits, and provides a richer API than the old-style traits derived from
 """
 
 import logging
-import warnings
 
 from .base_trait_handler import BaseTraitHandler
-from .constants import ComparisonMode, DefaultValue, TraitKind
+from .constants import DefaultValue, TraitKind
 from .trait_base import Missing, Self, TraitsCache, Undefined, class_of
 from .trait_dict_object import TraitDictObject
 from .trait_errors import TraitError
@@ -467,23 +466,6 @@ class TraitType(BaseTraitHandler):
             if post_setattr is not None:
                 trait.post_setattr = post_setattr
                 trait.is_mapped = self.is_mapped
-
-            # Note: The use of 'rich_compare' metadata is deprecated; use
-            # 'comparison_mode' metadata instead. Ref: enthought/traits#602.
-            rich_compare = metadata.get("rich_compare")
-            if rich_compare is not None:
-                warnings.warn(
-                    "The 'rich_compare' metadata has been deprecated. Please "
-                    "use the 'comparison_mode' metadata instead. In a future "
-                    "release, rich_compare will have no effect.",
-                    DeprecationWarning,
-                    stacklevel=6,
-                )
-
-                if rich_compare:
-                    trait.comparison_mode = ComparisonMode.equality
-                else:
-                    trait.comparison_mode = ComparisonMode.identity
 
             comparison_mode = metadata.pop("comparison_mode", None)
             if comparison_mode is not None:
