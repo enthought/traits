@@ -1,19 +1,25 @@
 Traits CHANGELOG
 ================
 
-Release 7.0.0
+Release 6.4.0
 -------------
 
-TBD Release summary
+Released: 2022-08-12
 
-Released: XXXX-XX-XX
+Traits 6.4 is a minor feature release of Traits, which focuses mainly on typing
+stub and documentation updates.
 
-Migrating from earlier versions of Traits
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Migrating from Traits 6.3
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Traits 7.0 should be largely backwards compatible with earlier versions
-of Traits, but there are some things to watch out for.
+Traits 6.4 should be largely backwards compatible with Traits 6.3, but there
+are a couple of things to watch out for.
 
+* Reminder: while the ``Either`` and ``Trait`` trait types are not yet formally
+  deprecated, the intention is to eventually deprecate and remove them.
+  Projects are encouraged to update their code to use ``Union`` instead.
+* Similarly, any uses of the ``Unicode`` trait type in your project should
+  be replaced with ``Str``.
 * Validation of items within a container (e.g., ``foos = List(MyTraitType)``)
   now always matches the validation used for the item trait at top level (e.g.,
   ``foo = MyTraitType``). Previously, the validation methods used could differ,
@@ -21,8 +27,115 @@ of Traits, but there are some things to watch out for.
   will make no difference, but for the ``Tuple`` trait type this change has the
   consequence that lists will no longer be accepted as valid for ``Tuple``
   traits inside list items. See issue #1619 and PR #1625 for more information.
+* Related to the above: a top-level ``Tuple()`` trait declaration currently
+  accepts Python ``list`` objects, while a ``Tuple`` declaration with explicit
+  item types (for example ``Tuple(Int(), Int())``) does not. The support for
+  ``list`` objects in plain ``Tuple()`` is deprecated, and will be removed in a
+  future version of Traits. See PR #1627 for more information.
 
-TBD Release details
+Detailed PR-by-PR changes
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following people contributed code changes for this release:
+
+* Caio Agiani
+* Steve Allen
+* Mark Dickinson
+* Sai Rahul Poruri
+* Corran Webster
+
+Features
+~~~~~~~~
+* ``ETSConfig`` attributes now support deletion. This makes it easier to make
+  temporary changes to ``ETSConfig`` attributes during unit testing. (#1670,
+  #1686)
+* ``Complex`` trait type validation is now more lenient: any type that
+  implements ``__complex__`` will be accepted. (#1594)
+* ``BaseFloat`` validation is now more lenient, and matches ``Float``
+  validation: ``BaseFloat`` now also accepts objects whose type has an
+  ``__index__`` method. (#1595)
+
+Changes
+~~~~~~~
+* An ``enumerate`` alias has been removed from ``traits.trait_base``. In the
+  unlikely event of code that imports ``enumerate`` from ``traits.trait_base``,
+  use the built-in ``enumerate`` instead. (#1681)
+* Fast validation tuples ``int_fast_validate``, ``float_fast_validate`` and
+  ``complex_fast_validate`` have been removed from the ``traits.trait_types``
+  module. (#1601)
+
+Fixes
+~~~~~
+* ``TraitListObject``, ``TraitDict`` object and ``TraitSetObject`` now use the
+  ``validate`` method of the appropriate ``CTrait`` instances to validate
+  items, keys and values. Previously the handler's ``validate`` method was
+  used; this gave buggy behaviour in cases where the handler's ``validate``
+  method differed from the actual validation in use. (#1625)
+* Fix specification of ``default_value`` that incorrectly disregarded
+  ``default_value_type``. (#1631)
+* Fix incorrect results from  ``clone_traits`` applied to ``List``, ``Dict``
+  and ``Set`` traits. (#1624)
+* The ``find_resource`` and ``store_resource`` tests are now skipped
+  if the ``pkg_resources`` module is not present in the environment. (#1679)
+* An ``ETSConfig`` test has been renamed so that it's properly picked up
+  by the test runner. (#1671)
+* Fix some ``ETSConfig`` tests that assume unittest as the test runner. (#1683)
+* Rename various test-related classes to avoid pytest trying to harvest test
+  methods from them. (#1684)
+* Overriding a default for a ``List`` or other collection trait in a subclass
+  now works as expected. Previously, the behaviour was unusably buggy. (#1645)
+
+Deprecations
+~~~~~~~~~~~~
+* ``Tuple`` traits currently accept Python ``list`` objects in some (but
+  not all) circumstances. That feature is deprecated, and will be removed
+  in a future version of Traits. (#1627)
+
+Type stubs
+~~~~~~~~~~
+* Add stubs for ``Array``, ``ArrayOrNone``, and ``CArray``. (#1682)
+* Fix various stubs for ``traits.trait_types``; add stubs for
+  ``traits.ctraits``. (#1661)
+* Fix that ``TraitError`` stubs weren't exposed at ``traits.api`` level.
+  (#1658)
+* Make ``Int`` and ``Float`` type stubs more accurate. (#1656)
+* Fix incorrect type stubs for the ``Dict`` trait type. (#1655)
+
+Documentation
+~~~~~~~~~~~~~
+* Make ``ETSConfig`` class documentation visible in the API docs. (#1688)
+* Add copy buttons to code samples in documentation. (#1651, #1653)
+* Document ``Date``, ``Datetime`` and ``Time`` trait types. (#1641)
+* Fix some missing mentions of ``Set`` in notification docs. (#1618)
+* Document the ``'some_trait.-'`` pattern for ``on_trait_change``. (#1592)
+* Document that ``Either`` should not be used in new code. (#1699)
+* Document that ``TraitPrefixMap`` and ``TraitPrefixList`` are deprecated.
+  (#1702)
+* Document that the Trait factory function should not be used in new code.
+  (#1700)
+* Miscellaneous minor fixes. (#1583, #1611, #1652, #1680)
+
+Build and continuous integration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+* Don't collect traits-stubs tests under pytest. As a result of this
+  and other fixes, the test suite now passes under pytest. (#1690)
+* Update ``etstool.py`` for Python 3.8 support. Python 3.8 is now the
+  default Python version for builds. (#1694)
+* Use PySide6 for Python >= 3.8 instead of PySide2 in CI testing. (#1685)
+* Add ``pyproject.toml`` files for both Traits and traits-stubs. (#1689, #1676)
+* Add Python 3.11 to some workflow runs. (#1600, #1660, #1674)
+* Add Python 3.10 to install-from-PyPI workflow. (#1576)
+* Allow running the main test workflow manually. (#1607)
+* Switch Slack channel used to report GitHub Actions failures. (#1650)
+* Exclude ``build`` directory in flake8 configuration. (#1635)
+* Re-include NumPy as a test dependency on Python 3.10. (#1593)
+
+Maintenance and refactoring
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+* ``.gitignore`` cleanup and updates. (#1678, #1687)
+* Return ``PyErr_Format`` calls in ``traits/ctraits.c``. (#1640)
+* Update copyright header end year to 2022. (#1612)
+* The ``ci-src-requirements.txt`` file isn't used; remove it. (#1602)
 
 
 Release 6.3.2
