@@ -28,13 +28,3 @@ Private Functions
 .. autofunction:: traits.trait_handlers._undefined_get
 
 .. autofunction:: traits.trait_handlers._undefined_set
-
-Deprecated Handlers
--------------------
-
-The following :class:`~.TraitHandler` classes and instances are deprecated,
-and may be removed in a future version of Traits.
-
-.. autoclass:: TraitPrefixList
-
-.. autoclass:: TraitPrefixMap

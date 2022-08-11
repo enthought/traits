@@ -34,10 +34,8 @@ Visualization:
 """
 
 from types import FunctionType, MethodType
-import warnings
 
 from .constants import (
-    ComparisonMode,
     DefaultValue,
     TraitKind,
 )
@@ -477,21 +475,6 @@ class _TraitMaker(object):
             if post_setattr is not None:
                 trait.post_setattr = post_setattr
                 trait.is_mapped = handler.is_mapped
-
-        rich_compare = metadata.get("rich_compare")
-        if rich_compare is not None:
-            # Ref: enthought/traits#602
-            warnings.warn(
-                "The 'rich_compare' metadata has been deprecated. Please "
-                "use the 'comparison_mode' metadata instead. In a future "
-                "release, rich_compare will have no effect.",
-                DeprecationWarning,
-                stacklevel=4,
-            )
-            if rich_compare:
-                trait.comparison_mode = ComparisonMode.equality
-            else:
-                trait.comparison_mode = ComparisonMode.identity
 
         comparison_mode = metadata.pop("comparison_mode", None)
         if comparison_mode is not None:
