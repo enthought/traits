@@ -11,6 +11,8 @@ TBD Release summary
 Detailed changes
 ~~~~~~~~~~~~~~~~
 
+Removals
+~~~~~~~~
 * Remove deprecated ``rich_compare`` Trait metadata. (#1698)
 * Remove deprecated ``find_resource`` and ``store_resource`` functions. (#1697)
 * Remove deprecated ``TraitList``, ``TraitDict`` and ``TraitTuple`` classes.
@@ -26,6 +28,10 @@ Detailed changes
   (#1701)
 * Remove the deprecated ``TraitPrefixList`` and ``TraitPrefixMap`` classes.
   Use ``PrefixList`` and ``PrefixMap`` instead. (#1703)
+
+Build and continuous integration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+* Include Python 3.11 in the workflow that tests wheels from PyPI. (#1715)
 
 
 Release 6.4.0
