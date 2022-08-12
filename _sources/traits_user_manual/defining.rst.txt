@@ -130,7 +130,7 @@ pass it as an argument to the trait::
 
     account_balance = Float(10.0)
 
-Most predefined traits are callable, [2]_ and can accept a default value and
+Most predefined traits are callable [1]_, and can accept a default value and
 possibly other arguments; all that are callable can also accept metadata as
 keyword arguments. (See :ref:`other-predefined-traits` for information on trait
 signatures, and see :ref:`trait-metadata` for information on metadata
@@ -261,15 +261,15 @@ trait cannot be used as a simple name, it is omitted from the Name column of
 the table.
 
 .. index:: Any(), Array(), Button(), Callable(), CArray(), Code()
-.. index:: CSet(), Constant(), Dict()
+.. index:: CSet(), Constant(), Date(), Datetime(), Dict()
 .. index:: Directory(), Disallow, Either(), Enum()
 .. index:: Event(), Expression(), false, File()
 .. index:: Instance(), List(), Method(), Module()
 .. index:: Password(), Property(), Python()
 .. index:: PythonValue(), Range(), ReadOnly(), Regex()
-.. index:: Set() String(), This,
+.. index:: Set() String(), This, Time()
 .. index:: ToolbarButton(), true, Tuple(), Type()
-.. index:: undefined, UUID(), ValidatedTuple(), WeakRef()
+.. index:: undefined, Union(), UUID(), ValidatedTuple(), WeakRef()
 
 .. _predefined-traits-beyond-simple-types-table:
 
@@ -280,7 +280,7 @@ the table.
 +==================+==========================================================+
 | Any              | Any( [*default_value* = None, \*,                        |
 |                  | *factory* = None, *args* = (), *kw* = {},                |
-|                  | \*\*\ *metadata* )                                       |
+|                  | \*\*\ *metadata*] )                                      |
 +------------------+----------------------------------------------------------+
 | Array            | Array( [*dtype* = None, *shape* = None, *value* = None,  |
 |                  | *typecode* = None, \*\*\ *metadata*] )                   |
@@ -306,6 +306,13 @@ the table.
 +------------------+----------------------------------------------------------+
 | Constant         | Constant( *value*\ [, \*\*\ *metadata*] )                |
 +------------------+----------------------------------------------------------+
+| Date             | Date( *value*\ [, *default_value* = None,                |
+|                  | *allow_datetime* = None, *allow_none* = None,            |
+|                  | \*\*\ *metadata*] )                                      |
++------------------+----------------------------------------------------------+
+| Datetime         | Datetime( *value*\ [, *default_value* = None,            |
+|                  | *allow_none* = None, \*\*\ *metadata*])                  |
++------------------+----------------------------------------------------------+
 | Dict             | Dict( [*key_trait* = None, *value_trait* = None,         |
 |                  | *value* = None, *items* = True, \*\*\ *metadata*] )      |
 +------------------+----------------------------------------------------------+
@@ -314,7 +321,7 @@ the table.
 +------------------+----------------------------------------------------------+
 | Disallow         | n/a                                                      |
 +------------------+----------------------------------------------------------+
-| Either           | Either( *val1*\ [, *val2*, ..., *valN*,                  |
+| Either [2]_      | Either( *val1*\ [, *val2*, ..., *valN*,                  |
 |                  | \*\*\ *metadata*] )                                      |
 +------------------+----------------------------------------------------------+
 | Enum             | Enum( *values*\ [, \*\*\ *metadata*] )                   |
@@ -386,6 +393,9 @@ the table.
 +------------------+----------------------------------------------------------+
 | This             | n/a                                                      |
 +------------------+----------------------------------------------------------+
+| Time             | Time( *value*\ [, *default_value* = None,                |
+|                  | *allow_none* = None, \*\*\ *metadata*])                  |
++------------------+----------------------------------------------------------+
 | ToolbarButton    | ToolbarButton( [*label* = '', *image* = None, *style* =  |
 |                  | 'toolbar', *orientation* = 'vertical', *width_padding* = |
 |                  | 2, *height_padding* = 2, \*\*\ *metadata*] )             |
@@ -398,7 +408,7 @@ the table.
 | Union            | Union( *val1*\ [, *val2*, ..., *valN*,                   |
 |                  | \*\*\ *metadata*] )                                      |
 +------------------+----------------------------------------------------------+
-| UUID [4]_        | UUID( [\*\*\ *metadata*] )                               |
+| UUID             | UUID( [\*\*\ *metadata*] )                               |
 +------------------+----------------------------------------------------------+
 | ValidatedTuple   | ValidatedTuple( [\*\ *traits*, *fvalidate* = None,       |
 |                  | *fvalidate_info* = '' , \*\*\ *metadata*] )              |
@@ -628,12 +638,80 @@ prefix. Instantiating the class produces the following::
     >>> print(bob.married)
     no
 
+.. index:: Union trait
+
+.. _union:
+
+Union
+:::::
+The Union trait accepts a value that is considered valid by at least one
+of the traits in its definition. It is a simpler and therefore less error-prone
+alternative to the `Either` trait, which allows more complex constructs and
+may sometimes exhibit mysterious validation behaviour. The Union trait however,
+validates the value assigned to it against each of the traits in its definition
+in the order they are defined. Union only accepts trait types or trait type
+instances or None in its definition. Prefer to use Union over `Either` to
+remain future proof.
+
+.. index::
+   pair: Union trait; examples
+
+The following is an example of using Union::
+
+    # union.py --- Example of Union predefined trait
+
+    from traits.api import HasTraits, Union, Int, Float, Instance
+
+    class Salary(HasTraits):
+        basic = Float
+        bonus = Float
+
+    class Employee(HasTraits):
+        manager_name = Union(Str, None)
+        pay = Union(Instance(Salary), Float)
+
+This example defines an Employee class, which has a **manager_name** trait
+attribute, which accepts either an Str instance or None as its value, a
+**salary** trait that accepts an instance of Salary or Float and will raise a
+TraitError if a value of any other type is assigned. For example::
+
+    >>> from traits.api import HasTraits, Str, Union
+    >>> class Employee(HasTraits):
+    ...     manager_name = Union(Str, None)
+    ...
+    >>> steven = Employee(manager_name="Jenni")
+    >>> # Here steven's manager is named "Jenni"
+    >>> # Assigning a value that is neither a string nor None will fail.
+    >>> steven.manager_name = 5
+    traits.trait_errors.TraitError: The 'manager_name' trait of an Employee instance must be a string or a None type, but a value of 5 <class 'int'> was specified.
+
+The following example illustrates the difference between `Either` and `Union`::
+
+    >>> from traits.api import Either, HasTraits, Str, Union
+    >>> class IntegerClass(HasTraits):
+    ...     primes = Either([2], None, {'3':6}, 5, 7, 11)
+    ...
+    >>> i = IntegerClass(primes=2) # Acceptable value, no error
+    >>> i = IntegerClass(primes=4)
+    traits.trait_errors.TraitError: The 'primes' trait of an IntegerClass instance must be 2 or None or 5 or 7 or 11 or '3', but a value of 4 <class 'int'> was specified.
+    >>>
+    >>> # But Union does not allow such declarations.
+    >>> class IntegerClass(HasTraits):
+    ...     primes = Union([2], None, {'3':6}, 5, 7, 11)
+    ValueError: Union trait declaration expects a trait type or an instance of trait type or None, but got [2] instead
+
 .. index:: Either trait
 
 .. _either:
 
 Either
 ::::::
+
+.. note::
+   The :class:`~.Either` trait type may eventually be deprecated, and should
+   not be used in new code. Use the more well-behaved :class:`~.Union` trait
+   type instead.
+
 Another predefined trait that merits special explanation is Either. The
 Either trait is intended for attributes that may take a value of more than
 a single trait type, including None. The default value of Either is None, even
@@ -671,68 +749,6 @@ will raise a TraitError if a value of any other type is assigned. For example::
     >>> # Assigning a value that is neither a string nor None will fail.
     >>> steven.manager_name = 5
     traits.trait_errors.TraitError: The 'manager_name' trait of an Employee instance must be a string or None, but a value of 5 <type 'int'> was specified.
-
-.. index:: Union trait
-
-.. _union:
-
-Union
-::::::
-The Union trait accepts a value that is considered valid by at least one
-of the traits in its definition. It is a simpler and therefore less error-prone
-alternative to the `Either` trait, which allows more complex constructs and
-may sometimes exhibit mysterious validation behaviour. The Union trait however,
-validates the value assigned to it against each of the traits in its definition
-in the order they are defined. Union only accepts trait types or trait type
-instances or None in its definition. Prefer to use Union over `Either` to
-remain future proof.
-
-.. index::
-   pair: Union trait; examples
-
-The following is an example of using Union::
-
-    # union.py --- Example of Union predefined trait
-
-    from traits.api import HasTraits, Union, Int, Float, Instance
-
-    class Salary(HasTraits):
-        basic = Float
-        bonus = Float
-
-    class Employee(HasTraits):
-        manager_name = Union(Str, None)
-        pay = Union(Instance(Salary), Float)
-
-This example defines an Employee class, which has a **manager_name** trait
-attribute, which accepts either an Str instance or None as its value, a
-**salary** trait that accepts an instance of Salary or Float and will raise a
-TraitError if a value of any other type is assigned. For example::
-
-    >>> from traits.api import HasTraits, Either, Str
-    >>> class Employee(HasTraits):
-    ...     manager_name = Union(Str, None)
-    ...
-    >>> steven = Employee(manager_name="Jenni")
-    >>> # Here steven's manager is named "Jenni"
-    >>> # Assigning a value that is neither a string nor None will fail.
-    >>> steven.manager_name = 5
-    traits.trait_errors.TraitError: The 'manager_name' trait of an Employee instance must be a string or a None type, but a value of 5 <class 'int'> was specified.
-
-The following example illustrates the difference between `Either` and `Union`::
-
-    >>> from traits.api import HasTraits, Either, Union, Str
-    >>> class IntegerClass(HasTraits):
-    ...     primes = Either([2], None, {'3':6}, 5, 7, 11)
-    ...
-    >>> i = IntegerClass(primes=2) # Acceptable value, no error
-    >>> i = IntegerClass(primes=4)
-    traits.trait_errors.TraitError: The 'primes' trait of an IntegerClass instance must be 2 or None or 5 or 7 or 11 or '3', but a value of 4 <class 'int'> was specified.
-    >>>
-    >>> # But Union does not allow such declarations.
-    >>> class IntegerClass(HasTraits):
-    ...     primes = Union([2], None, {'3':6}, 5, 7, 11)
-    ValueError: Union trait declaration expects a trait type or an instance of trait type or None, but got [2] instead
 
 
 .. _migration_either_to_union:
@@ -1031,14 +1047,16 @@ the metadata attribute::
     print(t.trait( 'any' ).is_trait_type( Str ))       # False
 
 .. rubric:: Footnotes
-.. [2] Most callable predefined traits are classes, but a few are functions.
+.. [1] Most callable predefined traits are classes, but a few are functions.
        The distinction does not make a difference unless you are trying to
        extend an existing predefined trait. See the *Traits API Reference* for
        details on particular traits, and see Chapter 5 for details on extending
        existing traits.
+.. [2] The :class:`~.Either` trait type is likely to be deprecated at some
+       point in the future. The :class:`~.Union` trait type should be preferred
+       to :class:`~.Either` in new code.
 .. [3] The Function and Method trait types are now deprecated. See |Function|,
        |Method|
-.. [4] Available in Python 2.5.
 
 ..
    external urls

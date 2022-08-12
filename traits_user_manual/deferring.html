@@ -3,17 +3,19 @@
 <html>
   <head>
     <meta charset="utf-8">
-    
-    <title>Deferring Trait Definitions &mdash; Traits 6.3 Documentation</title>
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Deferring Trait Definitions &mdash; Traits 6.4 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
     <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" >
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.3.2',
+        VERSION:     '6.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -24,13 +26,15 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/clipboard.min.js"></script>
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.png">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.3 Documentation" href="../index.html" >
-    <link rel="up" title="Traits 6.3 User Manual" href="index.html" >
+    <link rel="top" title="Traits 6.4 Documentation" href="../index.html" >
+    <link rel="up" title="Traits 6.4 User Manual" href="index.html" >
     <link rel="next" title="Custom Traits" href="custom.html" >
     <link rel="prev" title="Trait Notification" href="notification.html" > 
   </head>
@@ -49,9 +53,9 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.3 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 6.4 Documentation</a></li>
 	
-          <li class="active"><a href="index.html" accesskey="U">Traits 6.3 User Manual</a></li> 
+          <li class="active"><a href="index.html" accesskey="U">Traits 6.4 User Manual</a></li> 
     </ul>
               
               
@@ -85,7 +89,7 @@
         <div class="bodywrapper">
           <div class="body" id="spc-section-body" role="main">
             
-  <div class="section" id="deferring-trait-definitions">
+  <section id="deferring-trait-definitions">
 <span id="deferring-traits"></span><span id="index-0"></span><h1>Deferring Trait Definitions<a class="headerlink" href="#deferring-trait-definitions" title="Permalink to this headline">¶</a></h1>
 <p>One of the advanced capabilities of the Traits package is its support for trait
 attributes to defer their definition and value to another object than the one
@@ -106,7 +110,7 @@ broken, and the two attributes can change independently. This is essentially a
 “copy on write” scheme.</p>
 <p>The concepts of delegation and prototyping are implemented in the Traits package
 by two classes derived from TraitType: DelegatesTo and PrototypedFrom. <a class="footnote-reference brackets" href="#id8" id="id1">5</a></p>
-<div class="section" id="delegatesto">
+<section id="delegatesto">
 <span id="id2"></span><h2>DelegatesTo<a class="headerlink" href="#delegatesto" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="DelegatesTo">
@@ -171,8 +175,8 @@ the same as the original attribute name. Thus, the <strong>last_name</strong> of
 the same as the <strong>last_name</strong> of its <strong>father</strong>. When either the <strong>last_name</strong>
 of the Child or the <strong>last_name</strong> of the father is changed, both attributes
 reflect the new value.</p>
-</div>
-<div class="section" id="prototypedfrom">
+</section>
+<section id="prototypedfrom">
 <span id="id3"></span><h2>PrototypedFrom<a class="headerlink" href="#prototypedfrom" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="PrototypedFrom">
@@ -186,12 +190,12 @@ delegated attribute, until it is explicitly changed; from that point forward,
 the prototyped attribute changes independently from its prototype.</p>
 <p>The <em>prefix</em> and <em>listenable</em> parameters to the initializer function specify
 additional information about how to do the prototyping.</p>
-</div>
-<div class="section" id="keyword-parameters">
+</section>
+<section id="keyword-parameters">
 <span id="id4"></span><h2>Keyword Parameters<a class="headerlink" href="#keyword-parameters" title="Permalink to this headline">¶</a></h2>
 <p>The <em>prefix</em> and <em>listenable</em> parameters of the DelegatesTo and PrototypedFrom
 initializer functions behave similarly for both classes.</p>
-<div class="section" id="prefix-keyword">
+<section id="prefix-keyword">
 <span id="index-5"></span><span id="id5"></span><h3>Prefix Keyword<a class="headerlink" href="#prefix-keyword" title="Permalink to this headline">¶</a></h3>
 <p>When the <em>prefix</em> parameter is a non-empty string, the rule for performing trait
 attribute look-up in the deferred-to object is modified, with the modification
@@ -247,8 +251,8 @@ of its <strong>mother</strong> object.</p></li>
 <li><p><strong>allowance</strong>, which prototypes from the <strong>child_allowance</strong> attribute of its
 <strong>father</strong> object.</p></li>
 </ul>
-</div>
-<div class="section" id="listenable-keyword">
+</section>
+<section id="listenable-keyword">
 <span id="index-7"></span><span id="id6"></span><h3>Listenable Keyword<a class="headerlink" href="#listenable-keyword" title="Permalink to this headline">¶</a></h3>
 <p>By default, you can attach listeners to deferred trait attributes, just as you
 can attach listeners to most other trait attributes, as described in the
@@ -258,9 +262,9 @@ can be rather more expensive than hooking up other listeners. Since a common use
 case of deferring is to have a large number of deferred attributes for static
 object hierarchies, this feature can be turned off by setting
 <code class="docutils literal notranslate"><span class="pre">listenable=False</span></code> in order to speed up instantiation.</p>
-</div>
-</div>
-<div class="section" id="notification-with-deferring">
+</section>
+</section>
+<section id="notification-with-deferring">
 <span id="index-8"></span><span id="id7"></span><h2>Notification with Deferring<a class="headerlink" href="#notification-with-deferring" title="Permalink to this headline">¶</a></h2>
 <p>While two trait attributes are linked by a deferring relationship (either
 delegation, or prototyping before the link is broken), notifications for changes
@@ -325,8 +329,8 @@ Delegate is deprecated, as its name and default behavior (prototyping) are
 incongruous.</p>
 </dd>
 </dl>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -389,12 +393,12 @@ incongruous.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Mar 12, 2022.
+      Last updated on Aug 11, 2022.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.

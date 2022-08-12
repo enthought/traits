@@ -3,17 +3,19 @@
 <html>
   <head>
     <meta charset="utf-8">
-    
-    <title>traits.trait_numeric Module &mdash; Traits 6.3 Documentation</title>
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>traits.trait_numeric Module &mdash; Traits 6.4 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
     <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" >
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.3.2',
+        VERSION:     '6.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -24,12 +26,14 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/clipboard.min.js"></script>
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.png">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.3 Documentation" href="../index.html" >
+    <link rel="top" title="Traits 6.4 Documentation" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
     <link rel="next" title="traits.trait_type Module" href="trait_type.html" >
     <link rel="prev" title="traits.trait_list_object Module" href="trait_list_object.html" > 
@@ -49,7 +53,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.3 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 6.4 Documentation</a></li>
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
     </ul>
@@ -85,10 +89,10 @@
         <div class="bodywrapper">
           <div class="body" id="spc-section-body" role="main">
             
-  <div class="section" id="module-traits.trait_numeric">
+  <section id="module-traits.trait_numeric">
 <span id="traits-trait-numeric-module"></span><h1><a class="reference internal" href="#module-traits.trait_numeric" title="traits.trait_numeric"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_numeric</span></code></a> Module<a class="headerlink" href="#module-traits.trait_numeric" title="Permalink to this headline">¶</a></h1>
 <p>Trait definitions related to the numpy library.</p>
-<div class="section" id="classes">
+<section id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="traits.trait_numeric.AbstractArray">
@@ -182,7 +186,7 @@ to “float32”) are allowed</p></li>
 <dd><p>Bases: <a class="reference internal" href="#traits.trait_numeric.CArray" title="traits.trait_numeric.CArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">traits.trait_numeric.CArray</span></code></a></p>
 <p>A coercing trait whose value may be either a NumPy array or None.</p>
 <p>This trait is designed to avoid the comparison issues with numpy arrays
-that can arise from the use of constructs like Either(None, Array).</p>
+that can arise from the use of constructs like Union(None, Array).</p>
 <p>The default value is None.</p>
 <dl class="py method">
 <dt id="traits.trait_numeric.ArrayOrNone.validate">
@@ -246,8 +250,8 @@ to “float32”) are allowed</p></li>
 </dl>
 </dd></dl>
 
-</div>
-<div class="section" id="function">
+</section>
+<section id="function">
 <h2>Function<a class="headerlink" href="#function" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt id="traits.trait_numeric.dtype2trait">
@@ -255,8 +259,8 @@ to “float32”) are allowed</p></li>
 <dd><p>Get the corresponding trait for a numpy dtype.</p>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -313,12 +317,12 @@ to “float32”) are allowed</p></li>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Mar 12, 2022.
+      Last updated on Aug 11, 2022.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.

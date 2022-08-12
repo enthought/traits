@@ -4,16 +4,17 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.etsconfig.etsconfig &mdash; Traits 6.3 Documentation</title>
+    <title>traits.etsconfig.etsconfig &mdash; Traits 6.4 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
     <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" >
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '6.3.2',
+        VERSION:     '6.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -24,12 +25,14 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/clipboard.min.js"></script>
+    <script type="text/javascript" src="../../../_static/copybutton.js"></script>
     <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../../../_static/img/favicon.png">
     <link rel="index" title="Index" href="../../../genindex.html" >
     <link rel="search" title="Search" href="../../../search.html" >
-    <link rel="top" title="Traits 6.3 Documentation" href="../../../index.html" >
+    <link rel="top" title="Traits 6.4 Documentation" href="../../../index.html" >
     <link rel="up" title="Module code" href="../../index.html" > 
   </head>
   <body>
@@ -47,7 +50,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../../index.html">Traits 6.3 Documentation</a></li>
+        <li class="active"><a href="../../../index.html">Traits 6.4 Documentation</a></li>
 	
           <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -76,7 +79,7 @@
           <div class="body" id="spc-section-body" role="main">
             
   <h1>Source code for traits.etsconfig.etsconfig</h1><div class="highlight"><pre>
-<span></span><span class="c1"># (C) Copyright 2005-2021 Enthought, Inc., Austin, TX</span>
+<span></span><span class="c1"># (C) Copyright 2005-2022 Enthought, Inc., Austin, TX</span>
 <span class="c1"># All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># This software is provided without warranty under the terms of the BSD</span>
@@ -90,10 +93,9 @@
 
 
 <span class="c1"># Standard library imports.</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">contextlib</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">path</span>
-<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 
 
 <span class="k">class</span> <span class="nc">ETSToolkitError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
@@ -120,14 +122,20 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
 
 
-<div class="viewcode-block" id="ETSConfig"><a class="viewcode-back" href="../../../traits_api_reference/traits.etsconfig.html#traits.etsconfig.etsconfig.ETSConfig">[docs]</a><span class="k">class</span> <span class="nc">ETSConfig</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="ETSConfigType"><a class="viewcode-back" href="../../../traits_api_reference/traits.etsconfig.html#traits.etsconfig.etsconfig.ETSConfigType">[docs]</a><span class="k">class</span> <span class="nc">ETSConfigType</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Enthought Tool Suite configuration information.</span>
 
-<span class="sd">    This class should not use ANY other package in the tool suite so that it</span>
-<span class="sd">    will always work no matter which other packages are present.</span>
+<span class="sd">    Instances of this class record state useful for ETS-using applications,</span>
+<span class="sd">    including the current GUI toolkit in use, and data and home directory</span>
+<span class="sd">    setttings.</span>
 
+<span class="sd">    Users typically shouldn&#39;t make use of this class directly. Instead, use the</span>
+<span class="sd">    module-level :data:`~.ETSConfig` instance of this class, which is shared</span>
+<span class="sd">    between the various ETS packages.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># This class should not use ANY other package in the tool suite so that it</span>
+    <span class="c1"># will always work no matter which other packages are present.</span>
 
     <span class="c1">###########################################################################</span>
     <span class="c1"># &#39;object&#39; interface.</span>
@@ -153,7 +161,7 @@
 
     <span class="c1">#### properties ###########################################################</span>
 
-    <span class="k">def</span> <span class="nf">get_application_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">create</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="ETSConfigType.get_application_data"><a class="viewcode-back" href="../../../traits_api_reference/traits.etsconfig.html#traits.etsconfig.etsconfig.ETSConfigType.get_application_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_application_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">create</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Return the application data directory path.</span>
 
 <span class="sd">            Parameters</span>
@@ -172,13 +180,13 @@
 
 <span class="sd">            - The actual location differs between operating systems.</span>
 
-<span class="sd">       &quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_application_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_application_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_application_data</span><span class="p">(</span>
                 <span class="n">create</span><span class="o">=</span><span class="n">create</span>
             <span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_application_data</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_application_data</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">application_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -195,7 +203,11 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_application_data</span> <span class="o">=</span> <span class="n">application_data</span>
 
-    <span class="k">def</span> <span class="nf">get_application_home</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">create</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="nd">@application_data</span><span class="o">.</span><span class="n">deleter</span>
+    <span class="k">def</span> <span class="nf">application_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_application_data</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="ETSConfigType.get_application_home"><a class="viewcode-back" href="../../../traits_api_reference/traits.etsconfig.html#traits.etsconfig.etsconfig.ETSConfigType.get_application_home">[docs]</a>    <span class="k">def</span> <span class="nf">get_application_home</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">create</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Return the application home directory path.</span>
 
 <span class="sd">            Parameters</span>
@@ -229,14 +241,14 @@
 
 <span class="sd">            - The actual location differs between operating systems.</span>
 
-<span class="sd">       &quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_application_home</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_application_home</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_application_home</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">get_application_data</span><span class="p">(</span><span class="n">create</span><span class="o">=</span><span class="n">create</span><span class="p">),</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_get_application_dirname</span><span class="p">(),</span>
             <span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_application_home</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_application_home</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">application_home</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -252,6 +264,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_application_home</span> <span class="o">=</span> <span class="n">application_home</span>
+
+    <span class="nd">@application_home</span><span class="o">.</span><span class="n">deleter</span>
+    <span class="k">def</span> <span class="nf">application_home</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_application_home</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">company</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -274,7 +290,11 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_company</span> <span class="o">=</span> <span class="n">company</span>
 
-    <span class="nd">@contextmanager</span>
+    <span class="nd">@company</span><span class="o">.</span><span class="n">deleter</span>
+    <span class="k">def</span> <span class="nf">company</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_company</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="ETSConfigType.provisional_toolkit"><a class="viewcode-back" href="../../../traits_api_reference/traits.etsconfig.html#traits.etsconfig.etsconfig.ETSConfigType.provisional_toolkit">[docs]</a>    <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
     <span class="k">def</span> <span class="nf">provisional_toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">toolkit</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Perform an operation with toolkit provisionally set</span>
 
@@ -304,7 +324,7 @@
         <span class="k">except</span><span class="p">:</span>
             <span class="c1"># reset the toolkit state</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-            <span class="k">raise</span>
+            <span class="k">raise</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -337,6 +357,10 @@
             <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span> <span class="o">=</span> <span class="n">toolkit</span>
+
+    <span class="nd">@toolkit</span><span class="o">.</span><span class="n">deleter</span>
+    <span class="k">def</span> <span class="nf">toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">enable_toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -384,21 +408,12 @@
                 <span class="s2">&quot;which has not been set.&quot;</span>
             <span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kiva_backend</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_kiva_backend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
-            <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
-                <span class="c1"># Pick a reasonable default based on the toolkit</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolkit</span> <span class="o">==</span> <span class="s2">&quot;wx&quot;</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_kiva_backend</span> <span class="o">=</span> <span class="p">(</span>
-                        <span class="s2">&quot;quartz&quot;</span> <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;darwin&quot;</span> <span class="k">else</span> <span class="s2">&quot;image&quot;</span>
-                    <span class="p">)</span>
-                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolkit</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;qt4&quot;</span><span class="p">,</span> <span class="s2">&quot;qt&quot;</span><span class="p">]:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_kiva_backend</span> <span class="o">=</span> <span class="s2">&quot;image&quot;</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_kiva_backend</span> <span class="o">=</span> <span class="s2">&quot;image&quot;</span>
-
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kiva_backend</span>
+        <span class="k">if</span> <span class="s2">&quot;.&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolkit</span> <span class="o">==</span> <span class="s2">&quot;wx&quot;</span> <span class="ow">and</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;darwin&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;quartz&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;image&quot;</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">user_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -425,6 +440,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_user_data</span> <span class="o">=</span> <span class="n">user_data</span>
+
+    <span class="nd">@user_data</span><span class="o">.</span><span class="n">deleter</span>
+    <span class="k">def</span> <span class="nf">user_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_user_data</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="c1">#### private methods #####################################################</span>
 
@@ -455,8 +474,8 @@
         <span class="n">main_mod</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;__main__&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">main_mod</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">main_mod</span><span class="p">,</span> <span class="s2">&quot;__file__&quot;</span><span class="p">):</span>
-                <span class="n">main_mod_file</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">main_mod</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span>
-                <span class="n">dirname</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">main_mod_file</span><span class="p">))</span>
+                <span class="n">main_mod_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">main_mod</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span>
+                <span class="n">dirname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">main_mod_file</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">dirname</span>
 
@@ -579,10 +598,13 @@
         <span class="k">return</span> <span class="n">usr_dir</span></div>
 
 
-<span class="c1"># We very purposefully only have one object and do not export the class. We</span>
-<span class="c1"># could have just made everything class methods, but that always seems a bit</span>
-<span class="c1"># gorpy, especially with properties etc.</span>
-<span class="n">ETSConfig</span> <span class="o">=</span> <span class="n">ETSConfig</span><span class="p">()</span>
+<span class="c1">#: This single instance of :class:`~.ETSConfigType` is shared between the</span>
+<span class="c1">#: various ETS packages, and used to store global state relevant to</span>
+<span class="c1">#: ETS-using applications.</span>
+<span class="c1">#:</span>
+<span class="c1">#: See https://github.com/enthought/traits/discussions/1666 for a discussion</span>
+<span class="c1">#: of writing tests that depend on :data:`~.ETSConfig` state.</span>
+<span class="n">ETSConfig</span> <span class="o">=</span> <span class="n">ETSConfigType</span><span class="p">()</span>
 </pre></div>
 
           </div>
@@ -619,12 +641,12 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Mar 12, 2022.
+      Last updated on Aug 11, 2022.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.

@@ -3,17 +3,19 @@
 <html>
   <head>
     <meta charset="utf-8">
-    
-    <title>traits.traits Module &mdash; Traits 6.3 Documentation</title>
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>traits.traits Module &mdash; Traits 6.4 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
     <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" >
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.3.2',
+        VERSION:     '6.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -24,12 +26,14 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/clipboard.min.js"></script>
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.png">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.3 Documentation" href="../index.html" >
+    <link rel="top" title="Traits 6.4 Documentation" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
     <link rel="next" title="traits.has_traits Module" href="has_traits.html" >
     <link rel="prev" title="API Reference" href="index.html" > 
@@ -49,7 +53,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.3 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 6.4 Documentation</a></li>
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
     </ul>
@@ -85,7 +89,7 @@
         <div class="bodywrapper">
           <div class="body" id="spc-section-body" role="main">
             
-  <div class="section" id="module-traits.traits">
+  <section id="module-traits.traits">
 <span id="traits-traits-module"></span><h1><a class="reference internal" href="#module-traits.traits" title="traits.traits"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.traits</span></code></a> Module<a class="headerlink" href="#module-traits.traits" title="Permalink to this headline">¶</a></h1>
 <p>Defines the ‘core’ traits for the Traits package. A trait is a type definition
 that can be used for normal Python object attributes, giving the attributes
@@ -112,7 +116,7 @@ edited or displayed)</p>
 word ‘property’ to differentiate it from the Python language ‘property’
 feature.</p>
 </div>
-<div class="section" id="classes">
+<section id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="traits.traits.Default">
@@ -129,13 +133,19 @@ be specified, to generate a default value dynamically.</p>
 implicitly on the class.</p>
 </dd></dl>
 
-</div>
-<div class="section" id="functions">
+</section>
+<section id="functions">
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt id="traits.traits.Trait">
 <code class="sig-prename descclassname"><span class="pre">traits.traits.</span></code><code class="sig-name descname"><span class="pre">Trait</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">value_type</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">metadata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#Trait"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.traits.Trait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a trait definition.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <a class="reference internal" href="#traits.traits.Trait" title="traits.traits.Trait"><code class="xref py py-func docutils literal notranslate"><span class="pre">Trait()</span></code></a> function is not recommended for use in new code,
+and may eventually be deprecated and removed. Consider using
+<a class="reference internal" href="trait_types.html#traits.trait_types.Union" title="traits.trait_types.Union"><code class="xref py py-class docutils literal notranslate"><span class="pre">Union</span></code></a> instead.</p>
+</div>
 <p>This function accepts a variety of forms of parameter lists:</p>
 <table class="docutils align-default">
 <colgroup>
@@ -384,8 +394,8 @@ replaced by <code class="docutils literal notranslate"><span class="pre">Font</s
 </div>
 </dd></dl>
 
-</div>
-<div class="section" id="private-classes">
+</section>
+<section id="private-classes">
 <h2>Private Classes<a class="headerlink" href="#private-classes" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="traits.traits._InstanceArgs">
@@ -415,8 +425,8 @@ replaced by <code class="docutils literal notranslate"><span class="pre">Font</s
 
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -474,12 +484,12 @@ replaced by <code class="docutils literal notranslate"><span class="pre">Font</s
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Mar 12, 2022.
+      Last updated on Aug 11, 2022.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.

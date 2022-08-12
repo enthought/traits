@@ -155,24 +155,25 @@ Semantics
 +------------------------------+----------------------------------------------+
 | Pattern                      | Meaning                                      |
 +==============================+==============================================+
-|*item1*\ .\ *item2*           |A trait named item1 contains an object (or    |
-|                              |objects, if *item1* is a list or dictionary), |
-|                              |with a trait named *item2*. Changes to either |
-|                              |*item1* or *item2* trigger a  notification.   |
+|*item1*\ .\ *item2*           |A trait named *item1* contains an object (or  |
+|                              |objects, if *item1* is a list, dictionary or  |
+|                              |set), with a trait named *item2*. Changes to  |
+|                              |either *item1* or *item2* trigger a           |
+|                              |notification.                                 |
 +------------------------------+----------------------------------------------+
-|*item1*\ :*item2*             |A trait named **item1** contains an object (or|
-|                              |objects, if *item1* is a list or dictionary), |
-|                              |with a trait named *item2*. Changes to *item2*|
-|                              |trigger a notification, while changes to      |
-|                              |*item1* do not (i.e., the ':' indicates that  |
-|                              |changes to the link object are not reported.  |
+|*item1*\ :*item2*             |A trait named *item1* contains an object (or  |
+|                              |objects, if *item1* is a list, dictionary or  |
+|                              |set), with a trait named *item2*. Changes to  |
+|                              |*item2* trigger a notification, while changes |
+|                              |to *item1* do not (the ':' indicates that     |
+|                              |changes to the link object are not reported). |
 +------------------------------+----------------------------------------------+
 |[*item1*, *item2*, ...,       |A list that matches any of the specified      |
 |*itemN*]                      |items. Note that at the topmost level, the    |
 |                              |surrounding square brackets are optional.     |
 +------------------------------+----------------------------------------------+
-|*item*\ []                    |A trait named *item* is a list. Changes to    |
-|                              |*item* or to its members triggers a           |
+|*item*\ []                    |A trait named *item* is a list or set. Changes|
+|                              |to *item* or to its members trigger a         |
 |                              |notification.                                 |
 +------------------------------+----------------------------------------------+
 |*name*?                       |If the current object does not have an        |
@@ -199,13 +200,26 @@ Semantics
 |                              |begins with *prefix* and that does *not* have |
 |                              |a metadata attribute called *metadata_name*.  |
 +------------------------------+----------------------------------------------+
-|``+``                         |Matches all traits on the object.             |
+|``+``                         |Matches all traits on the object, via         |
+|                              |per-trait notifiers. (See note below.)        |
++------------------------------+----------------------------------------------+
+|``-``                         |Matches all traits on the object, via an      |
+|                              |object notifier. (See note below.)            |
 +------------------------------+----------------------------------------------+
 |*pattern*\ *                  |Matches object graphs where *pattern* occurs  |
 |                              |one or more times. This option is useful for  |
 |                              |setting up listeners on recursive data        |
 |                              |structures like trees or linked lists.        |
 +------------------------------+----------------------------------------------+
+
+.. note::
+    The patterns ``"+"`` and ``"-"`` both match all traits on a ``HasTraits``
+    object. The two patterns behave almost identically, but
+    there's a difference at the implementation level. The ``"+"`` pattern
+    registers one trait-level notifier for each trait on the target object,
+    while the ``"-"`` pattern registers a single *object*-level notifier on the
+    target object. As a result, the two patterns may have different
+    performance characteristics.
 
 .. index:: extended trait names; examples
 
@@ -228,7 +242,8 @@ Semantics
 |``'foo.[bar,baz]'``       |Matches *object*.\ **foo.bar** and                |
 |                          |*object*.\ **foo.baz**                            |
 +--------------------------+--------------------------------------------------+
-|``'foo[]'``               |Matches a list trait on *object* named **foo**.   |
+|``'foo[]'``               |Matches a list or set trait on *object* named     |
+|                          |**foo**.                                          |
 +--------------------------+--------------------------------------------------+
 |``'([left,right]).name*'``|Matches the **name** trait of each tree node      |
 |                          |object that is linked from the **left** or        |
@@ -250,21 +265,22 @@ Semantics
 +--------------------------+--------------------------------------------------+
 
 For a pattern that references multiple objects, any of the intermediate
-(non-final) links can be traits of type Instance, List, or Dict. In the case of
-List or Dict traits, the subsequent portion of the pattern is applied to each
-item in the list or value in the dictionary. For example, if **self.children**
-is a list, a handler set for ``'children.name'`` listens for changes to the
-**name** trait for each item in the **self.children** list.
+(non-final) links can be traits of type Instance, List, Dict or Set. In the
+case of List, Dict and Set traits, the subsequent portion of the pattern is
+applied to each item in the list or set, or to each value in the dictionary.
+For example, if **self.children** is a list, a handler set for
+``'children.name'`` listens for changes to the **name** trait for each item in
+the **self.children** list.
 
 .. note::
-    In the case of Dict, List, and Set with nested patterns (e.g.,
+    In the case of List, Dict and Set with nested patterns (e.g.,
     ``'children.name'``), not all handler signatures (see
     :ref:`notification-handler-signatures`) are supported; see section
     :ref:`dynamic-handler-special-cases` for more details.
 
-The handler routine is also invoked when items are added or removed from a list
-or dictionary, because this is treated as an implied change to the item's trait
-being monitored.
+The handler routine is also invoked when items are added or removed from a
+list, dictionary or set, because this is treated as an implied change to the
+item's trait being monitored.
 
 .. index:: notification; dynamic
 
@@ -293,20 +309,22 @@ These signatures use the following parameters:
 .. index:: name parameter; notification handlers
 
 * *name*: The attribute that changed. If one of the objects in a sequence is a
-  List or Dict, and its membership changes, then this is the name of the trait
-  that references it, with '_items appended. For example, if the handler is
-  monitoring ``'foo.bar.baz'``, where **bar** is a List, and an item is added
-  to **bar**, then the value of the *name* parameter is 'bar_items'.
+  List, Dict or Set, and its membership changes, then this is the name of the
+  trait that references it, with '_items appended. For example, if the handler
+  is monitoring ``'foo.bar.baz'``, where **bar** is a List, and an item is
+  added to **bar**, then the value of the *name* parameter is 'bar_items'.
 
 .. index:: new parameter to the notification handlers
 
 * *new*: The new value of the trait attribute that changed. For changes to
-  List and Dict objects, this is a list of items that were added.
+  List objects, this is a list of items that were added. For changes
+  to Set objects, this is a set of items that were added.
 
 .. index:: old parameter to the notification handlers
 
 * *old*: The old value of the trait attribute that changed. For changes to List
-  and Dict object, this is a list of items that were deleted. For event traits,
+  objects, this is a list of items that were deleted. For changes to
+  Set objects, this is a set of items that were deleted. For event traits,
   this is Undefined.
 
 If the handler is a bound method, it also implicitly has *self* as a first
@@ -325,20 +343,21 @@ monitored, and a change to an intermediate object. In this case, the
 notification dispatcher attempts to map a change to an intermediate object to
 its effective change on the final trait attribute. This mapping is only
 possible if all the intermediate objects are single values (such as Instance or
-Any traits), and not List or Dict traits. If the change involves a List or
-Dict, then the notification dispatcher raises a TraitError when attempting to
-call a one- or two-parameter handler function, because it cannot unambiguously
-resolve the effective value for the final trait attribute.
+Any traits), and not List, Dict or Set traits. If the change involves a List,
+Dict or Set, then the notification dispatcher raises a TraitError when
+attempting to call a one- or two-parameter handler function, because it cannot
+unambiguously resolve the effective value for the final trait attribute.
 
 Zero-parameter signature handlers receive special treatment if the final trait
-attribute is a List or Dict, and if the string used for the *name* parameter is
-not just a simple trait name. In this case, the handler is automatically called
-when the membership of a final List or Dict trait is changed. This behavior can
-be useful in cases where the handler needs to know only that some aspect of the
-final trait has changed. For all other signatures, the handler function must be
-explicitly set for the *name*\ _items trait in order to called when the
-membership of the name trait changes. (Note that the *prefix*\ + and *item*\ []
-syntaxes are both ways to specify both a trait name and its '_items' variant.)
+attribute is a List, Dict or Set, and if the string used for the *name*
+parameter is not just a simple trait name. In this case, the handler is
+automatically called when the membership of a final List, Dict or Set trait is
+changed. This behavior can be useful in cases where the handler needs to know
+only that some aspect of the final trait has changed. For all other signatures,
+the handler function must be explicitly set for the *name*\ _items trait in
+order to called when the membership of the name trait changes. (Note that the
+*prefix*\ + and *item*\ [] syntaxes are both ways to specify both a trait name
+and its '_items' variant.)
 
 This behavior for zero-parameter handlers is not triggered for simple trait
 names, to preserve compatibility with code written for versions of Traits
@@ -670,10 +689,10 @@ As an example of an event, consider::
             self.redraw()
 
 In support of the use of events, the Traits package understands
-attribute-specific notification handlers with names of the form
-_\ *name*\ _fired(), with signatures identical to the _\ *name*\ _changed() functions.
-In fact, the Traits package does not check whether the trait attributes that
-_\ *name*\ _fired() handlers are applied to are actually events. The function
+attribute-specific notification handlers with names of the form _\ *name*\
+_fired(), with signatures identical to the _\ *name*\ _changed() functions. In
+fact, the Traits package does not check whether the trait attributes that _\
+*name*\ _fired() handlers are applied to are actually events. The function
 names are simply synonyms for programmer convenience.
 
 Similarly, a function named on_trait_event() can be used as a synonym for
@@ -717,18 +736,18 @@ handler with the ``[]`` suffix as noted in the Table
 For these trait types, an auxiliary *name*\ _items Event trait is defined which
 you can listen to either with a static handler _\ *name*\ _items_changed()
 or a dynamic handler which matches *name*\ _items, and these handlers will be
-called with notifications of changes to the contents of the list, set or
-dictionary.
+called with notifications of changes to the contents of the list, dictionary
+or set.
 
-.. index:: TraitListEvent, TraitSetEvent, TraitDictEvent
+.. index:: TraitListEvent, TraitDictEvent, TraitSetEvent
 
 For these handlers the *new* parameter is a :index:`TraitListEvent`,
-:index:`TraitSetEvent` or :index:`TraitDictEvent` object whose attributes
+:index:`TraitDictEvent` or :index:`TraitSetEvent` object whose attributes
 indicate the nature of the change and, because they are Event handlers, the
 *old* parameter is Undefined.
 
 All of these event objects have **added** and **removed** attributes that
-hold a list, set or dictionary of the items that were added and removed,
+hold a list, dictionary or set of the items that were added and removed,
 respectively.
 
 The TraitListEvent has an additional **index** attribute that holds either
@@ -799,5 +818,5 @@ supports length checking::
     name = String(minlen=1)
 
 Traits consider handlers for the same change event to be independent of each
-other. Therefore, any uncaught exception from one change handler will be captured
-and logged, so not to prevent other handlers to be called.
+other. Therefore, any uncaught exception from one change handler will be
+captured and logged, so not to prevent other handlers to be called.

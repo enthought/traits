@@ -3,17 +3,19 @@
 <html>
   <head>
     <meta charset="utf-8">
-    
-    <title>Trait Notification with on_trait_change &mdash; Traits 6.3 Documentation</title>
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Trait Notification with on_trait_change &mdash; Traits 6.4 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
     <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" >
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.3.2',
+        VERSION:     '6.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -24,12 +26,14 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/clipboard.min.js"></script>
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.png">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.3 Documentation" href="../index.html" >
+    <link rel="top" title="Traits 6.4 Documentation" href="../index.html" >
     <link rel="up" title="Appendix" href="appendix.html" >
     <link rel="next" title="API Reference" href="../traits_api_reference/index.html" >
     <link rel="prev" title="Appendix" href="appendix.html" > 
@@ -49,9 +53,9 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.3 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 6.4 Documentation</a></li>
 	
-          <li class="active"><a href="index.html" >Traits 6.3 User Manual</a></li>
+          <li class="active"><a href="index.html" >Traits 6.4 User Manual</a></li>
           <li class="active"><a href="appendix.html" accesskey="U">Appendix</a></li> 
     </ul>
               
@@ -86,7 +90,7 @@
         <div class="bodywrapper">
           <div class="body" id="spc-section-body" role="main">
             
-  <div class="section" id="trait-notification-with-on-trait-change">
+  <section id="trait-notification-with-on-trait-change">
 <span id="on-trait-change-notification"></span><h1>Trait Notification with <strong>on_trait_change</strong><a class="headerlink" href="#trait-notification-with-on-trait-change" title="Permalink to this headline">¶</a></h1>
 <p><strong>on_trait_change</strong> is an older method for setting up change notifications. It
 has several design flaws and limitations. A newer mechanism <strong>observe</strong> is
@@ -101,7 +105,7 @@ decorator to indicate that they handle notification for specified attributes.</p
 <li><p>Statically, by using a special naming convention for methods on the class to
 indicate that they handle notifications for specific trait attributes.</p></li>
 </ul>
-<div class="section" id="dynamic-notification">
+<section id="dynamic-notification">
 <span id="index-1"></span><span id="id1"></span><h2>Dynamic Notification<a class="headerlink" href="#dynamic-notification" title="Permalink to this headline">¶</a></h2>
 <p>Dynamic notification is useful in cases where a notification handler cannot be
 defined on the class (or a subclass) whose trait attribute changes are to be
@@ -136,7 +140,7 @@ handler to be “unhooked”.</p></li>
 In most cases, it can be omitted. See the <em>Traits API Reference</em> for details
 on non-default values.</p></li>
 </ul>
-<div class="section" id="example-of-a-dynamic-notification-handler">
+<section id="example-of-a-dynamic-notification-handler">
 <span id="index-4"></span><span id="id2"></span><h3>Example of a Dynamic Notification Handler<a class="headerlink" href="#example-of-a-dynamic-notification-handler" title="Permalink to this headline">¶</a></h3>
 <p>Setting up a dynamic trait attribute change notification handler is illustrated
 in the following example:</p>
@@ -172,8 +176,8 @@ in the following example:</p>
 change notification so that its update_cost() method is called whenever the
 <strong>cost</strong> attribute of either its <strong>part1</strong> or <strong>part2</strong> attribute is modified.
 This method then updates the cost attribute of the widget object.</p>
-</div>
-<div class="section" id="the-name-parameter">
+</section>
+<section id="the-name-parameter">
 <span id="index-5"></span><span id="id3"></span><h3>The <em>name</em> Parameter<a class="headerlink" href="#the-name-parameter" title="Permalink to this headline">¶</a></h3>
 <p>The <em>name</em> parameter of on_trait_change() and on_trait_event() provides
 significant flexibility in specifying the name or names of one or more trait
@@ -189,7 +193,7 @@ object with the specified names.</p></li>
 <li><p>An “extended” name or list of extended names: The handler applies to each
 trait attribute that matches the specified extended names.</p></li>
 </ul>
-<div class="section" id="syntax">
+<section id="syntax">
 <span id="index-6"></span><span id="id4"></span><h4>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h4>
 <p>Extended names use the following syntax:</p>
 <pre>
@@ -198,8 +202,8 @@ trait attribute that matches the specified extended names.</p></li>
 <strong id="grammar-token-xname3">xname3</strong> ::=  xname | ['+'|'-'][name] | name['?' | ('+'|'-')[name]]
 </pre>
 <p>A <em>name</em> is any valid Python attribute name.</p>
-</div>
-<div class="section" id="semantics">
+</section>
+<section id="semantics">
 <span id="index-7"></span><span id="id5"></span><h4>Semantics<a class="headerlink" href="#semantics" title="Permalink to this headline">¶</a></h4>
 <p class="rubric" id="semantics-of-extended-name-notation-table">Semantics of extended name notation</p>
 <table class="docutils align-default">
@@ -214,18 +218,19 @@ trait attribute that matches the specified extended names.</p></li>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><em>item1</em>.<em>item2</em></p></td>
-<td><p>A trait named item1 contains an object (or
-objects, if <em>item1</em> is a list or dictionary),
-with a trait named <em>item2</em>. Changes to either
-<em>item1</em> or <em>item2</em> trigger a  notification.</p></td>
+<td><p>A trait named <em>item1</em> contains an object (or
+objects, if <em>item1</em> is a list, dictionary or
+set), with a trait named <em>item2</em>. Changes to
+either <em>item1</em> or <em>item2</em> trigger a
+notification.</p></td>
 </tr>
 <tr class="row-odd"><td><p><em>item1</em>:<em>item2</em></p></td>
-<td><p>A trait named <strong>item1</strong> contains an object (or
-objects, if <em>item1</em> is a list or dictionary),
-with a trait named <em>item2</em>. Changes to <em>item2</em>
-trigger a notification, while changes to
-<em>item1</em> do not (i.e., the ‘:’ indicates that
-changes to the link object are not reported.</p></td>
+<td><p>A trait named <em>item1</em> contains an object (or
+objects, if <em>item1</em> is a list, dictionary or
+set), with a trait named <em>item2</em>. Changes to
+<em>item2</em> trigger a notification, while changes
+to <em>item1</em> do not (the ‘:’ indicates that
+changes to the link object are not reported).</p></td>
 </tr>
 <tr class="row-even"><td><p>[<em>item1</em>, <em>item2</em>, …,
 <em>itemN</em>]</p></td>
@@ -234,8 +239,8 @@ items. Note that at the topmost level, the
 surrounding square brackets are optional.</p></td>
 </tr>
 <tr class="row-odd"><td><p><em>item</em>[]</p></td>
-<td><p>A trait named <em>item</em> is a list. Changes to
-<em>item</em> or to its members triggers a
+<td><p>A trait named <em>item</em> is a list or set. Changes
+to <em>item</em> or to its members trigger a
 notification.</p></td>
 </tr>
 <tr class="row-even"><td><p><em>name</em>?</p></td>
@@ -269,9 +274,14 @@ begins with <em>prefix</em> and that does <em>not</em> have
 a metadata attribute called <em>metadata_name</em>.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">+</span></code></p></td>
-<td><p>Matches all traits on the object.</p></td>
+<td><p>Matches all traits on the object, via
+per-trait notifiers. (See note below.)</p></td>
 </tr>
-<tr class="row-odd"><td><p><em>pattern</em>*</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">-</span></code></p></td>
+<td><p>Matches all traits on the object, via an
+object notifier. (See note below.)</p></td>
+</tr>
+<tr class="row-even"><td><p><em>pattern</em>*</p></td>
 <td><p>Matches object graphs where <em>pattern</em> occurs
 one or more times. This option is useful for
 setting up listeners on recursive data
@@ -279,6 +289,16 @@ structures like trees or linked lists.</p></td>
 </tr>
 </tbody>
 </table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The patterns <code class="docutils literal notranslate"><span class="pre">&quot;+&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;-&quot;</span></code> both match all traits on a <code class="docutils literal notranslate"><span class="pre">HasTraits</span></code>
+object. The two patterns behave almost identically, but
+there’s a difference at the implementation level. The <code class="docutils literal notranslate"><span class="pre">&quot;+&quot;</span></code> pattern
+registers one trait-level notifier for each trait on the target object,
+while the <code class="docutils literal notranslate"><span class="pre">&quot;-&quot;</span></code> pattern registers a single <em>object</em>-level notifier on the
+target object. As a result, the two patterns may have different
+performance characteristics.</p>
+</div>
 <p class="rubric" id="examples-of-extended-name-notation-table"><span id="index-8"></span>Examples of extended name notation</p>
 <table class="docutils align-default">
 <colgroup>
@@ -308,7 +328,8 @@ computed.</p></td>
 <em>object</em>.<strong>foo.baz</strong></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">'foo[]'</span></code></p></td>
-<td><p>Matches a list trait on <em>object</em> named <strong>foo</strong>.</p></td>
+<td><p>Matches a list or set trait on <em>object</em> named
+<strong>foo</strong>.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">'([left,right]).name*'</span></code></p></td>
 <td><p>Matches the <strong>name</strong> trait of each tree node
@@ -335,24 +356,25 @@ attribute named <strong>dirty</strong> set.</p></td>
 </tbody>
 </table>
 <p>For a pattern that references multiple objects, any of the intermediate
-(non-final) links can be traits of type Instance, List, or Dict. In the case of
-List or Dict traits, the subsequent portion of the pattern is applied to each
-item in the list or value in the dictionary. For example, if <strong>self.children</strong>
-is a list, a handler set for <code class="docutils literal notranslate"><span class="pre">'children.name'</span></code> listens for changes to the
-<strong>name</strong> trait for each item in the <strong>self.children</strong> list.</p>
+(non-final) links can be traits of type Instance, List, Dict or Set. In the
+case of List, Dict and Set traits, the subsequent portion of the pattern is
+applied to each item in the list or set, or to each value in the dictionary.
+For example, if <strong>self.children</strong> is a list, a handler set for
+<code class="docutils literal notranslate"><span class="pre">'children.name'</span></code> listens for changes to the <strong>name</strong> trait for each item in
+the <strong>self.children</strong> list.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>In the case of Dict, List, and Set with nested patterns (e.g.,
+<p>In the case of List, Dict and Set with nested patterns (e.g.,
 <code class="docutils literal notranslate"><span class="pre">'children.name'</span></code>), not all handler signatures (see
 <a class="reference internal" href="#notification-handler-signatures"><span class="std std-ref">Notification Handler Signatures</span></a>) are supported; see section
 <a class="reference internal" href="#dynamic-handler-special-cases"><span class="std std-ref">Dynamic Handler Special Cases</span></a> for more details.</p>
 </div>
-<p>The handler routine is also invoked when items are added or removed from a list
-or dictionary, because this is treated as an implied change to the item’s trait
-being monitored.</p>
-</div>
-</div>
-<div class="section" id="notification-handler-signatures">
+<p>The handler routine is also invoked when items are added or removed from a
+list, dictionary or set, because this is treated as an implied change to the
+item’s trait being monitored.</p>
+</section>
+</section>
+<section id="notification-handler-signatures">
 <span id="index-9"></span><span id="id6"></span><h3>Notification Handler Signatures<a class="headerlink" href="#notification-handler-signatures" title="Permalink to this headline">¶</a></h3>
 <p>The handler passed to on_trait_change() or on_trait_event() can have any one of
 the following signatures:</p>
@@ -369,24 +391,26 @@ the following signatures:</p>
 </ul>
 <ul class="simple" id="index-12">
 <li><p><em>name</em>: The attribute that changed. If one of the objects in a sequence is a
-List or Dict, and its membership changes, then this is the name of the trait
-that references it, with ‘_items appended. For example, if the handler is
-monitoring <code class="docutils literal notranslate"><span class="pre">'foo.bar.baz'</span></code>, where <strong>bar</strong> is a List, and an item is added
-to <strong>bar</strong>, then the value of the <em>name</em> parameter is ‘bar_items’.</p></li>
+List, Dict or Set, and its membership changes, then this is the name of the
+trait that references it, with ‘_items appended. For example, if the handler
+is monitoring <code class="docutils literal notranslate"><span class="pre">'foo.bar.baz'</span></code>, where <strong>bar</strong> is a List, and an item is
+added to <strong>bar</strong>, then the value of the <em>name</em> parameter is ‘bar_items’.</p></li>
 </ul>
 <ul class="simple" id="index-13">
 <li><p><em>new</em>: The new value of the trait attribute that changed. For changes to
-List and Dict objects, this is a list of items that were added.</p></li>
+List objects, this is a list of items that were added. For changes
+to Set objects, this is a set of items that were added.</p></li>
 </ul>
 <ul class="simple" id="index-14">
 <li><p><em>old</em>: The old value of the trait attribute that changed. For changes to List
-and Dict object, this is a list of items that were deleted. For event traits,
+objects, this is a list of items that were deleted. For changes to
+Set objects, this is a set of items that were deleted. For event traits,
 this is Undefined.</p></li>
 </ul>
 <p>If the handler is a bound method, it also implicitly has <em>self</em> as a first
 argument.</p>
-</div>
-<div class="section" id="dynamic-handler-special-cases">
+</section>
+<section id="dynamic-handler-special-cases">
 <span id="index-15"></span><span id="id7"></span><h3>Dynamic Handler Special Cases<a class="headerlink" href="#dynamic-handler-special-cases" title="Permalink to this headline">¶</a></h3>
 <p>In the one- and two-parameter signatures, the handler does not receive enough
 information to distinguish between a change to the final trait attribute being
@@ -394,19 +418,20 @@ monitored, and a change to an intermediate object. In this case, the
 notification dispatcher attempts to map a change to an intermediate object to
 its effective change on the final trait attribute. This mapping is only
 possible if all the intermediate objects are single values (such as Instance or
-Any traits), and not List or Dict traits. If the change involves a List or
-Dict, then the notification dispatcher raises a TraitError when attempting to
-call a one- or two-parameter handler function, because it cannot unambiguously
-resolve the effective value for the final trait attribute.</p>
+Any traits), and not List, Dict or Set traits. If the change involves a List,
+Dict or Set, then the notification dispatcher raises a TraitError when
+attempting to call a one- or two-parameter handler function, because it cannot
+unambiguously resolve the effective value for the final trait attribute.</p>
 <p>Zero-parameter signature handlers receive special treatment if the final trait
-attribute is a List or Dict, and if the string used for the <em>name</em> parameter is
-not just a simple trait name. In this case, the handler is automatically called
-when the membership of a final List or Dict trait is changed. This behavior can
-be useful in cases where the handler needs to know only that some aspect of the
-final trait has changed. For all other signatures, the handler function must be
-explicitly set for the <em>name</em>_items trait in order to called when the
-membership of the name trait changes. (Note that the <em>prefix</em>+ and <em>item</em>[]
-syntaxes are both ways to specify both a trait name and its ‘_items’ variant.)</p>
+attribute is a List, Dict or Set, and if the string used for the <em>name</em>
+parameter is not just a simple trait name. In this case, the handler is
+automatically called when the membership of a final List, Dict or Set trait is
+changed. This behavior can be useful in cases where the handler needs to know
+only that some aspect of the final trait has changed. For all other signatures,
+the handler function must be explicitly set for the <em>name</em>_items trait in
+order to called when the membership of the name trait changes. (Note that the
+<em>prefix</em>+ and <em>item</em>[] syntaxes are both ways to specify both a trait name
+and its ‘_items’ variant.)</p>
 <p>This behavior for zero-parameter handlers is not triggered for simple trait
 names, to preserve compatibility with code written for versions of Traits
 prior to 3.0. Earlier versions of Traits required handlers to be separately
@@ -450,9 +475,9 @@ some aspect of the extended trait name syntax in the name specifier.</p>
 <span class="n">dept</span><span class="o">.</span><span class="n">employees</span> <span class="o">=</span> <span class="p">[</span><span class="n">donna</span><span class="p">]</span>      <span class="c1"># Calls A and C</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="static-notification">
+</section>
+</section>
+<section id="static-notification">
 <span id="index-17"></span><span id="id8"></span><h2>Static Notification<a class="headerlink" href="#static-notification" title="Permalink to this headline">¶</a></h2>
 <p>The static approach is the most convenient option, but it is not always
 possible. Writing a static change notification handler requires that, for a
@@ -468,7 +493,7 @@ particular trait, you have two options:</p>
 <li><p>Give the method a special name based on the name of the trait attribute it
 “listens” to.</p></li>
 </ul>
-<div class="section" id="handler-decorator">
+<section id="handler-decorator">
 <span id="id9"></span><h3>Handler Decorator<a class="headerlink" href="#handler-decorator" title="Permalink to this headline">¶</a></h3>
 <p>The most flexible method of statically specifying that a method is a
 notification handler for a trait is to use the &#64;on_trait_change() decorator.
@@ -477,7 +502,7 @@ handlers, because it supports the very powerful extended trait name syntax
 (see <a class="reference internal" href="#the-name-parameter"><span class="std std-ref">The name Parameter</span></a>). You can use the decorator to set handlers on
 multiple attributes at once, on trait attributes of linked objects, and on
 attributes that are selected based on trait metadata.</p>
-<div class="section" id="decorator-syntax">
+<section id="decorator-syntax">
 <span id="index-19"></span><span id="id10"></span><h4>Decorator Syntax<a class="headerlink" href="#decorator-syntax" title="Permalink to this headline">¶</a></h4>
 <p>The syntax for the decorator is:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@on_trait_change</span><span class="p">(</span> <span class="s1">&#39;extended_trait_name&#39;</span> <span class="p">)</span>
@@ -492,8 +517,8 @@ those for dynamic notification handlers, as described in
 <a class="reference internal" href="#notification-handler-signatures"><span class="std std-ref">Notification Handler Signatures</span></a>. That is, they can have an <em>object</em>
 parameter, because they can handle notifications for trait attributes that do
 not belong to the same object.</p>
-</div>
-<div class="section" id="decorator-semantics">
+</section>
+<section id="decorator-semantics">
 <span id="index-20"></span><span id="id11"></span><h4>Decorator Semantics<a class="headerlink" href="#decorator-semantics" title="Permalink to this headline">¶</a></h4>
 <p>The functionality provided by the &#64;on_trait_change() decorator is identical to
 that of specially-named handlers, in that both result in a call to
@@ -527,9 +552,9 @@ to delay registering the handler to after the state is set.</p>
 <span class="c1"># Result: cost is changed from 0.0 to 2.0</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="specially-named-notification-handlers">
+</section>
+</section>
+<section id="specially-named-notification-handlers">
 <span id="index-21"></span><span id="id12"></span><h3>Specially-named Notification Handlers<a class="headerlink" href="#specially-named-notification-handlers" title="Permalink to this headline">¶</a></h3>
 <p>There are two kinds of special method names that can be used for static trait
 attribute change notifications. One is attribute-specific, and the other
@@ -593,8 +618,8 @@ the effect of special naming. A method that looks like:</p>
 <p>will only be called once when <code class="docutils literal notranslate"><span class="pre">foo</span></code> changes, as a result of the
 <code class="docutils literal notranslate"><span class="pre">observe</span></code> decorator.</p>
 </div>
-</div>
-<div class="section" id="attribute-specific-handler-signatures">
+</section>
+<section id="attribute-specific-handler-signatures">
 <span id="id13"></span><h3>Attribute-specific Handler Signatures<a class="headerlink" href="#attribute-specific-handler-signatures" title="Permalink to this headline">¶</a></h3>
 <p>For an attribute specific notification handler, the method signatures supported
 are:</p>
@@ -668,8 +693,8 @@ the following table.</p>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="general-static-handler-signatures">
+</section>
+<section id="general-static-handler-signatures">
 <span id="id14"></span><h3>General Static Handler Signatures<a class="headerlink" href="#general-static-handler-signatures" title="Permalink to this headline">¶</a></h3>
 <p>In the case of a non-attribute specific handler, the method signatures
 supported are:</p>
@@ -695,9 +720,9 @@ supported are:</p>
 
 <p>The meanings for <em>name</em>, <em>new</em>, and <em>old</em> are the same as for
 attribute-specific notification functions.</p>
-</div>
-</div>
-<div class="section" id="trait-events">
+</section>
+</section>
+<section id="trait-events">
 <span id="id15"></span><h2>Trait Events<a class="headerlink" href="#trait-events" title="Permalink to this headline">¶</a></h2>
 <p id="index-24">The Traits package defines a special type of trait called an event. Events are
 instances of (subclasses of) the Event class.</p>
@@ -738,14 +763,12 @@ results in a TraitError exception, because an event has no value.</p></li>
 </pre></div>
 </div>
 <p>In support of the use of events, the Traits package understands
-attribute-specific notification handlers with names of the form
-_<em>name</em>_fired(), with signatures identical to the _<em>name</em>_changed() functions.
-In fact, the Traits package does not check whether the trait attributes that
-_<em>name</em>_fired() handlers are applied to are actually events. The function
+attribute-specific notification handlers with names of the form _<em>name</em>_fired(), with signatures identical to the _<em>name</em>_changed() functions. In
+fact, the Traits package does not check whether the trait attributes that _<em>name</em>_fired() handlers are applied to are actually events. The function
 names are simply synonyms for programmer convenience.</p>
 <p>Similarly, a function named on_trait_event() can be used as a synonym for
 on_trait_change() for dynamic notification.</p>
-<div class="section" id="undefined-object">
+<section id="undefined-object">
 <span id="index-26"></span><span id="id16"></span><h3>Undefined Object<a class="headerlink" href="#undefined-object" title="Permalink to this headline">¶</a></h3>
 <p>Python defines a special, singleton object called None. The Traits package
 introduces an additional special, singleton object called Undefined.</p>
@@ -757,8 +780,8 @@ and its associated trait notification handlers are called, Undefined is passed
 as the value of the old parameter to each handler, to indicate that the
 attribute previously had no value. Similarly, the value of a trait event is
 always Undefined.</p>
-</div>
-<div class="section" id="container-items-events">
+</section>
+<section id="container-items-events">
 <span id="trait-items-handlers"></span><h3>Container Items Events<a class="headerlink" href="#container-items-events" title="Permalink to this headline">¶</a></h3>
 <p id="index-27">For the container traits (List, Dict and Set) both static and dynamic handlers
 for the trait are only called when the entire value of the trait is replaced
@@ -770,14 +793,14 @@ handler with the <code class="docutils literal notranslate"><span class="pre">[]
 <p>For these trait types, an auxiliary <em>name</em>_items Event trait is defined which
 you can listen to either with a static handler _<em>name</em>_items_changed()
 or a dynamic handler which matches <em>name</em>_items, and these handlers will be
-called with notifications of changes to the contents of the list, set or
-dictionary.</p>
+called with notifications of changes to the contents of the list, dictionary
+or set.</p>
 <p id="index-28">For these handlers the <em>new</em> parameter is a <span class="target" id="index-29"></span>TraitListEvent,
-<span class="target" id="index-30"></span>TraitSetEvent or <span class="target" id="index-31"></span>TraitDictEvent object whose attributes
+<span class="target" id="index-30"></span>TraitDictEvent or <span class="target" id="index-31"></span>TraitSetEvent object whose attributes
 indicate the nature of the change and, because they are Event handlers, the
 <em>old</em> parameter is Undefined.</p>
 <p>All of these event objects have <strong>added</strong> and <strong>removed</strong> attributes that
-hold a list, set or dictionary of the items that were added and removed,
+hold a list, dictionary or set of the items that were added and removed,
 respectively.</p>
 <p>The TraitListEvent has an additional <strong>index</strong> attribute that holds either
 the index of the first item changed, or for changes involving slices with
@@ -789,11 +812,11 @@ keys that were modified and the _old_ values that those keys held.  The new
 values can be queried from directly from the trait value, if needed.</p>
 <p>Handlers for these events should not mutate the attributes of the event
 objects, including avoiding in-place changes to <strong>added</strong>, <strong>removed</strong>, etc.</p>
-</div>
-</div>
-<div class="section" id="dos-and-donts">
+</section>
+</section>
+<section id="dos-and-donts">
 <span id="on-trait-change-dos-n-donts"></span><h2>Dos and Don’ts<a class="headerlink" href="#dos-and-donts" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="don-t-assume-handlers-are-called-in-a-specific-order">
+<section id="don-t-assume-handlers-are-called-in-a-specific-order">
 <h3>Don’t assume handlers are called in a specific order<a class="headerlink" href="#don-t-assume-handlers-are-called-in-a-specific-order" title="Permalink to this headline">¶</a></h3>
 <p>Don’t do this:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@on_trait_change</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
@@ -821,8 +844,8 @@ from calling <code class="docutils literal notranslate"><span class="pre">update
 <p>Even if the change handlers appear to be called in a deterministic order,
 this would be due to implementation details that may not hold true across
 releases and platforms.</p>
-</div>
-<div class="section" id="don-t-raise-exception-from-a-change-handler">
+</section>
+<section id="don-t-raise-exception-from-a-change-handler">
 <h3>Don’t raise exception from a change handler<a class="headerlink" href="#don-t-raise-exception-from-a-change-handler" title="Permalink to this headline">¶</a></h3>
 <p>Don’t do this:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">name</span> <span class="o">=</span> <span class="n">String</span><span class="p">()</span>
@@ -839,11 +862,11 @@ supports length checking:</p>
 </pre></div>
 </div>
 <p>Traits consider handlers for the same change event to be independent of each
-other. Therefore, any uncaught exception from one change handler will be captured
-and logged, so not to prevent other handlers to be called.</p>
-</div>
-</div>
-</div>
+other. Therefore, any uncaught exception from one change handler will be
+captured and logged, so not to prevent other handlers to be called.</p>
+</section>
+</section>
+</section>
 
 
           </div>
@@ -930,12 +953,12 @@ and logged, so not to prevent other handlers to be called.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Mar 12, 2022.
+      Last updated on Aug 11, 2022.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.

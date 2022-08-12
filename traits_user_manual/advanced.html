@@ -3,17 +3,19 @@
 <html>
   <head>
     <meta charset="utf-8">
-    
-    <title>Advanced Topics &mdash; Traits 6.3 Documentation</title>
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Advanced Topics &mdash; Traits 6.4 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
     <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" >
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.3.2',
+        VERSION:     '6.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -24,13 +26,15 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/clipboard.min.js"></script>
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.png">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.3 Documentation" href="../index.html" >
-    <link rel="up" title="Traits 6.3 User Manual" href="index.html" >
+    <link rel="top" title="Traits 6.4 Documentation" href="../index.html" >
+    <link rel="up" title="Traits 6.4 User Manual" href="index.html" >
     <link rel="next" title="Testing" href="testing.html" >
     <link rel="prev" title="Custom Traits" href="custom.html" > 
   </head>
@@ -49,9 +53,9 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.3 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 6.4 Documentation</a></li>
 	
-          <li class="active"><a href="index.html" accesskey="U">Traits 6.3 User Manual</a></li> 
+          <li class="active"><a href="index.html" accesskey="U">Traits 6.4 User Manual</a></li> 
     </ul>
               
               
@@ -85,12 +89,12 @@
         <div class="bodywrapper">
           <div class="body" id="spc-section-body" role="main">
             
-  <div class="section" id="advanced-topics">
+  <section id="advanced-topics">
 <span id="id1"></span><h1>Advanced Topics<a class="headerlink" href="#advanced-topics" title="Permalink to this headline">¶</a></h1>
 <p>The preceding sections provide enough information for you to use traits for
 manifestly-typed attributes, with initialization and validation. This section
 describes the advanced features of the Traits package</p>
-<div class="section" id="initialization-and-validation-revisited">
+<section id="initialization-and-validation-revisited">
 <span id="id2"></span><h2>Initialization and Validation Revisited<a class="headerlink" href="#initialization-and-validation-revisited" title="Permalink to this headline">¶</a></h2>
 <p>The following sections present advanced topics related to the initialization and
 validation features of the Traits package.</p>
@@ -100,7 +104,7 @@ validation features of the Traits package.</p>
 <li><p>Reusing trait definitions</p></li>
 <li><p>Trait attribute definition strategies</p></li>
 </ul>
-<div class="section" id="dynamic-initialization">
+<section id="dynamic-initialization">
 <span id="index-0"></span><span id="id3"></span><h3>Dynamic Initialization<a class="headerlink" href="#dynamic-initialization" title="Permalink to this headline">¶</a></h3>
 <p>When you define trait attributes using predefined traits, the Trait() factory
 function or trait handlers, you typically specify their default values
@@ -134,8 +138,8 @@ instantiation, instead of lazily after instantiation.</p>
 <p id="index-2">It is also possible to define a dynamic method for the default value in a trait
 type subclass (get_default_value()). However, using a
 _<em>name</em>_default()  method avoids the overhead of subclassing a trait.</p>
-<span class="target" id="index-3"></span></div>
-<div class="section" id="overriding-default-values-in-a-subclass">
+<span class="target" id="index-3"></span></section>
+<section id="overriding-default-values-in-a-subclass">
 <span id="index-4"></span><span id="id4"></span><h3>Overriding Default Values in a Subclass<a class="headerlink" href="#overriding-default-values-in-a-subclass" title="Permalink to this headline">¶</a></h3>
 <p>Often, a subclass must override a trait attribute in a parent class by providing
 a different default value. You can specify a new default value without
@@ -155,8 +159,8 @@ completely re-specifying the trait definition for the attribute. For example:</p
 <p>In this example, the <strong>salary_grade</strong> of the Employee class is a range from 1 to
 10, with a default value of 1. In the Manager subclass, the default value of
 <strong>salary_grade</strong> is 5, but it is still a range as defined in the Employee class.</p>
-</div>
-<div class="section" id="reusing-trait-definitions">
+</section>
+<section id="reusing-trait-definitions">
 <span id="index-5"></span><span id="id5"></span><h3>Reusing Trait Definitions<a class="headerlink" href="#reusing-trait-definitions" title="Permalink to this headline">¶</a></h3>
 <p>As mentioned in <a class="reference internal" href="defining.html#defining-traits-initialization-and-validation"><span class="std std-ref">Defining Traits: Initialization and Validation</span></a>, in most
 cases, traits are defined in-line in attribute definitions, but they can also be
@@ -180,8 +184,8 @@ class <strong>quadratic</strong>, which references <strong>coefficient</strong> 
 trait attributes <strong>c2</strong>, <strong>c1</strong>, and <strong>c0</strong>. Each of these attributes has a
 unique value, but they all use the same trait definition to determine whether a
 value assigned to them is valid.</p>
-</div>
-<div class="section" id="trait-attribute-definition-strategies">
+</section>
+<section id="trait-attribute-definition-strategies">
 <span id="index-6"></span><span id="id6"></span><h3>Trait Attribute Definition Strategies<a class="headerlink" href="#trait-attribute-definition-strategies" title="Permalink to this headline">¶</a></h3>
 <p>In the preceding examples in this guide, all trait attribute definitions have
 bound a single object attribute to a specified trait definition. This is known
@@ -191,7 +195,7 @@ attributes with a particular trait definition, using the trait attribute name
 wildcard. You can also dynamically create trait attributes that are specific to
 an instance, using the add_trait() method, rather than defined on a class. These
 strategies are described in the following sections.</p>
-<div class="section" id="trait-attribute-name-wildcard">
+<section id="trait-attribute-name-wildcard">
 <span id="index-7"></span><span id="id7"></span><h4>Trait Attribute Name Wildcard<a class="headerlink" href="#trait-attribute-name-wildcard" title="Permalink to this headline">¶</a></h4>
 <p>The Traits package enables you to define a category of trait attributes
 associated with a particular trait definition, by including an underscore (‘_’)
@@ -246,7 +250,7 @@ specifying only the wildcard character for the attribute name:</p>
 </div>
 <p>In this case, all Person instance attributes can be created on the fly and are
 defined by the Any trait.</p>
-<div class="section" id="wildcard-rules">
+<section id="wildcard-rules">
 <span id="index-8"></span><span id="id8"></span><h5>Wildcard Rules<a class="headerlink" href="#wildcard-rules" title="Permalink to this headline">¶</a></h5>
 <p>When using wildcard characters in trait attribute names, the following rules are
 used to determine what trait definition governs an attribute:</p>
@@ -276,8 +280,8 @@ starting with <code class="docutils literal notranslate"><span class="pre">temp<
 assigned. All other object attributes behave like normal Python attributes
 (i.e., they allow any value to be assigned, but they must have a value assigned
 to them before their first reference).</p>
-</div>
-<div class="section" id="disallow-object">
+</section>
+<section id="disallow-object">
 <span id="index-9"></span><span id="id9"></span><h5>Disallow Object<a class="headerlink" href="#disallow-object" title="Permalink to this headline">¶</a></h5>
 <p>The singleton object Disallow can be used with wildcards to disallow all
 attributes that are not explicitly defined. For example:</p>
@@ -301,8 +305,8 @@ attributes that are not explicitly defined. For example:</p>
 <p>All other object attributes are explicitly disallowed. That is, any attempt to
 read or set any object attribute other than <strong>name</strong>, <strong>age</strong>, or <strong>weight</strong>
 causes an exception.</p>
-</div>
-<div class="section" id="hastraits-subclasses">
+</section>
+<section id="hastraits-subclasses">
 <span id="index-10"></span><span id="id10"></span><h5>HasTraits Subclasses<a class="headerlink" href="#hastraits-subclasses" title="Permalink to this headline">¶</a></h5>
 <p>Because the HasTraits class implicitly contains the attribute definition
 <code class="docutils literal notranslate"><span class="pre">_</span> <span class="pre">=</span> <span class="pre">Python</span></code>, subclasses of HasTraits by default have very standard Python
@@ -311,8 +315,8 @@ attribute. However, the wildcard trait attribute definition rules make it easy
 to create subclasses of HasTraits with very non-standard attribute behavior. Two
 such subclasses are predefined in the Traits package: HasStrictTraits and
 HasPrivateTraits.</p>
-</div>
-<div class="section" id="hasstricttraits">
+</section>
+<section id="hasstricttraits">
 <span id="index-11"></span><span id="id11"></span><h5>HasStrictTraits<a class="headerlink" href="#hasstricttraits" title="Permalink to this headline">¶</a></h5>
 <p>This class guarantees that accessing any object attribute that does not have an
 explicit or wildcard trait definition results in an exception. This can be
@@ -340,8 +344,8 @@ attribute must be a string. Attempting to set other types of values generates an
 exception, as does attempting to set an attribute that is not one of the three
 defined attributes. In essence, TreeNode behaves like a type-checked data
 structure.</p>
-</div>
-<div class="section" id="hasrequiredtraits">
+</section>
+<section id="hasrequiredtraits">
 <span id="index-12"></span><span id="id12"></span><h5>HasRequiredTraits<a class="headerlink" href="#hasrequiredtraits" title="Permalink to this headline">¶</a></h5>
 <p>This subclass of <a class="reference internal" href="#hasstricttraits"><span class="std std-ref">HasStrictTraits</span></a> ensures that any object attribute with
 <code class="docutils literal notranslate"><span class="pre">required=True</span></code> in its metadata must be passed as an argument on object
@@ -367,8 +371,8 @@ instance:</p>
 <span class="go">provided: required_trait.</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="hasprivatetraits">
+</section>
+<section id="hasprivatetraits">
 <span id="index-13"></span><span id="id13"></span><h5>HasPrivateTraits<a class="headerlink" href="#hasprivatetraits" title="Permalink to this headline">¶</a></h5>
 <p>This class is similar to HasStrictTraits, but allows attributes beginning with
 ‘_’ to have an initial value of None, and to not be type-checked. This is useful
@@ -385,8 +389,8 @@ following:</p>
 <p>These subclasses of HasTraits are provided as a convenience, and their use is
 completely optional. However, they do illustrate how easy it is to create
 subclasses with customized default attribute behavior if desired.</p>
-</div>
-<div class="section" id="per-object-trait-attributes">
+</section>
+<section id="per-object-trait-attributes">
 <span id="index-14"></span><span id="id14"></span><h5>Per-Object Trait Attributes<a class="headerlink" href="#per-object-trait-attributes" title="Permalink to this headline">¶</a></h5>
 <p>The Traits package allows you to define dynamic trait attributes that are
 object-, rather than class-, specific. This is accomplished using the
@@ -433,11 +437,11 @@ When a class inherits from HasStrictTraits, the program cannot create a new
 attribute (either a trait attribute or a regular attribute) simply by assigning
 to it, as is normally the case in Python. In this case, add_trait() is the only
 way to create a new attribute for the class outside of the class definition.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="section" id="interfaces">
+</section>
+</section>
+</section>
+</section>
+<section id="interfaces">
 <span id="index-16"></span><span id="id15"></span><h2>Interfaces<a class="headerlink" href="#interfaces" title="Permalink to this headline">¶</a></h2>
 <p>The Traits package supports declaring and implementing
 <em>interfaces</em>. An interface is an abstract data type that defines a set of
@@ -452,7 +456,7 @@ Python programmers routinely use implicit, informal interfaces (what’s known a
 “duck typing”). Traits allows programmers to define explicit and formal
 interfaces, so that programmers reading the code can more easily understand what
 kinds of objects are actually <em>intended</em> to be used in a given situation.</p>
-<div class="section" id="defining-an-interface">
+<section id="defining-an-interface">
 <span id="index-17"></span><span id="id16"></span><h3>Defining an Interface<a class="headerlink" href="#defining-an-interface" title="Permalink to this headline">¶</a></h3>
 <p>To define an interface, create a subclass of Interface:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">Interface</span>
@@ -470,8 +474,8 @@ and returns a string. Do not include any implementation code in an interface
 declaration. However, the Traits package does not actually check to ensure that
 interfaces do not contain implementations.</p>
 <p>By convention, interface names have a capital ‘I’ at the beginning of the name.</p>
-</div>
-<div class="section" id="implementing-an-interface">
+</section>
+<section id="implementing-an-interface">
 <span id="index-18"></span><span id="id17"></span><h3>Implementing an Interface<a class="headerlink" href="#implementing-an-interface" title="Permalink to this headline">¶</a></h3>
 <p>A class declares that it implements one or more interfaces using the
 <code class="xref py py-func docutils literal notranslate"><span class="pre">provides()</span></code> class decorator, which has the signature:</p>
@@ -524,8 +528,8 @@ traits.has_traits module:</p>
 future, the <code class="docutils literal notranslate"><span class="pre">&#64;provides</span></code> decorator will ignore the value of
 <code class="docutils literal notranslate"><span class="pre">CHECK_INTERFACES</span></code> and will not do any interface checking.</p>
 </div>
-</div>
-<div class="section" id="using-interfaces">
+</section>
+<section id="using-interfaces">
 <span id="index-20"></span><span id="id18"></span><h3>Using Interfaces<a class="headerlink" href="#using-interfaces" title="Permalink to this headline">¶</a></h3>
 <p>You can use an interface at any place where you would normally use a class name.
 The most common way to use interfaces is with the
@@ -546,9 +550,9 @@ trait accepts only values that implement the specified interface. Using the
 the Traits package may automatically substitute an adapter object that
 implements the specified interface. See <a class="reference internal" href="#adaptation"><span class="std std-ref">Adaptation</span></a> for more
 information.</p>
-</div>
-</div>
-<div class="section" id="adaptation">
+</section>
+</section>
+<section id="adaptation">
 <span id="index-21"></span><span id="id19"></span><h2>Adaptation<a class="headerlink" href="#adaptation" title="Permalink to this headline">¶</a></h2>
 <p><em>The adaptation features of Traits have been rewritten in v. 4.4.0 . See
 the</em> <a class="reference internal" href="#migration"><span class="std std-ref">migration guide</span></a> <em>below for details regarding changes
@@ -578,7 +582,7 @@ class <code class="docutils literal notranslate"><span class="pre">Image</span><
 an adapter from <code class="docutils literal notranslate"><span class="pre">Image</span></code> to <code class="docutils literal notranslate"><span class="pre">IPrintable</span></code>, and if one exists the adapter object
 is assigned to the trait. If necessary, a “chain” of adapter objects might be
 created, in order to perform the required adaptation.</p>
-<div class="section" id="main-features">
+<section id="main-features">
 <h3>Main features<a class="headerlink" href="#main-features" title="Permalink to this headline">¶</a></h3>
 <p>The main features of the <a class="reference internal" href="../traits_api_reference/traits.adaptation.html#module-traits.adaptation" title="traits.adaptation"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.adaptation</span></code></a> package are:</p>
 <ul>
@@ -607,8 +611,8 @@ be specified as strings, and are only loaded if they are required.</p>
 </div></blockquote>
 </li>
 </ul>
-</div>
-<div class="section" id="note-on-terminology">
+</section>
+<section id="note-on-terminology">
 <h3>Note on terminology<a class="headerlink" href="#note-on-terminology" title="Permalink to this headline">¶</a></h3>
 <p>To avoid confusion, let’s define two terms that we will use all the time:</p>
 <ul class="simple">
@@ -617,10 +621,10 @@ protocol, or if it implements the protocol (if it is an interface)</p></li>
 <li><p>We say that a class <em>supports</em> a protocol if it provides the protocol
 or an adapter object can be built that provides the protocol</p></li>
 </ul>
-</div>
-<div class="section" id="defining-adapters">
+</section>
+<section id="defining-adapters">
 <span id="index-22"></span><span id="id20"></span><h3>Defining Adapters<a class="headerlink" href="#defining-adapters" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="the-adapter-class">
+<section id="the-adapter-class">
 <span id="subclassing-adapter"></span><span id="index-23"></span><h4>The <code class="xref py py-class docutils literal notranslate"><span class="pre">Adapter</span></code> class<a class="headerlink" href="#the-adapter-class" title="Permalink to this headline">¶</a></h4>
 <p>The Traits package provides two classes for defining adapters,
 one for Traits adapters, <a class="reference internal" href="../traits_api_reference/traits.adaptation.html#traits.adaptation.adapter.Adapter" title="traits.adaptation.adapter.Adapter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Adapter</span></code></a>,
@@ -665,8 +669,8 @@ declares what type of object it is an adapter for. Usually, this is an
         <span class="k">return</span> <span class="n">name</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="registering-adapters">
+</section>
+<section id="registering-adapters">
 <span id="index-26"></span><span id="id21"></span><h4>Registering adapters<a class="headerlink" href="#registering-adapters" title="Permalink to this headline">¶</a></h4>
 <p>Once an adapter class has been defined, it has to be registered with the
 adaptation manager using the <code class="xref py py-func docutils literal notranslate"><span class="pre">register_factory()</span></code>
@@ -703,9 +707,9 @@ by the protocol to be adapted (the one provided by the adaptee,
 <span class="n">register_factory</span><span class="p">(</span><span class="n">PersonToIName</span><span class="p">,</span> <span class="n">Person</span><span class="p">,</span> <span class="n">IName</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="adapter-factories-and-conditional-adaptation">
+</section>
+</section>
+<section id="adapter-factories-and-conditional-adaptation">
 <span id="adapter-factories"></span><span id="index-28"></span><h3>Adapter factories, and conditional adaptation<a class="headerlink" href="#adapter-factories-and-conditional-adaptation" title="Permalink to this headline">¶</a></h3>
 <p>The first argument to the <code class="xref py py-func docutils literal notranslate"><span class="pre">register_factory()</span></code>
 function needs not be an adapter <em>class</em>, it can be, more generally, an
@@ -715,7 +719,7 @@ the adaptee object, and returns an adapter or None if the adaptation was
 not possible. Adapter factories allow flexibility in the adaptation process,
 as the result of adaptation may vary depending on the state of the
 adaptee object.</p>
-<div class="section" id="conditional-adaptation">
+<section id="conditional-adaptation">
 <span id="id22"></span><h4>Conditional adaptation<a class="headerlink" href="#conditional-adaptation" title="Permalink to this headline">¶</a></h4>
 <p>A common use of adapter factories is to allow adaptation only if the
 state of the adaptee object allows it. The factory returns an adapter object
@@ -759,11 +763,11 @@ illustration, this example uses Python ABCs rather than Traits Interfaces.)</p>
 <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">NDArrayToImage</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="requesting-an-adapter">
+</section>
+</section>
+<section id="requesting-an-adapter">
 <span id="using-adapters"></span><span id="index-29"></span><h3>Requesting an adapter<a class="headerlink" href="#requesting-an-adapter" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="the-adapt-function">
+<section id="the-adapt-function">
 <h4>The <code class="docutils literal notranslate"><span class="pre">adapt</span></code> function<a class="headerlink" href="#the-adapt-function" title="Permalink to this headline">¶</a></h4>
 <p>Adapter classes are defined as described in the preceding sections, but you do
 not explicitly create instances of these classes.</p>
@@ -798,8 +802,8 @@ in this case:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">printable</span> <span class="o">=</span> <span class="n">adapt</span><span class="p">(</span><span class="n">unprintable_doc</span><span class="p">,</span> <span class="n">IPrintable</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">EmptyPrintableDoc</span><span class="p">())</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="using-traits-interfaces">
+</section>
+<section id="using-traits-interfaces">
 <h4>Using Traits interfaces<a class="headerlink" href="#using-traits-interfaces" title="Permalink to this headline">¶</a></h4>
 <p>An alternative syntax to create adapters when using Traits Interfaces is
 to use the interface class as an adapter factory, for example</p>
@@ -811,8 +815,8 @@ to use the interface class as an adapter factory, for example</p>
 </pre></div>
 </div>
 <p>(the default argument, None, is optional).</p>
-</div>
-<div class="section" id="using-the-supports-and-adaptsto-traits">
+</section>
+<section id="using-the-supports-and-adaptsto-traits">
 <h4>Using the <code class="docutils literal notranslate"><span class="pre">Supports</span></code> and <code class="docutils literal notranslate"><span class="pre">AdaptsTo</span></code> traits<a class="headerlink" href="#using-the-supports-and-adaptsto-traits" title="Permalink to this headline">¶</a></h4>
 <p>Using the terminology introduced in this section, we can say that the
 <a class="reference internal" href="../traits_api_reference/trait_types.html#traits.trait_types.Instance" title="traits.trait_types.Instance"><code class="xref py py-class docutils literal notranslate"><span class="pre">Instance</span></code></a> trait accepts values that <em>provide</em> the specified protocol.</p>
@@ -909,9 +913,9 @@ interface and be open to extensions by adaptation as follows:</p>
 <span class="o">--</span> <span class="n">End</span> <span class="n">of</span> <span class="n">document</span> <span class="o">-</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="implementation-details">
+</section>
+</section>
+<section id="implementation-details">
 <h3>Implementation details<a class="headerlink" href="#implementation-details" title="Permalink to this headline">¶</a></h3>
 <p>The algorithm for finding a sequence of adapters adapting an object <code class="docutils literal notranslate"><span class="pre">adaptee</span></code>
 to a protocol <code class="docutils literal notranslate"><span class="pre">to_protocol</span></code> is based on a weighted graph.</p>
@@ -935,8 +939,8 @@ adaptation (i.e., an adapter factory returns None), the path
 is discarded and the algorithm looks for the next shortest path.</p>
 <p>Cycles in adaptation are avoided by only considering path were
 every adaptation offer is used at most once.</p>
-</div>
-<div class="section" id="migration-guide">
+</section>
+<section id="migration-guide">
 <span id="migration"></span><h3>Migration guide<a class="headerlink" href="#migration-guide" title="Permalink to this headline">¶</a></h3>
 <p>The implementation of the adaptation mechanism changed in Traits 4.4.0 from
 one based on PyProtocols to a new, smaller, and more robust implementation.</p>
@@ -971,8 +975,8 @@ adapter to adapt the type to the interface.</p>
 <code class="xref py py-func docutils literal notranslate"><span class="pre">traits.api.isinterface()</span></code> instead</p>
 </li>
 </ul>
-</div>
-<div class="section" id="gotchas">
+</section>
+<section id="gotchas">
 <h3>Gotchas<a class="headerlink" href="#gotchas" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><p>The methods <a class="reference internal" href="../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.register_factory" title="traits.adaptation.adaptation_manager.register_factory"><code class="xref py py-func docutils literal notranslate"><span class="pre">register_factory()</span></code></a>,
@@ -994,8 +998,8 @@ Tests relying on adaptation should make sure to reset the state of the
 global adapter using
 <a class="reference internal" href="../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.reset_global_adaptation_manager" title="traits.adaptation.adaptation_manager.reset_global_adaptation_manager"><code class="xref py py-func docutils literal notranslate"><span class="pre">reset_global_adaptation_manager()</span></code></a>.</p></li>
 </ol>
-</div>
-<div class="section" id="recommended-readings-about-adaptation">
+</section>
+<section id="recommended-readings-about-adaptation">
 <h3>Recommended readings about adaptation<a class="headerlink" href="#recommended-readings-about-adaptation" title="Permalink to this headline">¶</a></h3>
 <p>This is a list of interesting readings about adaptation and the adapter
 pattern outside of Traits:</p>
@@ -1005,9 +1009,9 @@ a precursor of <code class="docutils literal notranslate"><span class="pre">trai
 <li><p><a class="reference external" href="http://www.python.org/dev/peps/pep-0246/">PEP 246</a> on object adaptation</p></li>
 <li><p><a class="reference external" href="http://www.eclipse.org/articles/article.php?file=Article-Adapters/index.html">Article about adapters in Eclipse plugins</a></p></li>
 </ul>
-</div>
-</div>
-<div class="section" id="property-traits">
+</section>
+</section>
+<section id="property-traits">
 <span id="index-30"></span><span id="id23"></span><h2>Property Traits<a class="headerlink" href="#property-traits" title="Permalink to this headline">¶</a></h2>
 <p>The predefined Property() trait factory function defines a Traits-based version
 of a Python property, with “getter” and “setter” methods. This type of trait
@@ -1015,7 +1019,7 @@ provides a powerful technique for defining trait attributes whose values depend
 on the state of other object attributes. In particular, this can be very useful
 for creating synthetic trait attributes which are editable or displayable in a
 TraitUI view.</p>
-<div class="section" id="property-factory-function">
+<section id="property-factory-function">
 <span id="id24"></span><h3>Property Factory Function<a class="headerlink" href="#property-factory-function" title="Permalink to this headline">¶</a></h3>
 <p>The Property() function has the following signature:</p>
 <dl class="py function">
@@ -1059,8 +1063,8 @@ example:</p>
     <span class="n">position</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span><span class="n">observe</span><span class="o">=</span><span class="s1">&#39;axle.chassis.position&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="caching-a-property-value">
+</section>
+<section id="caching-a-property-value">
 <span id="index-31"></span><span id="id25"></span><h3>Caching a Property Value<a class="headerlink" href="#caching-a-property-value" title="Permalink to this headline">¶</a></h3>
 <p>In some cases, the cost of computing the value of a property trait attribute may
 be very high. In such cases, it is a good idea to cache the most recently
@@ -1104,14 +1108,14 @@ preceding the property’s getter method.</p>
 references. As a result, it can take values that specify attributes on
 referenced objects, multiple attributes, or attributes that are selected based
 on their metadata attributes.</p>
-</div>
-</div>
-<div class="section" id="persistence">
+</section>
+</section>
+<section id="persistence">
 <span id="index-34"></span><span id="id26"></span><h2>Persistence<a class="headerlink" href="#persistence" title="Permalink to this headline">¶</a></h2>
 <p>In version 3.0, the Traits package provides __getstate__() and __setstate__()
 methods on HasTraits, to implement traits-aware policies for serialization and
 deserialization (i.e., pickling and unpickling).</p>
-<div class="section" id="pickling-hastraits-objects">
+<section id="pickling-hastraits-objects">
 <span id="index-35"></span><span id="id27"></span><h3>Pickling HasTraits Objects<a class="headerlink" href="#pickling-hastraits-objects" title="Permalink to this headline">¶</a></h3>
 <p>Often, you may wish to control for a HasTraits subclass which parts of an
 instance’s state are saved, and which are discarded. A typical approach is to
@@ -1146,8 +1150,8 @@ handles typically cannot be pickled and restored, the file handle should not be
 saved as part of the object’s persistent state. Normally, the file handle would
 be re-opened by application code after the object has been restored from its
 persisted state.</p>
-</div>
-<div class="section" id="predefined-transient-traits">
+</section>
+<section id="predefined-transient-traits">
 <span id="index-38"></span><span id="id28"></span><h3>Predefined Transient Traits<a class="headerlink" href="#predefined-transient-traits" title="Permalink to this headline">¶</a></h3>
 <p>A number of the predefined traits in the Traits package are defined with
 <strong>transient</strong> set to True, so you do not need to explicitly mark them. The
@@ -1163,8 +1167,8 @@ Delegate traits with a local value are non-transient, i.e., they are
 serialized. (See <a class="reference internal" href="deferring.html#delegatesto"><span class="std std-ref">DelegatesTo</span></a>) You can mark a Delegate trait as
 transient if you do not want its value to ever be serialized.</p></li>
 </ul>
-</div>
-<div class="section" id="overriding-getstate">
+</section>
+<section id="overriding-getstate">
 <span id="index-39"></span><span id="id29"></span><h3>Overriding __getstate__()<a class="headerlink" href="#overriding-getstate" title="Permalink to this headline">¶</a></h3>
 <p>In general, try to avoid overriding __getstate__() in subclasses of HasTraits.
 Instead, mark traits that should not be pickled with <code class="docutils literal notranslate"><span class="pre">transient</span> <span class="pre">=</span> <span class="pre">True</span></code>
@@ -1181,8 +1185,8 @@ to override __getstate__() to remove items that should not be persisted:</p>
     <span class="k">return</span> <span class="n">state</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="unpickling-hastraits-objects">
+</section>
+<section id="unpickling-hastraits-objects">
 <span id="unpicking-hastraits-objects"></span><span id="index-40"></span><h3>Unpickling HasTraits Objects<a class="headerlink" href="#unpickling-hastraits-objects" title="Permalink to this headline">¶</a></h3>
 <p>The __setstate__() method of HasTraits differs from the default Python behavior
 in one important respect: it explicitly sets the value of each attribute using
@@ -1203,8 +1207,8 @@ the state correctly.  For the same reason, if you’re overriding
 __getstate__(), you should be careful to make the appropriate
 <code class="docutils literal notranslate"><span class="pre">super().__getstate__()</span></code> call.</p>
 </div>
-</div>
-<div class="section" id="overriding-setstate">
+</section>
+<section id="overriding-setstate">
 <span id="index-41"></span><span id="id30"></span><h3>Overriding __setstate__()<a class="headerlink" href="#overriding-setstate" title="Permalink to this headline">¶</a></h3>
 <p>You may wish to override the HasTraits __setstate__() method, for example for
 classes that do not need to receive trait change notifications, and where the
@@ -1218,20 +1222,20 @@ dictionary).</p></li>
 <li><p>Call the HasTraits class’s private _init_trait_listeners() method; this
 method has no parameters and does not return a result.</p></li>
 </ul>
-</div>
-</div>
-<div class="section" id="useful-methods-on-hastraits">
+</section>
+</section>
+<section id="useful-methods-on-hastraits">
 <span id="index-42"></span><span id="id31"></span><h2>Useful Methods on HasTraits<a class="headerlink" href="#useful-methods-on-hastraits" title="Permalink to this headline">¶</a></h2>
 <p>The HasTraits class defines a number of methods, which are available to any
 class derived from it, i.e., any class that uses trait attributes. This section
 provides examples of a sampling of these methods. Refer to the <em>Traits API
 Reference</em> for a complete list of HasTraits methods.</p>
-<div class="section" id="add-trait">
+<section id="add-trait">
 <span id="index-43"></span><span id="id32"></span><h3>add_trait()<a class="headerlink" href="#add-trait" title="Permalink to this headline">¶</a></h3>
 <p>This method adds a trait attribute to an object dynamically, after the object
 has been created. For more information, see <a class="reference internal" href="#per-object-trait-attributes"><span class="std std-ref">Per-Object Trait Attributes</span></a>.</p>
-</div>
-<div class="section" id="clone-traits">
+</section>
+<section id="clone-traits">
 <span id="index-44"></span><span id="id33"></span><h3>clone_traits()<a class="headerlink" href="#clone-traits" title="Permalink to this headline">¶</a></h3>
 <p>This method copies trait attributes from one object to another. It can copy
 specified attributes, all explicitly defined trait attributes, or all explicitly
@@ -1241,8 +1245,8 @@ so that changes are made permanent only when the user commits them. In such a
 case, you might clone an object and its trait attributes; allow the user to
 modify the clone; and then re-clone only the trait attributes back to the
 original object when the user commits changes.</p>
-</div>
-<div class="section" id="trait-set">
+</section>
+<section id="trait-set">
 <span id="index-45"></span><span id="id34"></span><h3>trait_set()<a class="headerlink" href="#trait-set" title="Permalink to this headline">¶</a></h3>
 <p>This method takes a list of keyword-value pairs, and sets the trait attribute
 corresponding to each keyword to the matching value. This shorthand is useful
@@ -1256,8 +1260,8 @@ attribute value needs to be set in a lambda function. For example:</p>
 <span class="n">person</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">27</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="add-class-trait">
+</section>
+<section id="add-class-trait">
 <span id="index-46"></span><span id="id35"></span><h3>add_class_trait()<a class="headerlink" href="#add-class-trait" title="Permalink to this headline">¶</a></h3>
 <p>The add_class_trait() method is a class method, while the preceding HasTraits
 methods are instance methods. This method is very similar to the add_trait()
@@ -1310,9 +1314,9 @@ following code:</p>
 <span class="n">Chicken</span><span class="o">.</span><span class="n">add_class_trait</span><span class="p">(</span><span class="s1">&#39;hatched_from&#39;</span><span class="p">,</span> <span class="n">Egg</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="performance-considerations-of-traits">
+</section>
+</section>
+<section id="performance-considerations-of-traits">
 <span id="index-48"></span><span id="id36"></span><h2>Performance Considerations of Traits<a class="headerlink" href="#performance-considerations-of-traits" title="Permalink to this headline">¶</a></h2>
 <p>Using traits can potentially impose a performance penalty on attribute access
 over and above that of normal Python attributes. For the most part, this
@@ -1364,8 +1368,8 @@ course, this is offset by the convenience and flexibility provided by the
 deferral model. As with any powerful tool, it is best to understand its
 strengths and weaknesses and apply that understanding in determining when use of
 the tool is justified and appropriate.</p>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -1490,12 +1494,12 @@ the tool is justified and appropriate.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Mar 12, 2022.
+      Last updated on Aug 11, 2022.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.

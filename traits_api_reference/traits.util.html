@@ -3,17 +3,19 @@
 <html>
   <head>
     <meta charset="utf-8">
-    
-    <title>traits.util Package &mdash; Traits 6.3 Documentation</title>
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>traits.util Package &mdash; Traits 6.4 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
     <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" >
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.3.2',
+        VERSION:     '6.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -24,12 +26,14 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/clipboard.min.js"></script>
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.png">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.3 Documentation" href="../index.html" >
+    <link rel="top" title="Traits 6.4 Documentation" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
     <link rel="next" title="Traits CHANGELOG" href="../changelog.html" >
     <link rel="prev" title="traits.testing Package" href="traits.testing.html" > 
@@ -49,7 +53,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.3 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 6.4 Documentation</a></li>
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
     </ul>
@@ -85,10 +89,10 @@
         <div class="bodywrapper">
           <div class="body" id="spc-section-body" role="main">
             
-  <div class="section" id="module-traits.util">
+  <section id="module-traits.util">
 <span id="traits-util-package"></span><h1><a class="reference internal" href="#module-traits.util" title="traits.util"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.util</span></code></a> Package<a class="headerlink" href="#module-traits.util" title="Permalink to this headline">¶</a></h1>
 <p>Utility functions, part of the Traits project.</p>
-<div class="section" id="module-traits.util.async_trait_wait">
+<section id="module-traits.util.async_trait_wait">
 <span id="traits-util-async-trait-wait-module"></span><h2><a class="reference internal" href="#module-traits.util.async_trait_wait" title="traits.util.async_trait_wait"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.util.async_trait_wait</span></code></a> Module<a class="headerlink" href="#module-traits.util.async_trait_wait" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt id="traits.util.async_trait_wait.wait_for_condition">
@@ -113,8 +117,8 @@ evaluated one more time <em>after</em> the <code class="docutils literal notrans
 returned.</p>
 </dd></dl>
 
-</div>
-<div class="section" id="module-traits.util.camel_case">
+</section>
+<section id="module-traits.util.camel_case">
 <span id="traits-util-camel-case-module"></span><h2><a class="reference internal" href="#module-traits.util.camel_case" title="traits.util.camel_case"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.util.camel_case</span></code></a> Module<a class="headerlink" href="#module-traits.util.camel_case" title="Permalink to this headline">¶</a></h2>
 <p>Defines utility functions for operating on camel case names.</p>
 <dl class="py class">
@@ -146,8 +150,8 @@ Python variable names.</p>
 </dl>
 </dd></dl>
 
-</div>
-<div class="section" id="module-traits.util.clean_strings">
+</section>
+<section id="module-traits.util.clean_strings">
 <span id="traits-util-clean-strings-module"></span><h2><a class="reference internal" href="#module-traits.util.clean_strings" title="traits.util.clean_strings"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.util.clean_strings</span></code></a> Module<a class="headerlink" href="#module-traits.util.clean_strings" title="Permalink to this headline">¶</a></h2>
 <p>Provides functions that mange strings to avoid characters that would be
 problematic in certain situations.</p>
@@ -157,7 +161,7 @@ problematic in certain situations.</p>
 <dd><p>Make a user-supplied string safe for filename use.</p>
 <p>Returns an ASCII-encodable string based on the input string that’s safe for
 use as a component of a filename or URL. The returned value is a string
-containing only lowercase ASCII letters, digits, and the characters ‘-‘ and
+containing only lowercase ASCII letters, digits, and the characters ‘-’ and
 ‘_’.</p>
 <p>This does not give a faithful representation of the original string:
 different input strings can result in the same output string.</p>
@@ -223,8 +227,8 @@ is provided, then uses the current time.</p>
 <dd><p>Attempt to make a valid Python identifier out of a name.</p>
 </dd></dl>
 
-</div>
-<div class="section" id="module-traits.util.deprecated">
+</section>
+<section id="module-traits.util.deprecated">
 <span id="traits-util-deprecated-module"></span><h2><a class="reference internal" href="#module-traits.util.deprecated" title="traits.util.deprecated"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.util.deprecated</span></code></a> Module<a class="headerlink" href="#module-traits.util.deprecated" title="Permalink to this headline">¶</a></h2>
 <p>A decorator for marking methods/functions as deprecated.</p>
 <dl class="py function">
@@ -233,8 +237,8 @@ is provided, then uses the current time.</p>
 <dd><p>A factory for decorators for marking methods/functions as deprecated.</p>
 </dd></dl>
 
-</div>
-<div class="section" id="module-traits.util.home_directory">
+</section>
+<section id="module-traits.util.home_directory">
 <span id="traits-util-home-directory-module"></span><h2><a class="reference internal" href="#module-traits.util.home_directory" title="traits.util.home_directory"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.util.home_directory</span></code></a> Module<a class="headerlink" href="#module-traits.util.home_directory" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt id="traits.util.home_directory.get_home_directory">
@@ -242,8 +246,8 @@ is provided, then uses the current time.</p>
 <dd><p>Determine the user’s home directory.</p>
 </dd></dl>
 
-</div>
-<div class="section" id="module-traits.util.resource">
+</section>
+<section id="module-traits.util.resource">
 <span id="traits-util-resource-module"></span><h2><a class="reference internal" href="#module-traits.util.resource" title="traits.util.resource"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.util.resource</span></code></a> Module<a class="headerlink" href="#module-traits.util.resource" title="Permalink to this headline">¶</a></h2>
 <p>Utility functions for managing and finding resources (e.g. images, files).</p>
 <p>get_path :           Returns the absolute path of a class or instance</p>
@@ -329,8 +333,8 @@ The return value in always None.</p>
 </div>
 </dd></dl>
 
-</div>
-<div class="section" id="module-traits.util.import_symbol">
+</section>
+<section id="module-traits.util.import_symbol">
 <span id="traits-util-import-symbol-module"></span><h2><a class="reference internal" href="#module-traits.util.import_symbol" title="traits.util.import_symbol"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.util.import_symbol</span></code></a> Module<a class="headerlink" href="#module-traits.util.import_symbol" title="Permalink to this headline">¶</a></h2>
 <p>A function to import symbols.</p>
 <dl class="py function">
@@ -346,8 +350,8 @@ from the module.</p>
 <p>import_symbol(‘tarfile.TarFile’) -&gt; TarFile</p>
 </dd></dl>
 
-</div>
-<div class="section" id="module-traits.util.toposort">
+</section>
+<section id="module-traits.util.toposort">
 <span id="traits-util-toposort-module"></span><h2><a class="reference internal" href="#module-traits.util.toposort" title="traits.util.toposort"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.util.toposort</span></code></a> Module<a class="headerlink" href="#module-traits.util.toposort" title="Permalink to this headline">¶</a></h2>
 <p>A simple topological sort on a dictionary graph.</p>
 <dl class="py exception">
@@ -363,8 +367,8 @@ from the module.</p>
 <dd><p>Returns the nodes in the graph in topological order.</p>
 </dd></dl>
 
-</div>
-<div class="section" id="module-traits.util.trait_documenter">
+</section>
+<section id="module-traits.util.trait_documenter">
 <span id="traits-util-trait-documenter-module"></span><h2><a class="reference internal" href="#module-traits.util.trait_documenter" title="traits.util.trait_documenter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.util.trait_documenter</span></code></a> Module<a class="headerlink" href="#module-traits.util.trait_documenter" title="Permalink to this headline">¶</a></h2>
 <p>A Trait Documenter
 (Subclassed from the autodoc ClassLevelDocumenter)</p>
@@ -469,8 +473,8 @@ the returned string will contain <code class="docutils literal notranslate"><spa
 <dd><p>Add the TraitDocumenter in the current sphinx autodoc instance.</p>
 </dd></dl>
 
-</div>
-<div class="section" id="module-traits.util.event_tracer">
+</section>
+<section id="module-traits.util.event_tracer">
 <span id="traits-util-event-tracer-module"></span><h2><a class="reference internal" href="#module-traits.util.event_tracer" title="traits.util.event_tracer"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.util.event_tracer</span></code></a> Module<a class="headerlink" href="#module-traits.util.event_tracer" title="Permalink to this headline">¶</a></h2>
 <p>Record trait change events in single and multi-threaded environments.</p>
 <dl class="py class">
@@ -745,8 +749,8 @@ directory ‘C:devtrace’.  The files are named after the thread being
 traced.</p>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -811,12 +815,12 @@ traced.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Mar 12, 2022.
+      Last updated on Aug 11, 2022.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.

@@ -3,17 +3,19 @@
 <html>
   <head>
     <meta charset="utf-8">
-    
-    <title>traits.etsconfig Package &mdash; Traits 6.3 Documentation</title>
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>traits.etsconfig Package &mdash; Traits 6.4 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
     <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" >
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.3.2',
+        VERSION:     '6.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -24,12 +26,14 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/clipboard.min.js"></script>
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.png">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.3 Documentation" href="../index.html" >
+    <link rel="top" title="Traits 6.4 Documentation" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
     <link rel="next" title="traits.observation Package" href="traits.observation.html" >
     <link rel="prev" title="traits.adaptation Package" href="traits.adaptation.html" > 
@@ -49,7 +53,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.3 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 6.4 Documentation</a></li>
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
     </ul>
@@ -85,23 +89,173 @@
         <div class="bodywrapper">
           <div class="body" id="spc-section-body" role="main">
             
-  <div class="section" id="module-traits.etsconfig">
+  <section id="module-traits.etsconfig">
 <span id="traits-etsconfig-package"></span><h1><a class="reference internal" href="#module-traits.etsconfig" title="traits.etsconfig"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.etsconfig</span></code></a> Package<a class="headerlink" href="#module-traits.etsconfig" title="Permalink to this headline">¶</a></h1>
 <p>Supports sharing settings across projects or programs on the same system.
 Part of the EnthoughtBase project.</p>
-<div class="section" id="module-traits.etsconfig.etsconfig">
+<section id="module-traits.etsconfig.etsconfig">
 <span id="traits-etsconfig-etsconfig-module"></span><h2><a class="reference internal" href="#module-traits.etsconfig.etsconfig" title="traits.etsconfig.etsconfig"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.etsconfig.etsconfig</span></code></a> Module<a class="headerlink" href="#module-traits.etsconfig.etsconfig" title="Permalink to this headline">¶</a></h2>
 <p>Enthought Tool Suite configuration information.</p>
-<dl class="py data">
-<dt id="traits.etsconfig.etsconfig.ETSConfig">
-<code class="sig-prename descclassname"><span class="pre">traits.etsconfig.etsconfig.</span></code><code class="sig-name descname"><span class="pre">ETSConfig</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;traits.etsconfig.etsconfig.ETSConfig</span> <span class="pre">object&gt;</span></em><a class="reference internal" href="../_modules/traits/etsconfig/etsconfig.html#ETSConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.etsconfig.etsconfig.ETSConfig" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt id="traits.etsconfig.etsconfig.ETSConfigType">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">traits.etsconfig.etsconfig.</span></code><code class="sig-name descname"><span class="pre">ETSConfigType</span></code><a class="reference internal" href="../_modules/traits/etsconfig/etsconfig.html#ETSConfigType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.etsconfig.etsconfig.ETSConfigType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enthought Tool Suite configuration information.</p>
-<p>This class should not use ANY other package in the tool suite so that it
-will always work no matter which other packages are present.</p>
+<p>Instances of this class record state useful for ETS-using applications,
+including the current GUI toolkit in use, and data and home directory
+setttings.</p>
+<p>Users typically shouldn’t make use of this class directly. Instead, use the
+module-level <a class="reference internal" href="#traits.etsconfig.etsconfig.ETSConfig" title="traits.etsconfig.etsconfig.ETSConfig"><code class="xref py py-data docutils literal notranslate"><span class="pre">ETSConfig</span></code></a> instance of this class, which is shared
+between the various ETS packages.</p>
+<dl class="py method">
+<dt id="traits.etsconfig.etsconfig.ETSConfigType.get_application_data">
+<code class="sig-name descname"><span class="pre">get_application_data</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">create</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/etsconfig/etsconfig.html#ETSConfigType.get_application_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.etsconfig.etsconfig.ETSConfigType.get_application_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the application data directory path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>create</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Create the corresponding directory or not.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>This is a directory that applications and packages can safely
+write non-user accessible data to i.e. configuration
+information, preferences etc.</p></li>
+<li><p>Do not put anything in here that the user might want to
+navigate to e.g. projects, user data files etc.</p></li>
+<li><p>The actual location differs between operating systems.</p></li>
+</ul>
 </dd></dl>
 
+<dl class="py method">
+<dt id="traits.etsconfig.etsconfig.ETSConfigType.application_data">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">application_data</span></code><a class="headerlink" href="#traits.etsconfig.etsconfig.ETSConfigType.application_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Property getter, see get_application_data’s docstring.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="traits.etsconfig.etsconfig.ETSConfigType.get_application_home">
+<code class="sig-name descname"><span class="pre">get_application_home</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">create</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/etsconfig/etsconfig.html#ETSConfigType.get_application_home"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.etsconfig.etsconfig.ETSConfigType.get_application_home" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the application home directory path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>create</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Create the corresponding directory or not.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>This is a directory named after the current, running
+application that imported this module that applications and
+packages can safely write non-user accessible data to i.e.
+configuration information, preferences etc.  It is a
+sub-directory of self.application_data, named after the
+directory that contains the “main” python script that started
+the process.  For example, if application foo is started with
+a script named “run.py” in a directory named “foo”, then the
+application home would be: &lt;ETSConfig.application_data&gt;/foo,
+regardless of if it was launched with “python
+&lt;path_to_foo&gt;/run.py” or “cd &lt;path_to_foo&gt;; python run.py”</p></li>
+<li><p>This is useful for library modules used in apps that need to
+store state, preferences, etc. for the specific app only, and
+not for all apps which use that library module.  If the
+library module uses ETSConfig.application_home, they can
+store prefs for the app all in one place and do not need to
+know the details of where each app might reside.</p></li>
+<li><p>Do not put anything in here that the user might want to
+navigate to e.g. projects, user home files etc.</p></li>
+<li><p>The actual location differs between operating systems.</p></li>
+</ul>
 </div>
-</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="traits.etsconfig.etsconfig.ETSConfigType.application_home">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">application_home</span></code><a class="headerlink" href="#traits.etsconfig.etsconfig.ETSConfigType.application_home" title="Permalink to this definition">¶</a></dt>
+<dd><p>Property getter, see get_application_home’s docstring.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="traits.etsconfig.etsconfig.ETSConfigType.company">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">company</span></code><a class="headerlink" href="#traits.etsconfig.etsconfig.ETSConfigType.company" title="Permalink to this definition">¶</a></dt>
+<dd><p>Property getter.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="traits.etsconfig.etsconfig.ETSConfigType.provisional_toolkit">
+<code class="sig-name descname"><span class="pre">provisional_toolkit</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">toolkit</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/etsconfig/etsconfig.html#ETSConfigType.provisional_toolkit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.etsconfig.etsconfig.ETSConfigType.provisional_toolkit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform an operation with toolkit provisionally set</p>
+<p>This sets the toolkit attribute of the ETSConfig object to the
+provided value. If the operation fails with an exception, the toolkit
+is reset to nothing.</p>
+<p>This method should only be called if the toolkit is not currently set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>toolkit</strong> (<em>string</em>) – The name of the toolkit to provisionally use.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ETSToolkitError</strong> – If the toolkit attribute is already set, then an ETSToolkitError
+    will be raised when entering the context manager.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="traits.etsconfig.etsconfig.ETSConfigType.toolkit">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">toolkit</span></code><a class="headerlink" href="#traits.etsconfig.etsconfig.ETSConfigType.toolkit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Property getter for the GUI toolkit.  The value returned is, in order
+of preference: the value set by the application; the value specified by
+the ‘ETS_TOOLKIT’ environment variable; otherwise the empty string.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="traits.etsconfig.etsconfig.ETSConfigType.enable_toolkit">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">enable_toolkit</span></code><a class="headerlink" href="#traits.etsconfig.etsconfig.ETSConfigType.enable_toolkit" title="Permalink to this definition">¶</a></dt>
+<dd><p>This property is no longer used.</p>
+<p>Property getter for the Enable backend.  The value returned is, in
+order of preference: the value set by the application; the value
+specified by the ‘ENABLE_TOOLKIT’ environment variable; otherwise the
+empty string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>Deprecated</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="traits.etsconfig.etsconfig.ETSConfigType.kiva_backend">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">kiva_backend</span></code><a class="headerlink" href="#traits.etsconfig.etsconfig.ETSConfigType.kiva_backend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Property getter for the Kiva backend. The value returned is dependent
+on the value of the toolkit property. If toolkit specifies a kiva
+backend using the extended syntax: &lt;enable toolkit&gt;[.&lt;kiva backend&gt;]
+then the value of the property will be whatever was specified.
+Otherwise the value will be a reasonable default for the given enable
+backend.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="traits.etsconfig.etsconfig.ETSConfigType.user_data">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">user_data</span></code><a class="headerlink" href="#traits.etsconfig.etsconfig.ETSConfigType.user_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Property getter.</p>
+<p>This is a directory that users can safely write user accessible data
+to i.e. user-defined functions, edited functions, etc.</p>
+<p>The actual location differs between operating systems.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt id="traits.etsconfig.etsconfig.ETSConfig">
+<code class="sig-prename descclassname"><span class="pre">traits.etsconfig.etsconfig.</span></code><code class="sig-name descname"><span class="pre">ETSConfig</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;traits.etsconfig.etsconfig.ETSConfigType</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#traits.etsconfig.etsconfig.ETSConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>This single instance of <a class="reference internal" href="#traits.etsconfig.etsconfig.ETSConfigType" title="traits.etsconfig.etsconfig.ETSConfigType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ETSConfigType</span></code></a> is shared between the
+various ETS packages, and used to store global state relevant to
+ETS-using applications.</p>
+<p>See <a class="reference external" href="https://github.com/enthought/traits/discussions/1666">https://github.com/enthought/traits/discussions/1666</a> for a discussion
+of writing tests that depend on <a class="reference internal" href="#traits.etsconfig.etsconfig.ETSConfig" title="traits.etsconfig.etsconfig.ETSConfig"><code class="xref py py-data docutils literal notranslate"><span class="pre">ETSConfig</span></code></a> state.</p>
+</dd></dl>
+
+</section>
+</section>
 
 
           </div>
@@ -157,12 +311,12 @@ will always work no matter which other packages are present.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Mar 12, 2022.
+      Last updated on Aug 11, 2022.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.

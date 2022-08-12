@@ -3,17 +3,19 @@
 <html>
   <head>
     <meta charset="utf-8">
-    
-    <title>Custom Traits &mdash; Traits 6.3 Documentation</title>
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Custom Traits &mdash; Traits 6.4 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
     <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" >
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.3.2',
+        VERSION:     '6.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -24,13 +26,15 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/clipboard.min.js"></script>
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.png">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.3 Documentation" href="../index.html" >
-    <link rel="up" title="Traits 6.3 User Manual" href="index.html" >
+    <link rel="top" title="Traits 6.4 Documentation" href="../index.html" >
+    <link rel="up" title="Traits 6.4 User Manual" href="index.html" >
     <link rel="next" title="Advanced Topics" href="advanced.html" >
     <link rel="prev" title="Deferring Trait Definitions" href="deferring.html" > 
   </head>
@@ -49,9 +53,9 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.3 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 6.4 Documentation</a></li>
 	
-          <li class="active"><a href="index.html" accesskey="U">Traits 6.3 User Manual</a></li> 
+          <li class="active"><a href="index.html" accesskey="U">Traits 6.4 User Manual</a></li> 
     </ul>
               
               
@@ -85,7 +89,7 @@
         <div class="bodywrapper">
           <div class="body" id="spc-section-body" role="main">
             
-  <div class="section" id="custom-traits">
+  <section id="custom-traits">
 <span id="index-0"></span><span id="id1"></span><h1>Custom Traits<a class="headerlink" href="#custom-traits" title="Permalink to this headline">¶</a></h1>
 <p>The predefined traits such as those described in <a class="reference internal" href="defining.html#predefined-traits"><span class="std std-ref">Predefined Traits</span></a> are
 handy shortcuts for commonly used types. However, the Traits package also
@@ -95,7 +99,7 @@ provides facilities for defining complex or customized traits:</p>
 <li><p>The Trait() factory function</p></li>
 <li><p>Predefined or custom trait handlers</p></li>
 </ul>
-<div class="section" id="trait-subclassing">
+<section id="trait-subclassing">
 <span id="index-1"></span><span id="id2"></span><h2>Trait Subclassing<a class="headerlink" href="#trait-subclassing" title="Permalink to this headline">¶</a></h2>
 <p>Starting with Traits version 3.0, most predefined traits are defined as
 subclasses of traits.trait_handlers.TraitType. As a result, you can
@@ -144,7 +148,7 @@ here, since for many trait types <code class="docutils literal notranslate"><spa
 subclassing <a class="reference internal" href="../traits_api_reference/trait_type.html#traits.trait_type.TraitType" title="traits.trait_type.TraitType"><code class="xref py py-class docutils literal notranslate"><span class="pre">TraitType</span></code></a> and overriding or extending its <code class="docutils literal notranslate"><span class="pre">__init__</span></code>
 method, it’s recommended to re-use the singleton <a class="reference internal" href="../traits_api_reference/trait_type.html#traits.trait_type.NoDefaultSpecified" title="traits.trait_type.NoDefaultSpecified"><code class="xref py py-data docutils literal notranslate"><span class="pre">NoDefaultSpecified</span></code></a>
 if you need a way to indicate that no default value was specified.</p>
-<div class="section" id="defining-a-trait-type">
+<section id="defining-a-trait-type">
 <span id="id4"></span><h3>Defining a Trait Type<a class="headerlink" href="#defining-a-trait-type" title="Permalink to this headline">¶</a></h3>
 <p>The members that are specific to a trait type subclass are:</p>
 <ul class="simple" id="index-3">
@@ -182,8 +186,8 @@ TraitError, or calls the error() method to raise a TraitError on its behalf.</p>
 value. To use a constant, set the class-level <strong>default_value attribute</strong>. To
 compute the default value, override the TraitType class’s get_default_value()
 method.</p>
-</div>
-<div class="section" id="defining-a-trait-property">
+</section>
+<section id="defining-a-trait-property">
 <span id="index-6"></span><span id="id5"></span><h3>Defining a Trait Property<a class="headerlink" href="#defining-a-trait-property" title="Permalink to this headline">¶</a></h3>
 <p>A trait property uses get() and set() methods to interact with the value of the
 trait. If a TraitType subclass contains a get() method or a set() method, any
@@ -235,8 +239,8 @@ self.get_value(object, name) in order to behave correctly.</p>
         <span class="k">return</span> <span class="n">val</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="other-traittype-members">
+</section>
+<section id="other-traittype-members">
 <span id="index-7"></span><span id="id6"></span><h3>Other TraitType Members<a class="headerlink" href="#other-traittype-members" title="Permalink to this headline">¶</a></h3>
 <p>The following members can be specified for either a trait type or a trait
 property:</p>
@@ -259,10 +263,16 @@ can override the create_editor() method. This method has no parameters, and
 returns the default trait editor to use for any instances of the type.</p>
 <p>For complete details on the members that can be overridden, refer to the <em>Traits
 API Reference</em> sections on the TraitType and BaseTraitHandler classes.</p>
-</div>
-</div>
-<div class="section" id="the-trait-factory-function">
+</section>
+</section>
+<section id="the-trait-factory-function">
 <span id="index-9"></span><span id="id7"></span><h2>The Trait() Factory Function<a class="headerlink" href="#the-trait-factory-function" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <a class="reference internal" href="../traits_api_reference/traits.html#traits.traits.Trait" title="traits.traits.Trait"><code class="xref py py-func docutils literal notranslate"><span class="pre">Trait()</span></code></a> function is not recommended for use in new code, and may
+eventually be deprecated and removed. Consider using <a class="reference internal" href="../traits_api_reference/trait_types.html#traits.trait_types.Union" title="traits.trait_types.Union"><code class="xref py py-class docutils literal notranslate"><span class="pre">Union</span></code></a>
+instead.</p>
+</div>
 <p>The Trait() function is a generic factory for trait definitions. It has many
 forms, many of which are redundant with the predefined shortcut traits. For
 example, the simplest form Trait(default_value), is equivalent to the functions
@@ -298,7 +308,7 @@ any of the following values:</p>
 <li><p>An integer in the range of 1 to 6</p></li>
 <li><p>One of the following strings: ‘one’, ‘two’, ‘three’, ‘four’, ‘five’, ‘six’</p></li>
 </ul>
-<div class="section" id="trait-parameters">
+<section id="trait-parameters">
 <span id="index-12"></span><span id="id8"></span><h3>Trait () Parameters<a class="headerlink" href="#trait-parameters" title="Permalink to this headline">¶</a></h3>
 <p>The items listed as possible arguments to the Trait() function merit some
 further explanation.</p>
@@ -316,7 +326,7 @@ and override the validate() method.</p></li>
 <li><p><em>trait</em>: Another trait object can be passed as a parameter; any value that is
 valid for the specified trait is also valid for the trait referencing it.</p></li>
 </ul>
-<div class="section" id="type">
+<section id="type">
 <span id="index-17"></span><span id="id9"></span><h4>Type<a class="headerlink" href="#type" title="Permalink to this headline">¶</a></h4>
 <p>A <em>type</em> parameter to the Trait() function can be any of the following standard
 Python types:</p>
@@ -336,8 +346,8 @@ Python types:</p>
 </ul>
 <p>Specifying one of these types means that the trait value must be of the
 corresponding Python type.</p>
-</div>
-<div class="section" id="constant-value">
+</section>
+<section id="constant-value">
 <span id="index-18"></span><span id="id10"></span><h4>Constant Value<a class="headerlink" href="#constant-value" title="Permalink to this headline">¶</a></h4>
 <p>A <em>constant_value</em> parameter to the Trait() function can be any constant
 belonging to one of the following standard Python types:</p>
@@ -352,9 +362,9 @@ belonging to one of the following standard Python types:</p>
 <p>Specifying a constant means that the trait can have the constant as a valid
 value. Passing a list of constants to the Trait() function is equivalent to
 using the Enum predefined trait.</p>
-</div>
-</div>
-<div class="section" id="mapped-traits">
+</section>
+</section>
+<section id="mapped-traits">
 <span id="index-19"></span><span id="id11"></span><h3>Mapped Traits<a class="headerlink" href="#mapped-traits" title="Permalink to this headline">¶</a></h3>
 <p>If the Trait() function is called with parameters that include one or more
 dictionaries, then the resulting trait is called a “mapped” trait. In practice,
@@ -431,9 +441,9 @@ underscore in the name) is not allowed, and raises a TraitError.</p></li>
 Any trait that has a shadow value is a mapped trait. For example, for the
 Expression trait, the assigned value must be a valid Python expression, and the
 shadow value is the compiled form of the expression.</p>
-</div>
-</div>
-<div class="section" id="trait-handlers">
+</section>
+</section>
+<section id="trait-handlers">
 <span id="index-22"></span><span id="id12"></span><h2>Trait Handlers<a class="headerlink" href="#trait-handlers" title="Permalink to this headline">¶</a></h2>
 <p>In some cases, you may want to define a customized trait that is unrelated to
 any predefined trait behavior, or that is related to a predefined trait that
@@ -453,8 +463,12 @@ These sections also demonstrate how to define a trait using a trait handler and
 the Trait() factory function. For a complete list and descriptions of predefined
 TraitHandler subclasses, refer to the <em>Traits API Reference</em>, in the section on
 the traits.trait_handlers module.</p>
-<div class="section" id="traitprefixlist">
+<section id="traitprefixlist">
 <span id="index-24"></span><span id="id13"></span><h3>TraitPrefixList<a class="headerlink" href="#traitprefixlist" title="Permalink to this headline">¶</a></h3>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 6.1: </span><a class="reference internal" href="../traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitPrefixList" title="traits.trait_handlers.TraitPrefixList"><code class="xref py py-class docutils literal notranslate"><span class="pre">TraitPrefixList</span></code></a> is scheduled for removal
+in Traits 7.0. Use the <a class="reference internal" href="../traits_api_reference/trait_types.html#traits.trait_types.PrefixList" title="traits.trait_types.PrefixList"><code class="xref py py-class docutils literal notranslate"><span class="pre">PrefixList</span></code></a> trait type instead.</p>
+</div>
 <p>The TraitPrefixList handler accepts not only a specified set of strings as
 values, but also any unique prefix substring of those values. The value assigned
 to the trait attribute is the full string that the substring matches.</p>
@@ -483,9 +497,13 @@ traits.trait_errors.TraitError: The &#39;heads&#39; trait of an Alien instance
  &lt;type &#39;str&#39;&gt; was specified.
 </pre></div>
 </div>
-</div>
-<div class="section" id="traitprefixmap">
+</section>
+<section id="traitprefixmap">
 <span id="index-26"></span><span id="id14"></span><h3>TraitPrefixMap<a class="headerlink" href="#traitprefixmap" title="Permalink to this headline">¶</a></h3>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 6.1: </span><a class="reference internal" href="../traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitPrefixMap" title="traits.trait_handlers.TraitPrefixMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">TraitPrefixMap</span></code></a> is scheduled for removal
+in Traits 7.0. Use the <a class="reference internal" href="../traits_api_reference/trait_types.html#traits.trait_types.PrefixMap" title="traits.trait_types.PrefixMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">PrefixMap</span></code></a> trait type instead.</p>
+</div>
 <p>The TraitPrefixMap handler combines the TraitPrefixList with mapped traits. Its
 constructor takes a parameter that is a dictionary whose keys are strings. A
 string is a valid value if it is a unique prefix for a key in the dictionary.
@@ -502,9 +520,9 @@ any prefix of ‘true’, ‘yes’, ‘false’, or ‘no’, and maps them to 
                               <span class="s1">&#39;no&#39;</span><span class="p">:</span>   <span class="mi">0</span> <span class="p">}</span> <span class="p">)</span> <span class="p">)</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="custom-trait-handlers">
+</section>
+</section>
+<section id="custom-trait-handlers">
 <span id="index-28"></span><span id="id15"></span><h2>Custom Trait Handlers<a class="headerlink" href="#custom-trait-handlers" title="Permalink to this headline">¶</a></h2>
 <p>If you need a trait that cannot be defined using a predefined trait handler
 class, you can create your own subclass of TraitHandler. The constructor
@@ -513,7 +531,7 @@ additional information, if any, is needed to completely specify the trait. The
 constructor does not need to call the TraitHandler base class’s constructor.</p>
 <p>The only method that a custom trait handler must implement is validate(). Refer
 to the <em>Traits API Reference</em> for details about this function.</p>
-<div class="section" id="example-custom-trait-handler">
+<section id="example-custom-trait-handler">
 <span id="index-29"></span><span id="id16"></span><h3>Example Custom Trait Handler<a class="headerlink" href="#example-custom-trait-handler" title="Permalink to this headline">¶</a></h3>
 <p>The following example defines the OddInt trait (also implemented as a trait type
 in <a class="reference internal" href="#defining-a-trait-type"><span class="std std-ref">Defining a Trait Type</span></a>) using a TraitHandler subclass.</p>
@@ -567,9 +585,9 @@ the exception generated by the invalid assignment.</p>
 BaseType version that does not have the <strong>fast_validate</strong> attribute.</p>
 </dd>
 </dl>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
           </div>
@@ -648,12 +666,12 @@ BaseType version that does not have the <strong>fast_validate</strong> attribute
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Mar 12, 2022.
+      Last updated on Aug 11, 2022.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.

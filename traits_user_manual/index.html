@@ -3,17 +3,19 @@
 <html>
   <head>
     <meta charset="utf-8">
-    
-    <title>Traits 6.3 User Manual &mdash; Traits 6.3 Documentation</title>
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Traits 6.4 User Manual &mdash; Traits 6.4 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
     <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" >
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.3.2',
+        VERSION:     '6.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -24,12 +26,14 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/clipboard.min.js"></script>
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.png">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.3 Documentation" href="../index.html" >
+    <link rel="top" title="Traits 6.4 Documentation" href="../index.html" >
     <link rel="next" title="Introduction" href="intro.html" >
     <link rel="prev" title="Introduction" href="../traits_tutorial/introduction.html" > 
   </head>
@@ -48,7 +52,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.3 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 6.4 Documentation</a></li>
 	 
     </ul>
               
@@ -83,20 +87,20 @@
         <div class="bodywrapper">
           <div class="body" id="spc-section-body" role="main">
             
-  <div class="section" id="traits-version-user-manual">
-<h1>Traits 6.3 User Manual<a class="headerlink" href="#traits-version-user-manual" title="Permalink to this headline">¶</a></h1>
+  <section id="traits-version-user-manual">
+<h1>Traits 6.4 User Manual<a class="headerlink" href="#traits-version-user-manual" title="Permalink to this headline">¶</a></h1>
 <dl class="field-list">
 <dt class="field-odd">Authors</dt>
 <dd class="field-odd"><p>David C. Morrill, Janet M. Swisher, and Enthought developers</p>
 </dd>
 <dt class="field-even">Copyright</dt>
 <dd class="field-even"><div class="line-block">
-<div class="line">(C) Copyright 2005-2021 Enthought, Inc., Austin, TX</div>
+<div class="line">(C) Copyright 2005-2022 Enthought, Inc., Austin, TX</div>
 <div class="line">All rights reserved.</div>
 </div>
 </dd>
 </dl>
-<div class="section" id="contents">
+<section id="contents">
 <h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
@@ -269,15 +273,15 @@
 </li>
 </ul>
 </div>
-</div>
-<div class="section" id="indices-and-tables">
+</section>
+<section id="indices-and-tables">
 <h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p><a class="reference internal" href="../genindex.html"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="../search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
-</div>
-<div class="section" id="license">
+</section>
+<section id="license">
 <h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
 <p>Redistribution and use of this document in source and derived forms, with or
 without modification, are permitted provided that the following conditions are
@@ -312,8 +316,8 @@ owners.</p>
 <div class="line"><a class="reference external" href="http://www.enthought.com">http://www.enthought.com</a></div>
 <div class="line"><a class="reference external" href="mailto:info&#37;&#52;&#48;enthought&#46;com">info<span>&#64;</span>enthought<span>&#46;</span>com</a></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -326,7 +330,7 @@ owners.</p>
             </a></p>
   <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Traits 6.3 User Manual</a><ul>
+<li><a class="reference internal" href="#">Traits 6.4 User Manual</a><ul>
 <li><a class="reference internal" href="#contents">Contents</a></li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 <li><a class="reference internal" href="#license">License</a></li>
@@ -371,12 +375,12 @@ owners.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Mar 12, 2022.
+      Last updated on Aug 11, 2022.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.

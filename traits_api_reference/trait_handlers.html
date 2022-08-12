@@ -3,17 +3,19 @@
 <html>
   <head>
     <meta charset="utf-8">
-    
-    <title>traits.trait_handlers Module &mdash; Traits 6.3 Documentation</title>
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>traits.trait_handlers Module &mdash; Traits 6.4 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
     <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" >
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.3.2',
+        VERSION:     '6.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -24,12 +26,14 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/clipboard.min.js"></script>
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.png">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.3 Documentation" href="../index.html" >
+    <link rel="top" title="Traits 6.4 Documentation" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
     <link rel="next" title="traits.trait_list_object Module" href="trait_list_object.html" >
     <link rel="prev" title="traits.trait_handler Module" href="trait_handler.html" > 
@@ -49,7 +53,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.3 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 6.4 Documentation</a></li>
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
     </ul>
@@ -85,14 +89,14 @@
         <div class="bodywrapper">
           <div class="body" id="spc-section-body" role="main">
             
-  <div class="section" id="module-traits.trait_handlers">
+  <section id="module-traits.trait_handlers">
 <span id="traits-trait-handlers-module"></span><h1><a class="reference internal" href="#module-traits.trait_handlers" title="traits.trait_handlers"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_handlers</span></code></a> Module<a class="headerlink" href="#module-traits.trait_handlers" title="Permalink to this headline">¶</a></h1>
 <p>Defines a standard set of TraitHandler subclasses.</p>
 <p>A trait handler mediates the assignment of values to object traits. It
 verifies (via its validate() method) that a specified value is consistent
 with the object trait, and generates a TraitError exception if it is not
 consistent.</p>
-<div class="section" id="classes">
+<section id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="traits.trait_handlers.TraitCoerceType">
@@ -910,8 +914,8 @@ User Guide</em>.</p>
 
 </dd></dl>
 
-</div>
-<div class="section" id="private-functions">
+</section>
+<section id="private-functions">
 <h2>Private Functions<a class="headerlink" href="#private-functions" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt id="traits.trait_handlers._undefined_get">
@@ -923,14 +927,14 @@ User Guide</em>.</p>
 <code class="sig-prename descclassname"><span class="pre">traits.trait_handlers.</span></code><code class="sig-name descname"><span class="pre">_undefined_set</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#_undefined_set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_handlers._undefined_set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</div>
-<div class="section" id="deprecated-handlers">
+</section>
+<section id="deprecated-handlers">
 <h2>Deprecated Handlers<a class="headerlink" href="#deprecated-handlers" title="Permalink to this headline">¶</a></h2>
+<p>The following <a class="reference internal" href="trait_handler.html#traits.trait_handler.TraitHandler" title="traits.trait_handler.TraitHandler"><code class="xref py py-class docutils literal notranslate"><span class="pre">TraitHandler</span></code></a> classes and instances are deprecated,
+and may be removed in a future version of Traits.</p>
 <div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 6.0.0.</span></p>
 </div>
-<p>The following <a class="reference internal" href="trait_handler.html#traits.trait_handler.TraitHandler" title="traits.trait_handler.TraitHandler"><code class="xref py py-class docutils literal notranslate"><span class="pre">TraitHandler</span></code></a> classes and instances are deprecated,
-and may be removed in a future version of Traits.</p>
 <dl class="py class">
 <dt id="traits.trait_handlers.TraitDict">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">traits.trait_handlers.</span></code><code class="sig-name descname"><span class="pre">TraitDict</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key_trait</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_trait</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_items</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitDict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_handlers.TraitDict" title="Permalink to this definition">¶</a></dt>
@@ -1367,6 +1371,10 @@ User Guide</em>.</p>
 <dd><p>Ensures that a value assigned to a trait attribute is a member of a
 list of specified string values, or is a unique prefix of one of those
 values.</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 6.1: </span><a class="reference internal" href="#traits.trait_handlers.TraitPrefixList" title="traits.trait_handlers.TraitPrefixList"><code class="xref py py-class docutils literal notranslate"><span class="pre">TraitPrefixList</span></code></a> is scheduled for removal in Traits
+7.0. Use the <a class="reference internal" href="trait_types.html#traits.trait_types.PrefixList" title="traits.trait_types.PrefixList"><code class="xref py py-class docutils literal notranslate"><span class="pre">PrefixList</span></code></a> trait type instead.</p>
+</div>
 <p>TraitPrefixList is a variation on TraitEnum. The values that can be
 assigned to a trait attribute defined using a TraitPrefixList handler is
 the set of all strings supplied to the TraitPrefixList constructor, as well
@@ -1483,6 +1491,10 @@ User Guide</em>.</p>
 <dt id="traits.trait_handlers.TraitPrefixMap">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">traits.trait_handlers.</span></code><code class="sig-name descname"><span class="pre">TraitPrefixMap</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitPrefixMap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_handlers.TraitPrefixMap" title="Permalink to this definition">¶</a></dt>
 <dd><p>A cross between the TraitPrefixList and TraitMap classes.</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 6.1: </span><a class="reference internal" href="#traits.trait_handlers.TraitPrefixMap" title="traits.trait_handlers.TraitPrefixMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">TraitPrefixMap</span></code></a> is scheduled for removal
+in Traits 7.0. Use the <a class="reference internal" href="trait_types.html#traits.trait_types.PrefixMap" title="traits.trait_types.PrefixMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">PrefixMap</span></code></a> trait type instead.</p>
+</div>
 <p>Like TraitMap, TraitPrefixMap is created using a dictionary, but in this
 case, the keys of the dictionary must be strings. Like TraitPrefixList,
 a string <em>v</em> is a valid value for the trait attribute if it is a prefix of
@@ -1567,8 +1579,8 @@ default method returns the value of the ‘info_text’ attribute.</p>
 
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -1626,12 +1638,12 @@ default method returns the value of the ‘info_text’ attribute.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Mar 12, 2022.
+      Last updated on Aug 11, 2022.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.

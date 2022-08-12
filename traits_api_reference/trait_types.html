@@ -3,17 +3,19 @@
 <html>
   <head>
     <meta charset="utf-8">
-    
-    <title>traits.trait_types Module &mdash; Traits 6.3 Documentation</title>
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>traits.trait_types Module &mdash; Traits 6.4 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
     <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" >
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.3.2',
+        VERSION:     '6.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -24,12 +26,14 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/clipboard.min.js"></script>
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.png">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.3 Documentation" href="../index.html" >
+    <link rel="top" title="Traits 6.4 Documentation" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
     <link rel="next" title="traits.trait_notifiers Module" href="trait_notifiers.html" >
     <link rel="prev" title="traits.trait_type Module" href="trait_type.html" > 
@@ -49,7 +53,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.3 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 6.4 Documentation</a></li>
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
     </ul>
@@ -85,10 +89,10 @@
         <div class="bodywrapper">
           <div class="body" id="spc-section-body" role="main">
             
-  <div class="section" id="module-traits.trait_types">
+  <section id="module-traits.trait_types">
 <span id="traits-trait-types-module"></span><h1><a class="reference internal" href="#module-traits.trait_types" title="traits.trait_types"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_types</span></code></a> Module<a class="headerlink" href="#module-traits.trait_types" title="Permalink to this headline">¶</a></h1>
 <p>Core Trait definitions.</p>
-<div class="section" id="traits">
+<section id="traits">
 <h2>Traits<a class="headerlink" href="#traits" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="traits.trait_types.Any">
@@ -314,7 +318,7 @@ corresponding complex value.</p>
 corresponding complex value.</p>
 <dl class="py attribute">
 <dt id="traits.trait_types.Complex.fast_validate">
-<code class="sig-name descname"><span class="pre">fast_validate</span></code><em class="property"> <span class="pre">=</span> <span class="pre">(&lt;ValidateTrait.coerce:</span> <span class="pre">11&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'complex'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'numpy.complexfloating'&gt;,</span> <span class="pre">None,</span> <span class="pre">&lt;class</span> <span class="pre">'float'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'numpy.floating'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'int'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'numpy.integer'&gt;)</span></em><a class="headerlink" href="#traits.trait_types.Complex.fast_validate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">fast_validate</span></code><em class="property"> <span class="pre">=</span> <span class="pre">(&lt;ValidateTrait.complex_number:</span> <span class="pre">23&gt;,)</span></em><a class="headerlink" href="#traits.trait_types.Complex.fast_validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>The C-level fast validator to use:</p>
 </dd></dl>
 
@@ -2157,6 +2161,12 @@ element.</p>
 <dd><p>Set up the C-level fast validator.</p>
 </dd></dl>
 
+<dl class="py method">
+<dt id="traits.trait_types.Tuple.validate">
+<code class="sig-name descname"><span class="pre">validate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Tuple.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_types.Tuple.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that the value is a valid tuple.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -3454,41 +3464,10 @@ button.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="traits.trait_types.Either">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">traits.trait_types.</span></code><code class="sig-name descname"><span class="pre">Either</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">traits</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">metadata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Either"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_types.Either" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="trait_type.html#traits.trait_type.TraitType" title="traits.trait_type.TraitType"><code class="xref py py-class docutils literal notranslate"><span class="pre">traits.trait_type.TraitType</span></code></a></p>
-<p>A trait type whose value can be any of of a specified list of traits.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>*traits</strong> – Arguments that define allowable trait values.</p></li>
-<li><p><strong>**metadata</strong> – Trait metadata for the trait.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py attribute">
-<dt id="traits.trait_types.Either.trait_maker">
-<code class="sig-name descname"><span class="pre">trait_maker</span></code><a class="headerlink" href="#traits.trait_types.Either.trait_maker" title="Permalink to this definition">¶</a></dt>
-<dd><p>A TraitHandler generated by _TraitMaker from the arguments.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="trait_handler.html#traits.trait_handler.TraitHandler" title="traits.trait_handler.TraitHandler">TraitHandler</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="traits.trait_types.Either.as_ctrait">
-<code class="sig-name descname"><span class="pre">as_ctrait</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Either.as_ctrait"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_types.Either.as_ctrait" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a CTrait corresponding to the trait defined by this class.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
 <dt id="traits.trait_types.Union">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">traits.trait_types.</span></code><code class="sig-name descname"><span class="pre">Union</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">traits</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">metadata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Union"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_types.Union" title="Permalink to this definition">¶</a></dt>
-<dd><p>Defines a trait whose value can be any of of a specified list of
+<dd><p>Bases: <a class="reference internal" href="trait_type.html#traits.trait_type.TraitType" title="traits.trait_type.TraitType"><code class="xref py py-class docutils literal notranslate"><span class="pre">traits.trait_type.TraitType</span></code></a></p>
+<p>Defines a trait whose value can be any of of a specified list of
 trait types or list of trait type instances or None</p>
 <p>If the default value is not defined on Union, the default value from the
 first trait will be used.</p>
@@ -3550,6 +3529,45 @@ User Guide</em>.</p>
 <dd class="field-odd"><p><strong>trait</strong> (<em>Trait</em>) – The trait to be edited.</p>
 </dd>
 </dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="traits.trait_types.Either">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">traits.trait_types.</span></code><code class="sig-name descname"><span class="pre">Either</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">traits</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">metadata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Either"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_types.Either" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="trait_type.html#traits.trait_type.TraitType" title="traits.trait_type.TraitType"><code class="xref py py-class docutils literal notranslate"><span class="pre">traits.trait_type.TraitType</span></code></a></p>
+<p>A trait type whose value can be any of of a specified list of traits.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This class has some unusual corner-case behaviours and is not
+recommended for use in new code. It may eventually be deprecated and
+removed. For new code, consider using the <a class="reference internal" href="#traits.trait_types.Union" title="traits.trait_types.Union"><code class="xref py py-class docutils literal notranslate"><span class="pre">Union</span></code></a> trait type
+instead.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*traits</strong> – Arguments that define allowable trait values.</p></li>
+<li><p><strong>**metadata</strong> – Trait metadata for the trait.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="traits.trait_types.Either.trait_maker">
+<code class="sig-name descname"><span class="pre">trait_maker</span></code><a class="headerlink" href="#traits.trait_types.Either.trait_maker" title="Permalink to this definition">¶</a></dt>
+<dd><p>A TraitHandler generated by _TraitMaker from the arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="trait_handler.html#traits.trait_handler.TraitHandler" title="traits.trait_handler.TraitHandler">TraitHandler</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="traits.trait_types.Either.as_ctrait">
+<code class="sig-name descname"><span class="pre">as_ctrait</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Either.as_ctrait"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_types.Either.as_ctrait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a CTrait corresponding to the trait defined by this class.</p>
 </dd></dl>
 
 </dd></dl>
@@ -3825,8 +3843,8 @@ Traits, <code class="docutils literal notranslate"><span class="pre">None</span>
 
 </dd></dl>
 
-</div>
-<div class="section" id="deprecated-traits">
+</section>
+<section id="deprecated-traits">
 <h2>Deprecated Traits<a class="headerlink" href="#deprecated-traits" title="Permalink to this headline">¶</a></h2>
 <p>The following <a class="reference internal" href="trait_type.html#traits.trait_type.TraitType" title="traits.trait_type.TraitType"><code class="xref py py-class docutils literal notranslate"><span class="pre">TraitType</span></code></a> classes and instances are deprecated,
 and may be removed in a future version of Traits.</p>
@@ -4035,16 +4053,16 @@ with list values can be inserted. The default value is {}. This trait type
 is deprecated. Use <code class="docutils literal notranslate"><span class="pre">Dict(Str,</span> <span class="pre">List)</span></code> instead.</p>
 </dd></dl>
 
-</div>
-<div class="section" id="private-classes">
+</section>
+<section id="private-classes">
 <h2>Private Classes<a class="headerlink" href="#private-classes" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="traits.trait_types.HandleWeakRef">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">traits.trait_types.</span></code><code class="sig-name descname"><span class="pre">HandleWeakRef</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#HandleWeakRef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_types.HandleWeakRef" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</div>
-<div class="section" id="functions">
+</section>
+<section id="functions">
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt id="traits.trait_types.default_text_editor">
@@ -4067,8 +4085,8 @@ of the editor and return the correct type of value for the trait.</p></li>
 </dl>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -4127,12 +4145,12 @@ of the editor and return the correct type of value for the trait.</p></li>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Mar 12, 2022.
+      Last updated on Aug 11, 2022.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.

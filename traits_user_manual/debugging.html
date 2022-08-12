@@ -3,17 +3,19 @@
 <html>
   <head>
     <meta charset="utf-8">
-    
-    <title>Tips for debugging Traits &mdash; Traits 6.3 Documentation</title>
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Tips for debugging Traits &mdash; Traits 6.4 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
     <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" >
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.3.2',
+        VERSION:     '6.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -24,13 +26,15 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/clipboard.min.js"></script>
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.png">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.3 Documentation" href="../index.html" >
-    <link rel="up" title="Traits 6.3 User Manual" href="index.html" >
+    <link rel="top" title="Traits 6.4 Documentation" href="../index.html" >
+    <link rel="up" title="Traits 6.4 User Manual" href="index.html" >
     <link rel="next" title="Traits internals" href="internals.html" >
     <link rel="prev" title="Testing" href="testing.html" > 
   </head>
@@ -49,9 +53,9 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.3 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 6.4 Documentation</a></li>
 	
-          <li class="active"><a href="index.html" accesskey="U">Traits 6.3 User Manual</a></li> 
+          <li class="active"><a href="index.html" accesskey="U">Traits 6.4 User Manual</a></li> 
     </ul>
               
               
@@ -85,9 +89,9 @@
         <div class="bodywrapper">
           <div class="body" id="spc-section-body" role="main">
             
-  <div class="section" id="tips-for-debugging-traits">
+  <section id="tips-for-debugging-traits">
 <span id="index-0"></span><h1>Tips for debugging Traits<a class="headerlink" href="#tips-for-debugging-traits" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="re-raising-exceptions-in-change-handlers">
+<section id="re-raising-exceptions-in-change-handlers">
 <h2>Re-raising exceptions in change handlers<a class="headerlink" href="#re-raising-exceptions-in-change-handlers" title="Permalink to this headline">¶</a></h2>
 <p>Traits will typically log (instead of raise) exceptions when an exception is
 encountered in a trait-change handler. This behavior is often preferred in
@@ -140,12 +144,12 @@ the following traceback:</p>
 <p>Notice that this traceback has information about <em>where</em> we changed
 <code class="docutils literal notranslate"><span class="pre">constant</span></code>.  Note: This is a toy example; use <code class="docutils literal notranslate"><span class="pre">Constant</span></code> from
 <code class="docutils literal notranslate"><span class="pre">traits.api</span></code> if you actually want a constant trait.</p>
-</div>
-<div class="section" id="tracing-traits-change-events">
+</section>
+<section id="tracing-traits-change-events">
 <h2>Tracing Traits Change Events<a class="headerlink" href="#tracing-traits-change-events" title="Permalink to this headline">¶</a></h2>
 <p>Occasionally it is necessary to find the chain of event dispatches in traits
 classes. To help with debugging, a <a class="reference internal" href="../traits_api_reference/traits.util.html#traits.util.event_tracer.record_events" title="traits.util.event_tracer.record_events"><code class="xref py py-func docutils literal notranslate"><span class="pre">record_events()</span></code></a> context manager is provided
-in mod:<cite>traits.util.event_tracer</cite>. Trait change events taking place inside the
+in <a class="reference internal" href="../traits_api_reference/traits.util.html#module-traits.util.event_tracer" title="traits.util.event_tracer"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.util.event_tracer</span></code></a>. Trait change events taking place inside the
 context block will be recorded in a change event container (see example below)
 and can be saved to files (a file for each thread) for further inspection.</p>
 <p>Example:</p>
@@ -207,8 +211,8 @@ local folder. The file contents will be similar to the lines below:</p>
 <span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.782000</span> <span class="o">&lt;-</span> <span class="n">EXIT</span><span class="p">:</span> <span class="s1">&#39;_add_number_to_list&#39;</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -265,12 +269,12 @@ local folder. The file contents will be similar to the lines below:</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Mar 12, 2022.
+      Last updated on Aug 11, 2022.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.

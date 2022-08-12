@@ -3,17 +3,19 @@
 <html>
   <head>
     <meta charset="utf-8">
-    
-    <title>Testing &mdash; Traits 6.3 Documentation</title>
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Testing &mdash; Traits 6.4 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
     <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" >
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.3.2',
+        VERSION:     '6.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -24,13 +26,15 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/clipboard.min.js"></script>
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.png">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.3 Documentation" href="../index.html" >
-    <link rel="up" title="Traits 6.3 User Manual" href="index.html" >
+    <link rel="top" title="Traits 6.4 Documentation" href="../index.html" >
+    <link rel="up" title="Traits 6.4 User Manual" href="index.html" >
     <link rel="next" title="Tips for debugging Traits" href="debugging.html" >
     <link rel="prev" title="Advanced Topics" href="advanced.html" > 
   </head>
@@ -49,9 +53,9 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.3 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 6.4 Documentation</a></li>
 	
-          <li class="active"><a href="index.html" accesskey="U">Traits 6.3 User Manual</a></li> 
+          <li class="active"><a href="index.html" accesskey="U">Traits 6.4 User Manual</a></li> 
     </ul>
               
               
@@ -85,9 +89,9 @@
         <div class="bodywrapper">
           <div class="body" id="spc-section-body" role="main">
             
-  <div class="section" id="testing">
+  <section id="testing">
 <span id="index-0"></span><h1>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="testing-traits-classes">
+<section id="testing-traits-classes">
 <span id="testing-trait-classes"></span><h2>Testing Traits Classes<a class="headerlink" href="#testing-traits-classes" title="Permalink to this headline">¶</a></h2>
 <p>A mixin class is provided to facilitate writing tests for HasTraits classes.
 The following methods are available when <a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools" title="traits.testing.unittest_tools.UnittestTools"><code class="xref py py-class docutils literal notranslate"><span class="pre">UnittestTools</span></code></a> is added as a
@@ -188,8 +192,8 @@ TestCase:</p>
             <span class="n">my_class</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="mf">2.0</span>  <span class="c1"># The value is the same as the original</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="using-mocks">
+</section>
+<section id="using-mocks">
 <h2>Using Mocks<a class="headerlink" href="#using-mocks" title="Permalink to this headline">¶</a></h2>
 <p>Trying to mock a method in a <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasStrictTraits" title="traits.has_traits.HasStrictTraits"><code class="xref py py-class docutils literal notranslate"><span class="pre">HasStrictTraits</span></code></a> instance will raise an error
 because the <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasStrictTraits" title="traits.has_traits.HasStrictTraits"><code class="xref py py-class docutils literal notranslate"><span class="pre">HasStrictTraits</span></code></a> machinery does not allow any modification of
@@ -223,8 +227,8 @@ the methods and attributes of a <a class="reference internal" href="../traits_ap
 <p>The above method will not work for mocking <a class="reference internal" href="../traits_api_reference/traits.html#traits.traits.Property" title="traits.traits.Property"><code class="xref py py-func docutils literal notranslate"><span class="pre">Property()</span></code></a> setters,
 getters and validators.</p>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -281,12 +285,12 @@ getters and validators.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Mar 12, 2022.
+      Last updated on Aug 11, 2022.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.

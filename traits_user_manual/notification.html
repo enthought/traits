@@ -3,17 +3,19 @@
 <html>
   <head>
     <meta charset="utf-8">
-    
-    <title>Trait Notification &mdash; Traits 6.3 Documentation</title>
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Trait Notification &mdash; Traits 6.4 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
     <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" >
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.3.2',
+        VERSION:     '6.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -24,13 +26,15 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/clipboard.min.js"></script>
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.png">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.3 Documentation" href="../index.html" >
-    <link rel="up" title="Traits 6.3 User Manual" href="index.html" >
+    <link rel="top" title="Traits 6.4 Documentation" href="../index.html" >
+    <link rel="up" title="Traits 6.4 User Manual" href="index.html" >
     <link rel="next" title="Deferring Trait Definitions" href="deferring.html" >
     <link rel="prev" title="Defining Traits: Initialization and Validation" href="defining.html" > 
   </head>
@@ -49,9 +53,9 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.3 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 6.4 Documentation</a></li>
 	
-          <li class="active"><a href="index.html" accesskey="U">Traits 6.3 User Manual</a></li> 
+          <li class="active"><a href="index.html" accesskey="U">Traits 6.4 User Manual</a></li> 
     </ul>
               
               
@@ -85,7 +89,7 @@
         <div class="bodywrapper">
           <div class="body" id="spc-section-body" role="main">
             
-  <div class="section" id="trait-notification">
+  <section id="trait-notification">
 <span id="observe-notification"></span><h1>Trait Notification<a class="headerlink" href="#trait-notification" title="Permalink to this headline">¶</a></h1>
 <p>When the value of an attribute changes, other parts of the program might need
 to be notified that the change has occurred. The Traits package makes this
@@ -105,7 +109,7 @@ decorator to indicate that they handle notification for specified attributes.</p
 <li><p>Via instance method: By calling <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.observe" title="traits.has_traits.HasTraits.observe"><code class="xref py py-func docutils literal notranslate"><span class="pre">observe()</span></code></a> instance method to establish (or remove) change
 notification handlers.</p></li>
 </ul>
-<div class="section" id="via-class-definition">
+<section id="via-class-definition">
 <h2>Via class definition<a class="headerlink" href="#via-class-definition" title="Permalink to this headline">¶</a></h2>
 <p>Observers can be defined for every instance of a <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><code class="xref py py-class docutils literal notranslate"><span class="pre">HasTraits</span></code></a> subclass by
 applying the <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.observe" title="traits.has_traits.observe"><code class="xref py py-func docutils literal notranslate"><span class="pre">observe()</span></code></a> decorator on an instance method. For example, to
@@ -138,8 +142,8 @@ be used to delay adding the change handler until after the object state is set.<
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;age changed from </span><span class="si">{}</span><span class="s2"> to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">old</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">new</span><span class="p">))</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="via-instance-method">
+</section>
+<section id="via-instance-method">
 <h2>Via instance method<a class="headerlink" href="#via-instance-method" title="Permalink to this headline">¶</a></h2>
 <p>The <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.observe" title="traits.has_traits.HasTraits.observe"><code class="xref py py-func docutils literal notranslate"><span class="pre">observe()</span></code></a> method on <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><code class="xref py py-class docutils literal notranslate"><span class="pre">HasTraits</span></code></a> is useful for adding or removing
 change handlers on a per instance basis. The example above can be rewritten like
@@ -174,8 +178,8 @@ and those change handlers can be inherited by subclasses.</p></li>
 </ul>
 <p>Unless otherwise stated, the following sections apply to both methods for
 setting up change notifications.</p>
-</div>
-<div class="section" id="the-expression-parameter">
+</section>
+<section id="the-expression-parameter">
 <span id="observe-expression"></span><h2>The <em>expression</em> Parameter<a class="headerlink" href="#the-expression-parameter" title="Permalink to this headline">¶</a></h2>
 <p>The <em>expression</em> parameter in <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.observe" title="traits.has_traits.observe"><code class="xref py py-func docutils literal notranslate"><span class="pre">observe()</span></code></a> provides significant flexibility
 in specifying not just attributes directly on the current object, but also
@@ -185,7 +189,7 @@ attributes on nested objects and containers.</p>
 <li><p><a class="reference internal" href="#observe-mini-language"><span class="std std-ref">Traits Mini Language</span></a></p></li>
 <li><p><a class="reference internal" href="#observe-expression-object"><span class="std std-ref">Expressions as objects</span></a></p></li>
 </ul>
-<div class="section" id="traits-mini-language">
+<section id="traits-mini-language">
 <span id="observe-mini-language"></span><h3>Traits Mini Language<a class="headerlink" href="#traits-mini-language" title="Permalink to this headline">¶</a></h3>
 <p>Traits Mini Language is a domain specific language which provides a convenient
 and concise way to specify observation rules via a single text. It supports
@@ -282,8 +286,8 @@ that is an item of the container.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="expressions-as-objects">
+</section>
+<section id="expressions-as-objects">
 <span id="observe-expression-object"></span><h3>Expressions as objects<a class="headerlink" href="#expressions-as-objects" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference internal" href="../traits_api_reference/traits.observation.html#traits.observation.expression.ObserverExpression" title="traits.observation.expression.ObserverExpression"><code class="xref py py-class docutils literal notranslate"><span class="pre">ObserverExpression</span></code></a> supports all the use cases supported by the Traits Mini Language
 and beyond. Users can compose these objects programmatically and supply
@@ -401,9 +405,9 @@ with additional features supported by <a class="reference internal" href="../tra
 </pre></div>
 </div>
 <p>will observe traits with a prefix “my_” on <em>foo.bar</em> on the current object.</p>
-</div>
-</div>
-<div class="section" id="notification-handler">
+</section>
+</section>
+<section id="notification-handler">
 <span id="observe-handler"></span><h2>Notification Handler<a class="headerlink" href="#notification-handler" title="Permalink to this headline">¶</a></h2>
 <p>By default, the <strong>handler</strong> is invoked immediately after the change has
 occurred. The <strong>dispatch</strong> parameter in <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.observe" title="traits.has_traits.observe"><code class="xref py py-func docutils literal notranslate"><span class="pre">observe()</span></code></a> can be set such that the
@@ -480,14 +484,14 @@ it is invoked. The following example shows the first option:</p>
 <span class="c1"># print: scores added: [3]. scores removed: [] (Event type: ListChangeEvent)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="features-and-fixes-provided-by-observe">
+</section>
+<section id="features-and-fixes-provided-by-observe">
 <h2>Features and fixes provided by <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.observe" title="traits.has_traits.observe"><code class="xref py py-func docutils literal notranslate"><span class="pre">observe()</span></code></a><a class="headerlink" href="#features-and-fixes-provided-by-observe" title="Permalink to this headline">¶</a></h2>
 <p>In addition to the new flexibility provided by the <a class="reference internal" href="../traits_api_reference/traits.observation.html#traits.observation.expression.ObserverExpression" title="traits.observation.expression.ObserverExpression"><code class="xref py py-class docutils literal notranslate"><span class="pre">ObserverExpression</span></code></a>
 object, <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.observe" title="traits.has_traits.observe"><code class="xref py py-func docutils literal notranslate"><span class="pre">observe()</span></code></a> aims at overcoming a number of design flaws and
 limitations in the older API. The following sections highlight the differences
 and new features supported by <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.observe" title="traits.has_traits.observe"><code class="xref py py-func docutils literal notranslate"><span class="pre">observe()</span></code></a>.</p>
-<div class="section" id="existence-of-observed-items-is-checked-by-default">
+<section id="existence-of-observed-items-is-checked-by-default">
 <h3>Existence of observed items is checked by default<a class="headerlink" href="#existence-of-observed-items-is-checked-by-default" title="Permalink to this headline">¶</a></h3>
 <p>The existence of a trait is checked when the handler is being added to the
 instance:</p>
@@ -516,8 +520,8 @@ a trait is defined.</p>
 <span class="n">person</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">2</span>    <span class="c1"># print &#39;age changed&#39;</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="arbitrarily-nested-containers-are-supported">
+</section>
+<section id="arbitrarily-nested-containers-are-supported">
 <h3>Arbitrarily nested containers are supported<a class="headerlink" href="#arbitrarily-nested-containers-are-supported" title="Permalink to this headline">¶</a></h3>
 <p>It is now possible to notify for changes on an object in a very nested
 container. Suppose we have these classes:</p>
@@ -537,8 +541,8 @@ container. Suppose we have these classes:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">foo</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="n">trait</span><span class="p">(</span><span class="s2">&quot;bars&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">dict_items</span><span class="p">()</span><span class="o">.</span><span class="n">list_items</span><span class="p">()</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="observe-decorator-can-be-stacked">
+</section>
+<section id="observe-decorator-can-be-stacked">
 <h3><a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.observe" title="traits.has_traits.observe"><code class="xref py py-func docutils literal notranslate"><span class="pre">observe()</span></code></a> decorator can be stacked<a class="headerlink" href="#observe-decorator-can-be-stacked" title="Permalink to this headline">¶</a></h3>
 <p>The same handler can be used against different changes and with different
 parameters. With <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.observe" title="traits.has_traits.observe"><code class="xref py py-func docutils literal notranslate"><span class="pre">observe()</span></code></a>, one can stack the decorator on the same method:</p>
@@ -548,8 +552,8 @@ parameters. With <a class="reference internal" href="../traits_api_reference/has
     <span class="o">...</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="duplicated-objects-are-now-monitored">
+</section>
+<section id="duplicated-objects-are-now-monitored">
 <h3>Duplicated objects are now monitored<a class="headerlink" href="#duplicated-objects-are-now-monitored" title="Permalink to this headline">¶</a></h3>
 <p>Consider this example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Apple</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
@@ -577,8 +581,8 @@ we expect a change notification:</p>
 <p>In the older API, this situation was not accounted for. With <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.observe" title="traits.has_traits.observe"><code class="xref py py-func docutils literal notranslate"><span class="pre">observe()</span></code></a>, this
 situation is handled by keeping a reference count on the observed objects.</p>
 <p>This means <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.observe" title="traits.has_traits.HasTraits.observe"><code class="xref py py-func docutils literal notranslate"><span class="pre">observe()</span></code></a> cannot be idempotent.</p>
-</div>
-<div class="section" id="hastraits-observe-is-not-idempotent">
+</section>
+<section id="hastraits-observe-is-not-idempotent">
 <h3><a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.observe" title="traits.has_traits.HasTraits.observe"><code class="xref py py-func docutils literal notranslate"><span class="pre">observe()</span></code></a> is not idempotent<a class="headerlink" href="#hastraits-observe-is-not-idempotent" title="Permalink to this headline">¶</a></h3>
 <p>For most use cases, change handlers can be put up in a fire-and-forget
 fashion and they are never removed. However for some use cases, it is important
@@ -606,15 +610,15 @@ True.</p>
 </div>
 <p>Attempts to remove change handlers that do not exist will lead to a
 <a class="reference internal" href="../traits_api_reference/traits.observation.html#traits.observation.exceptions.NotifierNotFound" title="traits.observation.exceptions.NotifierNotFound"><code class="xref py py-exc docutils literal notranslate"><span class="pre">NotifierNotFound</span></code></a> exception.</p>
-</div>
-</div>
-<div class="section" id="migration-from-on-trait-change">
+</section>
+</section>
+<section id="migration-from-on-trait-change">
 <h2>Migration from <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.on_trait_change" title="traits.has_traits.on_trait_change"><code class="xref py py-func docutils literal notranslate"><span class="pre">on_trait_change()</span></code></a><a class="headerlink" href="#migration-from-on-trait-change" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.observe" title="traits.has_traits.observe"><code class="xref py py-func docutils literal notranslate"><span class="pre">observe()</span></code></a> can be used alongside <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.on_trait_change" title="traits.has_traits.on_trait_change"><code class="xref py py-func docutils literal notranslate"><span class="pre">on_trait_change()</span></code></a>. Therefore it is possible
 for projects to add new code using <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.observe" title="traits.has_traits.observe"><code class="xref py py-func docutils literal notranslate"><span class="pre">observe()</span></code></a> while slowly migrating existing
 code from <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.on_trait_change" title="traits.has_traits.on_trait_change"><code class="xref py py-func docutils literal notranslate"><span class="pre">on_trait_change()</span></code></a> to <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.observe" title="traits.has_traits.observe"><code class="xref py py-func docutils literal notranslate"><span class="pre">observe()</span></code></a>.</p>
 <p>The following sections provide some guide to help migrations.</p>
-<div class="section" id="observe-extended-trait-names">
+<section id="observe-extended-trait-names">
 <h3>Observe extended trait names<a class="headerlink" href="#observe-extended-trait-names" title="Permalink to this headline">¶</a></h3>
 <p>The expression syntax has not changed for extended trait names excluding
 containers.</p>
@@ -634,8 +638,8 @@ containers.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@observe</span><span class="p">(</span><span class="s2">&quot;bar.value&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="observe-nested-attributes-in-a-container">
+</section>
+<section id="observe-nested-attributes-in-a-container">
 <h3>Observe nested attributes in a container<a class="headerlink" href="#observe-nested-attributes-in-a-container" title="Permalink to this headline">¶</a></h3>
 <p>Suppose we have these classes:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Bar</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
@@ -677,8 +681,8 @@ being observed, like this:</p>
 defined for supporting <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.on_trait_change" title="traits.has_traits.on_trait_change"><code class="xref py py-func docutils literal notranslate"><span class="pre">on_trait_change()</span></code></a>. Monitoring this <em>name</em>_items trait
 with <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.observe" title="traits.has_traits.observe"><code class="xref py py-func docutils literal notranslate"><span class="pre">observe()</span></code></a> is discouraged as this special trait may be removed when
 <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.on_trait_change" title="traits.has_traits.on_trait_change"><code class="xref py py-func docutils literal notranslate"><span class="pre">on_trait_change()</span></code></a> is removed.</p>
-</div>
-<div class="section" id="change-handler-signature-is-different">
+</section>
+<section id="change-handler-signature-is-different">
 <h3>Change handler signature is different<a class="headerlink" href="#change-handler-signature-is-different" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.on_trait_change" title="traits.has_traits.on_trait_change"><code class="xref py py-func docutils literal notranslate"><span class="pre">on_trait_change()</span></code></a> supports a range of call
 <a class="reference internal" href="listening.html#notification-handler-signatures"><span class="std std-ref">signatures</span></a> for the change handler.
@@ -719,8 +723,8 @@ based on the type of changes being handled (see
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Removed: </span><span class="si">{event.removed}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="syntax-is-not-supported">
+</section>
+<section id="syntax-is-not-supported">
 <h3>Syntax “[]” is not supported<a class="headerlink" href="#syntax-is-not-supported" title="Permalink to this headline">¶</a></h3>
 <p>Suppose we have this class:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Foo</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
@@ -747,8 +751,8 @@ one may do:</p>
 <p>Note that assignment changes to <em>container</em> and mutations to the container will
 emit different event types for the change handler. See
 <a class="reference internal" href="#observe-handler"><span class="std std-ref">Notification Handler</span></a> for details.</p>
-</div>
-<div class="section" id="id1">
+</section>
+<section id="id1">
 <h3>Syntax “-” is not supported<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <p>With <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.on_trait_change" title="traits.has_traits.on_trait_change"><code class="xref py py-func docutils literal notranslate"><span class="pre">on_trait_change()</span></code></a>, the syntax <em>“-metadata_name”</em> is used to notify
 for changes on traits that do NOT have a metadata attribute with the given
@@ -756,8 +760,8 @@ name. This usage can be replaced by <a class="reference internal" href="../trait
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">match</span><span class="p">(</span><span class="k">lambda</span> <span class="n">name</span><span class="p">,</span> <span class="n">trait</span><span class="p">:</span> <span class="n">trait</span><span class="o">.</span><span class="n">metadata_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="dispatch-parameter-differentiates-observers">
+</section>
+<section id="dispatch-parameter-differentiates-observers">
 <h3>Dispatch parameter differentiates observers<a class="headerlink" href="#dispatch-parameter-differentiates-observers" title="Permalink to this headline">¶</a></h3>
 <p>In the following example with <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.on_trait_change" title="traits.has_traits.on_trait_change"><code class="xref py py-func docutils literal notranslate"><span class="pre">on_trait_change()</span></code></a>, the second call is an no-op
 because a handler for <em>“name”</em> has already been added:</p>
@@ -778,9 +782,9 @@ used for putting up the observer:</p>
 <span class="n">instance</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">dispatch</span><span class="o">=</span><span class="s2">&quot;ui&quot;</span><span class="p">,</span> <span class="n">remove</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
           </div>
@@ -860,12 +864,12 @@ used for putting up the observer:</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Mar 12, 2022.
+      Last updated on Aug 11, 2022.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.

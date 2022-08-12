@@ -3,17 +3,19 @@
 <html>
   <head>
     <meta charset="utf-8">
-    
-    <title>traits.observation Package &mdash; Traits 6.3 Documentation</title>
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>traits.observation Package &mdash; Traits 6.4 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
     <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" >
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.3.2',
+        VERSION:     '6.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -24,12 +26,14 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/clipboard.min.js"></script>
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.png">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.3 Documentation" href="../index.html" >
+    <link rel="top" title="Traits 6.4 Documentation" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
     <link rel="next" title="traits.testing Package" href="traits.testing.html" >
     <link rel="prev" title="traits.etsconfig Package" href="traits.etsconfig.html" > 
@@ -49,7 +53,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.3 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 6.4 Documentation</a></li>
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
     </ul>
@@ -85,9 +89,9 @@
         <div class="bodywrapper">
           <div class="body" id="spc-section-body" role="main">
             
-  <div class="section" id="module-traits.observation">
+  <section id="module-traits.observation">
 <span id="traits-observation-package"></span><h1><a class="reference internal" href="#module-traits.observation" title="traits.observation"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.observation</span></code></a> Package<a class="headerlink" href="#module-traits.observation" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="module-traits.observation.exception_handling">
+<section id="module-traits.observation.exception_handling">
 <span id="traits-observation-exception-handling-module"></span><h2><a class="reference internal" href="#module-traits.observation.exception_handling" title="traits.observation.exception_handling"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.observation.exception_handling</span></code></a> Module<a class="headerlink" href="#module-traits.observation.exception_handling" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="traits.observation.exception_handling.ObserverExceptionHandler">
@@ -145,7 +149,7 @@ an exception. If None, the exceptions will be logged.</p></li>
 <dl class="py method">
 <dt id="traits.observation.exception_handling.ObserverExceptionHandlerStack.handle_exception">
 <code class="sig-name descname"><span class="pre">handle_exception</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/observation/exception_handling.html#ObserverExceptionHandlerStack.handle_exception"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.observation.exception_handling.ObserverExceptionHandlerStack.handle_exception" title="Permalink to this definition">¶</a></dt>
-<dd><p>Handles a traits notification exception using the handler last pushed.</p>
+<dd><p>Handle a notification exception using the handler last pushed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>event</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)"><em>object</em></a>) – An event object emitted by the notification.</p>
@@ -185,7 +189,7 @@ an exception. If None, the exceptions will be logged.</p></li>
 <dl class="py function">
 <dt id="traits.observation.exception_handling.handle_exception">
 <code class="sig-prename descclassname"><span class="pre">traits.observation.exception_handling.</span></code><code class="sig-name descname"><span class="pre">handle_exception</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#traits.observation.exception_handling.handle_exception" title="Permalink to this definition">¶</a></dt>
-<dd><p>Handles a traits notification exception using the handler last pushed.</p>
+<dd><p>Handle a notification exception using the handler last pushed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>event</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)"><em>object</em></a>) – An event object emitted by the notification.</p>
@@ -193,8 +197,8 @@ an exception. If None, the exceptions will be logged.</p></li>
 </dl>
 </dd></dl>
 
-</div>
-<div class="section" id="module-traits.observation.exceptions">
+</section>
+<section id="module-traits.observation.exceptions">
 <span id="traits-observation-exceptions-module"></span><h2><a class="reference internal" href="#module-traits.observation.exceptions" title="traits.observation.exceptions"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.observation.exceptions</span></code></a> Module<a class="headerlink" href="#module-traits.observation.exceptions" title="Permalink to this headline">¶</a></h2>
 <dl class="py exception">
 <dt id="traits.observation.exceptions.NotifierNotFound">
@@ -203,11 +207,11 @@ an exception. If None, the exceptions will be logged.</p></li>
 <p>Raised when a notifier cannot be found.</p>
 </dd></dl>
 
-</div>
-<div class="section" id="module-traits.observation.api">
+</section>
+<section id="module-traits.observation.api">
 <span id="traits-observation-api-module"></span><h2><a class="reference internal" href="#module-traits.observation.api" title="traits.observation.api"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.observation.api</span></code></a> Module<a class="headerlink" href="#module-traits.observation.api" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="module-traits.observation.expression">
+</section>
+<section id="module-traits.observation.expression">
 <span id="traits-observation-expression-module"></span><h2><a class="reference internal" href="#module-traits.observation.expression" title="traits.observation.expression"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.observation.expression</span></code></a> Module<a class="headerlink" href="#module-traits.observation.expression" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="traits.observation.expression.ObserverExpression">
@@ -704,8 +708,8 @@ trait is not found.</p></li>
 </dl>
 </dd></dl>
 
-</div>
-<div class="section" id="module-traits.observation.events">
+</section>
+<section id="module-traits.observation.events">
 <span id="traits-observation-events-module"></span><h2><a class="reference internal" href="#module-traits.observation.events" title="traits.observation.events"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.observation.events</span></code></a> Module<a class="headerlink" href="#module-traits.observation.events" title="Permalink to this headline">¶</a></h2>
 <p>Event objects received by change handlers added using observe.</p>
 <dl class="py class">
@@ -897,8 +901,8 @@ and the values are new.</p>
 
 </dd></dl>
 
-</div>
-<div class="section" id="module-traits.observation.parsing">
+</section>
+<section id="module-traits.observation.parsing">
 <span id="traits-observation-parsing-module"></span><h2><a class="reference internal" href="#module-traits.observation.parsing" title="traits.observation.parsing"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.observation.parsing</span></code></a> Module<a class="headerlink" href="#module-traits.observation.parsing" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt id="traits.observation.parsing.parse">
@@ -923,7 +927,7 @@ and the values are new.</p>
 <dl class="py function">
 <dt id="traits.observation.parsing.compile_str">
 <code class="sig-prename descclassname"><span class="pre">traits.observation.parsing.</span></code><code class="sig-name descname"><span class="pre">compile_str</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/observation/parsing.html#compile_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.observation.parsing.compile_str" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compile a mini-language string to a list of ObserverGraphs.</p>
+<dd><p>Compile a mini-language string to a list of ObserverGraph objects.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Text to be parsed.</p>
@@ -937,8 +941,8 @@ and the values are new.</p>
 </dl>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -999,12 +1003,12 @@ and the values are new.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Mar 12, 2022.
+      Last updated on Aug 11, 2022.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.

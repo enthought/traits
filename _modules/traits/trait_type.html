@@ -4,16 +4,17 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.trait_type &mdash; Traits 6.3 Documentation</title>
+    <title>traits.trait_type &mdash; Traits 6.4 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-extend.css">
     <link rel="stylesheet" href="../../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" >
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '6.3.2',
+        VERSION:     '6.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -24,12 +25,14 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/clipboard.min.js"></script>
+    <script type="text/javascript" src="../../_static/copybutton.js"></script>
     <script type="text/javascript" src="../../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../../_static/img/favicon.png">
     <link rel="index" title="Index" href="../../genindex.html" >
     <link rel="search" title="Search" href="../../search.html" >
-    <link rel="top" title="Traits 6.3 Documentation" href="../../index.html" >
+    <link rel="top" title="Traits 6.4 Documentation" href="../../index.html" >
     <link rel="up" title="Module code" href="../index.html" > 
   </head>
   <body>
@@ -47,7 +50,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../index.html">Traits 6.3 Documentation</a></li>
+        <li class="active"><a href="../../index.html">Traits 6.4 Documentation</a></li>
 	
           <li class="active"><a href="../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -76,7 +79,7 @@
           <div class="body" id="spc-section-body" role="main">
             
   <h1>Source code for traits.trait_type</h1><div class="highlight"><pre>
-<span></span><span class="c1"># (C) Copyright 2005-2021 Enthought, Inc., Austin, TX</span>
+<span></span><span class="c1"># (C) Copyright 2005-2022 Enthought, Inc., Austin, TX</span>
 <span class="c1"># All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># This software is provided without warranty under the terms of the BSD</span>
@@ -94,6 +97,7 @@
 <span class="sd">``TraitHandler``.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="kn">from</span> <span class="nn">.base_trait_handler</span> <span class="kn">import</span> <span class="n">BaseTraitHandler</span>
@@ -104,9 +108,33 @@
 <span class="kn">from</span> <span class="nn">.trait_list_object</span> <span class="kn">import</span> <span class="n">TraitListObject</span>
 <span class="kn">from</span> <span class="nn">.trait_set_object</span> <span class="kn">import</span> <span class="n">TraitSetObject</span>
 
+<span class="c1">#: Logger instance for this module</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="c1">#: Mapping from trait metadata &#39;type&#39; to CTrait &#39;type&#39;:</span>
 <span class="n">trait_types</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;python&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;event&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+
+<span class="c1">#: DefaultValue kinds that have to copy a new default value when cloned</span>
+<span class="n">clone_copies_default_value</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">DefaultValue</span><span class="o">.</span><span class="n">trait_list_object</span><span class="p">,</span>
+    <span class="n">DefaultValue</span><span class="o">.</span><span class="n">trait_dict_object</span><span class="p">,</span>
+    <span class="n">DefaultValue</span><span class="o">.</span><span class="n">trait_set_object</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="c1">#: DefaultValue types that become constant type when given a new default</span>
+<span class="n">clone_becomes_constant_default_value</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">DefaultValue</span><span class="o">.</span><span class="n">callable_and_args</span><span class="p">,</span>
+    <span class="n">DefaultValue</span><span class="o">.</span><span class="n">callable</span><span class="p">,</span>
+    <span class="n">DefaultValue</span><span class="o">.</span><span class="n">object</span><span class="p">,</span>
+    <span class="c1"># the following are being phased out</span>
+    <span class="n">DefaultValue</span><span class="o">.</span><span class="n">list_copy</span><span class="p">,</span>
+    <span class="n">DefaultValue</span><span class="o">.</span><span class="n">dict_copy</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="c1">#: DefaultValue types that cannot take a default value when cloned</span>
+<span class="n">clone_no_override_default_value</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">DefaultValue</span><span class="o">.</span><span class="n">disallow</span><span class="p">,</span>
+<span class="p">}</span>
 
 
 <div class="viewcode-block" id="_infer_default_value_type"><a class="viewcode-back" href="../../traits_api_reference/trait_type.html#traits.trait_type._infer_default_value_type">[docs]</a><span class="k">def</span> <span class="nf">_infer_default_value_type</span><span class="p">(</span><span class="n">default_value</span><span class="p">):</span>
@@ -383,14 +411,46 @@
         <span class="n">new</span><span class="o">.</span><span class="n">_metadata</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">default_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">NoDefaultSpecified</span><span class="p">:</span>
-            <span class="n">new</span><span class="o">.</span><span class="n">default_value</span> <span class="o">=</span> <span class="n">default_value</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">new</span><span class="o">.</span><span class="n">default_value_type</span> <span class="ow">in</span> <span class="n">clone_no_override_default_value</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Can&#39;t override default value of cloned </span><span class="si">{</span><span class="n">new</span><span class="si">}</span><span class="s2"> trait&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="c1"># does the trait want the original value as the default?</span>
+            <span class="c1"># TODO: since this is needed here, it should also be a property of</span>
+            <span class="c1"># the TraitType, not just the CTrait.</span>
+            <span class="c1"># xref: enthought/traits#1695</span>
+            <span class="n">setattr_original_value</span> <span class="o">=</span> <span class="n">new</span><span class="o">.</span><span class="n">as_ctrait</span><span class="p">()</span><span class="o">.</span><span class="n">setattr_original_value</span>
+
+            <span class="c1"># try to validate the new default value</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">validate</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">setattr_original_value</span><span class="p">):</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="n">new</span><span class="o">.</span><span class="n">default_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span>
-                        <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">default_value</span>
+                    <span class="n">default_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">default_value</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                    <span class="c1"># this is expected for traits which need object or name</span>
+                    <span class="c1"># information to properly validate (eg. This() trait)</span>
+                    <span class="c1"># TODO: override This.clone() and similar for better</span>
+                    <span class="c1"># behaviour and raise an exception here.</span>
+                    <span class="c1"># xref: enthought/traits#1696</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Validation failed cloning </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2"> with &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;default value </span><span class="si">{</span><span class="n">default_value</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                     <span class="p">)</span>
-                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                    <span class="k">pass</span>
+
+            <span class="k">if</span> <span class="n">new</span><span class="o">.</span><span class="n">default_value_type</span> <span class="ow">in</span> <span class="n">clone_copies_default_value</span><span class="p">:</span>
+                <span class="n">default_value</span> <span class="o">=</span> <span class="n">default_value</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">new</span><span class="o">.</span><span class="n">default_value_type</span> <span class="ow">in</span> <span class="n">clone_becomes_constant_default_value</span><span class="p">:</span>
+                <span class="c1"># Note that a mutable default value will be shared across</span>
+                <span class="c1"># instances; this may not always be the desired behaviour,</span>
+                <span class="c1"># especially for trait types using a callable_and_args default.</span>
+                <span class="c1"># TraitType subclasses that need a different behaviour should</span>
+                <span class="c1"># override or extend the clone() method.</span>
+                <span class="c1"># xref: enthought/traits#1630</span>
+                <span class="n">new</span><span class="o">.</span><span class="n">default_value_type</span> <span class="o">=</span> <span class="n">DefaultValue</span><span class="o">.</span><span class="n">constant</span>
+
+            <span class="n">new</span><span class="o">.</span><span class="n">default_value</span> <span class="o">=</span> <span class="n">default_value</span>
 
         <span class="k">return</span> <span class="n">new</span></div>
 
@@ -573,12 +633,12 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Mar 12, 2022.
+      Last updated on Aug 11, 2022.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.

@@ -32,10 +32,10 @@ Private Functions
 Deprecated Handlers
 -------------------
 
-.. deprecated:: 6.0.0
-
 The following :class:`~.TraitHandler` classes and instances are deprecated,
 and may be removed in a future version of Traits.
+
+.. deprecated:: 6.0.0
 
 .. autoclass:: TraitDict
 

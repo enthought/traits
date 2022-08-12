@@ -219,6 +219,12 @@ API Reference* sections on the TraitType and BaseTraitHandler classes.
 The Trait() Factory Function
 ----------------------------
 
+.. note::
+
+   The :func:`~.Trait` function is not recommended for use in new code, and may
+   eventually be deprecated and removed. Consider using :class:`~.Union`
+   instead.
+
 The Trait() function is a generic factory for trait definitions. It has many
 forms, many of which are redundant with the predefined shortcut traits. For
 example, the simplest form Trait(default_value), is equivalent to the functions
@@ -462,6 +468,10 @@ the traits.trait_handlers module.
 TraitPrefixList
 ```````````````
 
+.. deprecated:: 6.1
+    :class:`~.TraitPrefixList` is scheduled for removal
+    in Traits 7.0. Use the :class:`~.PrefixList` trait type instead.
+
 The TraitPrefixList handler accepts not only a specified set of strings as
 values, but also any unique prefix substring of those values. The value assigned
 to the trait attribute is the full string that the substring matches.
@@ -500,6 +510,10 @@ For example::
 
 TraitPrefixMap
 ``````````````
+
+.. deprecated:: 6.1
+    :class:`~.TraitPrefixMap` is scheduled for removal
+    in Traits 7.0. Use the :class:`~.PrefixMap` trait type instead.
 
 The TraitPrefixMap handler combines the TraitPrefixList with mapped traits. Its
 constructor takes a parameter that is a dictionary whose keys are strings. A
