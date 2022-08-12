@@ -12,7 +12,7 @@ import setuptools
 
 
 def get_long_description():
-    """ Read long description from README.rst. """
+    """Read long description from README.rst."""
     with open("README.rst", "r", encoding="utf-8") as readme:
         return readme.read()
 
@@ -20,7 +20,7 @@ def get_long_description():
 if __name__ == "__main__":
     setuptools.setup(
         name="traits-stubs",
-        version="6.1.0",
+        version="6.4.0",
         url="https://github.com/enthought/traits",
         author="Enthought",
         author_email="info@enthought.com",
@@ -39,6 +39,9 @@ if __name__ == "__main__":
             Programming Language :: Python :: 3.6
             Programming Language :: Python :: 3.7
             Programming Language :: Python :: 3.8
+            Programming Language :: Python :: 3.9
+            Programming Language :: Python :: 3.10
+            Programming Language :: Python :: 3.11
             Programming Language :: Python :: Implementation :: CPython
             Topic :: Scientific/Engineering
             Topic :: Software Development
@@ -62,9 +65,11 @@ if __name__ == "__main__":
         packages=[
             "traits-stubs",
             "traits_stubs_tests",
-            "traits_stubs_tests.examples",
         ],
-        package_data={"traits-stubs": ["./*.pyi", "./**/*.pyi"]},
+        package_data={
+            "traits-stubs": ["*.pyi"],
+            "traits_stubs_tests": ["examples/*.py", "numpy_examples/*.py"],
+        },
         license="BSD",
         python_requires=">=3.6",
     )
