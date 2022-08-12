@@ -28,10 +28,28 @@ Detailed changes
   Use ``PrefixList`` and ``PrefixMap`` instead. (#1703)
 
 
+Release 6.4.1
+-------------
+
+Released: 2022-08-12
+
+This is a bugfix release that fixes wheel builds on Python 3.11 and
+fixes some distribution and testing issues with typing stubs.
+
+Fixes
+~~~~~
+* Update ``cibuildwheel`` to the latest version so that we get wheels for
+  Python 3.11. (#1711)
+* Rename ``requires_numpy_testing`` decorator to ``requires_numpy_typing``,
+  and have it check for ``numpy.typing``, not ``numpy.testing``. (#1710)
+* Fix missing ``numpy_examples`` directory in traits-stubs package data.
+  (#1709)
+
+
 Release 6.4.0
 -------------
 
-Released: 2022-08-11
+Released: 2022-08-12
 
 Traits 6.4 is a minor feature release of Traits, which focuses mainly on typing
 stub and documentation updates.
