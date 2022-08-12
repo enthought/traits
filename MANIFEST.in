@@ -10,5 +10,7 @@ recursive-exclude docs *.pyc
 graft examples
 recursive-exclude examples *.pyc
 include traits/ctraits.c
+include traits/py.typed
 recursive-include traits *.py
+
 include traits/observation/_dsl_grammar.lark

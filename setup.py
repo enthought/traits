@@ -287,6 +287,7 @@ setuptools.setup(
         Topic :: Software Development
         Topic :: Software Development :: Libraries
         Topic :: Software Development :: User Interfaces
+        Typing :: Typed
         """.splitlines()
         if len(c.strip()) > 0
     ],
@@ -299,7 +300,11 @@ setuptools.setup(
         "Documentation": "https://docs.enthought.com/traits",
         "Source Code": "https://github.com/enthought/traits",
     },
-    install_requires=[],
+    install_requires=[
+        # We need typing-extensions for SupportsIndex; once we no longer
+        # support Python < 3.8, we can drop this requirement.
+        'typing-extensions; python_version<"3.8"',
+    ],
     extras_require={
         "docs": [
             "enthought-sphinx-theme",
@@ -327,6 +332,10 @@ setuptools.setup(
     },
     ext_modules=[setuptools.Extension("traits.ctraits", ["traits/ctraits.c"])],
     package_data={
+        "traits": [
+            "py.typed",
+            "*.pyi",
+        ],
         "traits.examples": [
             "introduction/*",
             "introduction/*/*",
@@ -335,6 +344,10 @@ setuptools.setup(
             "test-data/historical-pickles/README",
             "test-data/historical-pickles/*.pkl",
             "test-data/historical-pickles/*.py",
+        ],
+        "traits.stubs_tests": [
+            "examples/*.py",
+            "numpy_examples/*.py",
         ],
     },
     entry_points={

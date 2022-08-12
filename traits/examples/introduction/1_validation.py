@@ -98,7 +98,7 @@ can do similar sorts of type declaration for classes.  Advanced Python users
 may be aware of, and using these classes already.
 
 As we will see, the capabilities of Traits are much greater than these type
-checking systems, however if you have the traits-stubs package installed,
+checking systems. However, Traits now ships with a selection of stub files, so
 most of your trait type declarations will be recognised and can be used with
 these new Python type systems.
 
