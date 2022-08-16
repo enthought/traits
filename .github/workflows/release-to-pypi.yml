@@ -76,5 +76,5 @@ jobs:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
-        python -m twine check --strict dist/*.tar.gz
-        python -m twine upload dist/*.tar.gz
+        python -m twine check --strict dist/*
+        python -m twine upload dist/*
