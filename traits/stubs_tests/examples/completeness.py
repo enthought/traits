@@ -19,7 +19,7 @@ class HasName(HasStrictTraits):
     name = Str()
 
 
-def try_assigning_age(x: HasName, new_name: str):
+def try_assigning_name(x: HasName, new_name: str):
     try:
         x.name = new_name
     except TraitError:
