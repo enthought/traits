@@ -12,7 +12,7 @@ import abc
 from .adaptation.adaptation_error import AdaptationError as AdaptationError
 from .constants import DefaultValue as DefaultValue, TraitKind as TraitKind
 from .ctrait import CTrait as CTrait, __newobj__ as __newobj__
-from .ctraits import CHasTraits as CHasTraits
+from traits.ctraits import CHasTraits as CHasTraits
 from .trait_base import SequenceTypes as SequenceTypes, TraitsCache as TraitsCache, Undefined as Undefined, is_none as is_none, not_event as not_event, not_false as not_false
 from .trait_converters import check_trait as check_trait, mapped_trait_for as mapped_trait_for, trait_for as trait_for
 from .trait_errors import TraitError as TraitError
@@ -152,8 +152,7 @@ class Vetoable(HasStrictTraits):
 
 VetoableEvent: _Any
 
-class MetaInterface(ABCMetaHasTraits):
-    def __call__(self, adaptee: _Any, default: _Any = ...): ...
+class MetaInterface(ABCMetaHasTraits): ...
 
 class Interface(HasTraits, metaclass=MetaInterface): ...
 

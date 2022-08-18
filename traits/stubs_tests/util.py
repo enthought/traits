@@ -108,7 +108,7 @@ def run_mypy(filepath):
         dest_filename = os.path.basename(filepath)
         dest = shutil.copyfile(filepath, os.path.join(tempdir, dest_filename))
         normal_report, error_report, exit_status = mypy_api.run(
-            [dest, '--show-error-code'])
+            [dest, '--show-error-code', '--follow-imports=skip'])
     return normal_report, error_report, exit_status
 
 
@@ -165,5 +165,7 @@ class MypyAssertions:
         for line, error_codes in parsed_mypy_output.items():
             if line not in line_error_map or sorted(
                     line_error_map[line]) != sorted(list(error_codes)):
-                s = "\n{}\n{}".format(str(filepath), normal_report)
+
+                s = "Unexpected error on line {}\n{}\n{}".format(
+                    line, str(filepath), normal_report)
                 raise AssertionError(s)
