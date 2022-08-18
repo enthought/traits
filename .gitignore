@@ -9,8 +9,6 @@
 *.egg-info/
 /build/
 /dist/
-/traits-stubs/build/
-/traits-stubs/dist/
 /docs/build/
 
 # Coverage artifacts
