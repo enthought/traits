@@ -34,7 +34,6 @@ jobs:
     - name: Install dependencies and local packages
       run: |
         python -m pip install .[test]
-        python -m pip install traits-stubs/[test]
     - name: Create clean test directory
       run: |
         mkdir testdir
@@ -43,8 +42,3 @@ jobs:
       with:
         working-directory: testdir
         run: python -m unittest discover -v traits
-    - name: Test Traits typing stubs
-      uses: GabrielBB/xvfb-action@v1
-      with:
-        working-directory: testdir
-        run: python -m unittest discover -v traits_stubs_tests

@@ -18,14 +18,14 @@ from traits.testing.optional_dependencies import (
     requires_numpy_typing,
     requires_pkg_resources,
 )
-from traits_stubs_tests.util import MypyAssertions
+from traits.stubs_tests.util import MypyAssertions
 
 
 @requires_pkg_resources
 @requires_mypy
 class TestAnnotations(TestCase, MypyAssertions):
     def test_all(self, filename_suffix=""):
-        """ Run mypy for all files contained in traits_stubs_tests/examples
+        """ Run mypy for all files contained in traits.stubs_tests/examples
         directory.
 
         Lines with expected errors are marked inside these files.
@@ -37,7 +37,7 @@ class TestAnnotations(TestCase, MypyAssertions):
             Optional filename suffix filter.
         """
         examples_dir = Path(pkg_resources.resource_filename(
-            'traits_stubs_tests', 'examples'))
+            'traits.stubs_tests', 'examples'))
 
         for file_path in examples_dir.glob("*{}.py".format(filename_suffix)):
             with self.subTest(file_path=file_path):
@@ -45,7 +45,7 @@ class TestAnnotations(TestCase, MypyAssertions):
 
     @requires_numpy_typing
     def test_numpy_examples(self):
-        """ Run mypy for files contained in traits_stubs_tests/numpy_examples
+        """ Run mypy for files contained in traits.stubs_tests/numpy_examples
         directory.
 
         Lines with expected errors are marked inside these files.
@@ -57,7 +57,7 @@ class TestAnnotations(TestCase, MypyAssertions):
             Optional filename suffix filter.
         """
         examples_dir = Path(pkg_resources.resource_filename(
-            'traits_stubs_tests', 'numpy_examples'))
+            'traits.stubs_tests', 'numpy_examples'))
 
         for file_path in examples_dir.glob("*.py"):
             with self.subTest(file_path=file_path):

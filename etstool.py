@@ -188,15 +188,11 @@ def install(edm, runtime, environment, editable, source):
     # of TraitsUI from EDM installs Traits as a dependency, so we need
     # to explicitly uninstall it before re-installing from source.
     install_traits = _get_install_command_string(".", editable=editable)
-    install_stubs = _get_install_command_string(
-        "./traits-stubs/", editable=editable
-    )
     commands = [
         "{edm} environments create {environment} --force --version={runtime}",
         "{edm} --config edm.yaml install -y -e {environment} " + packages,
         "{edm} plumbing remove-package -e {environment} traits",
         install_traits,
-        install_stubs,
     ]
 
     if pypi_dependencies:
@@ -284,10 +280,6 @@ def test(edm, runtime, verbose, environment):
     commands = [
         "{edm} run -e {environment} -- coverage run -p -m "
         "unittest discover " + options + "traits",
-    ]
-    commands += [
-        "{edm} run -e {environment} -- coverage run -p -m "
-        "unittest discover " + options + "traits_stubs_tests",
     ]
 
     # We run in a tempdir to avoid accidentally picking up wrong traits

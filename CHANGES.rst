@@ -11,6 +11,12 @@ TBD Release summary
 Detailed changes
 ~~~~~~~~~~~~~~~~
 
+Features
+~~~~~~~~
+* The traits package now ships with stub files directly, instead of requiring
+  those files to be installed via the separate ``traits-stubs`` package.
+  (#1714)
+
 Removals
 ~~~~~~~~
 * Remove deprecated ``rich_compare`` Trait metadata. (#1698)
