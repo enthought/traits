@@ -386,8 +386,6 @@ class InterfaceCheckerTestCase(unittest.TestCase):
 
         f = Foo()
 
-        # Adaptation via direct instantiation of interfaces is deprecated, so
-        # catch the warning to keep the test run output clean.
         self.assertEqual(f, adapt(f, IFoo))
 
     def test_adaptation(self):
