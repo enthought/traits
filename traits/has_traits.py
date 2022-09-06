@@ -25,7 +25,6 @@ import weakref
 from types import FunctionType
 
 from . import __version__ as TraitsVersion
-from .adaptation.adaptation_error import AdaptationError
 from .constants import DefaultValue, TraitKind
 from .ctrait import CTrait, __newobj__
 from .ctraits import CHasTraits
@@ -3679,25 +3678,10 @@ VetoableEvent = Event(Vetoable)
 class MetaInterface(ABCMetaHasTraits):
     """ Meta class for interfaces.
 
-    Interfaces are simple ABCs with the following features:-
-
-    1) They cannot be instantiated (they are interfaces, not implementations!).
-    2) Calling them is equivalent to calling 'adapt'.
-
+    Historically, there were some differences between interfaces
+    and ABCs in Traits, but now Interface is a near synonym for
+    ABCHasTraits.
     """
-
-    @deprecated('use "adapt(adaptee, protocol)" instead.')
-    def __call__(self, adaptee, default=AdaptationError):
-        """ Attempt to adapt the adaptee to this interface.
-
-        Note that this means that (intentionally ;^) that interfaces
-        cannot be instantiated!
-
-        """
-
-        from traits.adaptation.api import adapt
-
-        return adapt(adaptee, self, default=default)
 
 
 class Interface(HasTraits, metaclass=MetaInterface):
