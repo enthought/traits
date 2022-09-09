@@ -35,13 +35,10 @@ jobs:
         sudo apt-get install libxcb-xinerama0
       if: runner.os == 'Linux'
     - name: Set up Python ${{ matrix.python-version }} (${{ matrix.python-architecture }})
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
         architecture: ${{ matrix.python-architecture }}
-    - name: Install prerequisites
-      run: |
-        python -m pip install --upgrade pip setuptools wheel
     - name: Install Traits and test dependencies from PyPI sdist
       run: |
         python -m pip install --no-binary traits traits[test]
@@ -82,13 +79,10 @@ jobs:
         sudo apt-get install libxcb-xinerama0
       if: runner.os == 'Linux'
     - name: Set up Python ${{ matrix.python-version }} (${{ matrix.python-architecture }})
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
         architecture: ${{ matrix.python-architecture }}
-    - name: Install prerequisites
-      run: |
-        python -m pip install --upgrade pip setuptools wheel
     - name: Install Traits and test dependencies from PyPI wheel
       run: |
         python -m pip install --only-binary traits traits[test]
