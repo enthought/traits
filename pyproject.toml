@@ -11,9 +11,6 @@ profile = 'black'
 line_length = 79
 order_by_type = 'False'
 
-[tool.pytest.ini_options]
-addopts = '--ignore=traits-stubs'
-
 [tool.cibuildwheel]
 skip = 'pp*'
 
