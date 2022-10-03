@@ -152,8 +152,7 @@ class Vetoable(HasStrictTraits):
 
 VetoableEvent: _Any
 
-class MetaInterface(ABCMetaHasTraits):
-    def __call__(self, adaptee: _Any, default: _Any = ...): ...
+class MetaInterface(ABCMetaHasTraits): ...
 
 class Interface(HasTraits, metaclass=MetaInterface): ...
 

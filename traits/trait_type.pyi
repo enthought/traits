@@ -28,9 +28,6 @@ class _TraitMixin(Generic[_Accepts, _Stores]):
     def __set__(self, object: Any, value: _Accepts) -> None: ...
 
 
-_Trait = _TraitMixin()
-
-
 class _TraitType(BaseTraitHandler, Generic[_Accepts, _Stores]):
     default_value: _Stores = ...
     metadata: Dict[str, Any] = ...
