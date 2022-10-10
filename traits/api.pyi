@@ -135,21 +135,6 @@ from .trait_types import (
     false as false,
     true as true,
     undefined as undefined,
-    ListInt as ListInt,
-    ListFloat as ListFloat,
-    ListStr as ListStr,
-    ListUnicode as ListUnicode,
-    ListComplex as ListComplex,
-    ListBool as ListBool,
-    ListFunction as ListFunction,
-    ListMethod as ListMethod,
-    ListThis as ListThis,
-    DictStrAny as DictStrAny,
-    DictStrStr as DictStrStr,
-    DictStrInt as DictStrInt,
-    DictStrFloat as DictStrFloat,
-    DictStrBool as DictStrBool,
-    DictStrList as DictStrList,
 )
 
 from .trait_types import (
