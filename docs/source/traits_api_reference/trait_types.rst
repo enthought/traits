@@ -287,36 +287,6 @@ and may be removed in a future version of Traits.
 
 .. autodata:: undefined
 
-.. autodata:: ListInt
-
-.. autodata:: ListFloat
-
-.. autodata:: ListStr
-
-.. autodata:: ListUnicode
-
-.. autodata:: ListComplex
-
-.. autodata:: ListBool
-
-.. autodata:: ListFunction
-
-.. autodata:: ListMethod
-
-.. autodata:: ListThis
-
-.. autodata:: DictStrAny
-
-.. autodata:: DictStrStr
-
-.. autodata:: DictStrInt
-
-.. autodata:: DictStrFloat
-
-.. autodata:: DictStrBool
-
-.. autodata:: DictStrList
-
 
 Private Classes
 ---------------

@@ -116,33 +116,6 @@ from .trait_types import (
     Supports,
 )
 
-# Deprecated TraitType subclasses and instances.
-
-from .trait_types import (
-    BaseUnicode,
-    Unicode,
-    BaseCUnicode,
-    CUnicode,
-    false,
-    true,
-    undefined,
-    ListInt,
-    ListFloat,
-    ListStr,
-    ListUnicode,
-    ListComplex,
-    ListBool,
-    ListFunction,
-    ListMethod,
-    ListThis,
-    DictStrAny,
-    DictStrStr,
-    DictStrInt,
-    DictStrFloat,
-    DictStrBool,
-    DictStrList,
-)
-
 from .trait_types import (
     BaseCallable,
     BaseInt,
@@ -218,3 +191,15 @@ from .adaptation.adaptation_manager import (
 )
 
 from .trait_numeric import Array, ArrayOrNone, CArray
+
+# Deprecated TraitType subclasses and instances.
+
+from .trait_types import (
+    BaseUnicode,
+    Unicode,
+    BaseCUnicode,
+    CUnicode,
+    false,
+    true,
+    undefined,
+)
