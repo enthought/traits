@@ -23,6 +23,7 @@ jobs:
     - name: Install Linux packages for Qt 5 support
       run: |
         sudo apt-get update
+        sudo apt-get install libegl-mesa0
       if: matrix.os == 'ubuntu-latest'
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
