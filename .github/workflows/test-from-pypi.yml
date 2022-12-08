@@ -44,9 +44,9 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
         architecture: ${{ matrix.python-architecture }}
-    - name: Install Traits and test dependencies from PyPI sdist
+    - name: Install test dependencies and Traits from PyPI sdist
       run: |
-        python -m pip install --no-binary traits traits[test]
+        python -m pip install --no-binary traits Cython numpy PySide6 Sphinx traits traitsui
     - name: Create clean test directory
       run: |
         mkdir testdir
@@ -89,9 +89,9 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
         architecture: ${{ matrix.python-architecture }}
-    - name: Install Traits and test dependencies from PyPI wheel
+    - name: Install test dependencies and Traits from PyPI wheel
       run: |
-        python -m pip install --only-binary traits traits[test]
+        python -m pip install --only-binary traits Cython numpy PySide6 Sphinx traits traitsui
     - name: Create clean test directory
       run: |
         mkdir testdir
