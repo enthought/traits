@@ -120,6 +120,11 @@ class ETSConfigTestCase(unittest.TestCase):
 
     #### public methods #######################################################
 
+    def test_importing_pyside6(self):
+        import PySide6
+        import PySide6.QtCore
+        import PySide6.QtGui
+
     def test_application_data(self):
         """
         application data

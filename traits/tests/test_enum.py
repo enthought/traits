@@ -342,8 +342,8 @@ class EnumTestCase(unittest.TestCase):
             model.digit_sequence = [-1, 0, 2, 1]
 
 
-#@requires_traitsui
-#@unittest.skipIf(is_null, "GUI toolkit not available")
+@requires_traitsui
+@unittest.skipIf(is_null, "GUI toolkit not available")
 class TestGui(unittest.TestCase):
 
     def test_create_editor(self):
