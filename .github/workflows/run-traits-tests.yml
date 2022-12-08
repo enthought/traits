@@ -42,8 +42,9 @@ jobs:
     - name: Create clean test directory
       run: |
         mkdir testdir
-    - name: Test Traits package
-      uses: GabrielBB/xvfb-action@v1
-      with:
-        working-directory: testdir
-        run: python -m unittest discover -v traits
+    - name: Test Traits package (Linux)
+      run: cd testdir && xvfb-run -a python -m unittest discover -v traits
+      if: matrix.os == 'ubuntu-latest'
+    - name: Test Traits package (Windows/macOS)
+      run: cd testdir && python -m unittest discover -v traits
+      if: matrix.os != 'ubuntu-latest'
