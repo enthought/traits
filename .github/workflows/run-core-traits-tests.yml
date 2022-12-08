@@ -4,7 +4,7 @@
 name: Core tests
 
 on:
-  pull_request
+  workflow_dispatch
 
 jobs:
   core:
