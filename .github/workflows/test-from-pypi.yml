@@ -1,15 +1,10 @@
 name: Test installation from PyPI
 
 on:
-  pull_request:
   workflow_dispatch:
   schedule:
     # Run at 03:27 UTC on the 8th and 22nd of every month
     - cron: '27 3 8,22 * *'
-
-env:
-  QT_DEBUG_PLUGINS: 1
-
 
 jobs:
   test-pypi-sdist:
