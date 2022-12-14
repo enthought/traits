@@ -155,7 +155,7 @@ class BaseTraitHandler(object):
             trait handlers do not have any inner traits, and so will return an
             empty tuple. The exceptions are **List** and **Dict** trait types,
             which have inner traits used to validate the values assigned to the
-            trait. For example, in *List( Int )*, the *inner traits* for
-            **List** are ( **Int**, ).
+            trait. For example, in *List(Int)*, the *inner traits* for
+            **List** are (**Int**,).
         """
         return ()

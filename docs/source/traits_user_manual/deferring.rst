@@ -77,7 +77,7 @@ DelegatesTo object. Consider the following example::
     """
     >>> tony  = Parent(first_name='Anthony', last_name='Jones')
     >>> alice = Parent(first_name='Alice', last_name='Smith')
-    >>> sally = Child( first_name='Sally', father=tony, mother=alice)
+    >>> sally = Child(first_name='Sally', father=tony, mother=alice)
     >>> print(sally.last_name)
     Jones
     >>> sally.last_name = 'Cooper' # Updates delegatee
@@ -88,7 +88,7 @@ DelegatesTo object. Consider the following example::
       File "<stdin>", line 1, in ?
       File "c:\src\trunk\enthought\traits\trait_handlers.py", line
     163, in error
-        raise TraitError( object, name, self.info(), value )
+        raise TraitErrorobject, name, self.info(), value)
     traits.trait_errors.TraitError:  The 'last_name' trait of a
     Parent instance must be a string, but a value of <__main__.Parent object at
     0x014D6D80> <class '__main__.Parent'> was specified.
@@ -173,11 +173,11 @@ PrototypedFrom::
         mother     = Instance(Parent)
 
     """
-    >>> fred = Parent( first_name = 'Fred', family_name = 'Lopez', \
-    ... favorite_first_name = 'Diego', child_allowance = 5.0 )
+    >>> fred = Parent(first_name = 'Fred', family_name = 'Lopez', \
+    ... favorite_first_name = 'Diego', child_allowance = 5.0)
     >>> maria = Parent(first_name = 'Maria', family_name = 'Gonzalez',\
-    ... favorite_first_name = 'Tomas', child_allowance = 10.0 )
-    >>> nino = Child( father=fred, mother=maria )
+    ... favorite_first_name = 'Tomas', child_allowance = 10.0)
+    >>> nino = Child(father=fred, mother=maria)
     >>> print('%s %s gets $%.2f for allowance' % (nino.first_name, \ ... nino.last_name, nino.allowance))
     Tomas Lopez gets $5.00 for allowance
     """
@@ -230,7 +230,7 @@ example::
     from traits.api \
         import HasTraits, Instance, PrototypedFrom, Str
 
-    class Parent ( HasTraits ):
+    class Parent(HasTraits):
 
         first_name = Str
         last_name  = Str
@@ -238,19 +238,19 @@ example::
         def _last_name_changed(self, new):
             print("Parent's last name changed to %s." % new)
 
-    class Child ( HasTraits ):
+    class Child(HasTraits):
 
-        father = Instance( Parent )
+        father = Instance(Parent)
         first_name = Str
-        last_name  = PrototypedFrom( 'father' )
+        last_name  = PrototypedFrom('father')
 
         def _last_name_changed(self, new):
             print("Child's last name changed to %s." % new)
 
     """
-    >>> dad = Parent( first_name='William', last_name='Chase' )
+    >>> dad = Parent(first_name='William', last_name='Chase')
     Parent's last name changed to Chase.
-    >>> son = Child( first_name='John', father=dad )
+    >>> son = Child(first_name='John', father=dad)
     Child's last name changed to Chase.
     >>> dad.last_name='Jones'
     Parent's last name changed to Jones.
@@ -278,4 +278,3 @@ notif
 .. [5] Both of these class es inherit from the Delegate class. Explicit use of
    Delegate is deprecated, as its name and default behavior (prototyping) are
    incongruous.
-
