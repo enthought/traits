@@ -171,7 +171,7 @@ specifying only the wildcard character for the attribute name::
     # all_wildcard.py --- Example of trait attribute wildcard rules
     from traits.api import Any, HasTraits, Int, Str
 
-    class Person ( HasTraits ):
+    class Person(HasTraits):
 
         # Normal, explicitly defined trait:
         name = Str
@@ -194,7 +194,7 @@ specifying only the wildcard character for the attribute name::
       File "all_wildcard.py", line 33, in <module>
         bill.age = 'middle age'
       File "c:\wrk\src\lib\enthought\traits\\trait_handlers.py", line 163, in error
-        raise TraitError( object, name, self.info(), value )
+        raise TraitError(object, name, self.info(), value)
     TraitError: The 'age' trait of a Person instance must be an integer, but a value
      of 'middle age' <type 'str'> was specified.
     """
@@ -503,11 +503,11 @@ definition. For example::
     @provides(IName)
     class Person(HasTraits):
 
-        first_name = Str( 'John' )
-        last_name  = Str( 'Doe' )
+        first_name = Str('John')
+        last_name  = Str('Doe')
 
         # Implementation of the 'IName' interface:
-        def get_name ( self ):
+        def get_name(self):
             ''' Returns the name of an object. '''
             name = '{first} {last}'
             return name.format(name=self.first_name, last=self.last_name)
@@ -550,7 +550,7 @@ The most common way to use interfaces is with the
     >>> class Apartment(HasTraits):
     ...     renter = Instance(IName)
     >>> william = Person(first_name='William', last_name='Adams')
-    >>> apt1 = Apartment( renter=william )
+    >>> apt1 = Apartment(renter=william)
     >>> print 'Renter is: ', apt1.renter.get_name()
     Renter is: William Adams
 
@@ -698,7 +698,7 @@ The following code example shows a definition of a simple adapter class::
         adaptee = Instance(Person)
 
         # Implement the 'IName' interface on behalf of its client:
-        def get_name ( self ):
+        def get_name(self):
             name = '{first} {last}'.format(first=self.adaptee.first_name,
                                            last=self.adaptee.last_name)
             return name
@@ -742,7 +742,7 @@ This is the example from the previous section, were the adapter is registered::
         adaptee = Instance(Person)
 
         # Implement the 'IName' interface on behalf of its client:
-        def get_name ( self ):
+        def get_name(self):
             name = '{first} {last}'.format(first=self.adaptee.first_name,
                                            last=self.adaptee.last_name)
             return name
@@ -1118,7 +1118,7 @@ Property Factory Function
 The Property() function has the following signature:
 
 .. currentmodule:: traits.traits
-.. function:: Property( [fget=None, fset=None, fvalidate=None, force=False, handler=None, trait=None, **metadata] )
+.. function:: Property([fget=None, fset=None, fvalidate=None, force=False, handler=None, trait=None, **metadata])
    :noindex:
 
 All parameters are optional, including the *fget* "getter", *fvalidate*
@@ -1133,7 +1133,7 @@ that trait's handler supersedes the *handler* argument, if any. Because the
 *fget* parameter accepts either a method or a trait, you can define a Property
 trait by simply passing another trait. For example::
 
-    source = Property( Code )
+    source = Property(Code)
 
 This line defines a trait whose value is validated by the Code trait, and whose
 getter and setter methods are defined elsewhere on the same class.
@@ -1241,12 +1241,12 @@ For example::
     # transient_metadata.py -- Example of using 'transient' metadata
     from traits.api import HasTraits, File, Any
 
-    class DataBase ( HasTraits ):
+    class DataBase(HasTraits):
         # The name of the data base file:
         file_name = File
 
         # The open file handle used to access the data base:
-        file = Any( transient = True )
+        file = Any(transient = True)
 
 In this example, the DataBase class's file trait is marked as transient because
 it normally contains an open file handle used to access a data base. Since file
@@ -1290,12 +1290,12 @@ metadata.
 However, in cases where this strategy is insufficient, use the following pattern
 to override __getstate__() to remove items that should not be persisted::
 
-    def __getstate__ ( self ):
+    def __getstate__(self):
         state = super().__getstate__()
 
-        for key in [ 'foo', 'bar' ]:
+        for key in ['foo', 'bar']:
             if key in state:
-                del state[ key ]
+                del state[key]
 
         return state
 

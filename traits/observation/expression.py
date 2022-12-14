@@ -59,7 +59,7 @@ class ObserverExpression:
         """ Create a new expression by extending this expression with
         the given expression.
 
-        e.g. ``trait("child").then( trait("age") | trait("number") )``
+        e.g. ``trait("child").then(trait("age") | trait("number"))``
         on an object matches ``child.age`` or ``child.number`` on the object.
 
         Parameters

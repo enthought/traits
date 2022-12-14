@@ -60,7 +60,7 @@ ListenerType = {
     4: SRC_LISTENER,
 }
 
-# Invalid destination ( object, name ) reference marker (i.e. ambiguous):
+# Invalid destination (object, name) reference marker (i.e. ambiguous):
 INVALID_DESTINATION = (None, None)
 
 # Regular expressions used by the parser:
