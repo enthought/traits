@@ -536,7 +536,7 @@ class TraitMap(TraitHandler):
     The following example defines a ``Person`` class::
 
         >>> class Person(HasTraits):
-        ...     married = Trait('yes', TraitMap({'yes': 1, 'no': 0 })
+        ...     married = Trait('yes', TraitMap({'yes': 1, 'no': 0})
         ...
         >>> bob = Person()
         >>> print bob.married

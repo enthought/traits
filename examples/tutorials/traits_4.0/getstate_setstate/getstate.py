@@ -98,9 +98,9 @@ not be persisted::
     def __getstate__(self):
         state = super().__getstate__()
 
-        for key in [ 'foo', 'bar' ]:
+        for key in ['foo', 'bar']:
             if key in state:
-                del state[ key ]
+                del state[key]
 
         return state
 

@@ -2771,7 +2771,7 @@ class PrefixList(TraitType):
     type is the set of all strings supplied to the PrefixList constructor,
     as well as any unique prefix of those strings. That is, if the set of
     strings supplied to the constructor is described by
-    [*s*\ :sub:`1`\ , *s*\ :sub:`2`\ , ..., *s*\ :sub:`n`\ ], then the
+    [*s*\ :sub:`1`\ , *s*\ :sub:`2`\ , ..., *s*\ :sub:`n`], then the
     string *v* is a valid value for the trait if *v* == *s*\ :sub:`i[:j]`
     for one and only one pair of values (i, j). If *v* is a valid value,
     then the actual value assigned to the trait attribute is the
@@ -3161,7 +3161,7 @@ class Map(TraitType):
         The following example defines a ``Person`` class::
 
             >>> class Person(HasTraits):
-            ...     married = Map({'yes': 1, 'no': 0 }, default_value="yes")
+            ...     married = Map({'yes': 1, 'no': 0}, default_value="yes")
             ...
             >>> bob = Person()
             >>> print(bob.married)
@@ -3256,7 +3256,7 @@ class PrefixMap(TraitType):
     -------
     ::
 
-        mapping = {'true': 1, 'yes': 1, 'false': 0, 'no': 0 }
+        mapping = {'true': 1, 'yes': 1, 'false': 0, 'no': 0}
         boolean_map = PrefixMap(mapping)
 
     This example defines a Boolean trait that accepts any prefix of 'true',
@@ -3885,7 +3885,7 @@ class Type(BaseClass):
         return result
 
     def get_default_value(self):
-        """ Returns a tuple of the form: ( default_value_type, default_value )
+        """ Returns a tuple of the form: (default_value_type, default_value)
         which describes the default value for this trait.
         """
         if not isinstance(self.default_value, str):

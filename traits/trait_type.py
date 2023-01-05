@@ -176,7 +176,7 @@ class TraitType(BaseTraitHandler):
         the ``value`` being assigned. It should return ``True`` if the value is
         valid, and ``False`` otherwise.
 
-    ``value_for ( self, value )``
+    ``value_for(self, value)``
 
         As another alternative to implementing the ``validate`` method, you
         can instead implement the ``value_for`` method, which receives only

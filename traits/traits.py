@@ -207,16 +207,16 @@ def Trait(*value_type, **metadata):
     |                   |   Trait(i)    |                                     |
     +-------------------+---------------+-------------------------------------+
     | Trait(*handler*)  | Trait(        | Assignment to this trait is         |
-    |                   | TraitEnum )   | validated by an object derived from |
+    |                   | TraitEnum)    | validated by an object derived from |
     |                   |               | **traits.TraitHandler**.            |
     +-------------------+---------------+-------------------------------------+
     | Trait(*default*,  | Trait(0.0, 0.0| This is the most general form of    |
-    | { *type* |        | 'stuff',      | the function. The notation:         |
+    | {*type* |         | 'stuff',      | the function. The notation:         |
     | *constant* |      | TupleType)    | ``{...|...|...}+`` means a list of  |
     | *dict* | *class* ||               | one or more of any of the items     |
     | *function* |      |               | listed between the braces. Thus, the|
     | *handler* |       |               | most general form of the function   |
-    | *trait* }+ )      |               | consists of a default value,        |
+    | *trait*}+)        |               | consists of a default value,        |
     |                   |               | followed by one or more of several  |
     |                   |               | possible items. A trait defined by  |
     |                   |               | multiple items is called a          |
