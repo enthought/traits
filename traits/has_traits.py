@@ -1,4 +1,4 @@
-# (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
+# (C) Copyright 2005-2023 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -929,7 +929,7 @@ def property_depends_on(dependency, settable=False, flushable=False):
             file_name = File
             file_contents = Property
 
-            @property_depends_on( 'file_name' )
+            @property_depends_on('file_name')
             def _get_file_contents(self):
                 with open(self.file_name, 'rb') as fh:
                     return fh.read()
@@ -2391,11 +2391,11 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
 
         An *xname2* is of the form::
 
-            ( xname3 | '['xname3[','xname3]*']' ) ['*']
+            (xname3 | '['xname3[','xname3]*']') ['*']
 
         An *xname3* is of the form::
 
-             xname | ['+'|'-'][name] | name['?' | ('+'|'-')[name]]
+            xname | ['+'|'-'][name] | name['?' | ('+'|'-')[name]]
 
         A *name* is any valid Python attribute name. The semantic meaning of
         this notation is as follows:
@@ -2417,7 +2417,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                                          changes to *item1* do not (i.e., the
                                          ':' indicates that changes to the
                                          *link* object should not be reported).
-        ``[ item1, item2, ..., itemN ]`` A list which matches any of the
+        ``[item1, item2, ..., itemN]``   A list which matches any of the
                                          specified items. Note that at the
                                          topmost level, the surrounding square
                                          brackets are optional.
@@ -3261,7 +3261,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                 new.on_trait_change(*args)
 
     def _list_changed_handler(self, name, old, new):
-        """ Handles adding/removing listeners for a generic 'List( Instance )'
+        """ Handles adding/removing listeners for a generic 'List(Instance)'
             trait.
         """
         arg_lists = self._get_instance_handlers(name)
@@ -3275,7 +3275,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                 item.on_trait_change(*args)
 
     def _list_items_changed_handler(self, name, not_used, event):
-        """ Handles adding/removing listeners for a generic 'List( Instance )'
+        """ Handles adding/removing listeners for a generic 'List(Instance)'
             trait.
         """
         arg_lists = self._get_instance_handlers(name[:-6])
@@ -3289,8 +3289,8 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                 item.on_trait_change(*args)
 
     def _get_instance_handlers(self, name):
-        """ Returns a list of ( name, method ) pairs for a specified 'Instance'
-            or 'List( Instance )' trait name:
+        """ Returns a list of (name, method) pairs for a specified 'Instance'
+            or 'List(Instance)' trait name:
         """
         return [
             (getattr(self, method_name), item_name)

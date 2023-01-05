@@ -1,4 +1,4 @@
-# (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
+# (C) Copyright 2005-2023 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -54,7 +54,7 @@ The exception printed will look similar to the following:
 Traceback (most recent call last):
   File "<stdin>", line 1, in ?
   File "c:\src\trunk\enthought\traits\trait_handlers.py", line 163, in error
-    raise TraitError( object, name, self.info(), value )
+    raise TraitError(object, name, self.info(), value)
 traits.trait_errors.TraitError: The 'last_name' trait of a Child
 instance must be a value of type 'str', but a value of <__main__.Parent object
 at 0x009DD6F0> was specified.

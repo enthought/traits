@@ -135,7 +135,7 @@ Extended names use the following syntax:
 
 .. productionList::
    xname: xname2['.'xname2]*
-   xname2: ( xname3 | '['xname3[','xname3]*']' ) ['*']
+   xname2: (xname3 | '['xname3[','xname3]*']') ['*']
    xname3: xname | ['+'|'-'][name] | name['?' | ('+'|'-')[name]]
 
 A *name* is any valid Python attribute name.
@@ -378,7 +378,7 @@ some aspect of the extended trait name syntax in the name specifier.
 
     class Employee: pass
 
-    class Department( HasTraits ):
+    class Department(HasTraits):
         employees = List(Employee)
 
     def a_handler(): print("A handler")
@@ -393,13 +393,13 @@ some aspect of the extended trait name syntax in the name specifier.
 
     # "Old style" name syntax
     # a_handler is called only if the list is replaced:
-    dept.on_trait_change( a_handler, 'employees' )
+    dept.on_trait_change(a_handler, 'employees')
     # b_handler is called if the membership of the list changes:
-    dept.on_trait_change( b_handler, 'employees_items')
+    dept.on_trait_change(b_handler, 'employees_items')
 
     # "New style" name syntax
     # c_handler is called if 'employees' or its membership change:
-    dept.on_trait_change( c_handler, 'employees[]' )
+    dept.on_trait_change(c_handler, 'employees[]')
 
     print("Changing list items")
     dept.employees[1] = donna     # Calls B and C
@@ -453,8 +453,8 @@ Decorator Syntax
 
 The syntax for the decorator is::
 
-    @on_trait_change( 'extended_trait_name' )
-    def any_method_name( self, ...):
+    @on_trait_change('extended_trait_name')
+    def any_method_name(self, ...):
     ...
 
 In this case, *extended_trait_name* is a specifier for one or more trait
@@ -599,11 +599,11 @@ Note that these signatures follow a different pattern for argument
 interpretation from dynamic handlers and decorated static handlers. Both of
 the following methods define a handler for an object's **name** trait::
 
-    def _name_changed( self, arg1, arg2, arg3):
+    def _name_changed(self, arg1, arg2, arg3):
         pass
 
     @on_trait_change('name')
-    def some_method( self, arg1, arg2, arg3):
+    def some_method(self, arg1, arg2, arg3):
         pass
 
 However, the interpretation of arguments to these methods differs, as shown in

@@ -35,7 +35,7 @@ Here's an example of subclassing a predefined trait class::
     # trait_subclass.py -- Example of subclassing a trait class
     from traits.api import BaseInt
 
-    class OddInt ( BaseInt ):
+    class OddInt(BaseInt):
 
         # Define the default value
         default_value = 1
@@ -43,12 +43,12 @@ Here's an example of subclassing a predefined trait class::
         # Describe the trait type
         info_text = 'an odd integer'
 
-        def validate ( self, object, name, value ):
+        def validate(self, object, name, value):
             value = super().validate(object, name, value)
             if (value % 2) == 1:
                 return value
 
-            self.error( object, name, value )
+            self.error(object, name, value)
 
 The OddInt class defines a trait that must be an odd integer. It derives from
 BaseInt, rather than Int, as you might initially expect. BaseInt and Int are
@@ -101,8 +101,8 @@ performs additional processing after a value has been validated and assigned.
 
 The signatures of these methods are:
 
-.. method:: validate( object, name, value )
-.. method:: post_setattr( object, name, value )
+.. method:: validate(object, name, value)
+.. method:: post_setattr(object, name, value)
 
 The parameters of these methods are:
 
@@ -136,8 +136,8 @@ definition it might have for validate() is ignored.
 
 The signatures of these methods are:
 
-.. method:: get( object, name)
-.. method:: set( object, name, value)
+.. method:: get(object, name)
+.. method:: set(object, name, value)
 
 In these signatures, the parameters are:
 
@@ -235,7 +235,7 @@ Reference*.
 The most general form of the Trait() function is:
 
 .. currentmodule:: traits.traits
-.. function:: Trait(default_value, {type | constant_value | dictionary | class | function | trait_handler | trait }+ )
+.. function:: Trait(default_value, {type | constant_value | dictionary | class | function | trait_handler | trait}+)
     :noindex:
 
 .. index:: compound traits
@@ -255,11 +255,11 @@ The following is an example of a compound trait with multiple criteria::
     # compound.py -- Example of multiple criteria in a trait definition
     from traits.api import HasTraits, Trait, Range
 
-    class Die ( HasTraits ):
+    class Die(HasTraits):
 
         # Define a compound trait definition:
-        value = Trait( 1, Range( 1, 6 ),
-                      'one', 'two', 'three', 'four', 'five', 'six' )
+        value = Trait(1, Range(1, 6),
+                      'one', 'two', 'three', 'four', 'five', 'six')
 
 The Die class has a **value trait**, which has a default value of 1, and can have
 any of the following values:
@@ -383,7 +383,7 @@ representing red, green, blue, and transparency values::
                    'violet':      (0.31, 0.184, 0.31, 1.0),
                    'yellow':      (1.0, 1.0, 0.0, 1.0),
                    'white':       (1.0, 1.0, 1.0, 1.0),
-                   'transparent': (1.0, 1.0, 1.0, 0.0) } )
+                   'transparent': (1.0, 1.0, 1.0, 0.0)})
 
     red_color = Trait ('red', standard_color)
 

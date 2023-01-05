@@ -1,4 +1,4 @@
-# (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
+# (C) Copyright 2005-2023 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -536,7 +536,7 @@ class TraitMap(TraitHandler):
     The following example defines a ``Person`` class::
 
         >>> class Person(HasTraits):
-        ...     married = Trait('yes', TraitMap({'yes': 1, 'no': 0 })
+        ...     married = Trait('yes', TraitMap({'yes': 1, 'no': 0})
         ...
         >>> bob = Person()
         >>> print bob.married

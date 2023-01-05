@@ -1,4 +1,4 @@
-# (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
+# (C) Copyright 2005-2023 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -98,9 +98,9 @@ not be persisted::
     def __getstate__(self):
         state = super().__getstate__()
 
-        for key in [ 'foo', 'bar' ]:
+        for key in ['foo', 'bar']:
             if key in state:
-                del state[ key ]
+                del state[key]
 
         return state
 

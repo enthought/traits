@@ -1,4 +1,4 @@
-# (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
+# (C) Copyright 2005-2023 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -176,7 +176,7 @@ class TraitType(BaseTraitHandler):
         the ``value`` being assigned. It should return ``True`` if the value is
         valid, and ``False`` otherwise.
 
-    ``value_for ( self, value )``
+    ``value_for(self, value)``
 
         As another alternative to implementing the ``validate`` method, you
         can instead implement the ``value_for`` method, which receives only

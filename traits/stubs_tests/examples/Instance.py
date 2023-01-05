@@ -1,4 +1,4 @@
-# (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
+# (C) Copyright 2005-2023 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -37,7 +37,7 @@ class TestClass(HasTraits):
     itm_args = Instance(Fruit, ('different info',))
     itm_kw = Instance(Fruit, {'info': 'different info'})
     itm_factory = Instance(Fruit, fruit_factory)
-    itm_factory_args = Instance(Fruit, fruit_factory, ('different info',), )
+    itm_factory_args = Instance(Fruit, fruit_factory, ('different info',))
     itm_factory_args_kw = Instance(
         Fruit,
         fruit_factory,
