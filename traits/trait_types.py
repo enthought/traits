@@ -4507,9 +4507,9 @@ class Date(TraitType):
         :class:`datetime.datetime` instances are no longer valid values for
         this trait type unless "allow_datetime=True" is explicitly given.
 
-    .. deprecated:: 6.3.0
-        In the future, ``None`` will not be a valid value for this trait type
-        unless "allow_none=True" is explicitly given.
+    .. versionchanged:: 7.0.0
+        ``None`` is no longer a valid value for this trait type unless
+        "allow_none=True" is explicitly given.
 
     Parameters
     ----------
@@ -4522,10 +4522,8 @@ class Date(TraitType):
         instances are permitted. The default is ``False``.
     allow_none : bool, optional
         If ``False``, it's not permitted to assign ``None`` to this trait.
-        If ``True``, ``None`` instances are permitted. If this argument is
-        not given, ``None`` instances will be accepted but a
-        ``DeprecationWarning`` will be issued; in some future verison of
-        Traits, ``None`` may no longer be permitted.
+        If ``True``, ``None`` instances are permitted. The default is
+        ``False``.
     **metadata: dict
         Additional metadata.
     """
@@ -4538,7 +4536,7 @@ class Date(TraitType):
         default_value=None,
         *,
         allow_datetime=False,
-        allow_none=None,
+        allow_none=False,
         **metadata,
     ):
         super().__init__(default_value, **metadata)
@@ -4550,17 +4548,6 @@ class Date(TraitType):
         """
         if value is None:
             if self.allow_none:
-                return value
-            elif self.allow_none is None:
-                warnings.warn(
-                    (
-                        "In the future, None will no longer be accepted by "
-                        "this trait type. To allow None and silence this "
-                        "warning, use Date(allow_none=True)."
-                    ),
-                    DeprecationWarning,
-                    stacklevel=2,
-                )
                 return value
 
         elif isinstance(value, datetime.datetime):
@@ -4581,7 +4568,7 @@ class Date(TraitType):
         else:
             datetime_qualifier = " non-datetime"
 
-        if self.allow_none or self.allow_none is None:
+        if self.allow_none:
             none_qualifier = " or None"
         else:
             none_qualifier = ""
@@ -4599,9 +4586,9 @@ class Datetime(TraitType):
 
     The value must be an instance of :class:`datetime.datetime`.
 
-    .. deprecated:: 6.3.0
-        In the future, ``None`` will not be a valid value for this trait type
-        unless "allow_none=True" is explicitly given.
+    .. versionchanged:: 7.0.0
+        ``None`` is no longer a valid value for this trait type unless
+        "allow_none=True" is explicitly given.
 
     Parameters
     ----------
@@ -4610,10 +4597,8 @@ class Datetime(TraitType):
         default is ``None``.
     allow_none : bool, optional
         If ``False``, it's not permitted to assign ``None`` to this trait.
-        If ``True``, ``None`` instances are permitted. If this argument is
-        not given, ``None`` instances will be accepted but a
-        ``DeprecationWarning`` will be issued; in some future verison of
-        Traits, ``None`` may no longer be permitted.
+        If ``True``, ``None`` instances are permitted. The default is
+        ``False``.
     **metadata: dict
         Additional metadata.
     """
@@ -4625,7 +4610,7 @@ class Datetime(TraitType):
         self,
         default_value=None,
         *,
-        allow_none=None,
+        allow_none=False,
         **metadata,
     ):
         super().__init__(default_value, **metadata)
@@ -4637,17 +4622,6 @@ class Datetime(TraitType):
         if value is None:
             if self.allow_none:
                 return value
-            elif self.allow_none is None:
-                warnings.warn(
-                    (
-                        "In the future, None will no longer be accepted by "
-                        "this trait type. To allow None and silence this "
-                        "warning, use Datetime(allow_none=True)."
-                    ),
-                    DeprecationWarning,
-                    stacklevel=2,
-                )
-                return value
 
         elif isinstance(value, datetime.datetime):
             return value
@@ -4658,7 +4632,7 @@ class Datetime(TraitType):
         """
         Return text description of this trait.
         """
-        if self.allow_none or self.allow_none is None:
+        if self.allow_none:
             none_qualifier = " or None"
         else:
             none_qualifier = ""
@@ -4676,9 +4650,9 @@ class Time(TraitType):
 
     The value must be an instance of :class:`datetime.time`.
 
-    .. deprecated:: 6.3.0
-        In the future, ``None`` will not be a valid value for this trait type
-        unless "allow_none=True" is explicitly given.
+    .. versionchanged:: 7.0.0
+        ``None`` is no longer a valid value for this trait type unless
+        "allow_none=True" is explicitly given.
 
     Parameters
     ----------
@@ -4687,10 +4661,8 @@ class Time(TraitType):
         default is ``None``.
     allow_none : bool, optional
         If ``False``, it's not permitted to assign ``None`` to this trait.
-        If ``True``, ``None`` instances are permitted. If this argument is
-        not given, ``None`` instances will be accepted but a
-        ``DeprecationWarning`` will be issued; in some future verison of
-        Traits, ``None`` may no longer be permitted.
+        If ``True``, ``None`` instances are permitted. The default is
+        ``False``.
     **metadata: dict
         Additional metadata.
     """
@@ -4702,7 +4674,7 @@ class Time(TraitType):
         self,
         default_value=None,
         *,
-        allow_none=None,
+        allow_none=False,
         **metadata,
     ):
         super().__init__(default_value, **metadata)
@@ -4714,17 +4686,6 @@ class Time(TraitType):
         if value is None:
             if self.allow_none:
                 return value
-            elif self.allow_none is None:
-                warnings.warn(
-                    (
-                        "In the future, None will no longer be accepted by "
-                        "this trait type. To allow None and silence this "
-                        "warning, use Time(allow_none=True)."
-                    ),
-                    DeprecationWarning,
-                    stacklevel=2,
-                )
-                return value
 
         elif isinstance(value, datetime.time):
             return value
@@ -4735,7 +4696,7 @@ class Time(TraitType):
         """
         Return text description of this trait.
         """
-        if self.allow_none or self.allow_none is None:
+        if self.allow_none:
             none_qualifier = " or None"
         else:
             none_qualifier = ""

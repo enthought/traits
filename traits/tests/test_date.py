@@ -71,21 +71,15 @@ class TestDate(unittest.TestCase):
         with self.assertRaises(TraitError) as exception_context:
             obj.simple_date = "1975-2-13"
         message = str(exception_context.exception)
-        self.assertIn("must be a non-datetime date or None, but", message)
+        self.assertIn("must be a non-datetime date, but", message)
 
     def test_assign_none_with_allow_none_not_given(self):
         obj = HasDateTraits(simple_date=UNIX_EPOCH)
-        self.assertIsNotNone(obj.simple_date)
-        with self.assertWarns(DeprecationWarning) as warnings_cm:
+        with self.assertRaises(TraitError) as exception_context:
             obj.simple_date = None
-        self.assertIsNone(obj.simple_date)
-
-        _, _, this_module = __name__.rpartition(".")
-        self.assertIn(this_module, warnings_cm.filename)
-        self.assertIn(
-            "None will no longer be accepted",
-            str(warnings_cm.warning),
-        )
+        self.assertEqual(obj.simple_date, UNIX_EPOCH)
+        message = str(exception_context.exception)
+        self.assertIn("must be a non-datetime date, but", message)
 
     def test_assign_none_with_allow_none_false(self):
         obj = HasDateTraits(none_prohibited=UNIX_EPOCH)
@@ -106,7 +100,7 @@ class TestDate(unittest.TestCase):
         with self.assertRaises(TraitError) as exception_context:
             obj.datetime_prohibited = test_datetime
         message = str(exception_context.exception)
-        self.assertIn("must be a non-datetime date or None, but", message)
+        self.assertIn("must be a non-datetime date, but", message)
 
     def test_assign_datetime_with_allow_datetime_true(self):
         test_datetime = datetime.datetime(1975, 2, 13)
@@ -124,7 +118,7 @@ class TestDate(unittest.TestCase):
             obj.simple_date = test_datetime
         self.assertEqual(obj.simple_date, test_date)
         message = str(exception_context.exception)
-        self.assertIn("must be a non-datetime date or None, but", message)
+        self.assertIn("must be a non-datetime date, but", message)
 
     def test_allow_none_false_allow_datetime_false(self):
         obj = HasDateTraits(strict=UNIX_EPOCH)
