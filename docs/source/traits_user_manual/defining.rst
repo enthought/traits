@@ -307,7 +307,7 @@ the table.
 | Constant         | Constant(*value*\ [, \*\*\ *metadata*])                  |
 +------------------+----------------------------------------------------------+
 | Date             | Date(*value*\ [, *default_value* = None,                 |
-|                  | *allow_datetime* = None, *allow_none* = None,            |
+|                  | *allow_datetime* = False, *allow_none* = None,           |
 |                  | \*\*\ *metadata*])                                       |
 +------------------+----------------------------------------------------------+
 | Datetime         | Datetime(*value*\ [, *default_value* = None,             |

@@ -4498,14 +4498,14 @@ class Date(TraitType):
     """ A trait type whose value must be a date.
 
     The value must be an instance of :class:`datetime.date`. Note that
-    :class:`datetime.datetime` is a subclass of :class:`datetime.date`, so
-    by default instances of :class:`datetime.datetime` are also permitted.
-    Use ``Date(allow_datetime=False)`` to exclude this possibility.
+    :class:`datetime.datetime` is a subclass of :class:`datetime.date`, but by
+    default instances of :class:`datetime.datetime` are not permitted. Use
+    ``Date(allow_datetime=True)`` to allow :class:`datetime.datetime` instances
+    to be assigned to a ``Date`` trait.
 
-    .. deprecated:: 6.3.0
-        In the future, :class:`datetime.datetime` instances will not be valid
-        values for this trait type unless "allow_datetime=True" is explicitly
-        given.
+    .. versionchanged:: 7.0.0
+        :class:`datetime.datetime` instances are no longer valid values for
+        this trait type unless "allow_datetime=True" is explicitly given.
 
     .. deprecated:: 6.3.0
         In the future, ``None`` will not be a valid value for this trait type
@@ -4517,12 +4517,9 @@ class Date(TraitType):
         The default value for this trait. If no default is provided, the
         default is ``None``.
     allow_datetime : bool, optional
-        If ``False``, instances of ``datetime.datetime`` are not valid
-        values for this Trait. If ``True``, ``datetime.datetime`` instances
-        are explicitly permitted. If this argument is not given,
-        ``datetime.datetime`` instances will be accepted, but a
-        ``DeprecationWarning`` will be issued; in some future version of
-        Traits, ``datetime.datetime`` instances will not be permitted.
+        If ``False``, instances of ``datetime.datetime`` are not considered
+        valid values for this Trait. If ``True``, ``datetime.datetime``
+        instances are permitted. The default is ``False``.
     allow_none : bool, optional
         If ``False``, it's not permitted to assign ``None`` to this trait.
         If ``True``, ``None`` instances are permitted. If this argument is
@@ -4540,7 +4537,7 @@ class Date(TraitType):
         self,
         default_value=None,
         *,
-        allow_datetime=None,
+        allow_datetime=False,
         allow_none=None,
         **metadata,
     ):
@@ -4569,19 +4566,6 @@ class Date(TraitType):
         elif isinstance(value, datetime.datetime):
             if self.allow_datetime:
                 return value
-            elif self.allow_datetime is None:
-                warnings.warn(
-                    (
-                        "In the future, datetime.datetime instances will no "
-                        "longer be accepted by this trait type. To accept "
-                        "datetimes and silence this warning, use "
-                        "Date(allow_datetime=True) or "
-                        "Union(Datetime(), Date())."
-                    ),
-                    DeprecationWarning,
-                    stacklevel=2,
-                )
-                return value
 
         elif isinstance(value, datetime.date):
             return value
@@ -4592,7 +4576,7 @@ class Date(TraitType):
         """
         Return text description of this trait.
         """
-        if self.allow_datetime or self.allow_datetime is None:
+        if self.allow_datetime:
             datetime_qualifier = ""
         else:
             datetime_qualifier = " non-datetime"
