@@ -45,9 +45,6 @@ from .traits import (
     Trait,
     Property,
     Default,
-    Color,
-    RGBColor,
-    Font,
 )
 
 from .trait_types import (

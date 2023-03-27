@@ -19,16 +19,13 @@ from traits.api import (
     CFloat,
     CInt,
     ComparisonMode,
-    Color,
     Delegate,
     Float,
-    Font,
     HasTraits,
     Instance,
     Int,
     List,
     Range,
-    RGBColor,
     Str,
     This,
     Trait,
@@ -37,7 +34,6 @@ from traits.api import (
     pop_exception_handler,
     push_exception_handler,
 )
-from traits.testing.optional_dependencies import requires_traitsui
 
 #  Base unit test classes:
 
@@ -1075,20 +1071,3 @@ class ComparisonModeTests(unittest.TestCase):
         self.assertEqual(len(events), 1)
         old_compare.bar = [4, 5, 6]
         self.assertEqual(len(events), 2)
-
-
-@requires_traitsui
-class TestDeprecatedTraits(unittest.TestCase):
-
-    def test_color_deprecated(self):
-        with self.assertWarnsRegex(DeprecationWarning, "'Color' in 'traits'"):
-            Color()
-
-    def test_rgb_color_deprecated(self):
-        with self.assertWarnsRegex(DeprecationWarning,
-                                   "'RGBColor' in 'traits'"):
-            RGBColor()
-
-    def test_font_deprecated(self):
-        with self.assertWarnsRegex(DeprecationWarning, "'Font' in 'traits'"):
-            Font()
