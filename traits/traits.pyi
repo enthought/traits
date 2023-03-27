@@ -59,12 +59,3 @@ class ForwardProperty:
 
 
 generic_trait: _Any
-
-
-def Color(*args: _Any, **metadata: _DictType[str, _Any]): ...
-
-
-def RGBColor(*args: _Any, **metadata: _DictType[str, _Any]): ...
-
-
-def Font(*args: _Any, **metadata: _DictType[str, _Any]): ...

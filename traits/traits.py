@@ -71,7 +71,6 @@ from .trait_handlers import (
 from .trait_factory import (
     TraitFactory,
 )
-from .util.deprecated import deprecated
 
 # Constants
 
@@ -635,57 +634,3 @@ class ForwardProperty(object):
 
 # Generic trait with 'object' behavior:
 generic_trait = CTrait(TraitKind.generic)
-
-
-# User interface related color and font traits
-
-@deprecated("'Color' in 'traits' package has been deprecated. "
-            "Use 'Color' from 'traitsui' package instead.")
-def Color(*args, **metadata):
-    """ Returns a trait whose value must be a GUI toolkit-specific color.
-
-    .. deprecated:: 6.1.0
-        ``Color`` trait in this package will be removed in the future. It is
-        replaced by ``Color`` trait in TraitsUI package.
-    """
-    from traitsui.toolkit_traits import ColorTrait
-
-    return ColorTrait(*args, **metadata)
-
-
-Color = TraitFactory(Color)
-
-
-@deprecated("'RGBColor' in 'traits' package has been deprecated. "
-            "Use 'RGBColor' from 'traitsui' package instead.")
-def RGBColor(*args, **metadata):
-    """ Returns a trait whose value must be a GUI toolkit-specific RGB-based
-    color.
-
-    .. deprecated:: 6.1.0
-        ``RGBColor`` trait in this package will be removed in the future. It is
-        replaced by ``RGBColor`` trait in TraitsUI package.
-    """
-    from traitsui.toolkit_traits import RGBColorTrait
-
-    return RGBColorTrait(*args, **metadata)
-
-
-RGBColor = TraitFactory(RGBColor)
-
-
-@deprecated("'Font' in 'traits' package has been deprecated. "
-            "Use 'Font' from 'traitsui' package instead.")
-def Font(*args, **metadata):
-    """ Returns a trait whose value must be a GUI toolkit-specific font.
-
-    .. deprecated:: 6.1.0
-        ``Font`` trait in this package will be removed in the future. It is
-        replaced by ``Font`` trait in TraitsUI package.
-    """
-    from traitsui.toolkit_traits import FontTrait
-
-    return FontTrait(*args, **metadata)
-
-
-Font = TraitFactory(Font)

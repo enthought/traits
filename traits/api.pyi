@@ -25,11 +25,8 @@ from .trait_errors import (
 )
 
 from .traits import (
-    Color as Color,
     Default as Default,
-    Font as Font,
     Property as Property,
-    RGBColor as RGBColor,
     Trait as Trait
 )
 
