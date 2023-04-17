@@ -307,11 +307,11 @@ the table.
 | Constant         | Constant(*value*\ [, \*\*\ *metadata*])                  |
 +------------------+----------------------------------------------------------+
 | Date             | Date(*value*\ [, *default_value* = None,                 |
-|                  | *allow_datetime* = None, *allow_none* = None,            |
+|                  | *allow_datetime* = False, *allow_none* = False,          |
 |                  | \*\*\ *metadata*])                                       |
 +------------------+----------------------------------------------------------+
 | Datetime         | Datetime(*value*\ [, *default_value* = None,             |
-|                  | *allow_none* = None, \*\*\ *metadata*])                  |
+|                  | *allow_none* = False, \*\*\ *metadata*])                 |
 +------------------+----------------------------------------------------------+
 | Dict             | Dict([*key_trait* = None, *value_trait* = None,          |
 |                  | *value* = None, *items* = True, \*\*\ *metadata*])       |
@@ -394,7 +394,7 @@ the table.
 | This             | n/a                                                      |
 +------------------+----------------------------------------------------------+
 | Time             | Time(*value*\ [, *default_value* = None,                 |
-|                  | *allow_none* = None, \*\*\ *metadata*])                  |
+|                  | *allow_none* = False, \*\*\ *metadata*])                 |
 +------------------+----------------------------------------------------------+
 | ToolbarButton    | ToolbarButton([*label* = '', *image* = None, *style* =   |
 |                  | 'toolbar', *orientation* = 'vertical', *width_padding* = |
