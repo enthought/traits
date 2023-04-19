@@ -617,6 +617,22 @@ used for putting up the observer::
     instance.observe(handler, "name", dispatch="ui")
     instance.observe(handler, "name", dispatch="ui", remove=True)
 
+If dispatch is set to "ui", the ui_dispatch(handler, *args, **kw), the behavior
+of the function will be different depending on whether the current thread is the
+main thread.
+
+    ui_dispatch(handler, *args, **kw) in main thread (use **handler**)
+    ui_dispatch(handler, *args, **kw) in other threads (use **ui_handler**)
+
+Thus in the case of no ui (ui_handler in traits/trait_notifiers.py is None, which
+is the case by default):
+
+    instance.observe(handler, "name", dispatch="ui") in main thread (will use
+    **handler** parameter in ui_dispatch)
+    instance.observe(handler, "name", dispatch="ui") in main thread (will try
+    to use **ui_dispatch** in ui_dispatch and raise a systemExit since the value
+    of  ui_handler is None)
+
 ..
    # substitutions
 
