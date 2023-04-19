@@ -617,12 +617,12 @@ used for putting up the observer::
     instance.observe(handler, "name", dispatch="ui")
     instance.observe(handler, "name", dispatch="ui", remove=True)
 
-If dispatch is set to "ui", the ui_dispatch(handler, *args, **kw), the behavior
+If dispatch is set to "ui", the ui_dispatch(handler, ..), the behavior
 of the function will be different depending on whether the current thread is the
 main thread.
 
-    ui_dispatch(handler, *args, **kw) in main thread (use **handler**)
-    ui_dispatch(handler, *args, **kw) in other threads (use **ui_handler**)
+    ui_dispatch(handler, ..) in main thread (use **handler**)
+    ui_dispatch(handler, ..) in other threads (use **ui_handler**)
 
 Thus in the case of no ui (ui_handler in traits/trait_notifiers.py is None, which
 is the case by default):
