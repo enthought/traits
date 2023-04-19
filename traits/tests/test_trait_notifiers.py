@@ -9,7 +9,8 @@
 # Thanks for using Enthought open source!
 
 import unittest
-from traits.api import HasTraits, Int, observe
+from traits.api import HasTraits, Int
+
 
 class TestTraitNotifiers(unittest.TestCase):
     def test_ui_dispatch(self):
@@ -17,6 +18,7 @@ class TestTraitNotifiers(unittest.TestCase):
         class DispatchTest(HasTraits):
             test_param = Int()
         t = DispatchTest()
+
         def test_handler(event):
             pass
 
