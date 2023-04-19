@@ -63,34 +63,29 @@ class TestDatetime(unittest.TestCase):
         with self.assertRaises(TraitError) as exception_context:
             obj.simple_datetime = "2021-02-05 12:00:00"
         message = str(exception_context.exception)
-        self.assertIn("must be a datetime or None, but", message)
+        self.assertIn("must be a datetime, but", message)
 
     def test_assign_date(self):
         obj = HasDatetimeTraits()
         with self.assertRaises(TraitError) as exception_context:
             obj.simple_datetime = datetime.date(1975, 2, 13)
         message = str(exception_context.exception)
-        self.assertIn("must be a datetime or None, but", message)
+        self.assertIn("must be a datetime, but", message)
         self.assertIsNone(obj.simple_datetime)
 
     def test_assign_none_with_allow_none_not_given(self):
         obj = HasDatetimeTraits(simple_datetime=UNIX_EPOCH)
-        self.assertIsNotNone(obj.simple_datetime)
-        with self.assertWarns(DeprecationWarning) as warnings_cm:
+        with self.assertRaises(TraitError) as exception_context:
             obj.simple_datetime = None
-        self.assertIsNone(obj.simple_datetime)
-
-        _, _, this_module = __name__.rpartition(".")
-        self.assertIn(this_module, warnings_cm.filename)
-        self.assertIn(
-            "None will no longer be accepted",
-            str(warnings_cm.warning),
-        )
+        self.assertEqual(obj.simple_datetime, UNIX_EPOCH)
+        message = str(exception_context.exception)
+        self.assertIn("must be a datetime, but", message)
 
     def test_assign_none_with_allow_none_false(self):
         obj = HasDatetimeTraits(none_prohibited=UNIX_EPOCH)
         with self.assertRaises(TraitError) as exception_context:
             obj.none_prohibited = None
+        self.assertEqual(obj.none_prohibited, UNIX_EPOCH)
         message = str(exception_context.exception)
         self.assertIn("must be a datetime, but", message)
 

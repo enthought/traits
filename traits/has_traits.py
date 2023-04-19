@@ -390,54 +390,12 @@ class MetaHasTraits(type):
 
     """
 
-    # All registered class creation listeners.
-    #
-    # { Str class_name : Callable listener }
-    _listeners = {}
-
     def __new__(cls, class_name, bases, class_dict):
+        # Convert entries in the class dictionary into traits, as appropriate.
         update_traits_class_dict(class_name, bases, class_dict)
 
-        # Finish building the class using the updated class dictionary:
-        klass = type.__new__(cls, class_name, bases, class_dict)
-
-        # Call all listeners that registered for this specific class:
-        name = "%s.%s" % (klass.__module__, klass.__name__)
-        for listener in MetaHasTraits._listeners.get(name, []):
-            listener(klass)
-
-        # Call all listeners that registered for ANY class:
-        for listener in MetaHasTraits._listeners.get("", []):
-            listener(klass)
-
-        return klass
-
-    @classmethod
-    def add_listener(cls, listener, class_name=""):
-        """ Adds a class creation listener.
-
-        If the class name is the empty string then the listener will be called
-        when *any* class is created.
-
-        .. deprecated:: 6.3.0
-        """
-        warnings.warn(
-            "add_listener is deprecated", DeprecationWarning, stacklevel=2
-        )
-
-        MetaHasTraits._listeners.setdefault(class_name, []).append(listener)
-
-    @classmethod
-    def remove_listener(cls, listener, class_name=""):
-        """ Removes a class creation listener.
-
-        .. deprecated:: 6.3.0
-        """
-        warnings.warn(
-            "remove_listener is deprecated", DeprecationWarning, stacklevel=2
-        )
-
-        MetaHasTraits._listeners[class_name].remove(listener)
+        # Finish building the class using the updated class dictionary.
+        return type.__new__(cls, class_name, bases, class_dict)
 
 
 def update_traits_class_dict(class_name, bases, class_dict):
@@ -1459,13 +1417,6 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
 
         return result
 
-    # Defines the deprecated alias for 'trait_get'
-    @deprecated('use "HasTraits.trait_get" instead')
-    def get(self, *names, **metadata):
-        return self.trait_get(*names, **metadata)
-
-    get.__doc__ = trait_get.__doc__
-
     def trait_set(self, trait_change_notify=True, **traits):
         """ Shortcut for setting object trait attributes.
 
@@ -1509,15 +1460,6 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                 setattr(self, name, value)
 
         return self
-
-    # Defines the deprecated alias for 'trait_set'
-    @deprecated('use "HasTraits.trait_set" instead')
-    def set(self, trait_change_notify=True, **traits):
-        return self.trait_set(
-            trait_change_notify=trait_change_notify, **traits
-        )
-
-    set.__doc__ = trait_set.__doc__
 
     def trait_setq(self, **traits):
         """ Shortcut for setting object trait attributes.

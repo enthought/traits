@@ -4,6 +4,11 @@ on:
 - pull_request
 - workflow_dispatch
 
+env:
+  # Temporary workaround prior to release of Traits 8.0
+  # xref: enthought/traits#1742
+  ETS_QT4_IMPORTS: 1
+
 jobs:
   tests:
     strategy:
@@ -20,6 +25,7 @@ jobs:
         sudo apt-get update
         sudo apt-get install libegl1
         sudo apt-get install libxkbcommon-x11-0
+        sudo apt-get install libxcb-cursor0
         sudo apt-get install libxcb-icccm4
         sudo apt-get install libxcb-image0
         sudo apt-get install libxcb-keysyms1
