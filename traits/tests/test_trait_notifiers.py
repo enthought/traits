@@ -18,7 +18,7 @@ class TestTraitNotifiers(unittest.TestCase):
             test_param = Int()
         t = DispatchTest()
         def test_handler(event):
-            print(event)
+            pass
 
         # When
         t.observe(test_handler, 'test_param', dispatch='ui')
