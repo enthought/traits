@@ -20,6 +20,8 @@ class TestTraitNotifiers(unittest.TestCase):
         t = DispatchTest()
 
         event_list = []
+
+        # create handler
         def test_handler(event):
             event_list.append(event)
 
