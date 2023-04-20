@@ -19,8 +19,9 @@ class TestTraitNotifiers(unittest.TestCase):
             test_param = Int()
         t = DispatchTest()
 
+        event_list = []
         def test_handler(event):
-            pass
+            event_list.append(event)
 
         # When
         t.observe(test_handler, 'test_param', dispatch='ui')
@@ -30,3 +31,6 @@ class TestTraitNotifiers(unittest.TestCase):
             t.test_param = 1
         except Exception:
             self.fail("test_ui_dispatch raised an Exception unexpectedly!")
+
+        # also check the observer is called (test_handler function)
+        self.assertTrue(event_list)
