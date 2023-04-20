@@ -629,9 +629,10 @@ is the case by default):
 
     instance.observe(handler, "name", dispatch="ui") in main thread (will use
     **handler** parameter in ui_dispatch)
-    instance.observe(handler, "name", dispatch="ui") in main thread (will try
-    to use **ui_dispatch** in ui_dispatch and raise a systemExit since the value
-    of  ui_handler is None)
+    instance.observe(handler, "name", dispatch="ui") in other thread (will try
+    to use **ui_dispatch** in ui_dispatch and, since ui_handler is None, the
+    thread will throw a "TypeError: 'NoneType' object is not callable". However,
+    the main thread will not be terminated by this error.)
 
 ..
    # substitutions
