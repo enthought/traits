@@ -9,6 +9,7 @@
 # Thanks for using Enthought open source!
 
 import unittest
+
 from traits.api import HasTraits, Int
 
 
@@ -27,12 +28,14 @@ class TestTraitNotifiers(unittest.TestCase):
 
         # When
         t.observe(test_handler, 'test_param', dispatch='ui')
+        t.test_param = 1
 
         # Then
-        try:
-            t.test_param = 1
-        except Exception:
-            self.fail("test_ui_dispatch raised an Exception unexpectedly!")
-
-        # also check the observer is called (test_handler function)
+        # check the observer is called (test_handler function)
         self.assertTrue(event_list)
+        # check the name of the parameter change
+        self.assertEqual(event_list[0].name, 'test_param')
+        # check whether the value starts at 0
+        self.assertEqual(event_list[0].old, 0)
+        # check whether the value has been set to 1
+        self.assertEqual(event_list[0].new, 1)
