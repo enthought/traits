@@ -30,7 +30,10 @@ def check_traitsui_major_version(major):
     ------
     RuntimeError
     """
-    from importlib.metadata import version
+    try:
+        from importlib.metadata import version
+    except ImportError:
+        from importlib_metadata import version
 
     traitsui_version = version('traitsui')
     actual_major, _ = traitsui_version.split(".", 1)
