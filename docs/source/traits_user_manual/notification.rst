@@ -257,8 +257,20 @@ Notification Handler
 --------------------
 
 By default, the **handler** is invoked immediately after the change has
-occurred. The **dispatch** parameter in |@observe| can be set such that the
-handler is dispatched elsewhere to be invoked later (e.g. on a GUI event loop).
+occurred. This behaviour can be changed using the **dispatch** parameter
+to the |@observe| method.
+
+The |@observe| method currently supports two values for the **dispatch**
+parameter: ``"same"`` and ``"ui"``. ``dispatch="same"`` corresponds to the
+default behaviour. When using ``dispatch="ui"``, the behaviour depends on the
+thread that triggered the observer. If the change that triggers the observer
+occurs on the main thread then the behaviour is the same as
+``dispatch="same"``: the observer is called immediately. However, if the change
+occurs on a thread other than the main thread then the observer is scheduled to
+be called on the UI thread, using the UI handler (if any) that has been set by
+the function :func:`~.set_ui_handler`. (Note: in normal use, this handler is
+set by Pyface as part of GUI selection; it's rare that the user needs to call
+:func:`~.set_ui_handler` directly.)
 
 The following expectations apply to any change handler:
 
