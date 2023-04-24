@@ -44,7 +44,7 @@ def set_ui_handler(handler):
 
 
 def ui_dispatch(handler, *args, **kw):
-    if threading.current_thread().ident == ui_thread:
+    if threading.current_thread() == threading.main_thread():
         handler(*args, **kw)
     else:
         ui_handler(handler, *args, **kw)
