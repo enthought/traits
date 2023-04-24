@@ -31,8 +31,8 @@ class TestTraitNotifiers(unittest.TestCase):
         t.test_param = 1
 
         # Then
-        # check the observer is called (test_handler function)
-        self.assertTrue(event_list)
+        # check the observer is called once
+        self.assertEqual(len(event_list), 1)
         # check the name of the parameter change
         self.assertEqual(event_list[0].name, 'test_param')
         # check whether the value starts at 0
