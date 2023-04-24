@@ -18,6 +18,7 @@ class TestTraitNotifiers(unittest.TestCase):
         # Given
         class DispatchTest(HasTraits):
             test_param = Int()
+
         t = DispatchTest()
 
         event_list = []
@@ -27,14 +28,14 @@ class TestTraitNotifiers(unittest.TestCase):
             event_list.append(event)
 
         # When
-        t.observe(test_handler, 'test_param', dispatch='ui')
+        t.observe(test_handler, "test_param", dispatch="ui")
         t.test_param = 1
 
         # Then
         # check the observer is called once
         self.assertEqual(len(event_list), 1)
         # check the name of the parameter change
-        self.assertEqual(event_list[0].name, 'test_param')
+        self.assertEqual(event_list[0].name, "test_param")
         # check whether the value starts at 0
         self.assertEqual(event_list[0].old, 0)
         # check whether the value has been set to 1
