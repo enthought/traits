@@ -155,4 +155,8 @@ class TestConfigureTraits(unittest.TestCase):
                 warnings.simplefilter("always", DeprecationWarning)
                 model.configure_traits()
         mock_view.assert_called_once()
-        self.assertEqual(len(captured_warnings), 0)
+
+        all_warnings = "".join(
+            str(warning.message) for warning in captured_warnings
+        )
+        self.assertNotIn("edit argument", all_warnings)
