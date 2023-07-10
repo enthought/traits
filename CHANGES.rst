@@ -18,6 +18,7 @@ Fixes
 Maintenance
 ~~~~~~~~~~~
 * Update copyright headers for 2023. (#1729)
+* Update GitHub Actions workflows for compatibility with Ubuntu 22.04. (#1727)
 
 Release 6.4.1
 -------------
