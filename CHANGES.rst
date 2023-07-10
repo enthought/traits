@@ -1,6 +1,24 @@
 Traits CHANGELOG
 ================
 
+Release 6.4.2
+-------------
+
+Released: 2023-07-10
+
+This is a bugfix release that fixes a test failure that occurs with the
+latest version of TraitsUI.
+
+Fixes
+~~~~~
+* Fix an overzealous test that fails on warnings unrelated to the
+  functionality under test. (#1749)
+* Replace a deprecated TraitsUI version check. (#1746)
+
+Maintenance
+~~~~~~~~~~~
+* Update copyright headers for 2023. (#1729)
+
 Release 6.4.1
 -------------
 
