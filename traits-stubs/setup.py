@@ -20,7 +20,7 @@ def get_long_description():
 if __name__ == "__main__":
     setuptools.setup(
         name="traits-stubs",
-        version="6.4.0",
+        version="6.4.2",
         url="https://github.com/enthought/traits",
         author="Enthought",
         author_email="info@enthought.com",
@@ -36,7 +36,6 @@ if __name__ == "__main__":
             Operating System :: POSIX :: Linux
             Programming Language :: Python
             Programming Language :: Python :: 3
-            Programming Language :: Python :: 3.6
             Programming Language :: Python :: 3.7
             Programming Language :: Python :: 3.8
             Programming Language :: Python :: 3.9
@@ -71,5 +70,5 @@ if __name__ == "__main__":
             "traits_stubs_tests": ["examples/*.py", "numpy_examples/*.py"],
         },
         license="BSD",
-        python_requires=">=3.6",
+        python_requires=">=3.7",
     )

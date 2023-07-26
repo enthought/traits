@@ -20,9 +20,9 @@ import setuptools
 # into the package source.
 MAJOR = 6
 MINOR = 4
-MICRO = 1
+MICRO = 2
 PRERELEASE = ""
-IS_RELEASED = False
+IS_RELEASED = True
 
 # If this file is part of a Git export (for example created with "git archive",
 # or downloaded from GitHub), ARCHIVE_COMMIT_HASH gives the full hash of the
@@ -276,7 +276,6 @@ setuptools.setup(
         Operating System :: POSIX :: Linux
         Programming Language :: Python
         Programming Language :: Python :: 3
-        Programming Language :: Python :: 3.6
         Programming Language :: Python :: 3.7
         Programming Language :: Python :: 3.8
         Programming Language :: Python :: 3.9
@@ -349,6 +348,6 @@ setuptools.setup(
     },
     license="BSD",
     packages=setuptools.find_packages(include=["traits", "traits.*"]),
-    python_requires=">=3.6",
+    python_requires=">=3.7",
     zip_safe=False,
 )

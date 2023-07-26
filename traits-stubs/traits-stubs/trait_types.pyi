@@ -27,7 +27,7 @@ from typing import (
 )
 from uuid import UUID as _UUID
 
-# Once we no longer support Python 3.6 or Python 3.7, we can import
+# Once we no longer support Python 3.7, we can import
 # SupportsIndex from typing instead of typing_extensions.
 if sys.version_info < (3, 8):
     from typing_extensions import SupportsIndex

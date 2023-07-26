@@ -51,7 +51,7 @@ you can run tests in all supported runtimes::
 
     python etstool.py test-all
 
-Currently supported runtime values are ``3.6``.  Not all
+The only currently supported runtime values is ``3.8``.  Not all
 combinations of runtimes will work, but the tasks will fail with
 a clear error if that is the case.
 
@@ -101,7 +101,6 @@ common_dependencies = {
 
 # Dependencies on the Python runtime.
 runtime_dependencies = {
-    "3.6": {"pyqt5", "lark_parser", "mypy"},
     "3.8": {"pyside6"},
 }
 
@@ -118,7 +117,7 @@ unix_dependencies = {
     "gnureadline",
 }
 
-supported_runtimes = ["3.6", "3.8"]
+supported_runtimes = ["3.8"]
 default_runtime = "3.8"
 
 github_url_fmt = "git+http://github.com/enthought/{0}.git#egg={0}"
