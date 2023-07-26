@@ -303,7 +303,10 @@ setuptools.setup(
     extras_require={
         "docs": [
             "enthought-sphinx-theme",
-            "Sphinx>=2.1.0",
+            # Doc builds are hanging with pygments 2.15.0 and 2.15.1.
+            # Maybe related: https://github.com/pygments/pygments/issues/2427
+            "pygments<2.15",
+            "Sphinx",
             "sphinx-copybutton",
         ],
         "test": [
@@ -313,10 +316,12 @@ setuptools.setup(
             "mypy",
             "numpy",
             "pyface",
-            "PySide2; python_version < '3.8'",
-            "PySide6; python_version >= '3.8' and python_version < '3.11'",
+            # Doc builds are hanging with pygments 2.15.0 and 2.15.1.
+            # Maybe related: https://github.com/pygments/pygments/issues/2427
+            "pygments<2.15",
+            "PySide6; python_version >= '3.7' and python_version < '3.12'",
             "setuptools",
-            "Sphinx>=2.1.0",
+            "Sphinx",
             "traitsui",
         ],
         "examples": [

@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11-dev']
+        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11']
         python-architecture: [x86, x64]
         exclude:
         - os: macos-latest
@@ -22,20 +22,21 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - name: Install Linux packages for Qt 5 support
+    - name: Install Linux packages for Qt support
       run: |
         sudo apt-get update
-        sudo apt-get install qt5-default
+        sudo apt-get install libegl1
         sudo apt-get install libxkbcommon-x11-0
+        sudo apt-get install libxcb-cursor0
         sudo apt-get install libxcb-icccm4
         sudo apt-get install libxcb-image0
         sudo apt-get install libxcb-keysyms1
         sudo apt-get install libxcb-randr0
         sudo apt-get install libxcb-render-util0
-        sudo apt-get install libxcb-xinerama0
+        sudo apt-get install libxcb-shape0
       if: runner.os == 'Linux'
     - name: Set up Python ${{ matrix.python-version }} (${{ matrix.python-architecture }})
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
         architecture: ${{ matrix.python-architecture }}
@@ -48,17 +49,18 @@ jobs:
     - name: Create clean test directory
       run: |
         mkdir testdir
-    - name: Test Traits package
-      uses: GabrielBB/xvfb-action@v1
-      with:
-        working-directory: testdir
-        run: python -m unittest discover -v traits
+    - name: Test Traits package (Linux)
+      run: cd testdir && xvfb-run -a python -m unittest discover -v traits
+      if: matrix.os == 'ubuntu-latest'
+    - name: Test Traits package (Windows/macOS)
+      run: cd testdir && python -m unittest discover -v traits
+      if: matrix.os != 'ubuntu-latest'
 
   test-pypi-wheel:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10']
+        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11']
         python-architecture: [x86, x64]
         exclude:
         - os: macos-latest
@@ -69,20 +71,21 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - name: Install Linux packages for Qt 5 support
+    - name: Install Linux packages for Qt support
       run: |
         sudo apt-get update
-        sudo apt-get install qt5-default
+        sudo apt-get install libegl1
         sudo apt-get install libxkbcommon-x11-0
+        sudo apt-get install libxcb-cursor0
         sudo apt-get install libxcb-icccm4
         sudo apt-get install libxcb-image0
         sudo apt-get install libxcb-keysyms1
         sudo apt-get install libxcb-randr0
         sudo apt-get install libxcb-render-util0
-        sudo apt-get install libxcb-xinerama0
+        sudo apt-get install libxcb-shape0
       if: runner.os == 'Linux'
     - name: Set up Python ${{ matrix.python-version }} (${{ matrix.python-architecture }})
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
         architecture: ${{ matrix.python-architecture }}
@@ -95,11 +98,12 @@ jobs:
     - name: Create clean test directory
       run: |
         mkdir testdir
-    - name: Test Traits package
-      uses: GabrielBB/xvfb-action@v1
-      with:
-        working-directory: testdir
-        run: python -m unittest discover -v traits
+    - name: Test Traits package (Linux)
+      run: cd testdir && xvfb-run -a python -m unittest discover -v traits
+      if: matrix.os == 'ubuntu-latest'
+    - name: Test Traits package (Windows/macOS)
+      run: cd testdir && python -m unittest discover -v traits
+      if: matrix.os != 'ubuntu-latest'
 
   notify-on-failure:
     needs: [test-pypi-sdist, test-pypi-wheel]
