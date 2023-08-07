@@ -4,7 +4,7 @@ Traits CHANGELOG
 Release 6.4.2
 -------------
 
-Released: 2023-07-28
+Released: 2023-08-07
 
 This is a bugfix release that fixes failing some test failures with the
 most recent TraitsUI versions.
