@@ -4,31 +4,37 @@ on:
 - pull_request
 - workflow_dispatch
 
+env:
+  # Temporary workaround prior to release of Traits 8.0
+  # xref: enthought/traits#1742
+  ETS_QT4_IMPORTS: 1
+
 jobs:
   tests:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11-dev']
+        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11']
 
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Install Linux packages for Qt 5 support
+    - uses: actions/checkout@v3
+    - name: Install Linux packages for Qt support
       run: |
         sudo apt-get update
-        sudo apt-get install qt5-default
+        sudo apt-get install libegl1
         sudo apt-get install libxkbcommon-x11-0
+        sudo apt-get install libxcb-cursor0
         sudo apt-get install libxcb-icccm4
         sudo apt-get install libxcb-image0
         sudo apt-get install libxcb-keysyms1
         sudo apt-get install libxcb-randr0
         sudo apt-get install libxcb-render-util0
-        sudo apt-get install libxcb-xinerama0
+        sudo apt-get install libxcb-shape0
       if: matrix.os == 'ubuntu-latest'
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies and local packages
@@ -39,13 +45,15 @@ jobs:
     - name: Create clean test directory
       run: |
         mkdir testdir
-    - name: Test Traits package
-      uses: GabrielBB/xvfb-action@v1
-      with:
-        working-directory: testdir
-        run: python -m unittest discover -v traits
-    - name: Test Traits typing stubs
-      uses: GabrielBB/xvfb-action@v1
-      with:
-        working-directory: testdir
-        run: python -m unittest discover -v traits_stubs_tests
+    - name: Test Traits package (Linux)
+      run: cd testdir && xvfb-run -a python -m unittest discover -v traits
+      if: matrix.os == 'ubuntu-latest'
+    - name: Test Traits package (Windows/macOS)
+      run: cd testdir && python -m unittest discover -v traits
+      if: matrix.os != 'ubuntu-latest'
+    - name: Test Traits typing stubs (Linux)
+      run: cd testdir && xvfb-run -a python -m unittest discover -v traits_stubs_tests
+      if: matrix.os == 'ubuntu-latest'
+    - name: Test Traits typing stubs (Windows/macOS)
+      run: cd testdir && python -m unittest discover -v traits_stubs_tests
+      if: matrix.os != 'ubuntu-latest'

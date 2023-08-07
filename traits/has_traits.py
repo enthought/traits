@@ -1,4 +1,4 @@
-# (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
+# (C) Copyright 2005-2023 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -56,7 +56,6 @@ from .trait_base import (
 )
 from .trait_errors import TraitError
 from .util.deprecated import deprecated
-from .util._traitsui_helpers import check_traitsui_major_version
 from .trait_converters import check_trait, mapped_trait_for, trait_for
 
 
@@ -1904,10 +1903,6 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         # traits has been fully initialized (such as the default Handler):
         if view_elements is None:
             return None
-
-        # Provide a nicer failure mode when upgrading to Traits using
-        # TraitsUI 6.x
-        check_traitsui_major_version(7)
 
         if name:
             if view_element is None:

@@ -1,4 +1,4 @@
-# (C) Copyright 2020-2022 Enthought, Inc., Austin, TX
+# (C) Copyright 2020-2023 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -27,7 +27,7 @@ from typing import (
 )
 from uuid import UUID as _UUID
 
-# Once we no longer support Python 3.6 or Python 3.7, we can import
+# Once we no longer support Python 3.7, we can import
 # SupportsIndex from typing instead of typing_extensions.
 if sys.version_info < (3, 8):
     from typing_extensions import SupportsIndex

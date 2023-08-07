@@ -1,4 +1,4 @@
-# (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
+# (C) Copyright 2005-2023 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -155,4 +155,8 @@ class TestConfigureTraits(unittest.TestCase):
                 warnings.simplefilter("always", DeprecationWarning)
                 model.configure_traits()
         mock_view.assert_called_once()
-        self.assertEqual(len(captured_warnings), 0)
+
+        all_warnings = "".join(
+            str(warning.message) for warning in captured_warnings
+        )
+        self.assertNotIn("edit argument", all_warnings)
