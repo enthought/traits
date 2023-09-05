@@ -1,6 +1,19 @@
 Traits CHANGELOG
 ================
 
+Release 6.4.3
+-------------
+
+Released: 2023-09-05
+
+This is a bugfix release that fixes test failures with Sphinx 7.2 and later.
+
+Fixes
+~~~~~
+* Use ``pathlib.Path`` instead of ``sphinx.testing.path.path`` for Sphinx
+  7.2 and later. (#1755)
+
+
 Release 6.4.2
 -------------
 
