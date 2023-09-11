@@ -282,6 +282,7 @@ setuptools.setup(
         Programming Language :: Python :: 3.9
         Programming Language :: Python :: 3.10
         Programming Language :: Python :: 3.11
+        Programming Language :: Python :: 3.12
         Programming Language :: Python :: Implementation :: CPython
         Topic :: Scientific/Engineering
         Topic :: Software Development
@@ -316,9 +317,11 @@ setuptools.setup(
             "flake8",
             "flake8-ets",
             "mypy",
-            "numpy",
+            # NumPy is not yet available for Python 3.12, but that should be
+            # fixed soon: https://github.com/numpy/numpy/issues/23808
+            "numpy; python_version < '3.12'",
             "pyface",
-            "PySide6; python_version >= '3.7' and python_version < '3.11'",
+            "PySide6; python_version >= '3.7' and python_version < '3.12'",
             "setuptools",
             "Sphinx>=2.1.0",
             "traitsui",
