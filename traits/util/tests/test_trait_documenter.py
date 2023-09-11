@@ -27,7 +27,6 @@ from traits.testing.optional_dependencies import sphinx, requires_sphinx
 if sphinx is not None:
     from sphinx.ext.autodoc import ClassDocumenter, INSTANCEATTR, Options
     from sphinx.ext.autodoc.directive import DocumenterBridge
-    from sphinx.testing.path import path
     from sphinx.testing.util import SphinxTestApp
     from sphinx.util.docutils import LoggingReporter
 
@@ -36,6 +35,11 @@ if sphinx is not None:
         trait_definition,
         TraitDocumenter,
     )
+
+    if sphinx.version_info < (7, 2):
+        from sphinx.testing.path import path as Path
+    else:
+        from pathlib import Path
 
 
 # Configuration file content for testing.
@@ -223,7 +227,7 @@ class TestTraitDocumenter(unittest.TestCase):
             with open(conf_file, "w", encoding="utf-8") as f:
                 f.write(CONF_PY)
 
-            app = SphinxTestApp(srcdir=path(tmpdir))
+            app = SphinxTestApp(srcdir=Path(tmpdir))
             app.builder.env.app = app
             app.builder.env.temp_data["docname"] = "dummy"
 
