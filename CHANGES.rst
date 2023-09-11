@@ -4,14 +4,17 @@ Traits CHANGELOG
 Release 6.4.3
 -------------
 
-Released: 2023-09-05
+Released: 2023-09-12
 
-This is a bugfix release that fixes test failures with Sphinx 7.2 and later.
+This is a bugfix release that fixes test failures with Sphinx 7.2 and later,
+and adds support for Python 3.12.
 
 Fixes
 ~~~~~
 * Use ``pathlib.Path`` instead of ``sphinx.testing.path.path`` for Sphinx
   7.2 and later. (#1755)
+* Fix uses of the deprecated ``datetime.utcnow`` method. (#1758)
+* Update CI and workflows for Python 3.12 support. (#1757)
 
 
 Release 6.4.2
