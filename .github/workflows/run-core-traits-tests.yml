@@ -28,7 +28,7 @@ jobs:
         # dependence of the Traits source on setuptools. Note that in future
         # setuptools may not exist in a newly-created venv
         # https://github.com/python/cpython/issues/95299
-        python -m pip uninstall -y setuptools
+        # python -m pip uninstall -y setuptools
         python -m pip install .
         python -m pip list
     - name: Test Traits package
