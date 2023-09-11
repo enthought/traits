@@ -317,7 +317,9 @@ setuptools.setup(
             "flake8",
             "flake8-ets",
             "mypy",
-            "numpy",
+            # NumPy is not yet available for Python 3.12, but that should be
+            # fixed soon: https://github.com/numpy/numpy/issues/23808
+            "numpy; python_version < '3.12'",
             "pyface",
             "PySide6; python_version >= '3.7' and python_version < '3.12'",
             "setuptools",
