@@ -45,6 +45,7 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
         architecture: ${{ matrix.python-architecture }}
+        allow-prereleases: true
     - name: Install test dependencies and Traits from PyPI sdist (no PySide6)
       run: |
         python -m pip install --no-binary traits Cython numpy Sphinx traits traitsui
@@ -96,6 +97,7 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
         architecture: ${{ matrix.python-architecture }}
+        allow-prereleases: true
     - name: Install test dependencies and Traits from PyPI wheel (no PySide6)
       run: |
         python -m pip install --only-binary traits Cython numpy Sphinx traits traitsui

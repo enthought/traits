@@ -21,6 +21,7 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
+        allow-prereleases: true
     - name: Install local package
       run: |
         # Uninstall setuptools so that the tests will catch any accidental
