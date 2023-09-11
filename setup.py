@@ -281,6 +281,7 @@ setuptools.setup(
         Programming Language :: Python :: 3.9
         Programming Language :: Python :: 3.10
         Programming Language :: Python :: 3.11
+        Programming Language :: Python :: 3.12
         Programming Language :: Python :: Implementation :: CPython
         Topic :: Scientific/Engineering
         Topic :: Software Development
@@ -302,10 +303,7 @@ setuptools.setup(
     extras_require={
         "docs": [
             "enthought-sphinx-theme",
-            # Doc builds are hanging with pygments 2.15.0 and 2.15.1.
-            # Maybe related: https://github.com/pygments/pygments/issues/2427
-            "pygments<2.15",
-            "Sphinx",
+            "Sphinx>=2.1.0",
             "sphinx-copybutton",
         ],
         "test": [
@@ -313,14 +311,13 @@ setuptools.setup(
             "flake8",
             "flake8-ets",
             "mypy",
-            "numpy",
+            # NumPy is not yet available for Python 3.12, but that should be
+            # fixed soon: https://github.com/numpy/numpy/issues/23808
+            "numpy; python_version < '3.12'",
             "pyface",
-            # Doc builds are hanging with pygments 2.15.0 and 2.15.1.
-            # Maybe related: https://github.com/pygments/pygments/issues/2427
-            "pygments<2.15",
             "PySide6; python_version >= '3.7' and python_version < '3.12'",
             "setuptools",
-            "Sphinx",
+            "Sphinx>=2.1.0",
             "traitsui",
         ],
         "examples": [

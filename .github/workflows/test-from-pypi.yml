@@ -6,12 +6,17 @@ on:
     # Run at 03:27 UTC on the 8th and 22nd of every month
     - cron: '27 3 8,22 * *'
 
+env:
+  # Temporary workaround prior to release of Traits 8.0
+  # xref: enthought/traits#1742
+  ETS_QT4_IMPORTS: 1
+
 jobs:
   test-pypi-sdist:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11']
+        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11', '3.12']
         python-architecture: [x86, x64]
         exclude:
         - os: macos-latest
@@ -40,12 +45,15 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
         architecture: ${{ matrix.python-architecture }}
-    - name: Install prerequisites
+        allow-prereleases: true
+    - name: Install test dependencies and Traits from PyPI sdist (no PySide6)
       run: |
-        python -m pip install --upgrade pip setuptools wheel
-    - name: Install Traits and test dependencies from PyPI sdist
+        python -m pip install --no-binary traits Cython numpy Sphinx traits traitsui
+      if: matrix.python-version == '3.12' || matrix.python-architecture == 'x86'
+    - name: Install test dependencies and Traits from PyPI sdist (PySide6)
       run: |
-        python -m pip install --no-binary traits traits[test]
+        python -m pip install --no-binary traits Cython numpy PySide6 Sphinx traits traitsui
+      if: matrix.python-version != '3.12' && matrix.python-architecture != 'x86'
     - name: Create clean test directory
       run: |
         mkdir testdir
@@ -60,7 +68,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11']
+        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11', '3.12']
         python-architecture: [x86, x64]
         exclude:
         - os: macos-latest
@@ -89,12 +97,15 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
         architecture: ${{ matrix.python-architecture }}
-    - name: Install prerequisites
+        allow-prereleases: true
+    - name: Install test dependencies and Traits from PyPI wheel (no PySide6)
       run: |
-        python -m pip install --upgrade pip setuptools wheel
-    - name: Install Traits and test dependencies from PyPI wheel
+        python -m pip install --only-binary traits Cython numpy Sphinx traits traitsui
+      if: matrix.python-version == '3.12' || matrix.python-architecture == 'x86'
+    - name: Install test dependencies and Traits from PyPI wheel (PySide6)
       run: |
-        python -m pip install --only-binary traits traits[test]
+        python -m pip install --only-binary traits Cython numpy PySide6 Sphinx traits traitsui
+      if: matrix.python-version != '3.12' && matrix.python-architecture != 'x86'
     - name: Create clean test directory
       run: |
         mkdir testdir
