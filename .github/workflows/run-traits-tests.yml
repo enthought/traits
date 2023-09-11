@@ -20,7 +20,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Install Linux packages for Qt 5 support
+    - name: Install Linux packages for Qt support
       run: |
         sudo apt-get update
         sudo apt-get install libegl1
