@@ -282,6 +282,7 @@ setuptools.setup(
         Programming Language :: Python :: 3.9
         Programming Language :: Python :: 3.10
         Programming Language :: Python :: 3.11
+        Programming Language :: Python :: 3.12
         Programming Language :: Python :: Implementation :: CPython
         Topic :: Scientific/Engineering
         Topic :: Software Development
@@ -318,7 +319,7 @@ setuptools.setup(
             "mypy",
             "numpy",
             "pyface",
-            "PySide6; python_version >= '3.7' and python_version < '3.11'",
+            "PySide6; python_version >= '3.7' and python_version < '3.12'",
             "setuptools",
             "Sphinx>=2.1.0",
             "traitsui",
