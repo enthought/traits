@@ -15,7 +15,7 @@ import inspect
 import os
 import threading
 from contextlib import contextmanager
-from datetime import datetime
+from datetime import datetime, timezone
 
 from traits import trait_notifiers
 
@@ -228,7 +228,7 @@ class ChangeEventRecorder(object):
 
         """
         indent = self.indent
-        time = datetime.utcnow().isoformat(" ")
+        time = datetime.now(timezone.utc).isoformat(" ")
         container = self.container
         container.record(
             ChangeMessageRecord(
@@ -255,7 +255,7 @@ class ChangeEventRecorder(object):
         """ Record a string representation of the trait change return
 
         """
-        time = datetime.utcnow().isoformat(" ")
+        time = datetime.now(timezone.utc).isoformat(" ")
         self.indent -= 1
         indent = self.indent
         if exception:
