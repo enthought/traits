@@ -48,13 +48,11 @@ jobs:
         allow-prereleases: true
     - name: Install test dependencies and Traits from PyPI sdist (no PySide6)
       run: |
-        # Cython tests currently fail because cython.inline fails on
-        # Python 3.12. cf: https://github.com/cython/cython/issues/5751
-        python -m pip install --no-binary traits numpy Sphinx traits traitsui
+        python -m pip install --no-binary traits Cython numpy setuptools Sphinx traits traitsui
       if: matrix.python-version == '3.12' || matrix.python-architecture == 'x86'
     - name: Install test dependencies and Traits from PyPI sdist (PySide6)
       run: |
-        python -m pip install --no-binary traits Cython numpy PySide6 Sphinx traits traitsui
+        python -m pip install --no-binary traits Cython numpy PySide6 setuptools Sphinx traits traitsui
       if: matrix.python-version != '3.12' && matrix.python-architecture != 'x86'
     - name: Create clean test directory
       run: |
@@ -102,13 +100,11 @@ jobs:
         allow-prereleases: true
     - name: Install test dependencies and Traits from PyPI wheel (no PySide6)
       run: |
-        # Cython tests currently fail because cython.inline fails on
-        # Python 3.12. cf: https://github.com/cython/cython/issues/5751
-        python -m pip install --only-binary traits numpy Sphinx traits traitsui
+        python -m pip install --only-binary traits Cython numpy setuptools Sphinx traits traitsui
       if: matrix.python-version == '3.12' || matrix.python-architecture == 'x86'
     - name: Install test dependencies and Traits from PyPI wheel (PySide6)
       run: |
-        python -m pip install --only-binary traits Cython numpy PySide6 Sphinx traits traitsui
+        python -m pip install --only-binary traits Cython numpy PySide6 setuptools Sphinx traits traitsui
       if: matrix.python-version != '3.12' && matrix.python-architecture != 'x86'
     - name: Create clean test directory
       run: |
