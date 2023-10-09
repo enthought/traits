@@ -36,9 +36,9 @@ jobs:
       uses: pypa/cibuildwheel@v2.15.0
 
     - name: Check and upload wheels
-      env:
-        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      # env:
+      #  TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+      #  TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
         python -m twine check --strict wheelhouse/*.whl
         python -m twine upload wheelhouse/*.whl
@@ -63,9 +63,9 @@ jobs:
       run: python -m build --sdist
 
     - name: Publish sdist to PyPI
-      env:
-        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      # env:
+      #   TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+      #   TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
         python -m twine check --strict dist/*
         python -m twine upload dist/*
