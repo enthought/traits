@@ -41,7 +41,7 @@ jobs:
        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
         python -m twine check --strict wheelhouse/*.whl
-        # python -m twine upload wheelhouse/*.whl
+        python -m twine upload wheelhouse/*.whl
 
   build-sdist:
     runs-on: ubuntu-latest
@@ -68,4 +68,4 @@ jobs:
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
         python -m twine check --strict dist/*
-        # python -m twine upload dist/*
+        python -m twine upload dist/*
