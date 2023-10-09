@@ -4,7 +4,7 @@ Traits CHANGELOG
 Release 6.4.3
 -------------
 
-Released: 2023-09-12
+Released: 2023-10-09
 
 This is a bugfix release that fixes test failures with Sphinx 7.2 and later,
 and adds support for Python 3.12.
