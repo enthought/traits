@@ -11,5 +11,14 @@ profile = 'black'
 line_length = 79
 order_by_type = 'False'
 
+[tool.cibuildwheel]
+skip = 'pp*'
+
+[tool.cibuildwheel.macos]
+archs = ['auto', 'universal2']
+
+[tool.cibuildwheel.linux]
+archs = ['auto', 'aarch64']
+
 [tool.pytest.ini_options]
 addopts = '--ignore=traits-stubs'

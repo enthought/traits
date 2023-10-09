@@ -20,7 +20,7 @@ import setuptools
 # into the package source.
 MAJOR = 6
 MINOR = 4
-MICRO = 2
+MICRO = 3
 PRERELEASE = ""
 IS_RELEASED = True
 
@@ -281,6 +281,7 @@ setuptools.setup(
         Programming Language :: Python :: 3.9
         Programming Language :: Python :: 3.10
         Programming Language :: Python :: 3.11
+        Programming Language :: Python :: 3.12
         Programming Language :: Python :: Implementation :: CPython
         Topic :: Scientific/Engineering
         Topic :: Software Development
@@ -313,7 +314,9 @@ setuptools.setup(
             "flake8",
             "flake8-ets",
             "mypy",
-            "numpy",
+            # NumPy is not yet available for Python 3.12, but that should be
+            # fixed soon: https://github.com/numpy/numpy/issues/23808
+            "numpy; python_version < '3.12'",
             "pyface",
             # Doc builds are hanging with pygments 2.15.0 and 2.15.1.
             # Maybe related: https://github.com/pygments/pygments/issues/2427
