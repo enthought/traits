@@ -404,7 +404,7 @@ class TraitList(list):
         else:
             normalized_index = min(index, len(self))
         object = self.item_validator(object)
-        super().insert(index, self.item_validator(object))
+        super().insert(index, object)
         self.notify(normalized_index, [], [object])
 
     def pop(self, index=-1):
