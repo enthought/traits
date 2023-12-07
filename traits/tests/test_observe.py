@@ -906,3 +906,27 @@ class TestObserveAnytrait(unittest.TestCase):
         self.assertEqual(len(events), 0)
         obj.bar = 5
         self.assertEqual(len(events), 1)
+
+    def test_list_of_lists_insert(self):
+        # Regression test for enthought/traits#1761
+
+        # Given a list-of-lists trait, and an observer for the items
+        # on the inner list.
+
+        class A(HasTraits):
+            foo = List(List(Int()))
+
+        obj = A()
+        events = []
+        obj.observe(events.append, "foo:items:items")
+
+        # When we insert a list, then modify an item in that list
+        obj.foo.insert(0, [1, 2, 3])
+        obj.foo[0][2] = 4
+
+        # Then we get the expected event.
+        self.assertEqual(len(events), 1)
+        event = events[0]
+        self.assertEqual(event.index, 2)
+        self.assertEqual(event.removed, [3])
+        self.assertEqual(event.added, [4])
