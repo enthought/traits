@@ -31,6 +31,7 @@ from traits.trait_types import (
     Either,
     Enum,
     Expression,
+    Float,
     Instance,
     Int,
     List,
@@ -555,6 +556,28 @@ class TestRegression(unittest.TestCase):
         with self.assertRaises(TraitError):
             class OverrideDisallow(SubclassDefaultsSuper):
                 disallow_default = "a default value"
+
+    def test_warn_on_attribute_error_in_default_method(self):
+        # Given a misspelled reference to a trait in a _default method ...
+        class HasBrokenDefault(HasStrictTraits):
+            weight = Float(12.3)
+
+            mass = Float()
+
+            def _mass_default(self):
+                # Deliberately misspelled!
+                return self.wieght / 9.81
+
+        # When we try to get all trait values on an instance,
+        # Then a warning is issued ...
+        obj = HasBrokenDefault()
+        with self.assertWarnsRegex(
+            UserWarning, "default value resolution raised an AttributeError"
+        ):
+            traits = obj.trait_get()
+
+        # ... and the returned dictionary does not include the mass.
+        self.assertEqual(traits, {"weight": 12.3})
 
 
 class NestedContainerClass(HasTraits):
