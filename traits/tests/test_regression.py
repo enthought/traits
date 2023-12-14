@@ -579,6 +579,26 @@ class TestRegression(unittest.TestCase):
         # ... and the returned dictionary does not include the mass.
         self.assertEqual(traits, {"weight": 12.3})
 
+    def test_warn_on_attribute_error_in_factory(self):
+
+        def bad_range(start, stop):
+            self.this_attribute_doesnt_exist
+            return range(start, stop)
+
+        class HasBrokenFactory(HasStrictTraits):
+            ticks = Instance(range, factory=bad_range, args=(0, 10))
+
+        # When we try to get all trait values on an instance,
+        # Then a warning is issued ...
+        obj = HasBrokenFactory()
+        with self.assertWarnsRegex(
+            UserWarning, "default value resolution raised an AttributeError"
+        ):
+            traits = obj.trait_get()
+
+        # ... and the returned dictionary does not include the bad trait
+        self.assertEqual(traits, {})
+
 
 class NestedContainerClass(HasTraits):
     # Used in regression test for changes to nested containers
