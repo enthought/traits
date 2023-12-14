@@ -407,9 +407,12 @@ class TestHasTraitsPropertyObserves(unittest.TestCase):
     def test_property_default_initializer_with_value_in_init(self):
         # With "depends_on", instantiation will fail.
         # enthought/traits#709
-        with self.assertRaises(AttributeError):
-            ClassWithPropertyDependsOnInit(
-                info_without_default=PersonInfo(age=30))
+        with self.assertWarnsRegex(
+            UserWarning, "default value resolution raised an AttributeError"
+        ):
+            with self.assertRaises(AttributeError):
+                ClassWithPropertyDependsOnInit(
+                    info_without_default=PersonInfo(age=30))
 
         # With "observe", initialization works.
         instance = ClassWithPropertyObservesInit(
