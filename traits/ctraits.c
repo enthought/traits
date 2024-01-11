@@ -1786,6 +1786,58 @@ static PyTypeObject has_traits_type = {
 |  Returns the default value associated with a specified trait:
 +----------------------------------------------------------------------------*/
 
+// Since traits are attributes, AttributeErrors are naturally swallowed by
+// some parts of the Traits machinery (e.g., trait_get). So if computation of
+// the default value raises AttributeError, we issue a warning, using the
+// following helper function.
+// xref: https://github.com/enthought/traits/issues/1747
+
+void
+_warn_on_attribute_error(PyObject *result)
+{
+    if (result == NULL && PyErr_ExceptionMatches(PyExc_AttributeError)) {
+        // PyErr_WarnEx won't work correctly if there's an exception set,
+        // so save and clear the current exception.
+        PyObject *exc_type, *exc_value, *exc_traceback;
+        PyErr_Fetch(&exc_type, &exc_value, &exc_traceback);
+        if (PyErr_WarnEx(PyExc_UserWarning,
+            "default value resolution raised an AttributeError; "
+            "this may cause Traits to behave in unexpected ways", 0) == -1) {
+            // The warning was raised as an exception; retrieve that exception
+            // and set the AttributeError as its cause.
+            PyObject *warn_type, *warn_value, *warn_traceback;
+
+            // Normalize the AttributeError to ensure exc_value is valid.
+            PyErr_NormalizeException(&exc_type, &exc_value, &exc_traceback);
+            if (exc_traceback != NULL) {
+                PyException_SetTraceback(exc_value, exc_traceback);
+            }
+            assert(exc_value != NULL);
+
+            // Set the warning cause to the attribute error. The UserWarning
+            // shouldn't need to be normalized, since PyErr_WarnEx doesn't
+            // indulge in delayed normalization.
+            PyErr_Fetch(&warn_type, &warn_value, &warn_traceback);
+            assert(warn_value != NULL);
+            PyException_SetCause(warn_value, exc_value);
+            PyErr_Restore(warn_type, warn_value, warn_traceback);
+
+            // Reference cleanup: PyErr_Restore stole our references to
+            // warn_type, warn_value and warn_traceback, and
+            // PyException_SetCause stole our reference to exc_value; that
+            // leaves us to handle exc_type and exc_traceback.
+            Py_DECREF(exc_type);
+            if (exc_traceback != NULL) {
+                Py_DECREF(exc_traceback);
+            }
+        }
+        else {
+            // Restore the AttributeError
+            PyErr_Restore(exc_type, exc_value, exc_traceback);
+        }
+    }
+}
+
 static PyObject *
 default_value_for(trait_object *trait, has_traits_object *obj, PyObject *name)
 {
@@ -1820,8 +1872,10 @@ default_value_for(trait_object *trait, has_traits_object *obj, PyObject *name)
             if (kw == Py_None) {
                 kw = NULL;
             }
-            return PyObject_Call(
+            result = PyObject_Call(
                 PyTuple_GET_ITEM(dv, 0), PyTuple_GET_ITEM(dv, 1), kw);
+            _warn_on_attribute_error(result);
+            return result;
         case CALLABLE_DEFAULT_VALUE:
             tuple = PyTuple_Pack(1, (PyObject *)obj);
             if (tuple == NULL) {
@@ -1834,17 +1888,18 @@ default_value_for(trait_object *trait, has_traits_object *obj, PyObject *name)
                 if (trait->flags & TRAIT_SETATTR_ORIGINAL_VALUE) {
                     if (value == NULL) {
                         Py_DECREF(result);
-                        return NULL;
+                        result = NULL;
+                    } else {
+                        Py_DECREF(value);
                     }
-                    Py_DECREF(value);
-                    return result;
                 }
                 else {
                     Py_DECREF(result);
-                    return value;
+                    result = value;
                 }
             }
-            break;
+            _warn_on_attribute_error(result);
+            return result;
         case TRAIT_SET_OBJECT_DEFAULT_VALUE:
             return call_class(
                 TraitSetObject, trait, obj, name, trait->default_value);
