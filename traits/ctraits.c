@@ -808,10 +808,18 @@ static void
 has_traits_dealloc(has_traits_object *obj)
 {
     PyObject_GC_UnTrack(obj);
+#if PY_VERSION_HEX < 0x03080000
     Py_TRASHCAN_SAFE_BEGIN(obj);
+#else
+    Py_TRASHCAN_BEGIN(obj, has_traits_dealloc);
+#endif
     has_traits_clear(obj);
     Py_TYPE(obj)->tp_free((PyObject *)obj);
+#if PY_VERSION_HEX < 0x03080000
     Py_TRASHCAN_SAFE_END(obj);
+#else
+    Py_TRASHCAN_END
+#endif
 }
 
 /*-----------------------------------------------------------------------------
@@ -3006,10 +3014,18 @@ static void
 trait_dealloc(trait_object *trait)
 {
     PyObject_GC_UnTrack(trait);
+#if PY_VERSION_HEX < 0x03080000
     Py_TRASHCAN_SAFE_BEGIN(trait);
+#else
+    Py_TRASHCAN_BEGIN(trait, trait_dealloc);
+#endif
     trait_clear(trait);
     Py_TYPE(trait)->tp_free((PyObject *)trait);
+#if PY_VERSION_HEX < 0x03080000
     Py_TRASHCAN_SAFE_END(trait);
+#else
+    Py_TRASHCAN_END
+#endif
 }
 
 /*-----------------------------------------------------------------------------
