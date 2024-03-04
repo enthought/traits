@@ -276,13 +276,6 @@ setuptools.setup(
         Operating System :: POSIX :: Linux
         Programming Language :: Python
         Programming Language :: Python :: 3
-        Programming Language :: Python :: 3.6
-        Programming Language :: Python :: 3.7
-        Programming Language :: Python :: 3.8
-        Programming Language :: Python :: 3.9
-        Programming Language :: Python :: 3.10
-        Programming Language :: Python :: 3.11
-        Programming Language :: Python :: 3.12
         Programming Language :: Python :: Implementation :: CPython
         Topic :: Scientific/Engineering
         Topic :: Software Development
@@ -301,11 +294,6 @@ setuptools.setup(
         "Documentation": "https://docs.enthought.com/traits",
         "Source Code": "https://github.com/enthought/traits",
     },
-    install_requires=[
-        # We need typing-extensions for SupportsIndex; once we no longer
-        # support Python < 3.8, we can drop this requirement.
-        'typing-extensions; python_version<"3.8"',
-    ],
     extras_require={
         "docs": [
             "enthought-sphinx-theme",
@@ -317,11 +305,9 @@ setuptools.setup(
             "flake8",
             "flake8-ets",
             "mypy",
-            # NumPy is not yet available for Python 3.12, but that should be
-            # fixed soon: https://github.com/numpy/numpy/issues/23808
-            "numpy; python_version < '3.12'",
+            "numpy",
             "pyface",
-            "PySide6; python_version >= '3.7' and python_version < '3.12'",
+            "PySide6; python_version < '3.12'",
             "setuptools",
             "Sphinx>=2.1.0",
             "traitsui",
@@ -359,6 +345,6 @@ setuptools.setup(
     },
     license="BSD",
     packages=setuptools.find_packages(include=["traits", "traits.*"]),
-    python_requires=">=3.6",
+    python_requires=">=3.8",
     zip_safe=False,
 )
