@@ -8,23 +8,38 @@
 #
 # Thanks for using Enthought open source!
 
+import asyncio
+
 from traits.observation._observe import add_or_remove_notifiers
 from traits.observation.expression import compile_expr
+
+#: Set to hold references to active async traits handlers.
+_active_handler_tasks = set()
 
 
 def dispatch_same(handler, event):
     """ Dispatch an event handler on the same thread.
 
+    This dispatcher accepts both callables and async callables, the latter
+    being dispatched asynchronously via an async Task.  Asynchronous dispatch
+    is only available when an async event loop is running; it will raise if
+    it cannot create an async Task.
+
     Parameters
     ----------
-    handler : callable(event)
+    handler : callable(event) or async callable(event)
         User-defined callable to handle change events.
         ``event`` is an object representing the change.
         Its type and content depends on the change.
     event : object
         The event object to be given to handler.
     """
-    handler(event)
+    if asyncio.iscoroutinefunction(handler):
+        task = asyncio.create_task(handler(event))
+        _active_handler_tasks.add(task)
+        task.add_done_callback(_active_handler_tasks.discard)
+    else:
+        handler(event)
 
 
 def observe(

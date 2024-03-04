@@ -8,6 +8,8 @@
 #
 # Thanks for using Enthought open source!
 
+import asyncio
+from contextlib import contextmanager
 import unittest
 from unittest import mock
 
@@ -653,3 +655,74 @@ class TestApplyObservers(unittest.TestCase):
         # then
         # the handler should be called twice as the targets are different.
         self.assertEqual(handler.call_count, 2)
+
+
+# ---- Low-level tests for async dispatch_same ------------------------------
+
+
+class TestAsyncDispatchSame(unittest.IsolatedAsyncioTestCase):
+    """Test low-level async dispatch."""
+
+    def setUp(self):
+        from traits.observation.observe import _active_handler_tasks
+
+        # ensure no lingering references to handler tasks after test run
+        self.addCleanup(_active_handler_tasks.clear)
+
+        push_exception_handler(reraise_exceptions=True)
+        self.addCleanup(pop_exception_handler)
+
+    async def test_async_dispatch(self):
+        event = []
+
+        async def handler(event):
+            await asyncio.sleep(0)
+            event.append('called')
+        
+        dispatch_same(handler, event)
+
+        await asyncio.sleep(0.1)
+
+        self.assertEqual(event, ['called'])
+
+    async def test_async_dispatch_error(self):
+        event = []
+        exceptions = []
+
+        async def handler(event):
+            await asyncio.sleep(0)
+            raise Exception("Bad handler")
+        
+        def excption_handler(loop, context):
+            exceptions.append(context['exception'].args[0])
+
+        with self.asyncio_exception_handler(excption_handler):
+            dispatch_same(handler, event)
+            await asyncio.sleep(0.1)
+
+        self.assertEqual(event, [])
+        self.assertEqual(exceptions, ["Bad handler"])
+
+
+    def test_async_dispatch_no_loop(self):
+        event = []
+
+        async def handler(event):
+            await asyncio.sleep(0)
+            event.append('called')
+        
+        with self.assertWarns(RuntimeWarning):
+            with self.assertRaises(RuntimeError):
+                dispatch_same(handler, event)
+
+        self.assertEqual(event, [])
+
+    @contextmanager
+    def asyncio_exception_handler(self, exc_handler):
+        loop = asyncio.get_event_loop()
+        old_handler = loop.get_exception_handler()
+        loop.set_exception_handler(exc_handler)
+        try:
+            yield exc_handler
+        finally:
+            loop.set_exception_handler(old_handler)

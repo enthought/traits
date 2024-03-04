@@ -313,6 +313,39 @@ it is invoked. The following example shows the first option:
    :start-at: from traits.api
 
 
+Async Notification Handlers
+```````````````````````````
+
+Since Traits 8.0 you can use an async coroutine as an observe handler, either
+with an |@observe| decorator::
+
+    class AsyncExample(HasTraits):
+        value = Str()
+
+        @observe('value')
+        async def _value_updated(self, event):
+            await asyncio.sleep(0)
+            print("value changed")
+
+or via the |HasTraits.observe| method::
+
+    async def async_observer(self, event):
+        await asyncio.sleep(0)
+        print("value changed")
+    
+    async_example = AsyncExample()
+    async_example.observe(async_observer, "value")
+
+
+When a trait change event occurs which is observed by an async handler while
+in an asyncio event loop, a task will be created to call the handler at a later
+time.  If the event loop is not running an exception will be raised.
+
+.. warning::
+
+    This is an experimental feature, and behavior may change in the future.
+
+
 Features and fixes provided by |@observe|
 -----------------------------------------
 

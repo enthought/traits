@@ -12,6 +12,7 @@
 See tests in ``traits.observations`` for more targeted tests.
 """
 
+import asyncio
 import unittest
 
 from traits.api import (
@@ -930,3 +931,49 @@ class TestObserveAnytrait(unittest.TestCase):
         self.assertEqual(event.index, 2)
         self.assertEqual(event.removed, [3])
         self.assertEqual(event.added, [4])
+
+
+# Integration tests for async observe decorator -------------------------------
+
+
+class SimpleAsyncExample(HasTraits):
+
+    value = Str()
+
+    events = List()
+
+    @observe('value')
+    async def value_changed_async(self, event):
+        await asyncio.sleep(0)
+        self.events.append(event)
+
+
+class TestAsyncObserverDecorator(unittest.IsolatedAsyncioTestCase):
+
+    def setUp(self):
+        from traits.observation.observe import _active_handler_tasks
+
+        # ensure no lingering references to handler tasks after test run
+        self.addCleanup(_active_handler_tasks.clear)
+
+    async def test_async_dispatch(self):
+
+        obj = SimpleAsyncExample(value='initial')
+
+        self.assertEqual(len(obj.events), 0)
+
+        await asyncio.sleep(0.1)
+
+        self.assertEqual(len(obj.events), 1)
+        self.assertEqual(obj.events[0].name, 'value')
+        self.assertEqual(obj.events[0].new, 'initial')
+
+        obj.value = 'changed'
+
+        self.assertEqual(len(obj.events), 1)
+
+        await asyncio.sleep(0.1)
+
+        self.assertEqual(len(obj.events), 2)
+        self.assertEqual(obj.events[1].name, 'value')
+        self.assertEqual(obj.events[1].new, 'changed')
