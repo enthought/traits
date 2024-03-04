@@ -542,7 +542,7 @@ set_value(PyObject **field, PyObject *value)
 +----------------------------------------------------------------------------*/
 
 static PyObject *
-get_trait_flag(trait_object *trait, int mask)
+get_trait_flag(trait_object *trait, unsigned int mask)
 {
     if (trait->flags & mask) {
         Py_RETURN_TRUE;
@@ -557,7 +557,7 @@ get_trait_flag(trait_object *trait, int mask)
 +----------------------------------------------------------------------------*/
 
 static int
-set_trait_flag(trait_object *trait, int mask, PyObject *value)
+set_trait_flag(trait_object *trait, unsigned int mask, PyObject *value)
 {
     int flag = PyObject_IsTrue(value);
 
@@ -898,7 +898,6 @@ has_traits_getattro(has_traits_object *obj, PyObject *name)
 static PyObject *
 get_trait(has_traits_object *obj, PyObject *name, int instance)
 {
-    int i, n;
     PyDictObject *itrait_dict;
     trait_object *trait;
     trait_object *itrait;
@@ -963,13 +962,13 @@ get_trait(has_traits_object *obj, PyObject *name, int instance)
 
     /* Copy the class trait's notifier list into the instance trait: */
     if ((notifiers = trait->notifiers) != NULL) {
-        n = PyList_GET_SIZE(notifiers);
+        Py_ssize_t n = PyList_GET_SIZE(notifiers);
         itrait->notifiers = inotifiers = (PyListObject *)PyList_New(n);
         if (inotifiers == NULL) {
             return NULL;
         }
 
-        for (i = 0; i < n; i++) {
+        for (Py_ssize_t i = 0; i < n; i++) {
             item = PyList_GET_ITEM(notifiers, i);
             PyList_SET_ITEM(inotifiers, i, item);
             Py_INCREF(item);
@@ -3269,7 +3268,7 @@ validate_trait_type(
     PyObject *value)
 {
     PyObject *type_info = trait->py_validate;
-    int kind = PyTuple_GET_SIZE(type_info);
+    Py_ssize_t kind = PyTuple_GET_SIZE(type_info);
 
     if (((kind == 3) && (value == Py_None))
         || PyObject_TypeCheck(
@@ -3291,7 +3290,7 @@ validate_trait_instance(
     PyObject *value)
 {
     PyObject *type_info = trait->py_validate;
-    int kind = PyTuple_GET_SIZE(type_info);
+    Py_ssize_t kind = PyTuple_GET_SIZE(type_info);
 
     if (((kind == 3) && (value == Py_None))
         || (PyObject_IsInstance(value, PyTuple_GET_ITEM(type_info, kind - 1))
@@ -3678,13 +3677,12 @@ validate_trait_tuple_check(
 {
     trait_object *itrait;
     PyObject *bitem, *aitem, *tuple;
-    int i, j, n;
 
     if (PyTuple_Check(value)) {
-        n = PyTuple_GET_SIZE(traits);
+        Py_ssize_t n = PyTuple_GET_SIZE(traits);
         if (n == PyTuple_GET_SIZE(value)) {
             tuple = NULL;
-            for (i = 0; i < n; i++) {
+            for (Py_ssize_t i = 0; i < n; i++) {
                 bitem = PyTuple_GET_ITEM(value, i);
                 itrait = (trait_object *)PyTuple_GET_ITEM(traits, i);
                 if (itrait->validate == NULL) {
@@ -3711,7 +3709,7 @@ validate_trait_tuple_check(
                     if (tuple == NULL) {
                         return NULL;
                     }
-                    for (j = 0; j < i; j++) {
+                    for (Py_ssize_t j = 0; j < i; j++) {
                         bitem = PyTuple_GET_ITEM(value, j);
                         Py_INCREF(bitem);
                         PyTuple_SET_ITEM(tuple, j, bitem);
@@ -3757,7 +3755,7 @@ validate_trait_coerce_type(
     trait_object *trait, has_traits_object *obj, PyObject *name,
     PyObject *value)
 {
-    int i, n;
+    Py_ssize_t i, n;
     PyObject *type2;
 
     PyObject *type_info = trait->py_validate;
@@ -4001,18 +3999,18 @@ validate_trait_complex(
     trait_object *trait, has_traits_object *obj, PyObject *name,
     PyObject *value)
 {
-    int i, j, k, kind, in_range;
+    int in_range;
     long mode, rc;
     PyObject *result, *type_info, *type, *type2, *args;
 
     PyObject *list_type_info = PyTuple_GET_ITEM(trait->py_validate, 1);
-    int n = PyTuple_GET_SIZE(list_type_info);
-    for (i = 0; i < n; i++) {
+    Py_ssize_t n = PyTuple_GET_SIZE(list_type_info);
+    for (Py_ssize_t i = 0; i < n; i++) {
         type_info = PyTuple_GET_ITEM(list_type_info, i);
 
         switch (PyLong_AsLong(PyTuple_GET_ITEM(type_info, 0))) {
-            case 0: /* Type check: */
-                kind = PyTuple_GET_SIZE(type_info);
+            case 0: { /* Type check: */
+                Py_ssize_t kind = PyTuple_GET_SIZE(type_info);
                 if (((kind == 3) && (value == Py_None))
                     || PyObject_TypeCheck(
                         value, (PyTypeObject *)PyTuple_GET_ITEM(
@@ -4020,9 +4018,9 @@ validate_trait_complex(
                     goto done;
                 }
                 break;
-
-            case 1: /* Instance check: */
-                kind = PyTuple_GET_SIZE(type_info);
+            }
+            case 1: { /* Instance check: */
+                Py_ssize_t kind = PyTuple_GET_SIZE(type_info);
                 if (((kind == 3) && (value == Py_None))
                     || (PyObject_IsInstance(
                             value, PyTuple_GET_ITEM(type_info, kind - 1))
@@ -4030,7 +4028,7 @@ validate_trait_complex(
                     goto done;
                 }
                 break;
-
+            }
             case 2: /* Self type check: */
                 if (((PyTuple_GET_SIZE(type_info) == 2) && (value == Py_None))
                     || PyObject_TypeCheck(value, Py_TYPE(obj))) {
@@ -4111,8 +4109,9 @@ validate_trait_complex(
                     goto done;
                 }
 
-                k = PyTuple_GET_SIZE(type_info);
-                for (j = 2; j < k; j++) {
+                Py_ssize_t k = PyTuple_GET_SIZE(type_info);
+                Py_ssize_t j = 2;
+                for (; j < k; j++) {
                     type2 = PyTuple_GET_ITEM(type_info, j);
                     if (type2 == Py_None) {
                         break;
@@ -4323,7 +4322,7 @@ _trait_set_validate(trait_object *trait, PyObject *args)
 {
     PyObject *validate;
     PyObject *v1, *v2, *v3;
-    int n, kind;
+    Py_ssize_t kind;
 
     if (!PyArg_ParseTuple(args, "O", &validate)) {
         return NULL;
@@ -4335,7 +4334,7 @@ _trait_set_validate(trait_object *trait, PyObject *args)
     }
 
     if (PyTuple_CheckExact(validate)) {
-        n = PyTuple_GET_SIZE(validate);
+        Py_ssize_t n = PyTuple_GET_SIZE(validate);
         if (n > 0) {
             kind = PyLong_AsLong(PyTuple_GET_ITEM(validate, 0));
 
