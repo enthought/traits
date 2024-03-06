@@ -172,8 +172,11 @@ def safe_contains(value, container):
     TypeError.  In these cases we make the (reasonable) assumption that the
     value is _not_ contained in the container.
     """
-    # Do a LBYL check for Enums, to avoid the DeprecationWarning issued
-    # by Python 3.7. Ref: enthought/traits#853.
+    # Enums have an awkward history here. A containment check of an element
+    # against an enum.Enum subclass variously returns, raises, and/or warns
+    # depending on the Python version. So we do a LBYL check to bypass the
+    # warnings and errors.
+    # Ref: enthought/traits#853.
     if isinstance(container, enum.EnumMeta):
         if not isinstance(value, enum.Enum):
             return False

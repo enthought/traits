@@ -291,10 +291,7 @@ class TestRegression(unittest.TestCase):
         _create_subclass()
         gc.collect()
 
-        # In Python < 3.6, we can end up seeing the same subclasses but in
-        # a different order, so use assertCountEqual rather than assertEqual.
-        # Ref: enthought/traits#1282.
-        self.assertCountEqual(previous_subclasses, HasTraits.__subclasses__())
+        self.assertEqual(previous_subclasses, HasTraits.__subclasses__())
 
     def test_leaked_property_tuple(self):
         """ the property ctrait constructor shouldn't leak a tuple. """

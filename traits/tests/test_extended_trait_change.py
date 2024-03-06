@@ -586,10 +586,9 @@ class OnTraitChangeTest(unittest.TestCase):
                 AssertionError,
                 msg="Behavior of a bug (#537) is not reproduced."):
             # Handlers with arguments are unexpectedly called, but one of the
-            # handlers fails, leading to the rest of the handlers
-            # not to be called. Actual behavior depends on dictionary ordering
-            # (Python <3.6) or the order of handlers defined in
-            # InstanceValueListener (Python >= 3.6)
+            # handlers fails, leading to the rest of the handlers not to be
+            # called. Actual behavior depends on the order of handlers defined
+            # in InstanceValueListener.
             self.assertEqual(inst.calls, {0: 1, 1: 0, 2: 0, 3: 0, 4: 0})
 
         self.assertEqual(inst.ref.value, [0, 1, 2, 3])
@@ -646,10 +645,9 @@ class OnTraitChangeTest(unittest.TestCase):
                 AssertionError,
                 msg="Behavior of a bug (#537) is not reproduced."):
             # Handlers with arguments are unexpectedly called, but one of the
-            # handlers fails, leading to the rest of the handlers
-            # not to be called. Actual behavior depends on dictionary ordering
-            # (Python <3.6) or the order of handlers defined in
-            # InstanceValueListener (Python >= 3.6)
+            # handlers fails, leading to the rest of the handlers not to be
+            # called. Actual behavior depends on the order of handlers defined
+            # in InstanceValueListener.
             self.assertEqual(inst.calls, {0: 1, 1: 0, 2: 0, 3: 0, 4: 0})
 
         self.assertEqual(inst.ref.value, {0: 0, 1: 1, 2: 2, 3: 3})

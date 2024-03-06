@@ -26,16 +26,6 @@ class IntegerLike:
         return self._value
 
 
-# Python versions < 3.8 don't support conversion of something with __index__
-# to complex.
-try:
-    complex(IntegerLike(3))
-except TypeError:
-    complex_accepts_index = False
-else:
-    complex_accepts_index = True
-
-
 class FloatLike:
     def __init__(self, value):
         self._value = value
@@ -108,10 +98,6 @@ class CommonComplexTests(object):
         self.assertIs(type(a.value), complex)
         self.assertEqual(a.value, complex(5.0, 12.0))
 
-    @unittest.skipUnless(
-        complex_accepts_index,
-        "complex does not support __index__ for this Python version",
-    )
     def test_accepts_integer_like(self):
         a = self.test_class()
         a.value = IntegerLike(3)
