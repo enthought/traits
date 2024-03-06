@@ -26,16 +26,6 @@ class IntegerLike:
         return self._value
 
 
-# Python versions < 3.8 don't support conversion of something with __index__
-# to float.
-try:
-    float(IntegerLike(3))
-except TypeError:
-    float_accepts_index = False
-else:
-    float_accepts_index = True
-
-
 class MyFloat(object):
     def __init__(self, value):
         self._value = value
@@ -111,10 +101,6 @@ class CommonFloatTests(object):
         self.assertIs(type(a.value_or_none), float)
         self.assertEqual(a.value_or_none, 2.0)
 
-    @unittest.skipUnless(
-        float_accepts_index,
-        "float does not support __index__ for this Python version",
-    )
     def test_accepts_integer_like(self):
         a = self.test_class()
         a.value = IntegerLike(3)

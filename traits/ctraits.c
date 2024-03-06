@@ -808,18 +808,10 @@ static void
 has_traits_dealloc(has_traits_object *obj)
 {
     PyObject_GC_UnTrack(obj);
-#if PY_VERSION_HEX < 0x03080000
-    Py_TRASHCAN_SAFE_BEGIN(obj);
-#else
     Py_TRASHCAN_BEGIN(obj, has_traits_dealloc);
-#endif
     has_traits_clear(obj);
     Py_TYPE(obj)->tp_free((PyObject *)obj);
-#if PY_VERSION_HEX < 0x03080000
-    Py_TRASHCAN_SAFE_END(obj);
-#else
     Py_TRASHCAN_END
-#endif
 }
 
 /*-----------------------------------------------------------------------------
@@ -3401,10 +3393,9 @@ validate_trait_integer(
    Here float-like means:
 
    - is an instance of float, or
-   - can be converted to a float via its type's __float__ method
-
-   Note: as of Python 3.8, objects having an __index__ method but
-   no __float__ method can also be converted to float.
+   - can be converted to a float via its type's __float__ method, or
+   - can be converted to an int (and from there to a float) via its type's
+     __index__ method
 */
 
 static PyObject *
@@ -3471,8 +3462,7 @@ validate_trait_float(
    - can be converted to a a complex number via its type's __complex__ method,
      or
    - can be converted to a float via its type's __float__ method, or
-   - (for Python >= 3.8) can be converted to an int via its type's __index__
-     method.
+   - can be converted to an int via its type's __index__ method.
 
    In other words, these should be exactly the Python objects that are
    accepted by the standard functions in the cmath module.
@@ -3506,8 +3496,8 @@ _ctraits_validate_complex_number(PyObject *self, PyObject *value)
 /*-----------------------------------------------------------------------------
 |  Verifies that a Python value is convertible to a complex number.
 |
-|  Will convert anything whose type has a __complex__, __float__ or (for
-|  Python >= 3.8) __index__ method to a Python complex number. Returns a Python
+|  Will convert anything whose type has a __complex__, __float__ or
+|  __index__ method to a Python complex number. Returns a Python
 |  object of exact type "complex". Raises TraitError with a suitable message if
 |  the given value isn't convertible to a complex number.
 |
