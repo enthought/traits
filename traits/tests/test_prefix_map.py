@@ -63,8 +63,8 @@ class TestPrefixMap(unittest.TestCase):
 
         p = Person()
 
-        # Since we're using Python >= 3.6, we can rely on dictionaries
-        # being ordered, and then the default is predictable.
+        # In all recent Python versions, dictionary ordering is deterministic
+        # and hence the default value is predictable.
         self.assertEqual(p.married, "yes")
         self.assertEqual(p.married_, 1)
 

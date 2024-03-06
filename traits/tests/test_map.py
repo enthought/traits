@@ -71,8 +71,8 @@ class TestMap(unittest.TestCase):
 
         p = Person()
 
-        # Since we're using Python >= 3.6, we can rely on dictionaries
-        # being ordered, and then the default is predictable.
+        # Default is predictable because in all supported versions of
+        # Python, dictionary insertion order is preserved.
         self.assertEqual(p.married, "yes")
         self.assertEqual(p.married_, 1)
 
@@ -86,8 +86,8 @@ class TestMap(unittest.TestCase):
         shadow_value = p.married_
         primary_value = p.married
 
-        # For Python >= 3.6, dictionary ordering and hence the default
-        # value are predictable.
+        # In all recent Python versions, dictionary ordering is deterministic
+        # and hence the default value is predictable.
         self.assertEqual(primary_value, "yes")
         self.assertEqual(shadow_value, 1)
 
