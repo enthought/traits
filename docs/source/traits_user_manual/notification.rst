@@ -316,7 +316,7 @@ it is invoked. The following example shows the first option:
 Async Notification Handlers
 ```````````````````````````
 
-Since Traits 8.0 you can use an async coroutine as an observe handler, either
+Since Traits 7.0 you can use an async coroutine as an observe handler, either
 with an |@observe| decorator::
 
     class AsyncExample(HasTraits):
