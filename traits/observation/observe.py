@@ -9,6 +9,7 @@
 # Thanks for using Enthought open source!
 
 import asyncio
+import inspect
 
 from traits.observation._observe import add_or_remove_notifiers
 from traits.observation.expression import compile_expr
@@ -34,7 +35,7 @@ def dispatch_same(handler, event):
     event : object
         The event object to be given to handler.
     """
-    if asyncio.iscoroutinefunction(handler):
+    if inspect.iscoroutinefunction(handler):
         task = asyncio.create_task(handler(event))
         _active_handler_tasks.add(task)
         task.add_done_callback(_active_handler_tasks.discard)
