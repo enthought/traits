@@ -963,20 +963,21 @@ class TestAsyncObserverDecorator(unittest.IsolatedAsyncioTestCase):
 
         obj = SimpleAsyncExample(value='initial', event=event)
 
-        async with asyncio.timeout(10):
-            self.assertEqual(len(obj.events), 0)
-            await event.wait()
+        self.assertEqual(len(obj.events), 0)
+
+        await asyncio.wait_for(event.wait(), timeout=10)
 
         self.assertEqual(len(obj.events), 1)
         self.assertEqual(obj.events[0].name, 'value')
         self.assertEqual(obj.events[0].new, 'initial')
 
-        event.reset()
+        event.clear()
 
-        async with asyncio.timeout(10):
-            obj.value = 'changed'
-            self.assertEqual(len(obj.events), 1)
-            await event.wait()
+        obj.value = 'changed'
+
+        self.assertEqual(len(obj.events), 1)
+
+        await asyncio.wait_for(event.wait(), timeout=10)
 
         self.assertEqual(len(obj.events), 2)
         self.assertEqual(obj.events[1].name, 'value')

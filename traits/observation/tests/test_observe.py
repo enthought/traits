@@ -678,9 +678,9 @@ class TestAsyncDispatchSame(unittest.IsolatedAsyncioTestCase):
         async def handler(event):
             event.set()
 
-        async with asyncio.timeout(10):
-            dispatch_same(handler, event)
-            await event.wait()
+        dispatch_same(handler, event)
+
+        await asyncio.wait_for(event.wait(), timeout=10)
 
         self.assertTrue(event.is_set())
 
@@ -696,9 +696,9 @@ class TestAsyncDispatchSame(unittest.IsolatedAsyncioTestCase):
             exceptions.append(context["exception"].args[0])
 
         with self.asyncio_exception_handler(exception_handler):
-            async with asyncio.timeout(0.1):
+            with self.assertRaises(TimeoutError):
                 dispatch_same(handler, event)
-                await event.wait()
+                await asyncio.wait_for(event.wait(), timeout=0.1)
 
         self.assertFalse(event.is_set())
         self.assertEqual(exceptions, ["Bad handler"])
