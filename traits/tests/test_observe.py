@@ -944,9 +944,12 @@ class SimpleAsyncExample(HasTraits):
 
     event = Instance(asyncio.Event)
 
+    queue = Instance(asyncio.Queue)
+
     @observe('value')
     async def value_changed_async(self, event):
-        self.events.append(event)
+        queue_value = await self.queue.get()
+        self.events.append((event, queue_value))
         self.event.set()
 
 
@@ -960,16 +963,22 @@ class TestAsyncObserverDecorator(unittest.IsolatedAsyncioTestCase):
 
     async def test_async_dispatch(self):
         event = asyncio.Event()
+        queue = asyncio.Queue()
 
-        obj = SimpleAsyncExample(value='initial', event=event)
+        obj = SimpleAsyncExample(value='initial', event=event, queue=queue)
 
         self.assertEqual(len(obj.events), 0)
 
+        task = asyncio.create_task(queue.put("first"))
+
         await asyncio.wait_for(event.wait(), timeout=10)
 
+        self.assertTrue(task.done())
         self.assertEqual(len(obj.events), 1)
-        self.assertEqual(obj.events[0].name, 'value')
-        self.assertEqual(obj.events[0].new, 'initial')
+        trait_event, queue_value = obj.events[0]
+        self.assertEqual(trait_event.name, 'value')
+        self.assertEqual(trait_event.new, 'initial')
+        self.assertEqual(queue_value, 'first')
 
         event.clear()
 
@@ -977,8 +986,13 @@ class TestAsyncObserverDecorator(unittest.IsolatedAsyncioTestCase):
 
         self.assertEqual(len(obj.events), 1)
 
+        task = asyncio.create_task(queue.put("second"))
+
         await asyncio.wait_for(event.wait(), timeout=10)
 
+        self.assertTrue(task.done())
         self.assertEqual(len(obj.events), 2)
-        self.assertEqual(obj.events[1].name, 'value')
-        self.assertEqual(obj.events[1].new, 'changed')
+        trait_event, queue_value = obj.events[1]
+        self.assertEqual(trait_event.name, 'value')
+        self.assertEqual(trait_event.new, 'changed')
+        self.assertEqual(queue_value, 'second')
