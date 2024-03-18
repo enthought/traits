@@ -942,7 +942,7 @@ class SimpleAsyncExample(HasTraits):
 
     events = List()
     
-    event = Instance(asyncio.Event))
+    event = Instance(asyncio.Event)
 
     @observe('value')
     async def value_changed_async(self, event):

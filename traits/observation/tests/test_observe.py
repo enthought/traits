@@ -673,8 +673,6 @@ class TestAsyncDispatchSame(unittest.IsolatedAsyncioTestCase):
         self.addCleanup(pop_exception_handler)
 
     async def test_async_dispatch(self):
-
-    async def test_async_dispatch(self):
         event = asyncio.Event()
 
         async def handler(event):
