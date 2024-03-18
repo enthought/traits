@@ -959,7 +959,7 @@ class TestAsyncObserverDecorator(unittest.IsolatedAsyncioTestCase):
         self.addCleanup(_active_handler_tasks.clear)
 
     async def test_async_dispatch(self):
-        event = Event()
+        event = asyncio.Event()
 
         obj = SimpleAsyncExample(value='initial', event=event)
 

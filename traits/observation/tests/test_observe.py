@@ -711,8 +711,7 @@ class TestAsyncDispatchSame(unittest.IsolatedAsyncioTestCase):
 
         with self.assertWarns(RuntimeWarning):
             with self.assertRaises(RuntimeError):
-                async with asyncio.timeout(0.1):
-                    dispatch_same(handler, event)
+                dispatch_same(handler, event)
 
         self.assertFalse(event.is_set())
 
