@@ -941,7 +941,7 @@ class SimpleAsyncExample(HasTraits):
     value = Str()
 
     events = List()
-    
+
     event = Instance(asyncio.Event)
 
     @observe('value')
