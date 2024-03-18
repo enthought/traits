@@ -673,49 +673,50 @@ class TestAsyncDispatchSame(unittest.IsolatedAsyncioTestCase):
         self.addCleanup(pop_exception_handler)
 
     async def test_async_dispatch(self):
-        event = []
+
+    async def test_async_dispatch(self):
+        event = asyncio.Event()
 
         async def handler(event):
-            await asyncio.sleep(0)
-            event.append('called')
-        
-        dispatch_same(handler, event)
+            event.set()
 
-        await asyncio.sleep(0.1)
+        async with asyncio.timeout(10):
+            dispatch_same(handler, event)
+            await event.wait()
 
-        self.assertEqual(event, ['called'])
+        self.assertTrue(event.is_set())
 
     async def test_async_dispatch_error(self):
-        event = []
+        event = asyncio.Event()
         exceptions = []
 
         async def handler(event):
-            await asyncio.sleep(0)
             raise Exception("Bad handler")
-        
-        def excption_handler(loop, context):
-            exceptions.append(context['exception'].args[0])
+            event.set()
 
-        with self.asyncio_exception_handler(excption_handler):
-            dispatch_same(handler, event)
-            await asyncio.sleep(0.1)
+        def exception_handler(loop, context):
+            exceptions.append(context["exception"].args[0])
 
-        self.assertEqual(event, [])
+        with self.asyncio_exception_handler(exception_handler):
+            async with asyncio.timeout(0.1):
+                dispatch_same(handler, event)
+                await event.wait()
+
+        self.assertFalse(event.is_set())
         self.assertEqual(exceptions, ["Bad handler"])
 
-
     def test_async_dispatch_no_loop(self):
-        event = []
+        event = asyncio.Event()
 
         async def handler(event):
-            await asyncio.sleep(0)
-            event.append('called')
-        
+            event.set()
+
         with self.assertWarns(RuntimeWarning):
             with self.assertRaises(RuntimeError):
-                dispatch_same(handler, event)
+                async with asyncio.timeout(0.1):
+                    dispatch_same(handler, event)
 
-        self.assertEqual(event, [])
+        self.assertFalse(event.is_set())
 
     @contextmanager
     def asyncio_exception_handler(self, exc_handler):

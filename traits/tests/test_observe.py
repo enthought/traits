@@ -941,11 +941,13 @@ class SimpleAsyncExample(HasTraits):
     value = Str()
 
     events = List()
+    
+    event = Instance(asyncio.Event))
 
     @observe('value')
     async def value_changed_async(self, event):
-        await asyncio.sleep(0)
         self.events.append(event)
+        self.event.set()
 
 
 class TestAsyncObserverDecorator(unittest.IsolatedAsyncioTestCase):
@@ -957,22 +959,24 @@ class TestAsyncObserverDecorator(unittest.IsolatedAsyncioTestCase):
         self.addCleanup(_active_handler_tasks.clear)
 
     async def test_async_dispatch(self):
+        event = Event()
 
-        obj = SimpleAsyncExample(value='initial')
+        obj = SimpleAsyncExample(value='initial', event=event)
 
-        self.assertEqual(len(obj.events), 0)
-
-        await asyncio.sleep(0.1)
+        async with asyncio.timeout(10):
+            self.assertEqual(len(obj.events), 0)
+            await event.wait()
 
         self.assertEqual(len(obj.events), 1)
         self.assertEqual(obj.events[0].name, 'value')
         self.assertEqual(obj.events[0].new, 'initial')
 
-        obj.value = 'changed'
+        event.reset()
 
-        self.assertEqual(len(obj.events), 1)
-
-        await asyncio.sleep(0.1)
+        async with asyncio.timeout(10):
+            obj.value = 'changed'
+            self.assertEqual(len(obj.events), 1)
+            await event.wait()
 
         self.assertEqual(len(obj.events), 2)
         self.assertEqual(obj.events[1].name, 'value')
