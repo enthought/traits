@@ -696,7 +696,7 @@ class TestAsyncDispatchSame(unittest.IsolatedAsyncioTestCase):
             exceptions.append(context["exception"].args[0])
 
         with self.asyncio_exception_handler(exception_handler):
-            with self.assertRaises(TimeoutError):
+            with self.assertRaises(asyncio.exceptions.TimeoutError):
                 dispatch_same(handler, event)
                 await asyncio.wait_for(event.wait(), timeout=0.1)
 
