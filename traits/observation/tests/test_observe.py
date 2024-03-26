@@ -690,17 +690,15 @@ class TestAsyncDispatchSame(unittest.IsolatedAsyncioTestCase):
 
         async def handler(event):
             raise Exception("Bad handler")
-            event.set()
 
         def exception_handler(loop, context):
             exceptions.append(context["exception"].args[0])
+            event.set()
 
         with self.asyncio_exception_handler(exception_handler):
-            with self.assertRaises(asyncio.exceptions.TimeoutError):
-                dispatch_same(handler, event)
-                await asyncio.wait_for(event.wait(), timeout=0.1)
+            dispatch_same(handler, event)
+            await asyncio.wait_for(event.wait(), timeout=10.0)
 
-        self.assertFalse(event.is_set())
         self.assertEqual(exceptions, ["Bad handler"])
 
     def test_async_dispatch_no_loop(self):
