@@ -12,6 +12,7 @@
 See tests in ``traits.observations`` for more targeted tests.
 """
 
+import asyncio
 import unittest
 
 from traits.api import (
@@ -930,3 +931,68 @@ class TestObserveAnytrait(unittest.TestCase):
         self.assertEqual(event.index, 2)
         self.assertEqual(event.removed, [3])
         self.assertEqual(event.added, [4])
+
+
+# Integration tests for async observe decorator -------------------------------
+
+
+class SimpleAsyncExample(HasTraits):
+
+    value = Str()
+
+    events = List()
+
+    event = Instance(asyncio.Event)
+
+    queue = Instance(asyncio.Queue)
+
+    @observe('value')
+    async def value_changed_async(self, event):
+        queue_value = await self.queue.get()
+        self.events.append((event, queue_value))
+        self.event.set()
+
+
+class TestAsyncObserverDecorator(unittest.IsolatedAsyncioTestCase):
+
+    def setUp(self):
+        from traits.observation.observe import _active_handler_tasks
+
+        # ensure no lingering references to handler tasks after test run
+        self.addCleanup(_active_handler_tasks.clear)
+
+    async def test_async_dispatch(self):
+        event = asyncio.Event()
+        queue = asyncio.Queue()
+
+        obj = SimpleAsyncExample(value='initial', event=event, queue=queue)
+
+        self.assertEqual(len(obj.events), 0)
+
+        task = asyncio.create_task(queue.put("first"))
+
+        await asyncio.wait_for(event.wait(), timeout=10)
+
+        self.assertTrue(task.done())
+        self.assertEqual(len(obj.events), 1)
+        trait_event, queue_value = obj.events[0]
+        self.assertEqual(trait_event.name, 'value')
+        self.assertEqual(trait_event.new, 'initial')
+        self.assertEqual(queue_value, 'first')
+
+        event.clear()
+
+        obj.value = 'changed'
+
+        self.assertEqual(len(obj.events), 1)
+
+        task = asyncio.create_task(queue.put("second"))
+
+        await asyncio.wait_for(event.wait(), timeout=10)
+
+        self.assertTrue(task.done())
+        self.assertEqual(len(obj.events), 2)
+        trait_event, queue_value = obj.events[1]
+        self.assertEqual(trait_event.name, 'value')
+        self.assertEqual(trait_event.new, 'changed')
+        self.assertEqual(queue_value, 'second')
