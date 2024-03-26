@@ -122,7 +122,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Notify Slack channel on failure
-        uses: voxmedia/github-action-slack-notify-build@v1
+        uses: voxmedia/github-action-slack-notify-build@v2
         with:
           channel_id: ${{ secrets.ETS_SLACK_CHANNEL_ID }}
           status: FAILED
@@ -136,7 +136,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Notify Slack channel on success
-        uses: voxmedia/github-action-slack-notify-build@v1
+        uses: voxmedia/github-action-slack-notify-build@v2
         with:
           channel_id: ${{ secrets.ETS_BOTS_SLACK_CHANNEL_ID }}
           status: SUCCESS
