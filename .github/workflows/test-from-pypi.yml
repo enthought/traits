@@ -41,7 +41,7 @@ jobs:
         sudo apt-get install libxcb-shape0
       if: runner.os == 'Linux'
     - name: Set up Python ${{ matrix.python-version }} (${{ matrix.python-architecture }})
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
         architecture: ${{ matrix.python-architecture }}
@@ -93,7 +93,7 @@ jobs:
         sudo apt-get install libxcb-shape0
       if: runner.os == 'Linux'
     - name: Set up Python ${{ matrix.python-version }} (${{ matrix.python-architecture }})
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
         architecture: ${{ matrix.python-architecture }}

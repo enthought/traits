@@ -19,7 +19,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Install Linux packages for Qt support
       run: |
         sudo apt-get update
@@ -34,7 +34,7 @@ jobs:
         sudo apt-get install libxcb-shape0
       if: matrix.os == 'ubuntu-latest'
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
         allow-prereleases: true
