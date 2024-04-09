@@ -72,3 +72,19 @@ class TestConstantTrait(unittest.TestCase):
 
         # Check directly that both refer to the same object.
         self.assertIs(obj1.c_atr, obj2.c_atr)
+
+    @unittest.expectedFailure
+    def test_constant_validator(self):
+        """
+        XFAIL: `validate` on constant does not reject new values.
+
+        See enthought/traits#1784
+        """
+        class TestClass(HasTraits):
+            attribute = Constant(123)
+
+        a = TestClass()
+        const_trait = a.traits()["attribute"]
+
+        with self.assertRaises(TraitError):
+            const_trait.validate(a, "attribute", 456)

@@ -12,7 +12,7 @@ import unittest
 
 from traits.api import (
     Bytes, DefaultValue, Float, HasTraits, Instance, Int, List, Str,
-    TraitError, TraitType, Type, Union)
+    TraitError, TraitType, Type, Union, Constant)
 
 
 class CustomClass(HasTraits):
@@ -133,6 +133,20 @@ class TestUnion(unittest.TestCase):
             "'default'."
         )
 
+    def test_default_raise_error_subclass(self):
+        # Name used in error message inherited by subclass
+        class TestUnion(Union):
+            pass
+
+        with self.assertRaises(ValueError) as exception_context:
+            TestUnion(Int(), Float(), default=1.0)
+
+        self.assertEqual(
+            str(exception_context.exception),
+            "TestUnion default value should be set via 'default_value', not "
+            "'default'."
+        )
+
     def test_inner_traits(self):
         class TestClass(HasTraits):
             atr = Union(Float, Int, Str)
@@ -214,3 +228,15 @@ class TestUnion(unittest.TestCase):
             has_union.trait("nested").default_value(),
             (DefaultValue.constant, ""),
         )
+
+    @unittest.expectedFailure  # See enthought/traits#1784
+    def test_union_constant(self):
+        class TestClass(HasTraits):
+            attribute = Union(None, Constant(123))
+
+        self.assertEqual(TestClass(attribute=123).attribute, 123)
+        self.assertIsNone(TestClass(attribute=None).attribute)
+
+        # Fails here - internal trait validation fails
+        with self.assertRaises(TraitError):
+            TestClass(attribute=124)
