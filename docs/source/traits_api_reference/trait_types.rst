@@ -235,6 +235,9 @@ Traits
 .. autoclass:: Union
    :show-inheritance:
 
+.. autoclass:: Optional
+   :show-inheritance:
+
 .. autoclass:: Either
    :show-inheritance:
 
