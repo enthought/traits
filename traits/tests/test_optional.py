@@ -290,8 +290,22 @@ class TestOptional(unittest.TestCase):
         with self.assertRaises(TraitError):
             TestClass(attribute=1.23)
 
+    @unittest.expectedFailure
+    def test_optional_default_value_validation(self):
+        """
+        XFAIL: Default value is not validated against allowed types
+
+        See discussion on enthought/traits#1784
+        """
+        with self.assertRaises(Exception):
+            # Expectation: something in here ought to fail
+            class TestClass(HasTraits):
+                attribute = Optional(Str, default_value=3.5)
+
+            TestClass()
+
     @unittest.expectedFailure  # See enthought/traits#1784
-    def test_optional_constant(self):
+    def test_optional_constant_initialization(self):
         class TestClass(HasTraits):
             attribute = Optional(Constant(123))
 
@@ -301,3 +315,16 @@ class TestOptional(unittest.TestCase):
         # Fails here - internal trait validation fails
         with self.assertRaises(TraitError):
             TestClass(attribute=124)
+
+    @unittest.expectedFailure  # See enthought/traits#1784
+    def test_optional_constant_setting(self):
+        class TestClass(HasTraits):
+            attribute = Optional(Constant(123))
+
+        obj = TestClass(attribute=123)
+        obj.attribute = None
+        obj.attribute = 123
+
+        # Fails here - internal trait validation fails
+        with self.assertRaises(TraitError):
+            obj.attribute = 124
