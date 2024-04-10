@@ -76,7 +76,7 @@ class TestConstantTrait(unittest.TestCase):
     @unittest.expectedFailure
     def test_constant_validator(self):
         """
-        XFAIL: `validate` on constant does not reject new values.
+        XFAIL: `validate` on Constant is permissive.
 
         See enthought/traits#1784
         """
