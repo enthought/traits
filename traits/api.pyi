@@ -107,6 +107,7 @@ from .trait_types import (
     ToolbarButton as ToolbarButton,
     Either as Either,
     Union as Union,
+    Optional as Optional,
     Type as Type,
     Subclass as Subclass,
     WeakRef as WeakRef,

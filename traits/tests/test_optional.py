@@ -11,7 +11,6 @@
 import unittest
 
 from traits.api import (
-    Bytes,
     DefaultValue,
     Float,
     HasTraits,
@@ -21,8 +20,8 @@ from traits.api import (
     Str,
     TraitError,
     TraitType,
-    Type,
     Optional,
+    Union,
     Constant,
 )
 from traits.trait_types import _NoneTrait
@@ -233,6 +232,45 @@ class TestOptional(unittest.TestCase):
 
         obj.attribute = None
         self.assertIsNone(obj.shadow_attribute)
+
+    def test_optional_nested(self):
+        """
+        You can nest ``Optional``... if you want to
+        """
+
+        class TestClass(HasTraits):
+            attribute = Optional(Optional(Int))
+
+        self.assertIsNone(TestClass(attribute=None).attribute)
+        self.assertIsNone(TestClass().attribute)
+
+        obj = TestClass(attribute=3)
+
+        obj.attribute = 5
+        self.assertEqual(obj.attribute, 5)
+
+        obj.attribute = None
+        self.assertIsNone(obj.attribute)
+
+    def test_optional_union_of_optional(self):
+        """
+        ``Union(T1, Optional(T2))`` acts like ``Union(T1, None, T2)``
+        """
+        class TestClass(HasTraits):
+            attribute = Union(Int, Optional(Float))
+
+        self.assertEqual(TestClass(attribute=3).attribute, 3)
+        self.assertEqual(TestClass(attribute=3.0).attribute, 3.0)
+        self.assertIsNone(TestClass(attribute=None).attribute)
+        self.assertEqual(TestClass().attribute, 0)
+
+        a = TestClass(attribute=3)
+        a.attribute = 5
+        self.assertEqual(a.attribute, 5)
+        a.attribute = 5.0
+        self.assertEqual(a.attribute, 5.0)
+        a.attribute = None
+        self.assertIsNone(a.attribute)
 
     def test_optional_extend_trait(self):
         class OptionalOrStr(Optional):

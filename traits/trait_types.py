@@ -4236,7 +4236,7 @@ class Optional(Union):
     trait : a trait or value that can be converted using trait_from()
         The type of item that the set contains. Must not be ``None``.
     """
-    def __init__(self, trait,  **metadata):
+    def __init__(self, trait, **metadata):
         if trait is None:
             raise TraitError("Optional type must not be None.")
 
