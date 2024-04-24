@@ -307,7 +307,9 @@ setuptools.setup(
             "mypy",
             "numpy",
             "pyface",
-            "PySide6",
+            # TraitsUI is currently broken with PySide 6.7.0
+            # xref: https://github.com/enthought/traitsui/issues/2045
+            "PySide6<6.7",
             "setuptools",
             "Sphinx>=2.1.0",
             "traitsui",
