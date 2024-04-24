@@ -32,7 +32,7 @@ try:
     # This import is necessary to set the `ui_handler` global variable in
     # `traits.trait_notifiers`, which is responsible for dispatching the events
     # to the UI thread.
-    from traitsui.qt4 import toolkit  # noqa: F401
+    from traitsui.qt import toolkit  # noqa: F401
 
     qt4_app = get_app_qt4()
 
