@@ -15,6 +15,20 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+        # Python 3.8 and 3.9 are no longer available on macos-latest, so
+        # use an earlier version.
+        # xref: https://github.com/actions/setup-python/issues/850
+        exclude:
+          - python-version: "3.8"
+            os: "macos-latest"
+          - python-version: "3.9"
+            os: "macos-latest"
+        include:
+          - python-version: "3.8"
+            os: "macos-13"
+          - python-version: "3.9"
+            os: "macos-13"
+
 
     runs-on: ${{ matrix.os }}
 
