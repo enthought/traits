@@ -29,7 +29,6 @@ jobs:
           - python-version: "3.9"
             os: "macos-13"
 
-
     runs-on: ${{ matrix.os }}
 
     steps:
