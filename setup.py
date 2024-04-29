@@ -302,6 +302,9 @@ setuptools.setup(
         ],
         "test": [
             "Cython",
+            # defusedxml is required by the Sphinx test machinery
+            # for recent versions of Sphinx (including 7.3.7)
+            "defusedxml",
             "flake8",
             "flake8-ets",
             "mypy",
