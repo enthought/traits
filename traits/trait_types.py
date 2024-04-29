@@ -1507,7 +1507,7 @@ class BaseFile(BaseStr):
         return description
 
     def create_editor(self):
-        from traitsui.editors.file_editor import FileEditor
+        from traitsui.editors.api import FileEditor
 
         editor = FileEditor(
             filter=self.filter or [],
@@ -1641,7 +1641,7 @@ class BaseDirectory(BaseStr):
         return description
 
     def create_editor(self):
-        from traitsui.editors.directory_editor import DirectoryEditor
+        from traitsui.editors.api import DirectoryEditor
 
         editor = DirectoryEditor(auto_set=self.auto_set, entries=self.entries)
         return editor
