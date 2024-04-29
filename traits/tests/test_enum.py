@@ -14,10 +14,7 @@ import unittest
 from traits.api import (
     Any, BaseEnum, Enum, HasTraits, Int, List, Property, Set, TraitError,
     Tuple)
-from traits.etsconfig.api import ETSConfig
 from traits.testing.optional_dependencies import requires_traitsui
-
-is_null = ETSConfig.toolkit == 'null'
 
 
 class FooEnum(enum.Enum):
@@ -113,13 +110,6 @@ class EnumCollectionExample(HasTraits):
     single_digit = Enum(8)
 
     slow_enum = BaseEnum("yes", "no", "maybe")
-
-
-class EnumCollectionGUIExample(EnumCollectionExample):
-    # Override attributes that may fail GUI test
-    # until traitsui #781 is fixed.
-    int_set_enum = Enum("int", "set")
-    correct_int_set_enum = Enum("int", "set")
 
 
 class EnumTestCase(unittest.TestCase):
@@ -343,12 +333,14 @@ class EnumTestCase(unittest.TestCase):
 
 
 @requires_traitsui
-@unittest.skipIf(is_null, "GUI toolkit not available")
-class TestGui(unittest.TestCase):
-
+class TestEnumCreateEditor(unittest.TestCase):
     def test_create_editor(self):
-        from traitsui.testing.api import UITester
+        import traitsui.editor_factory
 
-        obj = EnumCollectionGUIExample()
-        with UITester().create_ui(obj):
-            pass
+        obj = EnumListExample()
+        trait = obj.trait("value")
+        editor_factory = trait.trait_type.create_editor()
+        self.assertIsInstance(
+            editor_factory,
+            traitsui.editor_factory.EditorFactory
+        )
