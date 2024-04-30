@@ -178,3 +178,8 @@ from .trait_numeric import (
     ArrayOrNone as ArrayOrNone,
     CArray as CArray,
 )
+
+from .trait_notifiers import (
+    get_ui_handler as get_ui_handler,
+    set_ui_handler as set_ui_handler,
+)

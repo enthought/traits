@@ -18,33 +18,22 @@ Most of the functionality of the class is thus already covered by the
 notification really occurs on the UI thread.
 
 At present, `dispatch='ui'` and `dispatch='fast_ui'` have the same effect.
-
 """
 
+import asyncio
+import contextlib
 import threading
-import time
 import unittest
 
-# Preamble: Try importing Qt, and set QT_FOUND to True on success.
-try:
-    from pyface.util.guisupport import get_app_qt4
-
-    # This import is necessary to set the `ui_handler` global variable in
-    # `traits.trait_notifiers`, which is responsible for dispatching the events
-    # to the UI thread.
-    from traitsui.qt import toolkit  # noqa: F401
-
-    qt4_app = get_app_qt4()
-
-except Exception:
-    QT_FOUND = False
-
-else:
-    QT_FOUND = True
-
-
+from traits.api import (
+    Callable,
+    Float,
+    get_ui_handler,
+    HasTraits,
+    on_trait_change,
+    set_ui_handler,
+)
 from traits import trait_notifiers
-from traits.api import Callable, Float, HasTraits, on_trait_change
 
 
 class CalledAsMethod(HasTraits):
@@ -61,79 +50,151 @@ class CalledAsDecorator(HasTraits):
         self.callback(obj, name, old, new)
 
 
-class BaseTestUINotifiers(object):
-    """ Tests for dynamic notifiers with `dispatch='ui'`.
+def asyncio_ui_handler(event_loop):
     """
+    Create a UI handler that dispatches to the asyncio event loop.
+    """
+
+    def ui_handler(handler, *args, **kwargs):
+        """
+        UI handler that dispatches to the asyncio event loop.
+        """
+        event_loop.call_soon_threadsafe(lambda: handler(*args, **kwargs))
+
+    return ui_handler
+
+
+@contextlib.contextmanager
+def use_asyncio_ui_handler(event_loop):
+    """
+    Context manager that temporarily sets the UI handler to an asyncio handler.
+    """
+    old_handler = get_ui_handler()
+    set_ui_handler(asyncio_ui_handler(event_loop))
+    try:
+        yield
+    finally:
+        set_ui_handler(old_handler)
+
+
+@contextlib.contextmanager
+def clear_ui_handler():
+    """
+    Context manager that temporarily clears the UI handler.
+    """
+    old_handler = get_ui_handler()
+    set_ui_handler(None)
+    try:
+        yield
+    finally:
+        set_ui_handler(old_handler)
+
+
+class BaseTestUINotifiers(object):
+    """Tests for dynamic notifiers with `dispatch='ui'`."""
 
     #### 'TestCase' protocol ##################################################
 
     def setUp(self):
         self.notifications = []
+        self.exceptions = []
+        self.done = asyncio.Event()
+        self.obj = self.obj_factory()
+        trait_notifiers.push_exception_handler(self.handle_exception)
+        self.addCleanup(trait_notifiers.pop_exception_handler)
+
+    def enterContext(self, cm):
+        # Backport of Python 3.11's TestCase.enterContext method.
+        result = type(cm).__enter__(cm)
+        self.addCleanup(type(cm).__exit__, cm, None, None, None)
+        return result
 
     #### 'TestUINotifiers' protocol ###########################################
 
-    def flush_event_loop(self):
-        """ Post and process the Qt events. """
-        qt4_app.sendPostedEvents()
-        qt4_app.processEvents()
+    def handle_exception(self, object, name, old, new):
+        self.exceptions.append((object, name, old, new))
+
+    def modify_obj(self):
+        trait_notifiers.push_exception_handler(self.handle_exception)
+        try:
+            self.obj.foo = 3
+        finally:
+            trait_notifiers.pop_exception_handler()
 
     def on_foo_notifications(self, obj, name, old, new):
-        thread_id = threading.current_thread().ident
-        event = (thread_id, (obj, name, old, new))
+        event = (threading.current_thread(), (obj, name, old, new))
         self.notifications.append(event)
+        self.done.set()
 
     #### Tests ################################################################
 
-    @unittest.skipIf(
-        not QT_FOUND, "Qt event loop not found, UI dispatch not possible."
-    )
-    def test_notification_from_main_thread(self):
+    def test_notification_from_main_thread_with_no_ui_handler(self):
+        # Given
+        self.enterContext(clear_ui_handler())
 
-        obj = self.obj_factory()
+        # When we set obj.foo to 3 on the main thread.
+        self.modify_obj()
 
-        obj.foo = 3
-        self.flush_event_loop()
+        # Then the notification is processed synchronously on the main thread.
+        self.assertEqual(
+            self.notifications,
+            [(threading.main_thread(), (self.obj, "foo", 0, 3))],
+        )
 
-        notifications = self.notifications
-        self.assertEqual(len(notifications), 1)
+    def test_notification_from_main_thread_with_registered_ui_handler(self):
+        # Given
+        self.enterContext(use_asyncio_ui_handler(asyncio.get_event_loop()))
 
-        thread_id, event = notifications[0]
-        self.assertEqual(event, (obj, "foo", 0, 3))
+        # When we set obj.foo to 3 on the main thread.
+        self.modify_obj()
 
-        ui_thread = trait_notifiers.ui_thread
-        self.assertEqual(thread_id, ui_thread)
+        # Then the notification is processed synchronously on the main thread.
+        self.assertEqual(
+            self.notifications,
+            [(threading.main_thread(), (self.obj, "foo", 0, 3))],
+        )
 
-    @unittest.skipIf(
-        not QT_FOUND, "Qt event loop not found, UI dispatch not possible."
-    )
-    def test_notification_from_separate_thread(self):
+    def test_notification_from_separate_thread_failure_case(self):
+        # Given no registered ui handler
+        self.enterContext(clear_ui_handler())
 
-        obj = self.obj_factory()
+        # When we set obj.foo to 3 on a separate thread.
+        background_thread = threading.Thread(target=self.modify_obj)
+        background_thread.start()
+        self.addCleanup(background_thread.join)
 
-        # Set obj.foo to 3 on a separate thread.
-        def set_foo_to_3(obj):
-            obj.foo = 3
+        # Then no notification is processed ...
+        self.assertEqual(self.notifications, [])
 
-        threading.Thread(target=set_foo_to_3, args=(obj,)).start()
+        # ... and an error was raised
+        self.assertEqual(self.exceptions, [(self.obj, "foo", 0, 3)])
 
-        # Wait for a while to make sure the function has finished.
-        time.sleep(0.1)
+        # ... but the attribute change was still applied.
+        self.assertEqual(self.obj.foo, 3)
 
-        self.flush_event_loop()
+    async def test_notification_from_separate_thread(self):
+        # Given an asyncio ui handler
+        self.enterContext(use_asyncio_ui_handler(asyncio.get_event_loop()))
 
-        notifications = self.notifications
-        self.assertEqual(len(notifications), 1)
+        # When we set obj.foo to 3 on a separate thread.
+        background_thread = threading.Thread(target=self.modify_obj)
+        background_thread.start()
+        self.addCleanup(background_thread.join)
 
-        thread_id, event = notifications[0]
-        self.assertEqual(event, (obj, "foo", 0, 3))
+        # Then the notification will eventually be processed on the main
+        # thread.
+        await asyncio.wait_for(self.done.wait(), timeout=5.0)
+        self.assertEqual(
+            self.notifications,
+            [(threading.main_thread(), (self.obj, "foo", 0, 3))],
+        )
+        self.assertEqual(self.obj.foo, 3)
 
-        ui_thread = trait_notifiers.ui_thread
-        self.assertEqual(thread_id, ui_thread)
 
-
-class TestMethodUINotifiers(BaseTestUINotifiers, unittest.TestCase):
-    """ Tests for dynamic notifiers with `dispatch='ui'` set by method call.
-    """
+class TestMethodUINotifiers(
+    BaseTestUINotifiers, unittest.IsolatedAsyncioTestCase
+):
+    """Tests for dynamic notifiers with `dispatch='ui'` set by method call."""
 
     def obj_factory(self):
         obj = CalledAsMethod()
@@ -141,8 +202,10 @@ class TestMethodUINotifiers(BaseTestUINotifiers, unittest.TestCase):
         return obj
 
 
-class TestDecoratorUINotifiers(BaseTestUINotifiers, unittest.TestCase):
-    """ Tests for dynamic notifiers with `dispatch='ui'` set by decorator. """
+class TestDecoratorUINotifiers(
+    BaseTestUINotifiers, unittest.IsolatedAsyncioTestCase
+):
+    """Tests for dynamic notifiers with `dispatch='ui'` set by decorator."""
 
     def obj_factory(self):
         return CalledAsDecorator(callback=self.on_foo_notifications)

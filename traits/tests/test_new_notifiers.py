@@ -74,8 +74,8 @@ class TestNewNotifiers(UnittestTools, unittest.TestCase):
         receiver = Receiver()
 
         def on_foo_notifications(obj, name, old, new):
-            thread_id = threading.current_thread().ident
-            event = (thread_id, obj, name, old, new)
+            thread = threading.current_thread()
+            event = (thread, obj, name, old, new)
             receiver.notifications.append(event)
 
         obj = Foo()
@@ -97,5 +97,5 @@ class TestNewNotifiers(UnittestTools, unittest.TestCase):
         self.assertEqual(len(notifications), 1)
         self.assertEqual(notifications[0][1:], (obj, "foo", 0, 3))
 
-        this_thread_id = threading.current_thread().ident
-        self.assertNotEqual(this_thread_id, notifications[0][0])
+        this_thread = threading.current_thread()
+        self.assertNotEqual(this_thread, notifications[0][0])
