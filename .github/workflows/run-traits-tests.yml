@@ -4,11 +4,6 @@ on:
 - pull_request
 - workflow_dispatch
 
-env:
-  # Temporary workaround prior to release of TraitsUI 8.0
-  # xref: enthought/traits#1742
-  ETS_QT4_IMPORTS: 1
-
 jobs:
   tests:
     strategy:
@@ -20,19 +15,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Install Linux packages for Qt support
-      run: |
-        sudo apt-get update
-        sudo apt-get install libegl1
-        sudo apt-get install libxkbcommon-x11-0
-        sudo apt-get install libxcb-cursor0
-        sudo apt-get install libxcb-icccm4
-        sudo apt-get install libxcb-image0
-        sudo apt-get install libxcb-keysyms1
-        sudo apt-get install libxcb-randr0
-        sudo apt-get install libxcb-render-util0
-        sudo apt-get install libxcb-shape0
-      if: matrix.os == 'ubuntu-latest'
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
@@ -44,9 +26,6 @@ jobs:
     - name: Create clean test directory
       run: |
         mkdir testdir
-    - name: Test Traits package (Linux)
-      run: cd testdir && xvfb-run -a python -m unittest discover -v traits
-      if: matrix.os == 'ubuntu-latest'
-    - name: Test Traits package (Windows/macOS)
-      run: cd testdir && python -m unittest discover -v traits
-      if: matrix.os != 'ubuntu-latest'
+    - name: Test Traits package
+      run: python -m unittest discover -v traits
+      working-directory: testdir

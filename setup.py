@@ -310,7 +310,6 @@ setuptools.setup(
             "mypy",
             "numpy",
             "pyface",
-            "PySide6",
             "setuptools",
             "Sphinx>=2.1.0",
             "traitsui",
