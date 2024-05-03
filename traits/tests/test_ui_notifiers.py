@@ -100,8 +100,6 @@ class BaseTestUINotifiers(object):
         self.exceptions = []
         self.done = asyncio.Event()
         self.obj = self.obj_factory()
-        trait_notifiers.push_exception_handler(self.handle_exception)
-        self.addCleanup(trait_notifiers.pop_exception_handler)
 
     def enterContext(self, cm):
         # Backport of Python 3.11's TestCase.enterContext method.
@@ -111,13 +109,14 @@ class BaseTestUINotifiers(object):
 
     #### 'TestUINotifiers' protocol ###########################################
 
-    def handle_exception(self, object, name, old, new):
-        self.exceptions.append((object, name, old, new))
-
     def modify_obj(self):
-        trait_notifiers.push_exception_handler(self.handle_exception)
+        trait_notifiers.push_exception_handler(
+            lambda *args: None, reraise_exceptions=True
+        )
         try:
             self.obj.foo = 3
+        except Exception as e:
+            self.exceptions.append(e)
         finally:
             trait_notifiers.pop_exception_handler()
 
@@ -167,7 +166,9 @@ class BaseTestUINotifiers(object):
         self.assertEqual(self.notifications, [])
 
         # ... and an error was raised
-        self.assertEqual(self.exceptions, [(self.obj, "foo", 0, 3)])
+        self.assertEqual(len(self.exceptions), 1)
+        self.assertIsInstance(self.exceptions[0], RuntimeError)
+        self.assertIn("no UI handler registered", str(self.exceptions[0]))
 
         # ... but the attribute change was still applied.
         self.assertEqual(self.obj.foo, 3)

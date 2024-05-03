@@ -51,7 +51,7 @@ def ui_dispatch(handler, *args, **kw):
     if threading.current_thread() == threading.main_thread():
         handler(*args, **kw)
     elif _ui_handler is None:
-        raise RuntimeError("No UI handler has been set.")
+        raise RuntimeError("no UI handler registered for dispatch='ui'")
     else:
         _ui_handler(handler, *args, **kw)
 
@@ -616,6 +616,8 @@ class FastUITraitChangeNotifyWrapper(TraitChangeNotifyWrapper):
     def dispatch(self, handler, *args):
         if threading.current_thread() == threading.main_thread():
             handler(*args)
+        elif _ui_handler is None:
+            raise RuntimeError("no UI handler registered for dispatch='ui'")
         else:
             _ui_handler(handler, *args)
 
