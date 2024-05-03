@@ -54,7 +54,6 @@ from .trait_base import (
     not_false,
 )
 from .trait_errors import TraitError
-from .util.deprecated import deprecated
 from .trait_converters import check_trait, mapped_trait_for, trait_for
 
 
