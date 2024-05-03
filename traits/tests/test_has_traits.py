@@ -23,9 +23,6 @@ from traits.has_traits import (
     HasTraits,
     observe,
     ObserverTraits,
-    SingletonHasTraits,
-    SingletonHasStrictTraits,
-    SingletonHasPrivateTraits,
 )
 from traits.ctrait import CTrait
 from traits.observation.api import (
@@ -758,27 +755,6 @@ class TestCallNotifiers(unittest.TestCase):
         # then
         # the second object notifier is called.
         self.assertEqual(side_effects, ["object1", "object2"])
-
-
-class TestDeprecatedHasTraits(unittest.TestCase):
-    def test_deprecated(self):
-        class TestSingletonHasTraits(SingletonHasTraits):
-            pass
-
-        class TestSingletonHasStrictTraits(SingletonHasStrictTraits):
-            pass
-
-        class TestSingletonHasPrivateTraits(SingletonHasPrivateTraits):
-            pass
-
-        with self.assertWarns(DeprecationWarning):
-            TestSingletonHasTraits()
-
-        with self.assertWarns(DeprecationWarning):
-            TestSingletonHasStrictTraits()
-
-        with self.assertWarns(DeprecationWarning):
-            TestSingletonHasPrivateTraits()
 
 
 class MappedWithDefault(HasTraits):
