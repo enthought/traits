@@ -89,7 +89,6 @@ CONTEXT_SETTINGS = dict(
 common_dependencies = {
     "configobj",
     "coverage",
-    "cython",
     "enthought_sphinx_theme",
     "flake8",
     "flake8_ets",

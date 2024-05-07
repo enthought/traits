@@ -184,7 +184,7 @@ def is_unbound_method_type(method):
     and _name_fired methods.
 
     """
-    # The ismethoddescriptor check catches methods written in C or Cython
+    # The ismethoddescriptor check catches methods written in C
     # extensions. It excludes things that pass an isfunction check, so we have
     # to explicitly re-include that check.
     return inspect.isfunction(method) or inspect.ismethoddescriptor(method)
