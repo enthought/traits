@@ -34,6 +34,8 @@ from .trait_errors import (
 )
 
 from .trait_notifiers import (
+    get_ui_handler,
+    set_ui_handler,
     push_exception_handler,
     pop_exception_handler,
     TraitChangeNotifyWrapper,

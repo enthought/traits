@@ -27,27 +27,33 @@ from .trait_errors import TraitNotificationError
 
 # Global Data
 
-# The thread ID for the user interface thread
-ui_thread = -1
+# The currently active handler for notifications that must be run on the UI
+# thread, or None if no handler has been set.
+_ui_handler = None
 
-# The handler for notifications that must be run on the UI thread
-ui_handler = None
+
+def get_ui_handler():
+    """
+    Return the current user interface thread handler.
+    """
+    return _ui_handler
 
 
 def set_ui_handler(handler):
     """ Sets up the user interface thread handler.
     """
-    global ui_handler, ui_thread
+    global _ui_handler
 
-    ui_handler = handler
-    ui_thread = threading.current_thread().ident
+    _ui_handler = handler
 
 
 def ui_dispatch(handler, *args, **kw):
     if threading.current_thread() == threading.main_thread():
         handler(*args, **kw)
+    elif _ui_handler is None:
+        raise RuntimeError("no UI handler registered for dispatch='ui'")
     else:
-        ui_handler(handler, *args, **kw)
+        _ui_handler(handler, *args, **kw)
 
 
 class NotificationExceptionHandlerState(object):
@@ -153,11 +159,7 @@ class NotificationExceptionHandler(object):
             thread.
         """
         thread_local = self.thread_local
-        if isinstance(thread_local, dict):
-            id = threading.current_thread().ident
-            handlers = thread_local.get(id)
-        else:
-            handlers = getattr(thread_local, "handlers", None)
+        handlers = getattr(thread_local, "handlers", None)
 
         if handlers is None:
             if self.main_thread is not None:
@@ -167,10 +169,7 @@ class NotificationExceptionHandler(object):
                     self._log_exception, False, False
                 )
             handlers = [handler]
-            if isinstance(thread_local, dict):
-                thread_local[id] = handlers
-            else:
-                thread_local.handlers = handlers
+            thread_local.handlers = handlers
 
         return handlers
 
@@ -615,10 +614,12 @@ class FastUITraitChangeNotifyWrapper(TraitChangeNotifyWrapper):
     """
 
     def dispatch(self, handler, *args):
-        if threading.current_thread().ident == ui_thread:
+        if threading.current_thread() == threading.main_thread():
             handler(*args)
+        elif _ui_handler is None:
+            raise RuntimeError("no UI handler registered for dispatch='ui'")
         else:
-            ui_handler(handler, *args)
+            _ui_handler(handler, *args)
 
 
 class NewTraitChangeNotifyWrapper(TraitChangeNotifyWrapper):
