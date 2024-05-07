@@ -36,9 +36,6 @@ def optional_import(name):
 
 
 # Commonly-used unittest skip decorators.
-cython = optional_import("cython")
-requires_cython = unittest.skipIf(cython is None, "Cython not available")
-
 mypy = optional_import("mypy")
 requires_mypy = unittest.skipIf(mypy is None, "Mypy not available")
 
