@@ -36,7 +36,7 @@ jobs:
   #       allow-prereleases: true
   #   - name: Install test dependencies and Traits from PyPI sdist
   #     run: |
-  #       python -m pip install --no-binary traits numpy setuptools Sphinx traits traitsui
+  #       python -m pip install --no-binary traits defusedxml numpy setuptools Sphinx traits traitsui
   #   - name: Create clean test directory
   #     run: |
   #       mkdir testdir
@@ -76,7 +76,7 @@ jobs:
         allow-prereleases: true
     - name: Install test dependencies and Traits from PyPI wheel
       run: |
-        python -m pip install --only-binary traits numpy setuptools Sphinx traits traitsui
+        python -m pip install --only-binary traits defusedxml numpy setuptools Sphinx traits traitsui
     - name: Create clean test directory
       run: |
         mkdir testdir
