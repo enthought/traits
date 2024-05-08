@@ -52,6 +52,8 @@ jobs:
         exclude:
         - os: ubuntu-latest
           python-architecture: arm64
+        - os: ubuntu-latest
+          python-architecture: x86
         - os: windows-latest
           python-architecture: arm64
         - os: macos-latest
