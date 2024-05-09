@@ -54,7 +54,6 @@ from .trait_base import (
     not_false,
 )
 from .trait_errors import TraitError
-from .util.deprecated import deprecated
 from .trait_converters import check_trait, mapped_trait_for, trait_for
 
 
@@ -3555,47 +3554,6 @@ class ABCHasStrictTraits(ABCHasTraits):
     """
 
     _ = Disallow
-
-
-#  Singleton classes with traits:
-#
-#  This code is based on a recipe taken from:
-#      http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/66531
-#  Specifically, the implementation of Oren Tirosh is used.
-
-class SingletonHasTraits(HasTraits):
-    """ Singleton class that support trait attributes.
-    """
-
-    @deprecated("SingletonHasTraits has been deprecated and will be removed "
-                "in the future. Avoid using it")
-    def __new__(cls, *args, **traits):
-        if "_the_instance" not in cls.__dict__:
-            cls._the_instance = HasTraits.__new__(cls, *args, **traits)
-        return cls._the_instance
-
-
-class SingletonHasStrictTraits(HasStrictTraits):
-    """ Singleton class that supports strict trait attributes.
-
-        Non-trait attributes generate an exception.
-    """
-
-    @deprecated("SingletonHasStrictTraits has been deprecated and will be "
-                "removed in the future. Avoid using it")
-    def __new__(cls, *args, **traits):
-        return SingletonHasTraits.__new__(cls, *args, **traits)
-
-
-class SingletonHasPrivateTraits(HasPrivateTraits):
-    """ Singleton class that supports trait attributes, with private attributes
-        being unchecked.
-    """
-
-    @deprecated("SingletonHasPrivateTraits has been deprecated and will be "
-                "removed in the future. Avoid using it")
-    def __new__(cls, *args, **traits):
-        return SingletonHasTraits.__new__(cls, *args, **traits)
 
 
 class Vetoable(HasStrictTraits):
