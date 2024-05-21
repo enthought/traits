@@ -157,10 +157,11 @@ class BaseTestUINotifiers(object):
         # Given no registered ui handler
         self.enterContext(clear_ui_handler())
 
-        # When we set obj.foo to 3 on a separate thread.
+        # When we set obj.foo to 3 on a separate thread, and wait for
+        # that thread to complete.
         background_thread = threading.Thread(target=self.modify_obj)
         background_thread.start()
-        self.addCleanup(background_thread.join)
+        background_thread.join()
 
         # Then no notification is processed ...
         self.assertEqual(self.notifications, [])
