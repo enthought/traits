@@ -12,7 +12,7 @@ Added
 
 - Event types for the ``event`` received by observers have been made
   available in ``traits.observation.api``. This is useful for those
-  wanting to use the types in type annotations.
+  wanting to use the types in type annotations. (#1805)
 
 .. Changed
 .. -------
