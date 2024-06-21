@@ -105,7 +105,8 @@ most of the use cases commonly encountered by users.
    * - *attr1\:attr2*
      - Matches a trait named *attr2* on an object referenced by a trait named
        *attr1* on the current object. Changes to *attr2* will trigger
-       notifications. Changes to *attr1* will not.
+       notifications. Changes to *attr1* will not trigger notifications, even
+       if the value of *attr2* between the objects is different.
    * - *attr1\, attr2*
      - Matches trait named *attr1* or trait named *attr2*.
    * - *items*
