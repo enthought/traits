@@ -11,7 +11,7 @@
 import unittest
 
 from traits.observation.api import DictChangeEvent
-from traits.observation._dict_change_event import dict_event_factory,
+from traits.observation._dict_change_event import dict_event_factory
 from traits.trait_dict_object import TraitDict
 
 
