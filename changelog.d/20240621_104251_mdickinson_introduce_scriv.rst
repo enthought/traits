@@ -15,7 +15,7 @@
 Changed
 -------
 
-- We now use the ``scriv`` package for changelog maintenance. (#12345)
+- We now use the ``scriv`` package for changelog maintenance. (#1804)
 
 .. Deprecated
 .. ----------
