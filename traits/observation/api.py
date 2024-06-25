@@ -8,6 +8,13 @@
 #
 # Thanks for using Enthought open source!
 
+from traits.observation.events import (
+    DictChangeEvent,
+    ListChangeEvent,
+    SetChangeEvent,
+    TraitChangeEvent,
+)
+
 from traits.observation.exception_handling import (
     pop_exception_handler,
     push_exception_handler,
