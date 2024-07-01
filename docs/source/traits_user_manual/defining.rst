@@ -265,7 +265,7 @@ the table.
 .. index:: Directory(), Disallow, Either(), Enum()
 .. index:: Event(), Expression(), false, File()
 .. index:: Instance(), List(), Method(), Module()
-.. index:: Password(), Property(), Python()
+.. index:: Optional(), Password(), Property(), Python()
 .. index:: PythonValue(), Range(), ReadOnly(), Regex()
 .. index:: Set() String(), This, Time()
 .. index:: ToolbarButton(), true, Tuple(), Type()
@@ -354,6 +354,8 @@ the table.
 | Method [3]_      | Method([\*\*\ *metadata*])                               |
 +------------------+----------------------------------------------------------+
 | Module           | Module([\*\*\ *metadata*])                               |
++------------------+----------------------------------------------------------+
+| Optional         | Optional(*trait*\ [, \*\*\ *metadata*])                  |
 +------------------+----------------------------------------------------------+
 | Password         | Password([*value* = '', *minlen* = 0, *maxlen* =         |
 |                  | sys.maxsize, *regex* = '', \*\*\ *metadata*])            |
@@ -699,6 +701,45 @@ The following example illustrates the difference between `Either` and `Union`::
     >>> class IntegerClass(HasTraits):
     ...     primes = Union([2], None, {'3':6}, 5, 7, 11)
     ValueError: Union trait declaration expects a trait type or an instance of trait type or None, but got [2] instead
+
+.. index:: Optional trait
+
+.. _optional:
+
+Optional
+::::::::
+The Optional trait is a shorthand for ``Union(None, *trait*)``. It allows
+the value of the trait to be either None or a specified type. The default
+value of the trait is None unless specified by ``default_value``.
+
+.. index::
+   pair: Optional trait; examples
+
+The following is an example of using Optional::
+
+    # optional.py --- Example of Optional predefined trait
+
+    from traits.api import HasTraits, Optional, Str
+
+    class Person(HasTraits):
+        name = Str
+        nickname = Optional(Str)
+
+This example defines a ``Person`` with a ``name`` and an optional ``nickname``.
+Their ``nickname`` can be ``None`` or a string. For example::
+
+    >>> from traits.api import HasTraits, Optional, Str
+    >>> class Person(HasTraits):
+    ...     name = Str
+    ...     nickname = Optional(Str)
+    ...
+    >>> joseph = Person(name="Joseph")
+    >>> # Joseph has no nickname
+    >>> joseph.nickname is None
+    True
+    >>> joseph.nickname = "Joe"
+    >>> joseph.nickname
+    'Joe'
 
 .. index:: Either trait
 

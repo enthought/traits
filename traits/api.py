@@ -105,6 +105,7 @@ from .trait_types import (
     ToolbarButton,
     Either,
     Union,
+    Optional,
     Type,
     Subclass,
     Symbol,
