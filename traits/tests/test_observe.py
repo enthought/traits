@@ -37,6 +37,7 @@ from traits.observation.api import (
     push_exception_handler,
     trait,
 )
+from traits.observation.events import TraitChangeEvent
 
 
 class TestObserveDecorator(unittest.TestCase):
@@ -936,6 +937,20 @@ class TestObserveAnytrait(unittest.TestCase):
 # Integration tests for async observe decorator -------------------------------
 
 
+class SimplerAsyncExample(HasTraits):
+    value = Str()
+
+    value_change_handled = Instance(asyncio.Event)
+
+    events = List(Instance(TraitChangeEvent))
+
+    @observe("value")
+    async def handle_value_change(self, event):
+        self.events.append(event)
+        self.value_change_handled.set()
+
+
+
 class SimpleAsyncExample(HasTraits):
 
     value = Str()
@@ -958,13 +973,44 @@ class TestAsyncObserverDecorator(unittest.IsolatedAsyncioTestCase):
     def setUp(self):
         from traits.observation.observe import _active_handler_tasks
 
+        self.addTypeEqualityFunc(
+            TraitChangeEvent,
+            self.assertTraitChangeEventsEqual,
+        )
+
         # ensure no lingering references to handler tasks after test run
         self.addCleanup(_active_handler_tasks.clear)
 
+    def assertTraitChangeEventsEqual(self, event1, event2, msg=None):
+        """Compare two TraitChangeEvent objects for equality."""
+
+        self.assertIs(event1.object, event2.object, msg=msg)
+        self.assertEqual(event1.name, event2.name, msg=msg)
+        self.assertEqual(event1.old, event2.old, msg=msg)
+        self.assertEqual(event1.new, event2.new, msg=msg)
+
+    async def test_async_dispatch_simple(self):
+        # Given an object with an async observer for its 'value' trait
+        value_change_handled = asyncio.Event()
+        obj = SimplerAsyncExample(value_change_handled=value_change_handled)
+
+        # When we change the value trait on that object
+        obj.value = "initial"
+
+        # Then the value change is eventually handled ...
+        await asyncio.wait_for(value_change_handled.wait(), timeout=10.0)
+
+        # ... and the handler received the expected TraitChangeEvent.
+        self.assertEqual(len(obj.events), 1)
+        self.assertEqual(
+            obj.events[0],
+            TraitChangeEvent(object=obj, name="value", old="", new="initial"),
+        )
+
     async def test_async_dispatch(self):
+        # Given
         event = asyncio.Event()
         queue = asyncio.Queue()
-
         obj = SimpleAsyncExample(value='initial', event=event, queue=queue)
 
         self.assertEqual(len(obj.events), 0)

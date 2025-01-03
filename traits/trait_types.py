@@ -2363,6 +2363,9 @@ class BaseTuple(TraitType):
         be a tuple of the same length as the remaining argument list, whose
         elements must match the types specified by the corresponding items
         of the remaining argument list.
+    allow_list : bool, optional
+        If ``False`` (the default), then assigning a list to this trait
+        is not permitted. If ``True``, assignments of lists are permitted.
     **metadata
         Trait metadata for the trait.
 
@@ -2378,11 +2381,12 @@ class BaseTuple(TraitType):
     #: The default value type to use.
     default_value_type = DefaultValue.constant
 
-    def __init__(self, *types, **metadata):
+    def __init__(self, *types, allow_list=False, **metadata):
         if len(types) == 0:
             self.init_fast_validate(ValidateTrait.coerce, tuple, None, list)
 
             super().__init__((), **metadata)
+            self.allow_list = allow_list
 
             return
 
@@ -2418,6 +2422,7 @@ class BaseTuple(TraitType):
                 default_value = self._get_default_value
 
         super().__init__(default_value, **metadata)
+        self.allow_list = allow_list
 
     def _get_default_value(self, object):
         # Dynamic default, used when at least one of the child traits requires
@@ -2439,13 +2444,13 @@ class BaseTuple(TraitType):
             if isinstance(value, tuple):
                 return value
 
-            if isinstance(value, list):
+            if self.allow_list and isinstance(value, list):
                 return tuple(value)
 
             self.error(object, name, value)
 
         try:
-            if isinstance(value, list):
+            if self.allow_list and isinstance(value, list):
                 value = tuple(value)
 
             if isinstance(value, tuple):

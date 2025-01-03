@@ -13,7 +13,7 @@
 import unittest
 
 from traits.api import (
-    BaseInt, Either, HasTraits, Int, List, Str, TraitError, Tuple)
+    BaseInt, BaseTuple, Either, HasTraits, Int, List, Str, TraitError, Tuple)
 from traits.tests.tuple_test_mixin import TupleTestMixin
 
 
@@ -92,3 +92,17 @@ class TupleTestCase(TupleTestMixin, unittest.TestCase):
             a.foo = [2, 3]
 
         self.assertEqual(a.foo, (2, 3))
+
+    def test_lists_not_accepted_for_base_tuple(self):
+
+        class A(HasTraits):
+            foo = BaseTuple(Int(), Int())
+
+            bar = BaseTuple()
+
+        a = A()
+        with self.assertRaises(TraitError):
+            a.foo = [2, 3]
+
+        with self.assertRaises(TraitError):
+            a.bar = [2, 3]
