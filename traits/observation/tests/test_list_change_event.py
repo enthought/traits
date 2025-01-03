@@ -10,10 +10,8 @@
 
 import unittest
 
-from traits.observation._list_change_event import (
-    ListChangeEvent,
-    list_event_factory,
-)
+from traits.observation.api import ListChangeEvent
+from traits.observation._list_change_event import list_event_factory
 from traits.trait_list_object import TraitList
 
 
