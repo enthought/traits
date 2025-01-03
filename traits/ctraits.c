@@ -3639,7 +3639,7 @@ validate_trait_map(
     PyObject *value)
 {
     PyObject *type_info = trait->py_validate;
-    if (PyDict_GetItem(PyTuple_GET_ITEM(type_info, 1), value) != NULL) {
+    if (PyDict_GetItemWithError(PyTuple_GET_ITEM(type_info, 1), value) != NULL) {
         Py_INCREF(value);
         return value;
     }
@@ -4065,7 +4065,7 @@ validate_trait_complex(
                 PyErr_Clear();
                 break;
             case 6: /* Mapped item check: */
-                if (PyDict_GetItem(PyTuple_GET_ITEM(type_info, 1), value)
+                if (PyDict_GetItemWithError(PyTuple_GET_ITEM(type_info, 1), value)
                     != NULL) {
                     goto done;
                 }
