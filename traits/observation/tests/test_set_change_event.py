@@ -10,10 +10,8 @@
 
 import unittest
 
-from traits.observation._set_change_event import (
-    SetChangeEvent,
-    set_event_factory,
-)
+from traits.observation.api import SetChangeEvent
+from traits.observation._set_change_event import set_event_factory
 from traits.trait_set_object import TraitSet
 
 

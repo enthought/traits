@@ -12,10 +12,8 @@ import unittest
 
 from traits.has_traits import HasTraits
 from traits.trait_types import Int
-from traits.observation._trait_change_event import (
-    trait_event_factory,
-    TraitChangeEvent,
-)
+from traits.observation.api import TraitChangeEvent
+from traits.observation._trait_change_event import trait_event_factory
 
 
 class TestTraitChangeEvent(unittest.TestCase):
