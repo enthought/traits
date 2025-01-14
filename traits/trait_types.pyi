@@ -597,6 +597,15 @@ class Union(_TraitType[_Any, _Any]):
         ...
 
 
+class Optional(_TraitType[_Any, _Any]):
+    def __init__(
+        self,
+        trait: _Any,
+        **metadata: _Any
+    ) -> None:
+        ...
+
+
 class Symbol(_TraitType[_Any, _Any]):
     ...
 
