@@ -16,7 +16,7 @@ Fixes
 
 Build
 ~~~~~
-* Include Python 3.13 in all test workflows.
+* Include Python 3.13 in all test workflows. (#1826)
 
 
 Release 7.0.1
