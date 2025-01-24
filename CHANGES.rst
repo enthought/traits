@@ -94,7 +94,8 @@ Removals
   ``ListFunction``, ``ListMethod``, ``ListThis``, ``DictStrAny``,
   ``DictStrStr``, ``DictStrInt``, ``DictStrFloat``, ``DictStrBool``,
   ``DictStrList``. (#1723)
-
+* Removed the deprecated ``clean_filename`` and ``clean_timestamp``
+  utilities. (#1820)
 
 Fixes
 ~~~~~
