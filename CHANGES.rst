@@ -14,6 +14,10 @@ Fixes
 * Make ``traits.trait_notifiers.ui_handler`` public again, since
   Pyface relies on importing it directly. (#1827)
 
+Build
+~~~~~
+* Include Python 3.13 in all test workflows.
+
 
 Release 7.0.1
 -------------
