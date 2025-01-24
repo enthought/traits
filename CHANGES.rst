@@ -12,8 +12,8 @@ in this release.
 
 Changes
 ~~~~~~~
-
-
+* Drop problematic manylinux/aarch64 wheel builds; build separate wheels
+  for macOS/arm64 and macOS/x86_64. (#1822)
 
 Release 7.0.0
 -------------
