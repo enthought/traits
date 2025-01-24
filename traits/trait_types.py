@@ -19,7 +19,7 @@ from os import fspath
 from os.path import isfile, isdir
 import re
 import sys
-from types import FunctionType, MethodType, ModuleType
+from types import ModuleType
 import uuid
 import warnings
 
@@ -35,7 +35,6 @@ from .trait_base import (
     SequenceTypes,
     TypeTypes,
     Undefined,
-    TraitsCache,
     xgetattr,
 )
 from .trait_converters import trait_from, trait_cast
@@ -51,8 +50,6 @@ from .traits import (
     Trait,
     _TraitMaker,
 )
-from .util.deprecated import deprecated
-from .util.import_symbol import import_symbol
 
 # TraitsUI integration imports
 from .editor_factories import (
