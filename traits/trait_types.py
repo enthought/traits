@@ -19,7 +19,7 @@ from os import fspath
 from os.path import isfile, isdir
 import re
 import sys
-from types import FunctionType, MethodType, ModuleType
+from types import ModuleType
 import uuid
 import warnings
 
@@ -35,7 +35,6 @@ from .trait_base import (
     SequenceTypes,
     TypeTypes,
     Undefined,
-    TraitsCache,
     xgetattr,
 )
 from .trait_converters import trait_from, trait_cast
@@ -51,8 +50,6 @@ from .traits import (
     Trait,
     _TraitMaker,
 )
-from .util.deprecated import deprecated
-from .util.import_symbol import import_symbol
 
 # TraitsUI integration imports
 from .editor_factories import (
@@ -978,64 +975,6 @@ class self(This):
 
     #: The default value type to use (i.e. 'self'):
     default_value_type = DefaultValue.object
-
-
-class Function(TraitType):
-    """ A trait type whose value must be a function.
-
-    .. deprecated:: 6.2.0
-        This trait type explicitly checks for an instance of
-        ``types.FunctionType``. For the majority of use cases, the more general
-        ``Callable`` trait type should be used instead. If an instance
-        specifically of ``types.FunctionType`` really is needed, one can use
-        ``Instance(types.FunctionType)``.
-    """
-
-    #: The default value type to use.
-    default_value_type = DefaultValue.constant
-
-    #: The default value for the trait type.
-    default_value = Undefined
-
-    @deprecated("Function trait type has been deprecated. Use 'Callable' or "
-                "'Instance(types.FunctionType)' instead")
-    def __init__(self, default_value=NoDefaultSpecified, **metadata):
-        super().__init__(default_value=default_value, **metadata)
-
-    #: The C-level fast validator to use:
-    fast_validate = (ValidateTrait.coerce, FunctionType)
-
-    #: A description of the type of value this trait accepts:
-    info_text = "a function"
-
-
-class Method(TraitType):
-    """ A trait type whose value must be a method.
-
-    .. deprecated:: 6.2.0
-        This trait type explicitly checks for an instance of
-        ``types.MethodType``. For the majority of use cases, the more general
-        ``Callable`` trait type should be used instead. If an instance
-        specifically of ``types.MethodType`` really is needed, one can use
-        ``Instance(types.MethodType)``.
-    """
-
-    #: The default value type to use.
-    default_value_type = DefaultValue.constant
-
-    #: The default value for the trait type.
-    default_value = Undefined
-
-    @deprecated("Method trait type has been deprecated. Use 'Callable' or "
-                "'Instance(types.MethodType)' instead")
-    def __init__(self, default_value=NoDefaultSpecified, **metadata):
-        super().__init__(default_value=default_value, **metadata)
-
-    #: The C-level fast validator to use:
-    fast_validate = (ValidateTrait.coerce, MethodType)
-
-    #: A description of the type of value this trait accepts:
-    info_text = "a method"
 
 
 class Module(TraitType):
@@ -4269,79 +4208,6 @@ class Union(TraitType):
             editors.append(editor)
 
         return CompoundEditor(editors=editors)
-
-
-# -------------------------------------------------------------------------------
-#  'Symbol' trait:
-# -------------------------------------------------------------------------------
-class Symbol(TraitType):
-    """ A property trait type that refers to a Python object by name.
-
-    The value set to the trait must be a value of the form
-    ``'[package.package...package.]module[:symbol[([arg1,...,argn])]]'``
-    which is imported and evaluated to get underlying value.
-
-    The value returned by the trait is the actual object that this string
-    refers to.  The value is cached, so any calls are only evaluated once.
-
-    .. deprecated:: 6.3.0
-        This trait type is deprecated, and will be removed in a future
-        version of Traits.
-    """
-
-    @deprecated("The Symbol trait type has been deprecated.")
-    def __init__(self, default_value=NoDefaultSpecified, **metadata):
-        super().__init__(default_value=default_value, **metadata)
-
-    #: A description of the type of value this trait accepts:
-    info_text = (
-        "an object or a string of the form "
-        "'[package.package...package.]module[:symbol[([arg1,...,argn])]]' "
-        "specifying where to locate the object"
-    )
-
-    def get(self, object, name):
-        value = object.__dict__.get(name, Undefined)
-        if value is Undefined:
-            cache = TraitsCache + name
-            ref = object.__dict__.get(cache)
-            if ref is None:
-                object.__dict__[cache] = ref = object.trait(
-                    name
-                ).default_value_for(object, name)
-
-            if isinstance(ref, str):
-                object.__dict__[name] = value = self._resolve(ref)
-
-        return value
-
-    def set(self, object, name, value):
-        dict = object.__dict__
-        old = dict.get(name, Undefined)
-        if isinstance(value, str):
-            dict.pop(name, None)
-            dict[TraitsCache + name] = value
-            object.trait_property_changed(name, old)
-        else:
-            dict[name] = value
-            object.trait_property_changed(name, old, value)
-
-    def _resolve(self, ref):
-        try:
-            elements = ref.split("(", 1)
-            symbol = import_symbol(elements[0])
-            if len(elements) == 1:
-                return symbol
-
-            args = eval("(" + elements[1])
-            if not isinstance(args, tuple):
-                args = (args,)
-
-            return symbol(*args)
-        except Exception:
-            raise TraitError(
-                "Could not resolve '%s' into a valid symbol." % ref
-            )
 
 
 class UUID(TraitType):

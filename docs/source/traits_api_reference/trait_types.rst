@@ -115,12 +115,6 @@ Traits
 .. autoclass:: self
    :show-inheritance:
 
-.. autoclass:: Function
-   :show-inheritance:
-
-.. autoclass:: Method
-   :show-inheritance:
-
 .. autoclass:: Module
    :show-inheritance:
 
@@ -242,9 +236,6 @@ Traits
    :show-inheritance:
 
 .. autoclass:: Either
-   :show-inheritance:
-
-.. autoclass:: Symbol
    :show-inheritance:
 
 .. autoclass:: UUID
