@@ -408,9 +408,8 @@ class TraitFunction(TraitHandler):
     """Ensures that assigned trait attribute values are acceptable to a
     specified validator function.
 
-    TraitFunction is the underlying handler for the predefined trait
-    **Function**, and for the use of function references as arguments to the
-    Trait() function.
+    TraitFunction is the underlying handler for the use of function references
+    as arguments to the Trait() function.
 
     The signature of the function must be of the form *function*(*object*,
     *name*, *value*). The function must verify that *value* is a legal value

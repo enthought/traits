@@ -250,14 +250,6 @@ class self(This):
     ...
 
 
-class Function(_TraitType[_OptionalCallable, _OptionalCallable]):
-    ...
-
-
-class Method(_TraitType[_OptionalCallable, _OptionalCallable]):
-    ...
-
-
 class Module(_TraitType[_Any, _Any]):
     ...
 
@@ -595,10 +587,6 @@ class Union(_TraitType[_Any, _Any]):
         **metadata: _Any
     ) -> None:
         ...
-
-
-class Symbol(_TraitType[_Any, _Any]):
-    ...
 
 
 class UUID(_TraitType[_Union[str, _UUID], _UUID]):

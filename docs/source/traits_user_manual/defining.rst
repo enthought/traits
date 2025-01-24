@@ -264,7 +264,7 @@ the table.
 .. index:: CSet(), Constant(), Date(), Datetime(), Dict()
 .. index:: Directory(), Disallow, Either(), Enum()
 .. index:: Event(), Expression(), false, File()
-.. index:: Instance(), List(), Method(), Module()
+.. index:: Instance(), List(), Module()
 .. index:: Password(), Property(), Python()
 .. index:: PythonValue(), Range(), ReadOnly(), Regex()
 .. index:: Set() String(), This, Time()
@@ -333,8 +333,6 @@ the table.
 | File             | File([*value* = '', *filter* = None, *auto_set* = False, |
 |                  | *entries* = 10, *exists* = False,  \*\*\ *metadata*])    |
 +------------------+----------------------------------------------------------+
-| Function [3]_    | Function([*value* = None, \*\*\ *metadata*])             |
-+------------------+----------------------------------------------------------+
 | generic_trait    | n/a                                                      |
 +------------------+----------------------------------------------------------+
 | HTML             | HTML([*value* = '', *minlen* = 0,                        |
@@ -350,8 +348,6 @@ the table.
 |                  | \*\*\ *metadata*])                                       |
 +------------------+----------------------------------------------------------+
 | Map              | Map(*map*\ [, \*\*\ *metadata*])                         |
-+------------------+----------------------------------------------------------+
-| Method [3]_      | Method([\*\*\ *metadata*])                               |
 +------------------+----------------------------------------------------------+
 | Module           | Module([\*\*\ *metadata*])                               |
 +------------------+----------------------------------------------------------+
@@ -1055,16 +1051,8 @@ the metadata attribute::
 .. [2] The :class:`~.Either` trait type is likely to be deprecated at some
        point in the future. The :class:`~.Union` trait type should be preferred
        to :class:`~.Either` in new code.
-.. [3] The Function and Method trait types are now deprecated. See |Function|,
-       |Method|
 
 ..
    external urls
 
 .. _Traits bug tracker: https://github.com/enthought/traits/issues
-
-..
-   # substitutions
-
-.. |Function| replace:: :class:`~traits.trait_types.Function`
-.. |Method| replace:: :class:`~traits.trait_types.Method`
