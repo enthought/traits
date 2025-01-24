@@ -29,31 +29,33 @@ from .trait_errors import TraitNotificationError
 
 # The currently active handler for notifications that must be run on the UI
 # thread, or None if no handler has been set.
-_ui_handler = None
+# Note: the Pyface library current accesses the `ui_handler` attribute
+# directly, so we can't make it private yet.
+ui_handler = None
 
 
 def get_ui_handler():
     """
     Return the current user interface thread handler.
     """
-    return _ui_handler
+    return ui_handler
 
 
 def set_ui_handler(handler):
     """ Sets up the user interface thread handler.
     """
-    global _ui_handler
+    global ui_handler
 
-    _ui_handler = handler
+    ui_handler = handler
 
 
 def ui_dispatch(handler, *args, **kw):
     if threading.current_thread() == threading.main_thread():
         handler(*args, **kw)
-    elif _ui_handler is None:
+    elif ui_handler is None:
         raise RuntimeError("no UI handler registered for dispatch='ui'")
     else:
-        _ui_handler(handler, *args, **kw)
+        ui_handler(handler, *args, **kw)
 
 
 class NotificationExceptionHandlerState(object):
@@ -616,10 +618,10 @@ class FastUITraitChangeNotifyWrapper(TraitChangeNotifyWrapper):
     def dispatch(self, handler, *args):
         if threading.current_thread() == threading.main_thread():
             handler(*args)
-        elif _ui_handler is None:
+        elif ui_handler is None:
             raise RuntimeError("no UI handler registered for dispatch='ui'")
         else:
-            _ui_handler(handler, *args)
+            ui_handler(handler, *args)
 
 
 class NewTraitChangeNotifyWrapper(TraitChangeNotifyWrapper):
