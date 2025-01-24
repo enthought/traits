@@ -1,6 +1,20 @@
 Traits CHANGELOG
 ================
 
+Release 7.0.1
+-------------
+
+Released: 2025-01-24
+
+This is a bugfix release of the Traits package that adjusts the wheel
+building configuration. There are no non-packaging-related changes
+in this release.
+
+Changes
+~~~~~~~
+* Drop problematic manylinux/aarch64 wheel builds; build separate wheels
+  for macOS/arm64 and macOS/x86_64. (#1822)
+
 Release 7.0.0
 -------------
 
