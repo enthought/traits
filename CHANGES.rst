@@ -1,6 +1,24 @@
 Traits CHANGELOG
 ================
 
+Release 7.0.2
+-------------
+
+Released: 2025-01-24
+
+This is a bugfix release of the Traits package that fixes an interoperability
+issue with Pyface (a regression since Traits 6.4.3).
+
+Fixes
+~~~~~
+* Make ``traits.trait_notifiers.ui_handler`` public again, since
+  Pyface relies on importing it directly. (#1827)
+
+Build
+~~~~~
+* Include Python 3.13 in all test workflows. (#1826)
+
+
 Release 7.0.1
 -------------
 
