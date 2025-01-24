@@ -1,6 +1,20 @@
 Traits CHANGELOG
 ================
 
+Release 7.0.1
+-------------
+
+Released: 2025-01-24
+
+This is a bugfix release of the Traits package that adjusts the wheel
+building configuration. There are no non-packaging-related changes
+in this release.
+
+Changes
+~~~~~~~
+
+
+
 Release 7.0.0
 -------------
 

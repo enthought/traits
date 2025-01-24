@@ -9,7 +9,7 @@ jobs:
   build-wheels:
     strategy:
       matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
+        os: [windows-latest, macos-13, macos-14, ubuntu-latest]
 
     runs-on: ${{ matrix.os }}
 
@@ -17,12 +17,6 @@ jobs:
 
     - name: Check out the release commit
       uses: actions/checkout@v4
-
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v3
-      with:
-        platforms: arm64
-      if: runner.os == 'Linux'
 
     - name: Set up Python
       uses: actions/setup-python@v5
