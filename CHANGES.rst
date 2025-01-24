@@ -4,40 +4,153 @@ Traits CHANGELOG
 Release 7.0.0
 -------------
 
-Released: XXXX-XX-XX
+Released: 2025-01-24
 
-TBD Release summary
+This is a major release of the Traits package. Some highlights:
+
+* Python versions through Python 3.13 are now supported.
+* The Traits package now includes (partial) type hints. (Type hints
+  were previously distributed in a separate ``traits-stubs`` package.)
+* There is some experimental and provisional support for async
+  observer dispatch.
+* Many long-deprecated pieces of functionality have finally been removed
+  from the codebase.
 
 Detailed changes
 ~~~~~~~~~~~~~~~~
+
+The following people contributed code changes and reviews for this release:
+
+* Mark Dickinson
+* Robert Haschke
+* Chengyu Liu
+* Frank Longford
+* Sai Rahul Poruri
+* Matt Smarte
+* Corran Webster
 
 Features
 ~~~~~~~~
 * The traits package now ships with stub files directly, instead of requiring
   those files to be installed via the separate ``traits-stubs`` package.
   (#1714)
+* Experimental support for async dispatch has been added. This API should
+  be considered provisional, and may change in the future. (#1771)
+* Python versions through 3.13 are now supported. (#1773)
+* Event types ``TraitChangeEvent``, ``ListChangeEvent``, ``DictChangeEvent``
+  and ``SetChangeEvent`` for the ``event`` received by observers are now
+  available in ``traits.observation.api``. This is useful for those wanting to
+  use the types in type annotations. (#1805)
+
+Changes
+~~~~~~~
+* The behaviour of observers using ``dispatch="ui"`` when no GUI system is
+  present (in particular, if Pyface has not performed toolkit selection)
+  has changed. Previously, if such an observer was triggered then
+  it would raise an exception. Now it will raise with a clear error message
+  if triggered from a thread other than the main thread, and will execute
+  synchronously if triggered on the main thread. (#1740)
+* ``AttributeError``s raised by ``some_trait_default`` methods are
+  no longer swallowed. (#1762)
+* The ``Date`` trait type no longer accepts ``datetime`` instances
+  unless ``allow_datetime=True`` is used. (#1736)
+* The ``Date``, ``Time`` and ``Datetime`` trait types no longer
+  accept a value of ``None`` unless ``allow_none=True`` is used. (#1736)
+* Calling an interface class no longer performs implicit adaptation.
+  Adaptation must be performed explicitly, using the ``adapt`` function.
+  (#1719)
 
 Removals
 ~~~~~~~~
-* Remove deprecated ``rich_compare`` Trait metadata. (#1698)
-* Remove deprecated ``find_resource`` and ``store_resource`` functions. (#1697)
-* Remove deprecated ``TraitList``, ``TraitDict`` and ``TraitTuple`` classes.
+* Python versions earlier than 3.8 are no longer supported. (#1773)
+* Removed deprecated ``rich_compare`` Trait metadata. (#1698)
+* Removed deprecated ``find_resource`` and ``store_resource`` functions. (#1697)
+* Removed deprecated ``TraitList``, ``TraitDict`` and ``TraitTuple`` classes.
   (#1634)
-* Remove the deprecated ability of ``cTrait.default_value`` to set the default
+* Removed the deprecated ability of ``cTrait.default_value`` to set the default
   value of a trait. It can now only be used for getting, not for setting.
   (#1632)
-* Remove the deprecated ``typecode`` parameter to ``Array`` trait types.
+* Removed the deprecated ``typecode`` parameter to ``Array`` trait types.
   (#1633)
-* Remove the deprecated ``nose_tools`` module. (#1636)
-* Remove the deprecated ``Long``, ``CLong``, ``BaseLong`` and ``BaseCLong``
+* Removed the deprecated ``nose_tools`` module. (#1636)
+* Removed the deprecated ``Long``, ``CLong``, ``BaseLong`` and ``BaseCLong``
   trait types. Use ``Int``, ``CInt``, ``BaseInt`` and ``BaseCInt`` instead.
   (#1701)
-* Remove the deprecated ``TraitPrefixList`` and ``TraitPrefixMap`` classes.
+* Removed the deprecated ``TraitPrefixList`` and ``TraitPrefixMap`` classes.
   Use ``PrefixList`` and ``PrefixMap`` instead. (#1703)
+* Removed the deprecated ``Function``, ``Method`` and ``Symbol`` trait types.
+  (#1819)
+* Removed the deprecated ``SingletonHasTraits``, ``SingletonHasStrictTraits``
+  and ``SingletonHasPrivateTraits`` classes. (#1794)
+* Removed the deprecated ``HasTraits.get`` and ``HasTraits.set`` methods.
+  (#1738)
+* Removed the deprecated ``MetaHasTraits.add_listener`` and
+  ``MetaHasTraits.remove_listener`` methods. (#1730)
+* Removed the deprecated ``Color``, ``RGBColor`` and ``Font`` traits.
+  Code that needs these trait types should import them from TraitsUI instead.
+  (#1737)
+* Removed the deprecated trait type aliases ``ListInt``, ``ListFloat``,
+  ``ListStr``, ``ListUnicode``, ``ListComplex``, ``ListBool``,
+  ``ListFunction``, ``ListMethod``, ``ListThis``, ``DictStrAny``,
+  ``DictStrStr``, ``DictStrInt``, ``DictStrFloat``, ``DictStrBool``,
+  ``DictStrList``. (#1723)
+* Removed the deprecated ``clean_filename`` and ``clean_timestamp``
+  utilities. (#1820)
+
+Fixes
+~~~~~
+* Fixed build error on Python 3.13 triggered by removal of the
+  ``PyTRASHCAN_SAFE_BEGIN`` and ``PyTRASHCAN_SAFE_END`` macros. (#1767)
+* Fixed warning messages from use of ``PyDict_GetItem`` in Python >= 3.13.
+  (#1818)
+* Fixed a race condition in test of background thread notification. (#1798)
+* Fixed missing observer registration when inserting into a nested
+  list. (#1761)
+* Fixed a use of the deprecated ``datetime.datetime.utcnow`` method. (#1758)
+* Fixed a use of a deprecated TraitsUI version check. (#1746)
+* Fixed various type stubs. (#1718)
+
+Tests
+~~~~~
+* Reworked ``ui_dispatch`` tests to no longer require Qt. (#1792)
+* Removed Cython-based tests (after fixing them). (#1793, #1759)
+* Fixed two tests that were triggering TraitsUI deprecation warnings. (#1790)
+* Remove uses of ``UITester`` from the test suite. (#1788)
+* Fix a fragile ``configure_traits`` test that could fail on warnings unrelated
+  to the test goal. (#1749)
 
 Build and continuous integration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-* Include Python 3.11 in the workflow that tests wheels from PyPI. (#1715)
+* Added Python 3.11 to the workflow that tests wheels from PyPI. (#1715)
+* Added dependabot config to aid keeping GitHub Actions up to date. (#1776)
+* Brought various GitHub Actions up to date. (#1814, #1810, #1808,
+  #1807, #1800, #1799, #1797, #1796, #1780, #1779, #1778, #1777)
+* Removed uses of the ``voxmedia`` action for Slack notification. (#1782)
+* Fix the set of architectures tested in the PyPI workflow. (#1795)
+* Removed PySide as a test dependency. (#1791)
+* Fixed a couple of compiler warnings related to integer conversions in the
+  Windows build. (#1774)
+* Temporarily pinned the Python 3.13 version to avoid an upstream bug with
+  Python 3.13.0a4. (#1775, #1773)
+* Updated workflows for Python 3.12 support. (#1757)
+* Updated workflows for compatibility with Ubuntu 22.04. (#1727)
+* Updated workflows to use Python 3.11 final. (#1725)
+* Moved cibuildwheel config to ``pyproject.toml``. (#1717)
+* Temporarily pinned ``setuptools`` to avoid an incompatibility with EDM
+  runtimes. (#1722)
+* The PyPI release workflow has been modernized. (#1716)
+
+
+Documentation
+~~~~~~~~~~~~~
+* Clarify behaviour of observers listening to ``attr1:attr2``. (#1806)
+* Fixed Trait documenter tests for Sphinx >= 7.2. (#1755)
+* Fixed inconsistent spacing style in docs. (#1728)
+
+Miscellaneous
+~~~~~~~~~~~~~
+* Copyright header updates. (#1816, #1768, #1729)
+* The parser for the ``observe`` mini-language was regenerated. (#1743)
 
 
 Release 6.4.1
