@@ -92,7 +92,7 @@ common_dependencies = {
     "enthought_sphinx_theme",
     "flake8",
     "flake8_ets",
-    "lark-parser",
+    "lark_parser",
     "mypy",
     "numpy",
     "Sphinx",
