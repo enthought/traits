@@ -4,17 +4,19 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.util.trait_documenter &mdash; Traits 6.4 Documentation</title>
+    <title>traits.util.trait_documenter &mdash; Traits 7.0 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
     <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" >
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '6.4.0',
+        VERSION:     '7.0.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -22,9 +24,9 @@
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/sphinx_highlight.js"></script>
     <script type="text/javascript" src="../../../_static/clipboard.min.js"></script>
     <script type="text/javascript" src="../../../_static/copybutton.js"></script>
     <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
@@ -32,7 +34,7 @@
     <link rel="shortcut icon" href="../../../_static/img/favicon.png">
     <link rel="index" title="Index" href="../../../genindex.html" >
     <link rel="search" title="Search" href="../../../search.html" >
-    <link rel="top" title="Traits 6.4 Documentation" href="../../../index.html" >
+    <link rel="top" title="Traits 7.0 Documentation" href="../../../index.html" >
     <link rel="up" title="Module code" href="../../index.html" > 
   </head>
   <body>
@@ -50,7 +52,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../../index.html">Traits 6.4 Documentation</a></li>
+        <li class="active"><a href="../../../index.html">Traits 7.0 Documentation</a></li>
 	
           <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -79,7 +81,7 @@
           <div class="body" id="spc-section-body" role="main">
             
   <h1>Source code for traits.util.trait_documenter</h1><div class="highlight"><pre>
-<span></span><span class="c1"># (C) Copyright 2005-2022 Enthought, Inc., Austin, TX</span>
+<span></span><span class="c1"># (C) Copyright 2005-2025 Enthought, Inc., Austin, TX</span>
 <span class="c1"># All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># This software is provided without warranty under the terms of the BSD</span>
@@ -94,26 +96,26 @@
 <span class="sd">    (Subclassed from the autodoc ClassLevelDocumenter)</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">import_module</span>
-<span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">import</span> <span class="nn">io</span>
-<span class="kn">import</span> <span class="nn">token</span>
-<span class="kn">import</span> <span class="nn">tokenize</span>
-<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">importlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">import_module</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">token</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tokenize</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
 
-<span class="kn">from</span> <span class="nn">sphinx.ext.autodoc</span> <span class="kn">import</span> <span class="n">ClassLevelDocumenter</span>
-<span class="kn">from</span> <span class="nn">sphinx.util</span> <span class="kn">import</span> <span class="n">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sphinx.ext.autodoc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClassLevelDocumenter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sphinx.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">logging</span>
 
-<span class="kn">from</span> <span class="nn">traits.has_traits</span> <span class="kn">import</span> <span class="n">MetaHasTraits</span>
-<span class="kn">from</span> <span class="nn">traits.trait_type</span> <span class="kn">import</span> <span class="n">TraitType</span>
-<span class="kn">from</span> <span class="nn">traits.traits</span> <span class="kn">import</span> <span class="n">generic_trait</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">traits.has_traits</span><span class="w"> </span><span class="kn">import</span> <span class="n">MetaHasTraits</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">traits.trait_type</span><span class="w"> </span><span class="kn">import</span> <span class="n">TraitType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">traits.traits</span><span class="w"> </span><span class="kn">import</span> <span class="n">generic_trait</span>
 
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_is_class_trait</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Check if the name is in the list of class defined traits of ``cls``.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_is_class_trait</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Check if the name is in the list of class defined traits of ``cls``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">(</span>
         <span class="nb">isinstance</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">MetaHasTraits</span><span class="p">)</span>
@@ -122,8 +124,10 @@
     <span class="p">)</span>
 
 
-<div class="viewcode-block" id="TraitDocumenter"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.trait_documenter.TraitDocumenter">[docs]</a><span class="k">class</span> <span class="nc">TraitDocumenter</span><span class="p">(</span><span class="n">ClassLevelDocumenter</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Specialized Documenter subclass for trait attributes.</span>
+<div class="viewcode-block" id="TraitDocumenter">
+<a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.trait_documenter.TraitDocumenter">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TraitDocumenter</span><span class="p">(</span><span class="n">ClassLevelDocumenter</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Specialized Documenter subclass for trait attributes.</span>
 
 <span class="sd">    The class defines a new documenter that recovers the trait definition</span>
 <span class="sd">    signature of module level and class level traits.</span>
@@ -141,9 +145,11 @@
     <span class="c1"># must be higher than other attribute documenters</span>
     <span class="n">priority</span> <span class="o">=</span> <span class="mi">12</span>
 
-<div class="viewcode-block" id="TraitDocumenter.can_document_member"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.trait_documenter.TraitDocumenter.can_document_member">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">can_document_member</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">member</span><span class="p">,</span> <span class="n">membername</span><span class="p">,</span> <span class="n">isattr</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Check that the documented member is a trait instance.</span>
+<div class="viewcode-block" id="TraitDocumenter.can_document_member">
+<a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.trait_documenter.TraitDocumenter.can_document_member">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">can_document_member</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">member</span><span class="p">,</span> <span class="n">membername</span><span class="p">,</span> <span class="n">isattr</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Check that the documented member is a trait instance.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">check</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">isattr</span>
@@ -152,12 +158,18 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">check</span></div>
 
-<div class="viewcode-block" id="TraitDocumenter.document_members"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.trait_documenter.TraitDocumenter.document_members">[docs]</a>    <span class="k">def</span> <span class="nf">document_members</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">all_members</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Trait attributes have no members &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="TraitDocumenter.document_members">
+<a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.trait_documenter.TraitDocumenter.document_members">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">document_members</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">all_members</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Trait attributes have no members &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="TraitDocumenter.import_object"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.trait_documenter.TraitDocumenter.import_object">[docs]</a>    <span class="k">def</span> <span class="nf">import_object</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Get the Trait object.</span>
+
+<div class="viewcode-block" id="TraitDocumenter.import_object">
+<a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.trait_documenter.TraitDocumenter.import_object">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">import_object</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Get the Trait object.</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
@@ -189,8 +201,11 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">note_reread</span><span class="p">()</span>
             <span class="k">return</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="TraitDocumenter.add_directive_header"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.trait_documenter.TraitDocumenter.add_directive_header">[docs]</a>    <span class="k">def</span> <span class="nf">add_directive_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sig</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Add the directive header &#39;attribute&#39; with the annotation</span>
+
+<div class="viewcode-block" id="TraitDocumenter.add_directive_header">
+<a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.trait_documenter.TraitDocumenter.add_directive_header">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_directive_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sig</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Add the directive header &#39;attribute&#39; with the annotation</span>
 <span class="sd">        option set to the trait definition.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -214,11 +229,15 @@
         <span class="k">if</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">definition</span><span class="p">:</span>
             <span class="n">definition</span> <span class="o">=</span> <span class="n">definition</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; …&quot;</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="s2">&quot;   :annotation: = </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">definition</span><span class="p">),</span> <span class="s2">&quot;&lt;autodoc&gt;&quot;</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="s2">&quot;   :annotation: = </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">definition</span><span class="p">),</span> <span class="s2">&quot;&lt;autodoc&gt;&quot;</span><span class="p">)</span></div>
+</div>
 
 
-<div class="viewcode-block" id="trait_definition"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.trait_documenter.trait_definition">[docs]</a><span class="k">def</span> <span class="nf">trait_definition</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Retrieve the portion of the source defining a Trait attribute.</span>
+
+<div class="viewcode-block" id="trait_definition">
+<a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.trait_documenter.trait_definition">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">trait_definition</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Retrieve the portion of the source defining a Trait attribute.</span>
 
 <span class="sd">    For example, given a class::</span>
 
@@ -278,8 +297,9 @@
     <span class="k">return</span> <span class="n">definition</span></div>
 
 
-<span class="k">def</span> <span class="nf">_get_definition_tokens</span><span class="p">(</span><span class="n">tokens</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Given the tokens, extracts the definition tokens.</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_definition_tokens</span><span class="p">(</span><span class="n">tokens</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Given the tokens, extracts the definition tokens.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -314,9 +334,12 @@
     <span class="k">return</span> <span class="n">definition_tokens</span>
 
 
-<div class="viewcode-block" id="setup"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.trait_documenter.setup">[docs]</a><span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Add the TraitDocumenter in the current sphinx autodoc instance. &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="setup">
+<a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.trait_documenter.setup">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Add the TraitDocumenter in the current sphinx autodoc instance. &quot;&quot;&quot;</span>
     <span class="n">app</span><span class="o">.</span><span class="n">add_autodocumenter</span><span class="p">(</span><span class="n">TraitDocumenter</span><span class="p">)</span></div>
+
 </pre></div>
 
           </div>
@@ -327,16 +350,16 @@
             <p class="logo"><a href="../../../index.html">
               <img class="logo" src="../../../_static/img/e-logo.png" alt="Logo">
             </a></p>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
         </div>
@@ -353,15 +376,15 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2025 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Aug 11, 2022.
+      Last updated on Jan 27, 2025.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 8.1.3.
       </li>
     </ul>
     </div>

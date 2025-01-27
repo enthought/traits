@@ -3,19 +3,21 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>traits.ctrait Module &mdash; Traits 6.4 Documentation</title>
+    <title>traits.ctrait Module &mdash; Traits 7.0 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
     <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" >
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.4.0',
+        VERSION:     '7.0.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -23,9 +25,9 @@
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/sphinx_highlight.js"></script>
     <script type="text/javascript" src="../_static/clipboard.min.js"></script>
     <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
@@ -33,7 +35,7 @@
     <link rel="shortcut icon" href="../_static/img/favicon.png">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.4 Documentation" href="../index.html" >
+    <link rel="top" title="Traits 7.0 Documentation" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
     <link rel="next" title="traits.ctraits Module" href="ctraits.html" >
     <link rel="prev" title="traits.constants Module" href="constants.html" > 
@@ -53,7 +55,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.4 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 7.0 Documentation</a></li>
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
     </ul>
@@ -90,75 +92,75 @@
           <div class="body" id="spc-section-body" role="main">
             
   <section id="module-traits.ctrait">
-<span id="traits-ctrait-module"></span><h1><a class="reference internal" href="#module-traits.ctrait" title="traits.ctrait"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.ctrait</span></code></a> Module<a class="headerlink" href="#module-traits.ctrait" title="Permalink to this headline">¶</a></h1>
+<span id="traits-ctrait-module"></span><h1><a class="reference internal" href="#module-traits.ctrait" title="traits.ctrait"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.ctrait</span></code></a> Module<a class="headerlink" href="#module-traits.ctrait" title="Link to this heading">¶</a></h1>
 <p>Defines the core CTrait class.</p>
 <p>The CTrait class extends the C-level cTrait type to provide the full CTrait
 API. CTraits are the core objects that are used to generate defaults and
 validate as well as maintaining a list of notifiers and calling them when
 values are modified.</p>
 <section id="classes">
-<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">¶</a></h2>
 <dl class="py class">
-<dt id="traits.ctrait.CTrait">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">traits.ctrait.</span></code><code class="sig-name descname"><span class="pre">CTrait</span></code><a class="reference internal" href="../_modules/traits/ctrait.html#CTrait"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.ctrait.CTrait" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="traits.ctrait.CTrait">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">traits.ctrait.</span></span><span class="sig-name descname"><span class="pre">CTrait</span></span><a class="reference internal" href="../_modules/traits/ctrait.html#CTrait"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.ctrait.CTrait" title="Link to this definition">¶</a></dt>
 <dd><p>Extends the underlying C-based cTrait type.</p>
-<dl class="py method">
-<dt id="traits.ctrait.CTrait.comparison_mode">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">comparison_mode</span></code><a class="headerlink" href="#traits.ctrait.CTrait.comparison_mode" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="traits.ctrait.CTrait.comparison_mode">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">comparison_mode</span></span><a class="headerlink" href="#traits.ctrait.CTrait.comparison_mode" title="Link to this definition">¶</a></dt>
 <dd><p>Get or set the comparison mode on the trait.
 Getter returns a ComparisonMode enum.
 Setter acceps either an int or a ComparisonMode enum.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="traits.ctrait.CTrait.property_fields">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">property_fields</span></code><a class="headerlink" href="#traits.ctrait.CTrait.property_fields" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="traits.ctrait.CTrait.property_fields">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">property_fields</span></span><a class="headerlink" href="#traits.ctrait.CTrait.property_fields" title="Link to this definition">¶</a></dt>
 <dd><p>Return a tuple of callables (fget, fset, validate) for the
 property trait.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="traits.ctrait.CTrait.is_trait_type">
-<code class="sig-name descname"><span class="pre">is_trait_type</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trait_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/ctrait.html#CTrait.is_trait_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.ctrait.CTrait.is_trait_type" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="traits.ctrait.CTrait.is_trait_type">
+<span class="sig-name descname"><span class="pre">is_trait_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trait_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/ctrait.html#CTrait.is_trait_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.ctrait.CTrait.is_trait_type" title="Link to this definition">¶</a></dt>
 <dd><p>Returns whether or not this trait is of a specified trait type.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="traits.ctrait.CTrait.get_editor">
-<code class="sig-name descname"><span class="pre">get_editor</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/ctrait.html#CTrait.get_editor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.ctrait.CTrait.get_editor" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="traits.ctrait.CTrait.get_editor">
+<span class="sig-name descname"><span class="pre">get_editor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/ctrait.html#CTrait.get_editor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.ctrait.CTrait.get_editor" title="Link to this definition">¶</a></dt>
 <dd><p>Returns the user interface editor associated with the trait.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="traits.ctrait.CTrait.get_help">
-<code class="sig-name descname"><span class="pre">get_help</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">full</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/ctrait.html#CTrait.get_help"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.ctrait.CTrait.get_help" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="traits.ctrait.CTrait.get_help">
+<span class="sig-name descname"><span class="pre">get_help</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">full</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/ctrait.html#CTrait.get_help"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.ctrait.CTrait.get_help" title="Link to this definition">¶</a></dt>
 <dd><p>Returns the help text for a trait.</p>
 <p>If <em>full</em> is False or the trait does not have a <strong>help</strong> string,
 the returned string is constructed from the <strong>desc</strong> attribute on the
 trait and the <strong>info</strong> string on the trait’s handler.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>full</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Indicates whether to return the value of the <em>help</em> attribute of
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>full</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Indicates whether to return the value of the <em>help</em> attribute of
 the trait itself.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="traits.ctrait.CTrait.full_info">
-<code class="sig-name descname"><span class="pre">full_info</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/ctrait.html#CTrait.full_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.ctrait.CTrait.full_info" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="traits.ctrait.CTrait.full_info">
+<span class="sig-name descname"><span class="pre">full_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/ctrait.html#CTrait.full_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.ctrait.CTrait.full_info" title="Link to this definition">¶</a></dt>
 <dd><p>Returns a description of the trait.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="traits.ctrait.CTrait.info">
-<code class="sig-name descname"><span class="pre">info</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/ctrait.html#CTrait.info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.ctrait.CTrait.info" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="traits.ctrait.CTrait.info">
+<span class="sig-name descname"><span class="pre">info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/ctrait.html#CTrait.info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.ctrait.CTrait.info" title="Link to this definition">¶</a></dt>
 <dd><p>Returns a description of the trait.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="traits.ctrait.CTrait.as_ctrait">
-<code class="sig-name descname"><span class="pre">as_ctrait</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/ctrait.html#CTrait.as_ctrait"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.ctrait.CTrait.as_ctrait" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="traits.ctrait.CTrait.as_ctrait">
+<span class="sig-name descname"><span class="pre">as_ctrait</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/ctrait.html#CTrait.as_ctrait"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.ctrait.CTrait.as_ctrait" title="Link to this definition">¶</a></dt>
 <dd><p>Method that returns self for trait converters.</p>
 </dd></dl>
 
@@ -176,35 +178,54 @@ the trait itself.</p>
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
             </a></p>
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.ctrait</span></code> Module</a><ul>
-<li><a class="reference internal" href="#classes">Classes</a></li>
+<li><a class="reference internal" href="#classes">Classes</a><ul>
+<li><a class="reference internal" href="#traits.ctrait.CTrait"><code class="docutils literal notranslate"><span class="pre">CTrait</span></code></a><ul>
+<li><a class="reference internal" href="#traits.ctrait.CTrait.comparison_mode"><code class="docutils literal notranslate"><span class="pre">CTrait.comparison_mode</span></code></a></li>
+<li><a class="reference internal" href="#traits.ctrait.CTrait.property_fields"><code class="docutils literal notranslate"><span class="pre">CTrait.property_fields</span></code></a></li>
+<li><a class="reference internal" href="#traits.ctrait.CTrait.is_trait_type"><code class="docutils literal notranslate"><span class="pre">CTrait.is_trait_type()</span></code></a></li>
+<li><a class="reference internal" href="#traits.ctrait.CTrait.get_editor"><code class="docutils literal notranslate"><span class="pre">CTrait.get_editor()</span></code></a></li>
+<li><a class="reference internal" href="#traits.ctrait.CTrait.get_help"><code class="docutils literal notranslate"><span class="pre">CTrait.get_help()</span></code></a></li>
+<li><a class="reference internal" href="#traits.ctrait.CTrait.full_info"><code class="docutils literal notranslate"><span class="pre">CTrait.full_info()</span></code></a></li>
+<li><a class="reference internal" href="#traits.ctrait.CTrait.info"><code class="docutils literal notranslate"><span class="pre">CTrait.info()</span></code></a></li>
+<li><a class="reference internal" href="#traits.ctrait.CTrait.as_ctrait"><code class="docutils literal notranslate"><span class="pre">CTrait.as_ctrait()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="constants.html"
-                        title="previous chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.constants</span></code> Module</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="ctraits.html"
-                        title="next chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.ctraits</span></code> Module</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="constants.html"
+                          title="previous chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.constants</span></code> Module</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="ctraits.html"
+                          title="next chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.ctraits</span></code> Module</a></p>
+  </div>
   <h3>This Page</h3>
   <div>
     <a href="../_sources/traits_api_reference/ctrait.rst.txt"
        rel="nofollow">Show Source</a>
   </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
         </div>
@@ -221,15 +242,15 @@ the trait itself.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2025 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Aug 11, 2022.
+      Last updated on Jan 27, 2025.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 8.1.3.
       </li>
     </ul>
     </div>

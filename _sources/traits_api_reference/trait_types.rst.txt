@@ -115,12 +115,6 @@ Traits
 .. autoclass:: self
    :show-inheritance:
 
-.. autoclass:: Function
-   :show-inheritance:
-
-.. autoclass:: Method
-   :show-inheritance:
-
 .. autoclass:: Module
    :show-inheritance:
 
@@ -244,9 +238,6 @@ Traits
 .. autoclass:: Either
    :show-inheritance:
 
-.. autoclass:: Symbol
-   :show-inheritance:
-
 .. autoclass:: UUID
    :show-inheritance:
 
@@ -281,49 +272,11 @@ and may be removed in a future version of Traits.
 
 .. autodata:: CUnicode
 
-.. autodata:: BaseLong
-
-.. autodata:: Long
-
-.. autodata:: BaseCLong
-
-.. autodata:: CLong
-
 .. autodata:: false
 
 .. autodata:: true
 
 .. autodata:: undefined
-
-.. autodata:: ListInt
-
-.. autodata:: ListFloat
-
-.. autodata:: ListStr
-
-.. autodata:: ListUnicode
-
-.. autodata:: ListComplex
-
-.. autodata:: ListBool
-
-.. autodata:: ListFunction
-
-.. autodata:: ListMethod
-
-.. autodata:: ListThis
-
-.. autodata:: DictStrAny
-
-.. autodata:: DictStrStr
-
-.. autodata:: DictStrInt
-
-.. autodata:: DictStrFloat
-
-.. autodata:: DictStrBool
-
-.. autodata:: DictStrList
 
 
 Private Classes

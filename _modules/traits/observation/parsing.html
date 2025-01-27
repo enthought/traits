@@ -4,17 +4,19 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.observation.parsing &mdash; Traits 6.4 Documentation</title>
+    <title>traits.observation.parsing &mdash; Traits 7.0 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
     <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" >
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '6.4.0',
+        VERSION:     '7.0.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -22,9 +24,9 @@
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/sphinx_highlight.js"></script>
     <script type="text/javascript" src="../../../_static/clipboard.min.js"></script>
     <script type="text/javascript" src="../../../_static/copybutton.js"></script>
     <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
@@ -32,7 +34,7 @@
     <link rel="shortcut icon" href="../../../_static/img/favicon.png">
     <link rel="index" title="Index" href="../../../genindex.html" >
     <link rel="search" title="Search" href="../../../search.html" >
-    <link rel="top" title="Traits 6.4 Documentation" href="../../../index.html" >
+    <link rel="top" title="Traits 7.0 Documentation" href="../../../index.html" >
     <link rel="up" title="Module code" href="../../index.html" > 
   </head>
   <body>
@@ -50,7 +52,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../../index.html">Traits 6.4 Documentation</a></li>
+        <li class="active"><a href="../../../index.html">Traits 7.0 Documentation</a></li>
 	
           <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -79,7 +81,7 @@
           <div class="body" id="spc-section-body" role="main">
             
   <h1>Source code for traits.observation.parsing</h1><div class="highlight"><pre>
-<span></span><span class="c1"># (C) Copyright 2005-2022 Enthought, Inc., Austin, TX</span>
+<span></span><span class="c1"># (C) Copyright 2005-2025 Enthought, Inc., Austin, TX</span>
 <span class="c1"># All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># This software is provided without warranty under the terms of the BSD</span>
@@ -89,17 +91,17 @@
 <span class="c1">#</span>
 <span class="c1"># Thanks for using Enthought open source!</span>
 
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">lru_cache</span>
 
-<span class="kn">from</span> <span class="nn">traits.observation</span> <span class="kn">import</span> <span class="n">_generated_parser</span>
-<span class="kn">import</span> <span class="nn">traits.observation.expression</span> <span class="k">as</span> <span class="nn">expression_module</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">traits.observation</span><span class="w"> </span><span class="kn">import</span> <span class="n">_generated_parser</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">traits.observation.expression</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">expression_module</span>
 
 
 <span class="n">_LARK_PARSER</span> <span class="o">=</span> <span class="n">_generated_parser</span><span class="o">.</span><span class="n">Lark_StandAlone</span><span class="p">()</span>
 
 
-<span class="k">def</span> <span class="nf">_handle_series</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">notify</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Handle an expression of the form &quot;a.b&quot; or &quot;a:b&quot;.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_handle_series</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">notify</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Handle an expression of the form &quot;a.b&quot; or &quot;a:b&quot;.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -118,8 +120,8 @@
     <span class="k">return</span> <span class="n">_handle_tree</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">notify_left</span><span class="p">)</span><span class="o">.</span><span class="n">then</span><span class="p">(</span><span class="n">_handle_tree</span><span class="p">(</span><span class="n">right</span><span class="p">,</span> <span class="n">notify</span><span class="p">))</span>
 
 
-<span class="k">def</span> <span class="nf">_handle_parallel</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">notify</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Handle an expression of the form &quot;a, b&quot;.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_handle_parallel</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">notify</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Handle an expression of the form &quot;a, b&quot;.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -137,8 +139,8 @@
     <span class="k">return</span> <span class="n">_handle_tree</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">notify</span><span class="p">)</span> <span class="o">|</span> <span class="n">_handle_tree</span><span class="p">(</span><span class="n">right</span><span class="p">,</span> <span class="n">notify</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_handle_trait</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">notify</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Handle an element for a named trait.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_handle_trait</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">notify</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Handle an element for a named trait.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -157,8 +159,8 @@
     <span class="k">return</span> <span class="n">expression_module</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">notify</span><span class="o">=</span><span class="n">notify</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_handle_anytrait</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">notify</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Handle an anytrait element.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_handle_anytrait</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">notify</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Handle an anytrait element.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -174,8 +176,8 @@
     <span class="k">return</span> <span class="n">expression_module</span><span class="o">.</span><span class="n">anytrait</span><span class="p">(</span><span class="n">notify</span><span class="o">=</span><span class="n">notify</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_handle_metadata</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">notify</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Handle an element for filtering existing metadata.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_handle_metadata</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">notify</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Handle an element for filtering existing metadata.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -194,8 +196,8 @@
     <span class="k">return</span> <span class="n">expression_module</span><span class="o">.</span><span class="n">metadata</span><span class="p">(</span><span class="n">metadata_name</span><span class="p">,</span> <span class="n">notify</span><span class="o">=</span><span class="n">notify</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_handle_items</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">notify</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Handle keyword &quot;items&quot;.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_handle_items</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">notify</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Handle keyword &quot;items&quot;.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -221,8 +223,8 @@
     <span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_handle_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">notify</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Handle a tree using the specified rule.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_handle_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">notify</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Handle a tree using the specified rule.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -250,9 +252,11 @@
     <span class="k">return</span> <span class="n">handlers</span><span class="p">[</span><span class="n">tree</span><span class="o">.</span><span class="n">data</span><span class="p">](</span><span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">,</span> <span class="n">notify</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="parse"><a class="viewcode-back" href="../../../traits_api_reference/traits.observation.html#traits.observation.parsing.parse">[docs]</a><span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="n">expression_module</span><span class="o">.</span><span class="n">_OBSERVER_EXPRESSION_CACHE_MAXSIZE</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Top-level function for parsing user&#39;s text to an ObserverExpression.</span>
+<div class="viewcode-block" id="parse">
+<a class="viewcode-back" href="../../../traits_api_reference/traits.observation.html#traits.observation.parsing.parse">[docs]</a>
+<span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="n">expression_module</span><span class="o">.</span><span class="n">_OBSERVER_EXPRESSION_CACHE_MAXSIZE</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Top-level function for parsing user&#39;s text to an ObserverExpression.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -271,14 +275,17 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="n">tree</span> <span class="o">=</span> <span class="n">_LARK_PARSER</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">_generated_parser</span><span class="o">.</span><span class="n">LarkError</span> <span class="k">as</span> <span class="n">parser_exception</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid expression: </span><span class="si">{</span><span class="n">text</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">parser_exception</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid expression: </span><span class="si">{</span><span class="n">text</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">parser_exception</span>
 
     <span class="k">return</span> <span class="n">_handle_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">notify</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="compile_str"><a class="viewcode-back" href="../../../traits_api_reference/traits.observation.html#traits.observation.parsing.compile_str">[docs]</a><span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="n">expression_module</span><span class="o">.</span><span class="n">_OBSERVER_EXPRESSION_CACHE_MAXSIZE</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">compile_str</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Compile a mini-language string to a list of ObserverGraph objects.</span>
+
+<div class="viewcode-block" id="compile_str">
+<a class="viewcode-back" href="../../../traits_api_reference/traits.observation.html#traits.observation.parsing.compile_str">[docs]</a>
+<span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="n">expression_module</span><span class="o">.</span><span class="n">_OBSERVER_EXPRESSION_CACHE_MAXSIZE</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compile_str</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Compile a mini-language string to a list of ObserverGraph objects.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -290,6 +297,7 @@
 <span class="sd">    list of ObserverGraph</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">expression_module</span><span class="o">.</span><span class="n">compile_expr</span><span class="p">(</span><span class="n">parse</span><span class="p">(</span><span class="n">text</span><span class="p">))</span></div>
+
 </pre></div>
 
           </div>
@@ -300,16 +308,16 @@
             <p class="logo"><a href="../../../index.html">
               <img class="logo" src="../../../_static/img/e-logo.png" alt="Logo">
             </a></p>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
         </div>
@@ -326,15 +334,15 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2025 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Aug 11, 2022.
+      Last updated on Jan 27, 2025.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 8.1.3.
       </li>
     </ul>
     </div>

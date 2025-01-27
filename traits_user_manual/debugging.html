@@ -3,19 +3,21 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Tips for debugging Traits &mdash; Traits 6.4 Documentation</title>
+    <title>Tips for debugging Traits &mdash; Traits 7.0 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
     <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" >
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.4.0',
+        VERSION:     '7.0.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -23,9 +25,9 @@
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/sphinx_highlight.js"></script>
     <script type="text/javascript" src="../_static/clipboard.min.js"></script>
     <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
@@ -33,8 +35,8 @@
     <link rel="shortcut icon" href="../_static/img/favicon.png">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.4 Documentation" href="../index.html" >
-    <link rel="up" title="Traits 6.4 User Manual" href="index.html" >
+    <link rel="top" title="Traits 7.0 Documentation" href="../index.html" >
+    <link rel="up" title="Traits 7.0 User Manual" href="index.html" >
     <link rel="next" title="Traits internals" href="internals.html" >
     <link rel="prev" title="Testing" href="testing.html" > 
   </head>
@@ -53,9 +55,9 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.4 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 7.0 Documentation</a></li>
 	
-          <li class="active"><a href="index.html" accesskey="U">Traits 6.4 User Manual</a></li> 
+          <li class="active"><a href="index.html" accesskey="U">Traits 7.0 User Manual</a></li> 
     </ul>
               
               
@@ -90,20 +92,20 @@
           <div class="body" id="spc-section-body" role="main">
             
   <section id="tips-for-debugging-traits">
-<span id="index-0"></span><h1>Tips for debugging Traits<a class="headerlink" href="#tips-for-debugging-traits" title="Permalink to this headline">¶</a></h1>
+<span id="index-0"></span><h1>Tips for debugging Traits<a class="headerlink" href="#tips-for-debugging-traits" title="Link to this heading">¶</a></h1>
 <section id="re-raising-exceptions-in-change-handlers">
-<h2>Re-raising exceptions in change handlers<a class="headerlink" href="#re-raising-exceptions-in-change-handlers" title="Permalink to this headline">¶</a></h2>
+<h2>Re-raising exceptions in change handlers<a class="headerlink" href="#re-raising-exceptions-in-change-handlers" title="Link to this heading">¶</a></h2>
 <p>Traits will typically log (instead of raise) exceptions when an exception is
 encountered in a trait-change handler. This behavior is often preferred in
 applications, since you usually want to avoid critical failures in
 applications. However, when debugging these errors, the
 <code class="docutils literal notranslate"><span class="pre">logging.Logger.exception</span></code> only displays the tip of the traceback. For example,
 the following code changes a <code class="docutils literal notranslate"><span class="pre">constant</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Int</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Int</span>
 
-<span class="k">class</span> <span class="nc">Curmudgeon</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Curmudgeon</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">constant</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">_constant_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_constant_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span>
 
 <span class="n">c</span> <span class="o">=</span> <span class="n">Curmudgeon</span><span class="p">()</span>
@@ -125,7 +127,7 @@ logged:</p>
 <p>This logged exception, however, only contains the tip of the traceback. This
 makes debugging a bit difficult. You can force exceptions to be re-raised
 by adding a custom exception handler:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">push_exception_handler</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">push_exception_handler</span>
 <span class="n">push_exception_handler</span><span class="p">(</span><span class="n">reraise_exceptions</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -146,32 +148,32 @@ the following traceback:</p>
 <code class="docutils literal notranslate"><span class="pre">traits.api</span></code> if you actually want a constant trait.</p>
 </section>
 <section id="tracing-traits-change-events">
-<h2>Tracing Traits Change Events<a class="headerlink" href="#tracing-traits-change-events" title="Permalink to this headline">¶</a></h2>
+<h2>Tracing Traits Change Events<a class="headerlink" href="#tracing-traits-change-events" title="Link to this heading">¶</a></h2>
 <p>Occasionally it is necessary to find the chain of event dispatches in traits
 classes. To help with debugging, a <a class="reference internal" href="../traits_api_reference/traits.util.html#traits.util.event_tracer.record_events" title="traits.util.event_tracer.record_events"><code class="xref py py-func docutils literal notranslate"><span class="pre">record_events()</span></code></a> context manager is provided
 in <a class="reference internal" href="../traits_api_reference/traits.util.html#module-traits.util.event_tracer" title="traits.util.event_tracer"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.util.event_tracer</span></code></a>. Trait change events taking place inside the
 context block will be recorded in a change event container (see example below)
 and can be saved to files (a file for each thread) for further inspection.</p>
 <p>Example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">traits.util.event_tracer</span> <span class="kn">import</span> <span class="n">record_events</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">traits.util.event_tracer</span><span class="w"> </span><span class="kn">import</span> <span class="n">record_events</span>
 
 
-<span class="k">class</span> <span class="nc">MyModel</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MyModel</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
 
     <span class="n">number</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
     <span class="n">list_of_numbers</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">Float</span><span class="p">())</span>
     <span class="n">count</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="nd">@on_trait_change</span><span class="p">(</span><span class="s1">&#39;number&#39;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">_add_number_to_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_add_number_to_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">list_of_numbers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
     <span class="nd">@on_trait_change</span><span class="p">(</span><span class="s1">&#39;list_of_numbers[]&#39;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">_count_items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_count_items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">list_on_numbers</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">add_to_number</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_to_number</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">+=</span> <span class="n">value</span>
 
 
@@ -187,24 +189,24 @@ and can be saved to files (a file for each thread) for further inspection.</p>
 </div>
 <p>Running the above example will write a file named MAinThread.trace in the
 local folder. The file contents will be similar to the lines below:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.779000</span> <span class="o">-&gt;</span> <span class="s1">&#39;number&#39;</span> <span class="n">changed</span> <span class="kn">from</span> <span class="mf">2.0</span> <span class="n">to</span> <span class="mf">4.7</span> <span class="ow">in</span> <span class="s1">&#39;MyModel&#39;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.779000</span> <span class="o">-&gt;</span> <span class="s1">&#39;number&#39;</span> <span class="n">changed</span> <span class="kn">from</span><span class="w"> </span><span class="mf">2.0</span> <span class="n">to</span> <span class="mf">4.7</span> <span class="ow">in</span> <span class="s1">&#39;MyModel&#39;</span>
 <span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.779000</span>     <span class="n">CALLING</span><span class="p">:</span> <span class="s1">&#39;_add_number_to_list&#39;</span> <span class="ow">in</span> <span class="n">example</span><span class="o">.</span><span class="n">py</span>
-<span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.780000</span> <span class="o">---&gt;</span> <span class="s1">&#39;list_of_numbers_items&#39;</span> <span class="n">changed</span> <span class="kn">from</span> <span class="o">&lt;</span><span class="n">undefined</span><span class="o">&gt;</span> <span class="n">to</span> <span class="o">&lt;</span><span class="n">traits</span><span class="o">.</span><span class="n">trait_handlers</span><span class="o">.</span><span class="n">TraitListEvent</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x03C85AF0</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="s1">&#39;MyModel&#39;</span>
+<span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.780000</span> <span class="o">---&gt;</span> <span class="s1">&#39;list_of_numbers_items&#39;</span> <span class="n">changed</span> <span class="kn">from</span><span class="w"> </span><span class="o">&lt;</span><span class="n">undefined</span><span class="o">&gt;</span> <span class="n">to</span> <span class="o">&lt;</span><span class="n">traits</span><span class="o">.</span><span class="n">trait_handlers</span><span class="o">.</span><span class="n">TraitListEvent</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x03C85AF0</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="s1">&#39;MyModel&#39;</span>
 <span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.780000</span>       <span class="n">CALLING</span><span class="p">:</span> <span class="s1">&#39;handle_list_items_special&#39;</span> <span class="ow">in</span> <span class="n">C</span><span class="p">:</span>\<span class="n">Users</span>\<span class="n">itziakos</span>\<span class="n">Projects</span>\<span class="n">traits</span>\<span class="n">traits</span>\<span class="n">traits_listener</span><span class="o">.</span><span class="n">py</span>
-<span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.780000</span> <span class="o">-----&gt;</span> <span class="s1">&#39;list_of_numbers_items&#39;</span> <span class="n">changed</span> <span class="kn">from</span> <span class="p">[]</span> <span class="n">to</span> <span class="p">[</span><span class="mf">4.7</span><span class="p">]</span> <span class="ow">in</span> <span class="s1">&#39;MyModel&#39;</span>
+<span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.780000</span> <span class="o">-----&gt;</span> <span class="s1">&#39;list_of_numbers_items&#39;</span> <span class="n">changed</span> <span class="kn">from</span><span class="w"> </span><span class="p">[]</span> <span class="n">to</span> <span class="p">[</span><span class="mf">4.7</span><span class="p">]</span> <span class="ow">in</span> <span class="s1">&#39;MyModel&#39;</span>
 <span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.780000</span>         <span class="n">CALLING</span><span class="p">:</span> <span class="s1">&#39;_count_items&#39;</span> <span class="ow">in</span> <span class="n">exampler</span><span class="o">.</span><span class="n">py</span>
-<span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.780000</span> <span class="o">-------&gt;</span> <span class="s1">&#39;trait_added&#39;</span> <span class="n">changed</span> <span class="kn">from</span> <span class="o">&lt;</span><span class="n">undefined</span><span class="o">&gt;</span> <span class="n">to</span> <span class="s1">&#39;list_on_numbers&#39;</span> <span class="ow">in</span> <span class="s1">&#39;MyModel&#39;</span>
+<span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.780000</span> <span class="o">-------&gt;</span> <span class="s1">&#39;trait_added&#39;</span> <span class="n">changed</span> <span class="kn">from</span><span class="w"> </span><span class="o">&lt;</span><span class="n">undefined</span><span class="o">&gt;</span> <span class="n">to</span> <span class="s1">&#39;list_on_numbers&#39;</span> <span class="ow">in</span> <span class="s1">&#39;MyModel&#39;</span>
 <span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.780000</span>           <span class="n">CALLING</span><span class="p">:</span> <span class="s1">&#39;_trait_added_changed&#39;</span> <span class="ow">in</span> <span class="n">C</span><span class="p">:</span>\<span class="n">Users</span>\<span class="n">itziakos</span>\<span class="n">Projects</span>\<span class="n">traits</span>\<span class="n">traits</span>\<span class="n">has_traits</span><span class="o">.</span><span class="n">py</span>
 <span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.780000</span> <span class="o">&lt;-------</span> <span class="n">EXIT</span><span class="p">:</span> <span class="s1">&#39;_trait_added_changed&#39;</span>
 <span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.780000</span> <span class="o">&lt;-----</span> <span class="n">EXIT</span><span class="p">:</span> <span class="s1">&#39;_count_items&#39;</span> <span class="p">[</span><span class="n">EXCEPTION</span><span class="p">:</span> <span class="s1">&#39;MyModel&#39;</span> <span class="nb">object</span> <span class="n">has</span> <span class="n">no</span> <span class="n">attribute</span> <span class="s1">&#39;list_on_numbers&#39;</span><span class="p">]</span>
 <span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.780000</span> <span class="o">&lt;---</span> <span class="n">EXIT</span><span class="p">:</span> <span class="s1">&#39;handle_list_items_special&#39;</span>
 <span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.781000</span> <span class="o">&lt;-</span> <span class="n">EXIT</span><span class="p">:</span> <span class="s1">&#39;_add_number_to_list&#39;</span>
 
-<span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.781000</span> <span class="o">-&gt;</span> <span class="s1">&#39;number&#39;</span> <span class="n">changed</span> <span class="kn">from</span> <span class="mf">4.7</span> <span class="n">to</span> <span class="mf">3.0</span> <span class="ow">in</span> <span class="s1">&#39;MyModel&#39;</span>
+<span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.781000</span> <span class="o">-&gt;</span> <span class="s1">&#39;number&#39;</span> <span class="n">changed</span> <span class="kn">from</span><span class="w"> </span><span class="mf">4.7</span> <span class="n">to</span> <span class="mf">3.0</span> <span class="ow">in</span> <span class="s1">&#39;MyModel&#39;</span>
 <span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.781000</span>     <span class="n">CALLING</span><span class="p">:</span> <span class="s1">&#39;_add_number_to_list&#39;</span> <span class="ow">in</span> <span class="n">example</span><span class="o">.</span><span class="n">py</span>
-<span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.781000</span> <span class="o">---&gt;</span> <span class="s1">&#39;list_of_numbers_items&#39;</span> <span class="n">changed</span> <span class="kn">from</span> <span class="o">&lt;</span><span class="n">undefined</span><span class="o">&gt;</span> <span class="n">to</span> <span class="o">&lt;</span><span class="n">traits</span><span class="o">.</span><span class="n">trait_handlers</span><span class="o">.</span><span class="n">TraitListEvent</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x03C85A30</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="s1">&#39;MyModel&#39;</span>
+<span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.781000</span> <span class="o">---&gt;</span> <span class="s1">&#39;list_of_numbers_items&#39;</span> <span class="n">changed</span> <span class="kn">from</span><span class="w"> </span><span class="o">&lt;</span><span class="n">undefined</span><span class="o">&gt;</span> <span class="n">to</span> <span class="o">&lt;</span><span class="n">traits</span><span class="o">.</span><span class="n">trait_handlers</span><span class="o">.</span><span class="n">TraitListEvent</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x03C85A30</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="s1">&#39;MyModel&#39;</span>
 <span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.781000</span>       <span class="n">CALLING</span><span class="p">:</span> <span class="s1">&#39;handle_list_items_special&#39;</span> <span class="ow">in</span> <span class="n">C</span><span class="p">:</span>\<span class="n">Users</span>\<span class="n">itziakos</span>\<span class="n">Projects</span>\<span class="n">traits</span>\<span class="n">traits</span>\<span class="n">traits_listener</span><span class="o">.</span><span class="n">py</span>
-<span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.781000</span> <span class="o">-----&gt;</span> <span class="s1">&#39;list_of_numbers_items&#39;</span> <span class="n">changed</span> <span class="kn">from</span> <span class="p">[]</span> <span class="n">to</span> <span class="p">[</span><span class="mf">3.0</span><span class="p">]</span> <span class="ow">in</span> <span class="s1">&#39;MyModel&#39;</span>
+<span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.781000</span> <span class="o">-----&gt;</span> <span class="s1">&#39;list_of_numbers_items&#39;</span> <span class="n">changed</span> <span class="kn">from</span><span class="w"> </span><span class="p">[]</span> <span class="n">to</span> <span class="p">[</span><span class="mf">3.0</span><span class="p">]</span> <span class="ow">in</span> <span class="s1">&#39;MyModel&#39;</span>
 <span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.781000</span>         <span class="n">CALLING</span><span class="p">:</span> <span class="s1">&#39;_count_items&#39;</span> <span class="ow">in</span> <span class="n">example</span><span class="o">.</span><span class="n">py</span>
 <span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.781000</span> <span class="o">&lt;-----</span> <span class="n">EXIT</span><span class="p">:</span> <span class="s1">&#39;_count_items&#39;</span> <span class="p">[</span><span class="n">EXCEPTION</span><span class="p">:</span> <span class="s1">&#39;MyModel&#39;</span> <span class="nb">object</span> <span class="n">has</span> <span class="n">no</span> <span class="n">attribute</span> <span class="s1">&#39;list_on_numbers&#39;</span><span class="p">]</span>
 <span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.782000</span> <span class="o">&lt;---</span> <span class="n">EXIT</span><span class="p">:</span> <span class="s1">&#39;handle_list_items_special&#39;</span>
@@ -223,8 +225,9 @@ local folder. The file contents will be similar to the lines below:</p>
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
             </a></p>
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">Tips for debugging Traits</a><ul>
 <li><a class="reference internal" href="#re-raising-exceptions-in-change-handlers">Re-raising exceptions in change handlers</a></li>
 <li><a class="reference internal" href="#tracing-traits-change-events">Tracing Traits Change Events</a></li>
@@ -232,27 +235,32 @@ local folder. The file contents will be similar to the lines below:</p>
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="testing.html"
-                        title="previous chapter">Testing</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="internals.html"
-                        title="next chapter">Traits internals</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="testing.html"
+                          title="previous chapter">Testing</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="internals.html"
+                          title="next chapter">Traits internals</a></p>
+  </div>
   <h3>This Page</h3>
   <div>
     <a href="../_sources/traits_user_manual/debugging.rst.txt"
        rel="nofollow">Show Source</a>
   </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
         </div>
@@ -269,15 +277,15 @@ local folder. The file contents will be similar to the lines below:</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2025 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Aug 11, 2022.
+      Last updated on Jan 27, 2025.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 8.1.3.
       </li>
     </ul>
     </div>

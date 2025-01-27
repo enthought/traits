@@ -21,12 +21,6 @@ Functions
 
 .. autofunction:: Property
 
-.. autofunction:: Color
-
-.. autofunction:: RGBColor
-
-.. autofunction:: Font
-
 
 Private Classes
 ---------------

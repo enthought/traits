@@ -35,7 +35,7 @@ Here's an example of subclassing a predefined trait class::
     # trait_subclass.py -- Example of subclassing a trait class
     from traits.api import BaseInt
 
-    class OddInt ( BaseInt ):
+    class OddInt(BaseInt):
 
         # Define the default value
         default_value = 1
@@ -43,12 +43,12 @@ Here's an example of subclassing a predefined trait class::
         # Describe the trait type
         info_text = 'an odd integer'
 
-        def validate ( self, object, name, value ):
+        def validate(self, object, name, value):
             value = super().validate(object, name, value)
             if (value % 2) == 1:
                 return value
 
-            self.error( object, name, value )
+            self.error(object, name, value)
 
 The OddInt class defines a trait that must be an odd integer. It derives from
 BaseInt, rather than Int, as you might initially expect. BaseInt and Int are
@@ -101,8 +101,8 @@ performs additional processing after a value has been validated and assigned.
 
 The signatures of these methods are:
 
-.. method:: validate( object, name, value )
-.. method:: post_setattr( object, name, value )
+.. method:: validate(object, name, value)
+.. method:: post_setattr(object, name, value)
 
 The parameters of these methods are:
 
@@ -136,8 +136,8 @@ definition it might have for validate() is ignored.
 
 The signatures of these methods are:
 
-.. method:: get( object, name)
-.. method:: set( object, name, value)
+.. method:: get(object, name)
+.. method:: set(object, name, value)
 
 In these signatures, the parameters are:
 
@@ -235,7 +235,7 @@ Reference*.
 The most general form of the Trait() function is:
 
 .. currentmodule:: traits.traits
-.. function:: Trait(default_value, {type | constant_value | dictionary | class | function | trait_handler | trait }+ )
+.. function:: Trait(default_value, {type | constant_value | dictionary | class | function | trait_handler | trait}+)
     :noindex:
 
 .. index:: compound traits
@@ -255,11 +255,11 @@ The following is an example of a compound trait with multiple criteria::
     # compound.py -- Example of multiple criteria in a trait definition
     from traits.api import HasTraits, Trait, Range
 
-    class Die ( HasTraits ):
+    class Die(HasTraits):
 
         # Define a compound trait definition:
-        value = Trait( 1, Range( 1, 6 ),
-                      'one', 'two', 'three', 'four', 'five', 'six' )
+        value = Trait(1, Range(1, 6),
+                      'one', 'two', 'three', 'four', 'five', 'six')
 
 The Die class has a **value trait**, which has a default value of 1, and can have
 any of the following values:
@@ -383,7 +383,7 @@ representing red, green, blue, and transparency values::
                    'violet':      (0.31, 0.184, 0.31, 1.0),
                    'yellow':      (1.0, 1.0, 0.0, 1.0),
                    'white':       (1.0, 1.0, 1.0, 1.0),
-                   'transparent': (1.0, 1.0, 1.0, 0.0) } )
+                   'transparent': (1.0, 1.0, 1.0, 0.0)})
 
     red_color = Trait ('red', standard_color)
 
@@ -454,87 +454,10 @@ computed value, or raises a TraitError if the assigned value is not valid. Both
 TraitHandler and TraitType derive from BaseTraitHandler; TraitHandler has a more
 limited interface.
 
-The Traits package provides a number of predefined TraitHandler subclasses. A few
-of the predefined trait handler classes are described in the following sections.
-These sections also demonstrate how to define a trait using a trait handler and
-the Trait() factory function. For a complete list and descriptions of predefined
-TraitHandler subclasses, refer to the *Traits API Reference*, in the section on
-the traits.trait_handlers module.
-
-.. index:: TraitPrefixList class
-
-.. _traitprefixlist:
-
-TraitPrefixList
-```````````````
-
-.. deprecated:: 6.1
-    :class:`~.TraitPrefixList` is scheduled for removal
-    in Traits 7.0. Use the :class:`~.PrefixList` trait type instead.
-
-The TraitPrefixList handler accepts not only a specified set of strings as
-values, but also any unique prefix substring of those values. The value assigned
-to the trait attribute is the full string that the substring matches.
-
-.. index::
-   pair: TraitPrefixList class; examples
-
-For example::
-
-    >>> from traits.api import HasTraits, Trait
-    >>> from traits.api import TraitPrefixList
-    >>> class Alien(HasTraits):
-    ...   heads = Trait('one', TraitPrefixList(['one','two','three']))
-    ...
-    >>> alf = Alien()
-    >>> alf.heads = 'o'
-    >>> print(alf.heads)
-    one
-    >>> alf.heads = 'tw'
-    >>> print(alf.heads)
-    two
-    >>> alf.heads = 't'  # Error, not a unique prefix
-    Traceback (most recent call last):
-      File "<stdin>", line 1, in <module>
-      File "c:\svn\ets3\traits_3.0.3\enthought\traits\trait_handlers.py", line 1802,
-     in validate self.error( object, name, value )
-      File "c:\svn\ets3\traits_3.0.3\enthought\traits\trait_handlers.py", line 175,
-    in error value )
-    traits.trait_errors.TraitError: The 'heads' trait of an Alien instance
-     must be 'one' or 'two' or 'three' (or any unique prefix), but a value of 't'
-     <type 'str'> was specified.
-
-.. index:: TraitPrefixMap class
-
-.. _traitprefixmap:
-
-TraitPrefixMap
-``````````````
-
-.. deprecated:: 6.1
-    :class:`~.TraitPrefixMap` is scheduled for removal
-    in Traits 7.0. Use the :class:`~.PrefixMap` trait type instead.
-
-The TraitPrefixMap handler combines the TraitPrefixList with mapped traits. Its
-constructor takes a parameter that is a dictionary whose keys are strings. A
-string is a valid value if it is a unique prefix for a key in the dictionary.
-The value assigned is the dictionary value corresponding to the matched key.
-
-.. index::
-   pair: TraitPrefixMap class; examples
-
-The following example uses TraitPrefixMap to define a Boolean trait that accepts
-any prefix of 'true', 'yes', 'false', or 'no', and maps them to 1 or 0.
-::
-
-    # traitprefixmap.py --- Example of using the TraitPrefixMap handler
-    from traits.api import Trait, TraitPrefixMap
-
-    boolean_map = Trait('true', TraitPrefixMap( {
-                                  'true': 1,
-                                  'yes':  1,
-                                  'false': 0,
-                                  'no':   0 } ) )
+The Traits package provides a number of predefined TraitHandler subclasses. For
+a complete list and descriptions of predefined TraitHandler subclasses, refer
+to the *Traits API Reference*, in the section on the traits.trait_handlers
+module.
 
 .. index:: handler classes; custom
 

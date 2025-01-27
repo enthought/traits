@@ -3,19 +3,21 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>traits.trait_base Module &mdash; Traits 6.4 Documentation</title>
+    <title>traits.trait_base Module &mdash; Traits 7.0 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
     <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" >
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.4.0',
+        VERSION:     '7.0.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -23,9 +25,9 @@
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/sphinx_highlight.js"></script>
     <script type="text/javascript" src="../_static/clipboard.min.js"></script>
     <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
@@ -33,7 +35,7 @@
     <link rel="shortcut icon" href="../_static/img/favicon.png">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.4 Documentation" href="../index.html" >
+    <link rel="top" title="Traits 7.0 Documentation" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
     <link rel="next" title="traits.trait_converters Module" href="trait_converters.html" >
     <link rel="prev" title="traits.interface_checker Module" href="interface_checker.html" > 
@@ -53,7 +55,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.4 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 7.0 Documentation</a></li>
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
     </ul>
@@ -90,13 +92,13 @@
           <div class="body" id="spc-section-body" role="main">
             
   <section id="module-traits.trait_base">
-<span id="traits-trait-base-module"></span><h1><a class="reference internal" href="#module-traits.trait_base" title="traits.trait_base"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_base</span></code></a> Module<a class="headerlink" href="#module-traits.trait_base" title="Permalink to this headline">¶</a></h1>
+<span id="traits-trait-base-module"></span><h1><a class="reference internal" href="#module-traits.trait_base" title="traits.trait_base"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_base</span></code></a> Module<a class="headerlink" href="#module-traits.trait_base" title="Link to this heading">¶</a></h1>
 <p>Defines common, low-level capabilities needed by the Traits package.</p>
 <section id="classes">
-<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">¶</a></h2>
 <dl class="py data">
-<dt id="traits.trait_base.Uninitialized">
-<code class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></code><code class="sig-name descname"><span class="pre">Uninitialized</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;uninitialized&gt;</span></em><a class="headerlink" href="#traits.trait_base.Uninitialized" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="traits.trait_base.Uninitialized">
+<span class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></span><span class="sig-name descname"><span class="pre">Uninitialized</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;uninitialized&gt;</span></em><a class="headerlink" href="#traits.trait_base.Uninitialized" title="Link to this definition">¶</a></dt>
 <dd><p>When the first reference to a trait is a ‘get’ reference, the default value
 of the trait is implicitly assigned and returned as the value of the trait.
 Because of this implicit assignment, a trait change notification is
@@ -107,8 +109,8 @@ assignment, and treat it specially.</p>
 </dd></dl>
 
 <dl class="py data">
-<dt id="traits.trait_base.Undefined">
-<code class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></code><code class="sig-name descname"><span class="pre">Undefined</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;undefined&gt;</span></em><a class="headerlink" href="#traits.trait_base.Undefined" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="traits.trait_base.Undefined">
+<span class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></span><span class="sig-name descname"><span class="pre">Undefined</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;undefined&gt;</span></em><a class="headerlink" href="#traits.trait_base.Undefined" title="Link to this definition">¶</a></dt>
 <dd><p>Singleton object that indicates that a trait attribute has not yet had a
 value set (i.e., its value is undefined). This object is used instead of
 None, because None often has other meanings, such as that a value is not
@@ -118,118 +120,118 @@ parameter, to indicate that the attribute previously had no value.</p>
 </dd></dl>
 
 <dl class="py data">
-<dt id="traits.trait_base.Missing">
-<code class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></code><code class="sig-name descname"><span class="pre">Missing</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;missing&gt;</span></em><a class="reference internal" href="../_modules/traits/trait_base.html#Missing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.Missing" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="traits.trait_base.Missing">
+<span class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></span><span class="sig-name descname"><span class="pre">Missing</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;missing&gt;</span></em><a class="reference internal" href="../_modules/traits/trait_base.html#Missing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.Missing" title="Link to this definition">¶</a></dt>
 <dd><p>Singleton object that indicates that a method argument is missing from a
 type-checked method signature.</p>
 </dd></dl>
 
 <dl class="py data">
-<dt id="traits.trait_base.Self">
-<code class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></code><code class="sig-name descname"><span class="pre">Self</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;self&gt;</span></em><a class="reference internal" href="../_modules/traits/trait_base.html#Self"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.Self" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="traits.trait_base.Self">
+<span class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></span><span class="sig-name descname"><span class="pre">Self</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;self&gt;</span></em><a class="reference internal" href="../_modules/traits/trait_base.html#Self"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.Self" title="Link to this definition">¶</a></dt>
 <dd><p>Singleton object that references the current ‘object’.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="traits.trait_base.HandleWeakRef">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></code><code class="sig-name descname"><span class="pre">HandleWeakRef</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#HandleWeakRef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.HandleWeakRef" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="traits.trait_base.HandleWeakRef">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></span><span class="sig-name descname"><span class="pre">HandleWeakRef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#HandleWeakRef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.HandleWeakRef" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </section>
 <section id="functions">
-<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading">¶</a></h2>
 <dl class="py function">
-<dt id="traits.trait_base.strx">
-<code class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></code><code class="sig-name descname"><span class="pre">strx</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#strx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.strx" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="traits.trait_base.strx">
+<span class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></span><span class="sig-name descname"><span class="pre">strx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#strx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.strx" title="Link to this definition">¶</a></dt>
 <dd><p>Wraps the built-in str() function to raise a TypeError if the
 argument is not of a type in StringTypes.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="traits.trait_base.class_of">
-<code class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></code><code class="sig-name descname"><span class="pre">class_of</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#class_of"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.class_of" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="traits.trait_base.class_of">
+<span class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></span><span class="sig-name descname"><span class="pre">class_of</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#class_of"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.class_of" title="Link to this definition">¶</a></dt>
 <dd><p>Returns a string containing the class name of an object with the
 correct indefinite article (‘a’ or ‘an’) preceding it (e.g., ‘an Image’,
 ‘a PlotValue’).</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="traits.trait_base.add_article">
-<code class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></code><code class="sig-name descname"><span class="pre">add_article</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#add_article"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.add_article" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="traits.trait_base.add_article">
+<span class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></span><span class="sig-name descname"><span class="pre">add_article</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#add_article"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.add_article" title="Link to this definition">¶</a></dt>
 <dd><p>Returns a string containing the correct indefinite article (‘a’ or
 ‘an’) prefixed to the specified string.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="traits.trait_base.user_name_for">
-<code class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></code><code class="sig-name descname"><span class="pre">user_name_for</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#user_name_for"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.user_name_for" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="traits.trait_base.user_name_for">
+<span class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></span><span class="sig-name descname"><span class="pre">user_name_for</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#user_name_for"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.user_name_for" title="Link to this definition">¶</a></dt>
 <dd><p>Returns a “user-friendly” version of a string, with the first letter
 capitalized and with underscore characters replaced by spaces. For example,
 <code class="docutils literal notranslate"><span class="pre">user_name_for('user_name_for')</span></code> returns <code class="docutils literal notranslate"><span class="pre">'User</span> <span class="pre">name</span> <span class="pre">for'</span></code>.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="traits.trait_base.traits_home">
-<code class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></code><code class="sig-name descname"><span class="pre">traits_home</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#traits_home"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.traits_home" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="traits.trait_base.traits_home">
+<span class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></span><span class="sig-name descname"><span class="pre">traits_home</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#traits_home"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.traits_home" title="Link to this definition">¶</a></dt>
 <dd><p>Gets the path to the Traits home directory.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="traits.trait_base.verify_path">
-<code class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></code><code class="sig-name descname"><span class="pre">verify_path</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#verify_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.verify_path" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="traits.trait_base.verify_path">
+<span class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></span><span class="sig-name descname"><span class="pre">verify_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#verify_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.verify_path" title="Link to this definition">¶</a></dt>
 <dd><p>Verify that a specified path exists, and try to create it if it
 does not exist.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="traits.trait_base.get_module_name">
-<code class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></code><code class="sig-name descname"><span class="pre">get_module_name</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#get_module_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.get_module_name" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="traits.trait_base.get_module_name">
+<span class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></span><span class="sig-name descname"><span class="pre">get_module_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#get_module_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.get_module_name" title="Link to this definition">¶</a></dt>
 <dd><p>Returns the name of the module that the caller’s caller is located in.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="traits.trait_base.get_resource_path">
-<code class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></code><code class="sig-name descname"><span class="pre">get_resource_path</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#get_resource_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.get_resource_path" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="traits.trait_base.get_resource_path">
+<span class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></span><span class="sig-name descname"><span class="pre">get_resource_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#get_resource_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.get_resource_path" title="Link to this definition">¶</a></dt>
 <dd><p>Returns a resource path calculated from the caller’s stack.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="traits.trait_base.xgetattr">
-<code class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></code><code class="sig-name descname"><span class="pre">xgetattr</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">object</span></em>, <em class="sig-param"><span class="pre">xname</span></em>, <em class="sig-param"><span class="pre">default=&lt;undefined&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#xgetattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.xgetattr" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="traits.trait_base.xgetattr">
+<span class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></span><span class="sig-name descname"><span class="pre">xgetattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default=&lt;undefined&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#xgetattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.xgetattr" title="Link to this definition">¶</a></dt>
 <dd><p>Returns the value of an extended object attribute name of the form:
 name[.name2[.name3…]].</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="traits.trait_base.xsetattr">
-<code class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></code><code class="sig-name descname"><span class="pre">xsetattr</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#xsetattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.xsetattr" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="traits.trait_base.xsetattr">
+<span class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></span><span class="sig-name descname"><span class="pre">xsetattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#xsetattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.xsetattr" title="Link to this definition">¶</a></dt>
 <dd><p>Sets the value of an extended object attribute name of the form:
 name[.name2[.name3…]].</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="traits.trait_base.is_none">
-<code class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></code><code class="sig-name descname"><span class="pre">is_none</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#is_none"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.is_none" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="traits.trait_base.is_none">
+<span class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></span><span class="sig-name descname"><span class="pre">is_none</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#is_none"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.is_none" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="traits.trait_base.not_none">
-<code class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></code><code class="sig-name descname"><span class="pre">not_none</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#not_none"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.not_none" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="traits.trait_base.not_none">
+<span class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></span><span class="sig-name descname"><span class="pre">not_none</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#not_none"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.not_none" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="traits.trait_base.not_false">
-<code class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></code><code class="sig-name descname"><span class="pre">not_false</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#not_false"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.not_false" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="traits.trait_base.not_false">
+<span class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></span><span class="sig-name descname"><span class="pre">not_false</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#not_false"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.not_false" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="traits.trait_base.not_event">
-<code class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></code><code class="sig-name descname"><span class="pre">not_event</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#not_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.not_event" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="traits.trait_base.not_event">
+<span class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></span><span class="sig-name descname"><span class="pre">not_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#not_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.not_event" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="traits.trait_base.is_str">
-<code class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></code><code class="sig-name descname"><span class="pre">is_str</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#is_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.is_str" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="traits.trait_base.is_str">
+<span class="sig-prename descclassname"><span class="pre">traits.trait_base.</span></span><span class="sig-name descname"><span class="pre">is_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#is_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_base.is_str" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </section>
@@ -244,36 +246,66 @@ name[.name2[.name3…]].</p>
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
             </a></p>
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_base</span></code> Module</a><ul>
-<li><a class="reference internal" href="#classes">Classes</a></li>
-<li><a class="reference internal" href="#functions">Functions</a></li>
+<li><a class="reference internal" href="#classes">Classes</a><ul>
+<li><a class="reference internal" href="#traits.trait_base.Uninitialized"><code class="docutils literal notranslate"><span class="pre">Uninitialized</span></code></a></li>
+<li><a class="reference internal" href="#traits.trait_base.Undefined"><code class="docutils literal notranslate"><span class="pre">Undefined</span></code></a></li>
+<li><a class="reference internal" href="#traits.trait_base.Missing"><code class="docutils literal notranslate"><span class="pre">Missing</span></code></a></li>
+<li><a class="reference internal" href="#traits.trait_base.Self"><code class="docutils literal notranslate"><span class="pre">Self</span></code></a></li>
+<li><a class="reference internal" href="#traits.trait_base.HandleWeakRef"><code class="docutils literal notranslate"><span class="pre">HandleWeakRef</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#functions">Functions</a><ul>
+<li><a class="reference internal" href="#traits.trait_base.strx"><code class="docutils literal notranslate"><span class="pre">strx()</span></code></a></li>
+<li><a class="reference internal" href="#traits.trait_base.class_of"><code class="docutils literal notranslate"><span class="pre">class_of()</span></code></a></li>
+<li><a class="reference internal" href="#traits.trait_base.add_article"><code class="docutils literal notranslate"><span class="pre">add_article()</span></code></a></li>
+<li><a class="reference internal" href="#traits.trait_base.user_name_for"><code class="docutils literal notranslate"><span class="pre">user_name_for()</span></code></a></li>
+<li><a class="reference internal" href="#traits.trait_base.traits_home"><code class="docutils literal notranslate"><span class="pre">traits_home()</span></code></a></li>
+<li><a class="reference internal" href="#traits.trait_base.verify_path"><code class="docutils literal notranslate"><span class="pre">verify_path()</span></code></a></li>
+<li><a class="reference internal" href="#traits.trait_base.get_module_name"><code class="docutils literal notranslate"><span class="pre">get_module_name()</span></code></a></li>
+<li><a class="reference internal" href="#traits.trait_base.get_resource_path"><code class="docutils literal notranslate"><span class="pre">get_resource_path()</span></code></a></li>
+<li><a class="reference internal" href="#traits.trait_base.xgetattr"><code class="docutils literal notranslate"><span class="pre">xgetattr()</span></code></a></li>
+<li><a class="reference internal" href="#traits.trait_base.xsetattr"><code class="docutils literal notranslate"><span class="pre">xsetattr()</span></code></a></li>
+<li><a class="reference internal" href="#traits.trait_base.is_none"><code class="docutils literal notranslate"><span class="pre">is_none()</span></code></a></li>
+<li><a class="reference internal" href="#traits.trait_base.not_none"><code class="docutils literal notranslate"><span class="pre">not_none()</span></code></a></li>
+<li><a class="reference internal" href="#traits.trait_base.not_false"><code class="docutils literal notranslate"><span class="pre">not_false()</span></code></a></li>
+<li><a class="reference internal" href="#traits.trait_base.not_event"><code class="docutils literal notranslate"><span class="pre">not_event()</span></code></a></li>
+<li><a class="reference internal" href="#traits.trait_base.is_str"><code class="docutils literal notranslate"><span class="pre">is_str()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="interface_checker.html"
-                        title="previous chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.interface_checker</span></code> Module</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="trait_converters.html"
-                        title="next chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_converters</span></code> Module</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="interface_checker.html"
+                          title="previous chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.interface_checker</span></code> Module</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="trait_converters.html"
+                          title="next chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_converters</span></code> Module</a></p>
+  </div>
   <h3>This Page</h3>
   <div>
     <a href="../_sources/traits_api_reference/trait_base.rst.txt"
        rel="nofollow">Show Source</a>
   </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
         </div>
@@ -290,15 +322,15 @@ name[.name2[.name3…]].</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2025 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Aug 11, 2022.
+      Last updated on Jan 27, 2025.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 8.1.3.
       </li>
     </ul>
     </div>
