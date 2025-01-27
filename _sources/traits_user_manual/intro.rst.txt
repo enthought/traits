@@ -68,25 +68,25 @@ package. These features are elaborated in the rest of this guide.
 
     from traits.api import Delegate, HasTraits, Instance,\
                                      Int, Str
-    class Parent ( HasTraits ):
+    class Parent(HasTraits):
 
         # INITIALIZATION: last_name' is initialized to '':
-        last_name = Str( '' )
+        last_name = Str('')
 
 
-    class Child ( HasTraits ):
+    class Child(HasTraits):
 
         age = Int
 
         # VALIDATION: 'father' must be a Parent instance:
-        father = Instance( Parent )
+        father = Instance(Parent)
 
         # DELEGATION: 'last_name' is delegated to father's 'last_name':
-        last_name = Delegate( 'father' )
+        last_name = Delegate('father')
 
         # NOTIFICATION: This method is called when 'age' changes:
-        def _age_changed ( self, old, new ):
-            print('Age changed from %s to %s ' % ( old, new ))
+        def _age_changed(self, old, new):
+            print('Age changed from %s to %s ' % (old, new))
 
     # Set up the example:
     joe = Parent()
@@ -128,7 +128,7 @@ as legal values for the color red:
 
 * 'red'
 * 0xFF0000
-* ( 1.0, 0.0, 0.0, 1.0 )
+* (1.0, 0.0, 0.0, 1.0)
 
 Thus, the user might write::
 
@@ -149,7 +149,7 @@ So, one of the main goals of the Traits package is to provide a form of type
 checking that:
 
 * Allows for flexibility in the set of values an attribute can have, such as
-  allowing 'red', 0xFF0000 and ( 1.0, 0.0, 0.0, 1.0 ) as equivalent ways of
+  allowing 'red', 0xFF0000 and (1.0, 0.0, 0.0, 1.0) as equivalent ways of
   expressing the color red.
 * Catches illegal value assignments at the point of error, and provides a
   meaningful and useful explanation of the error and the set of allowable
@@ -164,7 +164,7 @@ where the Traits package has been used, it has proven valuable for enhancing
 programmers' ability to understand code, during both concurrent
 development and maintenance.
 
-The Traits |version| package works with versions 3.5 and later of
+The Traits |version| package works with versions 3.8 and later of
 Python.  It is similar in some ways to the Python property language feature.
 Standard Python properties provide the similar capabilities to the Traits
 package, but with more work on the part of the programmer.

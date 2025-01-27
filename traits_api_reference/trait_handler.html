@@ -3,19 +3,21 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>traits.trait_handler Module &mdash; Traits 6.4 Documentation</title>
+    <title>traits.trait_handler Module &mdash; Traits 7.0 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
     <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" >
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.4.0',
+        VERSION:     '7.0.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -23,9 +25,9 @@
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/sphinx_highlight.js"></script>
     <script type="text/javascript" src="../_static/clipboard.min.js"></script>
     <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
@@ -33,7 +35,7 @@
     <link rel="shortcut icon" href="../_static/img/favicon.png">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.4 Documentation" href="../index.html" >
+    <link rel="top" title="Traits 7.0 Documentation" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
     <link rel="next" title="traits.trait_handlers Module" href="trait_handlers.html" >
     <link rel="prev" title="traits.trait_factory Module" href="trait_factory.html" > 
@@ -53,7 +55,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.4 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 7.0 Documentation</a></li>
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
     </ul>
@@ -90,17 +92,17 @@
           <div class="body" id="spc-section-body" role="main">
             
   <section id="module-traits.trait_handler">
-<span id="traits-trait-handler-module"></span><h1><a class="reference internal" href="#module-traits.trait_handler" title="traits.trait_handler"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_handler</span></code></a> Module<a class="headerlink" href="#module-traits.trait_handler" title="Permalink to this headline">¶</a></h1>
+<span id="traits-trait-handler-module"></span><h1><a class="reference internal" href="#module-traits.trait_handler" title="traits.trait_handler"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_handler</span></code></a> Module<a class="headerlink" href="#module-traits.trait_handler" title="Link to this heading">¶</a></h1>
 <p>Defines the TraitHandler class.</p>
 <p>A trait handler mediates the assignment of values to object traits. It
 verifies (via its validate() method) that a specified value is consistent
 with the object trait, and generates a TraitError exception if it is not
 consistent.</p>
 <section id="classes">
-<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">¶</a></h2>
 <dl class="py class">
-<dt id="traits.trait_handler.TraitHandler">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">traits.trait_handler.</span></code><code class="sig-name descname"><span class="pre">TraitHandler</span></code><a class="reference internal" href="../_modules/traits/trait_handler.html#TraitHandler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_handler.TraitHandler" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="traits.trait_handler.TraitHandler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">traits.trait_handler.</span></span><span class="sig-name descname"><span class="pre">TraitHandler</span></span><a class="reference internal" href="../_modules/traits/trait_handler.html#TraitHandler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_handler.TraitHandler" title="Link to this definition">¶</a></dt>
 <dd><p>The task of this class and its subclasses is to verify the correctness
 of values assigned to object trait attributes.</p>
 <p>This class is an alternative to trait validator functions. A trait handler
@@ -117,8 +119,8 @@ wider range of cases, such as interactions with other components.</p></li>
 <p>The only method of TraitHandler that <em>must</em> be implemented by subclasses
 is validate().</p>
 <dl class="py method">
-<dt id="traits.trait_handler.TraitHandler.validate">
-<code class="sig-name descname"><span class="pre">validate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handler.html#TraitHandler.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_handler.TraitHandler.validate" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="traits.trait_handler.TraitHandler.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handler.html#TraitHandler.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_handler.TraitHandler.validate" title="Link to this definition">¶</a></dt>
 <dd><p>Verifies whether a new value assigned to a trait attribute is
 valid.</p>
 <p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
@@ -128,20 +130,20 @@ using this trait handler.</p>
 attribute, the method must called the predefined error() method to
 raise a TraitError exception</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>object</strong> (<em>HasTraits instance</em>) – The object whose attribute is being assigned.</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the attribute being assigned.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The name of the attribute being assigned.</p></li>
 <li><p><strong>value</strong> (<em>any</em>) – The proposed new value for the attribute.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>If the new value is valid, this method must return either the
 original value passed to it, or an alternate value to be assigned
 in place of the original value. Whatever value this method returns
 is the actual value assigned to <em>object.name</em>.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>any</p>
 </dd>
 </dl>
@@ -161,35 +163,47 @@ is the actual value assigned to <em>object.name</em>.</p>
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
             </a></p>
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_handler</span></code> Module</a><ul>
-<li><a class="reference internal" href="#classes">Classes</a></li>
+<li><a class="reference internal" href="#classes">Classes</a><ul>
+<li><a class="reference internal" href="#traits.trait_handler.TraitHandler"><code class="docutils literal notranslate"><span class="pre">TraitHandler</span></code></a><ul>
+<li><a class="reference internal" href="#traits.trait_handler.TraitHandler.validate"><code class="docutils literal notranslate"><span class="pre">TraitHandler.validate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="trait_factory.html"
-                        title="previous chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_factory</span></code> Module</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="trait_handlers.html"
-                        title="next chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_handlers</span></code> Module</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="trait_factory.html"
+                          title="previous chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_factory</span></code> Module</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="trait_handlers.html"
+                          title="next chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_handlers</span></code> Module</a></p>
+  </div>
   <h3>This Page</h3>
   <div>
     <a href="../_sources/traits_api_reference/trait_handler.rst.txt"
        rel="nofollow">Show Source</a>
   </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
         </div>
@@ -206,15 +220,15 @@ is the actual value assigned to <em>object.name</em>.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2025 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Aug 11, 2022.
+      Last updated on Jan 27, 2025.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 8.1.3.
       </li>
     </ul>
     </div>

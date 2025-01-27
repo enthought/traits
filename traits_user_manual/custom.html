@@ -3,19 +3,21 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Custom Traits &mdash; Traits 6.4 Documentation</title>
+    <title>Custom Traits &mdash; Traits 7.0 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
     <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" >
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.4.0',
+        VERSION:     '7.0.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -23,9 +25,9 @@
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/sphinx_highlight.js"></script>
     <script type="text/javascript" src="../_static/clipboard.min.js"></script>
     <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
@@ -33,8 +35,8 @@
     <link rel="shortcut icon" href="../_static/img/favicon.png">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.4 Documentation" href="../index.html" >
-    <link rel="up" title="Traits 6.4 User Manual" href="index.html" >
+    <link rel="top" title="Traits 7.0 Documentation" href="../index.html" >
+    <link rel="up" title="Traits 7.0 User Manual" href="index.html" >
     <link rel="next" title="Advanced Topics" href="advanced.html" >
     <link rel="prev" title="Deferring Trait Definitions" href="deferring.html" > 
   </head>
@@ -53,9 +55,9 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.4 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 7.0 Documentation</a></li>
 	
-          <li class="active"><a href="index.html" accesskey="U">Traits 6.4 User Manual</a></li> 
+          <li class="active"><a href="index.html" accesskey="U">Traits 7.0 User Manual</a></li> 
     </ul>
               
               
@@ -90,7 +92,7 @@
           <div class="body" id="spc-section-body" role="main">
             
   <section id="custom-traits">
-<span id="index-0"></span><span id="id1"></span><h1>Custom Traits<a class="headerlink" href="#custom-traits" title="Permalink to this headline">¶</a></h1>
+<span id="index-0"></span><span id="id1"></span><h1>Custom Traits<a class="headerlink" href="#custom-traits" title="Link to this heading">¶</a></h1>
 <p>The predefined traits such as those described in <a class="reference internal" href="defining.html#predefined-traits"><span class="std std-ref">Predefined Traits</span></a> are
 handy shortcuts for commonly used types. However, the Traits package also
 provides facilities for defining complex or customized traits:</p>
@@ -100,7 +102,7 @@ provides facilities for defining complex or customized traits:</p>
 <li><p>Predefined or custom trait handlers</p></li>
 </ul>
 <section id="trait-subclassing">
-<span id="index-1"></span><span id="id2"></span><h2>Trait Subclassing<a class="headerlink" href="#trait-subclassing" title="Permalink to this headline">¶</a></h2>
+<span id="index-1"></span><span id="id2"></span><h2>Trait Subclassing<a class="headerlink" href="#trait-subclassing" title="Link to this heading">¶</a></h2>
 <p>Starting with Traits version 3.0, most predefined traits are defined as
 subclasses of traits.trait_handlers.TraitType. As a result, you can
 subclass one of these traits, or TraitType, to derive new traits. Refer to the
@@ -108,9 +110,9 @@ subclass one of these traits, or TraitType, to derive new traits. Refer to the
 TraitType.</p>
 <p id="index-2">Here’s an example of subclassing a predefined trait class:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># trait_subclass.py -- Example of subclassing a trait class</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">BaseInt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseInt</span>
 
-<span class="k">class</span> <span class="nc">OddInt</span> <span class="p">(</span> <span class="n">BaseInt</span> <span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">OddInt</span><span class="p">(</span><span class="n">BaseInt</span><span class="p">):</span>
 
     <span class="c1"># Define the default value</span>
     <span class="n">default_value</span> <span class="o">=</span> <span class="mi">1</span>
@@ -118,19 +120,19 @@ TraitType.</p>
     <span class="c1"># Describe the trait type</span>
     <span class="n">info_text</span> <span class="o">=</span> <span class="s1">&#39;an odd integer&#39;</span>
 
-    <span class="k">def</span> <span class="nf">validate</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="n">value</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">value</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The OddInt class defines a trait that must be an odd integer. It derives from
 BaseInt, rather than Int, as you might initially expect. BaseInt and Int are
 exactly the same, except that Int has a <strong>fast_validate attribute</strong>, which
 causes it to quickly check types at the C level, not go through the expense of
-executing the general validate() method. <a class="footnote-reference brackets" href="#id17" id="id3">6</a></p>
+executing the general validate() method. <a class="footnote-reference brackets" href="#id15" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a></p>
 <p>As a subclass of BaseInt, OddInt can reuse and change any part of the BaseInt
 class behavior that it needs to. In this case, it reuses the BaseInt class’s
 validate() method, via the call to super() in the OddInt validate() method.
@@ -149,7 +151,7 @@ subclassing <a class="reference internal" href="../traits_api_reference/trait_ty
 method, it’s recommended to re-use the singleton <a class="reference internal" href="../traits_api_reference/trait_type.html#traits.trait_type.NoDefaultSpecified" title="traits.trait_type.NoDefaultSpecified"><code class="xref py py-data docutils literal notranslate"><span class="pre">NoDefaultSpecified</span></code></a>
 if you need a way to indicate that no default value was specified.</p>
 <section id="defining-a-trait-type">
-<span id="id4"></span><h3>Defining a Trait Type<a class="headerlink" href="#defining-a-trait-type" title="Permalink to this headline">¶</a></h3>
+<span id="id4"></span><h3>Defining a Trait Type<a class="headerlink" href="#defining-a-trait-type" title="Link to this heading">¶</a></h3>
 <p>The members that are specific to a trait type subclass are:</p>
 <ul class="simple" id="index-3">
 <li><p>validate() method</p></li>
@@ -163,17 +165,17 @@ assigned to the trait. Optionally, it can define a post_setattr() method, which
 performs additional processing after a value has been validated and assigned.</p>
 <p>The signatures of these methods are:</p>
 <dl class="py method">
-<dt id="validate">
-<code class="sig-name descname"><span class="pre">validate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#validate" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#validate" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="post_setattr">
-<code class="sig-name descname"><span class="pre">post_setattr</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#post_setattr" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="post_setattr">
+<span class="sig-name descname"><span class="pre">post_setattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#post_setattr" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p>The parameters of these methods are:</p>
-<span class="target" id="index-4"></span><ul class="simple" id="index-5">
+<span id="index-4"></span><ul class="simple" id="index-5">
 <li><p><em>object</em>: The object whose trait attribute whose value is being assigned.</p></li>
 <li><p><em>name</em>: The name of the trait attribute whose value is being assigned.</p></li>
 <li><p><em>value</em>: The value being assigned.</p></li>
@@ -188,19 +190,19 @@ compute the default value, override the TraitType class’s get_default_value()
 method.</p>
 </section>
 <section id="defining-a-trait-property">
-<span id="index-6"></span><span id="id5"></span><h3>Defining a Trait Property<a class="headerlink" href="#defining-a-trait-property" title="Permalink to this headline">¶</a></h3>
+<span id="index-6"></span><span id="id5"></span><h3>Defining a Trait Property<a class="headerlink" href="#defining-a-trait-property" title="Link to this heading">¶</a></h3>
 <p>A trait property uses get() and set() methods to interact with the value of the
 trait. If a TraitType subclass contains a get() method or a set() method, any
 definition it might have for validate() is ignored.</p>
 <p>The signatures of these methods are:</p>
 <dl class="py method">
-<dt id="get">
-<code class="sig-name descname"><span class="pre">get</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#get" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#get" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="set">
-<code class="sig-name descname"><span class="pre">set</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#set" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#set" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p>In these signatures, the parameters are:</p>
@@ -223,16 +225,16 @@ value.</p>
 <p>Likewise if the property will not be read only the get method must use
 self.get_value(object, name) in order to behave correctly.</p>
 <p>The following example demonstrates the use of a property trait to set temperature:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">TempFloat</span><span class="p">(</span><span class="n">BaseFloat</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">TempFloat</span><span class="p">(</span><span class="n">BaseFloat</span><span class="p">):</span>
     <span class="n">default_value</span> <span class="o">=</span> <span class="mf">20.0</span>
     <span class="n">info_text</span> <span class="o">=</span> <span class="s1">&#39;A calculated temperature float in Celsius&#39;</span>
 
-    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="n">celsius</span> <span class="o">=</span> <span class="p">(</span><span class="n">value</span> <span class="o">-</span> <span class="mi">32</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">5</span><span class="o">/</span><span class="mi">9</span><span class="p">)</span>
         <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">celsius</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">celsius</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_value</span>
@@ -241,7 +243,7 @@ self.get_value(object, name) in order to behave correctly.</p>
 </div>
 </section>
 <section id="other-traittype-members">
-<span id="index-7"></span><span id="id6"></span><h3>Other TraitType Members<a class="headerlink" href="#other-traittype-members" title="Permalink to this headline">¶</a></h3>
+<span id="index-7"></span><span id="id6"></span><h3>Other TraitType Members<a class="headerlink" href="#other-traittype-members" title="Link to this heading">¶</a></h3>
 <p>The following members can be specified for either a trait type or a trait
 property:</p>
 <ul class="simple" id="index-8">
@@ -266,7 +268,7 @@ API Reference</em> sections on the TraitType and BaseTraitHandler classes.</p>
 </section>
 </section>
 <section id="the-trait-factory-function">
-<span id="index-9"></span><span id="id7"></span><h2>The Trait() Factory Function<a class="headerlink" href="#the-trait-factory-function" title="Permalink to this headline">¶</a></h2>
+<span id="index-9"></span><span id="id7"></span><h2>The Trait() Factory Function<a class="headerlink" href="#the-trait-factory-function" title="Link to this heading">¶</a></h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The <a class="reference internal" href="../traits_api_reference/traits.html#traits.traits.Trait" title="traits.traits.Trait"><code class="xref py py-func docutils literal notranslate"><span class="pre">Trait()</span></code></a> function is not recommended for use in new code, and may
@@ -281,8 +283,8 @@ full variety of forms of the Trait() function, refer to the <em>Traits API
 Reference</em>.</p>
 <p>The most general form of the Trait() function is:</p>
 <dl class="py function">
-<dt>
-<code class="sig-prename descclassname"><span class="pre">traits.traits.</span></code><code class="sig-name descname"><span class="pre">Trait</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">default_value</span></em>, <em class="sig-param"><span class="pre">{type</span> <span class="pre">|</span> <span class="pre">constant_value</span> <span class="pre">|</span> <span class="pre">dictionary</span> <span class="pre">|</span> <span class="pre">class</span> <span class="pre">|</span> <span class="pre">function</span> <span class="pre">|</span> <span class="pre">trait_handler</span> <span class="pre">|</span> <span class="pre">trait</span> <span class="pre">}+</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#Trait"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">traits.traits.</span></span><span class="sig-name descname"><span class="pre">Trait</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">{type</span> <span class="pre">|</span> <span class="pre">constant_value</span> <span class="pre">|</span> <span class="pre">dictionary</span> <span class="pre">|</span> <span class="pre">class</span> <span class="pre">|</span> <span class="pre">function</span> <span class="pre">|</span> <span class="pre">trait_handler</span> <span class="pre">|</span> <span class="pre">trait}+</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#Trait"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <p id="index-10">The notation <code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">|</span> <span class="pre">|</span> <span class="pre">}+</span></code> means a list of one or more of any of the items listed
@@ -293,13 +295,13 @@ value is considered valid if it meets the criteria of at least one of the items
 in the list.</p>
 <p id="index-11">The following is an example of a compound trait with multiple criteria:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># compound.py -- Example of multiple criteria in a trait definition</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Trait</span><span class="p">,</span> <span class="n">Range</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Trait</span><span class="p">,</span> <span class="n">Range</span>
 
-<span class="k">class</span> <span class="nc">Die</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Die</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
 
     <span class="c1"># Define a compound trait definition:</span>
-    <span class="n">value</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="n">Range</span><span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span> <span class="p">),</span>
-                  <span class="s1">&#39;one&#39;</span><span class="p">,</span> <span class="s1">&#39;two&#39;</span><span class="p">,</span> <span class="s1">&#39;three&#39;</span><span class="p">,</span> <span class="s1">&#39;four&#39;</span><span class="p">,</span> <span class="s1">&#39;five&#39;</span><span class="p">,</span> <span class="s1">&#39;six&#39;</span> <span class="p">)</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">Range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
+                  <span class="s1">&#39;one&#39;</span><span class="p">,</span> <span class="s1">&#39;two&#39;</span><span class="p">,</span> <span class="s1">&#39;three&#39;</span><span class="p">,</span> <span class="s1">&#39;four&#39;</span><span class="p">,</span> <span class="s1">&#39;five&#39;</span><span class="p">,</span> <span class="s1">&#39;six&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The Die class has a <strong>value trait</strong>, which has a default value of 1, and can have
@@ -309,10 +311,10 @@ any of the following values:</p>
 <li><p>One of the following strings: ‘one’, ‘two’, ‘three’, ‘four’, ‘five’, ‘six’</p></li>
 </ul>
 <section id="trait-parameters">
-<span id="index-12"></span><span id="id8"></span><h3>Trait () Parameters<a class="headerlink" href="#trait-parameters" title="Permalink to this headline">¶</a></h3>
+<span id="index-12"></span><span id="id8"></span><h3>Trait () Parameters<a class="headerlink" href="#trait-parameters" title="Link to this heading">¶</a></h3>
 <p>The items listed as possible arguments to the Trait() function merit some
 further explanation.</p>
-<span class="target" id="index-13"></span><span class="target" id="index-14"></span><span class="target" id="index-15"></span><ul class="simple" id="index-16">
+<span id="index-15"></span><span id="index-14"></span><span id="index-13"></span><ul class="simple" id="index-16">
 <li><p><em>type</em>: See <a class="reference internal" href="#type"><span class="std std-ref">Type</span></a>.</p></li>
 <li><p><em>constant_value</em>: See <a class="reference internal" href="#constant-value"><span class="std std-ref">Constant Value</span></a>.</p></li>
 <li><p><em>dictionary</em>: See <a class="reference internal" href="#mapped-traits"><span class="std std-ref">Mapped Traits</span></a>.</p></li>
@@ -327,7 +329,7 @@ and override the validate() method.</p></li>
 valid for the specified trait is also valid for the trait referencing it.</p></li>
 </ul>
 <section id="type">
-<span id="index-17"></span><span id="id9"></span><h4>Type<a class="headerlink" href="#type" title="Permalink to this headline">¶</a></h4>
+<span id="index-17"></span><span id="id9"></span><h4>Type<a class="headerlink" href="#type" title="Link to this heading">¶</a></h4>
 <p>A <em>type</em> parameter to the Trait() function can be any of the following standard
 Python types:</p>
 <ul class="simple">
@@ -348,7 +350,7 @@ Python types:</p>
 corresponding Python type.</p>
 </section>
 <section id="constant-value">
-<span id="index-18"></span><span id="id10"></span><h4>Constant Value<a class="headerlink" href="#constant-value" title="Permalink to this headline">¶</a></h4>
+<span id="index-18"></span><span id="id10"></span><h4>Constant Value<a class="headerlink" href="#constant-value" title="Link to this heading">¶</a></h4>
 <p>A <em>constant_value</em> parameter to the Trait() function can be any constant
 belonging to one of the following standard Python types:</p>
 <ul class="simple">
@@ -365,7 +367,7 @@ using the Enum predefined trait.</p>
 </section>
 </section>
 <section id="mapped-traits">
-<span id="index-19"></span><span id="id11"></span><h3>Mapped Traits<a class="headerlink" href="#mapped-traits" title="Permalink to this headline">¶</a></h3>
+<span id="index-19"></span><span id="id11"></span><h3>Mapped Traits<a class="headerlink" href="#mapped-traits" title="Link to this heading">¶</a></h3>
 <p>If the Trait() function is called with parameters that include one or more
 dictionaries, then the resulting trait is called a “mapped” trait. In practice,
 this means that the resulting object actually contains two attributes:</p>
@@ -380,7 +382,7 @@ mapped to a set of internal, program-friendly values.</p>
 <p id="index-21">The following examples illustrates mapped traits that map color names to tuples
 representing red, green, blue, and transparency values:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># mapped.py --- Example of a mapped trait</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Trait</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Trait</span>
 
 <span class="n">standard_color</span> <span class="o">=</span> <span class="n">Trait</span> <span class="p">(</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
               <span class="p">{</span><span class="s1">&#39;black&#39;</span><span class="p">:</span>       <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
@@ -394,11 +396,11 @@ representing red, green, blue, and transparency values:</p>
                <span class="s1">&#39;violet&#39;</span><span class="p">:</span>      <span class="p">(</span><span class="mf">0.31</span><span class="p">,</span> <span class="mf">0.184</span><span class="p">,</span> <span class="mf">0.31</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
                <span class="s1">&#39;yellow&#39;</span><span class="p">:</span>      <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
                <span class="s1">&#39;white&#39;</span><span class="p">:</span>       <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
-               <span class="s1">&#39;transparent&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span> <span class="p">}</span> <span class="p">)</span>
+               <span class="s1">&#39;transparent&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)})</span>
 
 <span class="n">red_color</span> <span class="o">=</span> <span class="n">Trait</span> <span class="p">(</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">standard_color</span><span class="p">)</span>
 
-<span class="k">class</span> <span class="nc">GraphicShape</span> <span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GraphicShape</span> <span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">line_color</span> <span class="o">=</span> <span class="n">standard_color</span>
     <span class="n">fill_color</span> <span class="o">=</span> <span class="n">red_color</span>
 </pre></div>
@@ -410,7 +412,7 @@ that each GraphicShape instance has two shadow attributes: <strong>line_color_</
 and <strong>fill_color_</strong>. Any time a new value is assigned to either <strong>line_color</strong>
 or <strong>fill_color</strong>, the corresponding shadow attribute is updated with the
 value in the dictionary corresponding to the value assigned. For example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">mapped</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">mapped</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_shape1</span> <span class="o">=</span> <span class="n">mapped</span><span class="o">.</span><span class="n">GraphicShape</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">my_shape1</span><span class="o">.</span><span class="n">line_color</span><span class="p">,</span> <span class="n">my_shape1</span><span class="o">.</span><span class="n">fill_color</span><span class="p">)</span>
 <span class="go">black red</span>
@@ -444,7 +446,7 @@ shadow value is the compiled form of the expression.</p>
 </section>
 </section>
 <section id="trait-handlers">
-<span id="index-22"></span><span id="id12"></span><h2>Trait Handlers<a class="headerlink" href="#trait-handlers" title="Permalink to this headline">¶</a></h2>
+<span id="index-22"></span><span id="id12"></span><h2>Trait Handlers<a class="headerlink" href="#trait-handlers" title="Link to this heading">¶</a></h2>
 <p>In some cases, you may want to define a customized trait that is unrelated to
 any predefined trait behavior, or that is related to a predefined trait that
 happens to not be derived from TraitType. The option for such cases is to use a
@@ -457,73 +459,13 @@ handler’s validate() method checks the value, and assigns that value or a
 computed value, or raises a TraitError if the assigned value is not valid. Both
 TraitHandler and TraitType derive from BaseTraitHandler; TraitHandler has a more
 limited interface.</p>
-<p>The Traits package provides a number of predefined TraitHandler subclasses. A few
-of the predefined trait handler classes are described in the following sections.
-These sections also demonstrate how to define a trait using a trait handler and
-the Trait() factory function. For a complete list and descriptions of predefined
-TraitHandler subclasses, refer to the <em>Traits API Reference</em>, in the section on
-the traits.trait_handlers module.</p>
-<section id="traitprefixlist">
-<span id="index-24"></span><span id="id13"></span><h3>TraitPrefixList<a class="headerlink" href="#traitprefixlist" title="Permalink to this headline">¶</a></h3>
-<div class="deprecated">
-<p><span class="versionmodified deprecated">Deprecated since version 6.1: </span><a class="reference internal" href="../traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitPrefixList" title="traits.trait_handlers.TraitPrefixList"><code class="xref py py-class docutils literal notranslate"><span class="pre">TraitPrefixList</span></code></a> is scheduled for removal
-in Traits 7.0. Use the <a class="reference internal" href="../traits_api_reference/trait_types.html#traits.trait_types.PrefixList" title="traits.trait_types.PrefixList"><code class="xref py py-class docutils literal notranslate"><span class="pre">PrefixList</span></code></a> trait type instead.</p>
-</div>
-<p>The TraitPrefixList handler accepts not only a specified set of strings as
-values, but also any unique prefix substring of those values. The value assigned
-to the trait attribute is the full string that the substring matches.</p>
-<p id="index-25">For example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; from traits.api import HasTraits, Trait
-&gt;&gt;&gt; from traits.api import TraitPrefixList
-&gt;&gt;&gt; class Alien(HasTraits):
-...   heads = Trait(&#39;one&#39;, TraitPrefixList([&#39;one&#39;,&#39;two&#39;,&#39;three&#39;]))
-...
-&gt;&gt;&gt; alf = Alien()
-&gt;&gt;&gt; alf.heads = &#39;o&#39;
-&gt;&gt;&gt; print(alf.heads)
-one
-&gt;&gt;&gt; alf.heads = &#39;tw&#39;
-&gt;&gt;&gt; print(alf.heads)
-two
-&gt;&gt;&gt; alf.heads = &#39;t&#39;  # Error, not a unique prefix
-Traceback (most recent call last):
-  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
-  File &quot;c:\svn\ets3\traits_3.0.3\enthought\traits\trait_handlers.py&quot;, line 1802,
- in validate self.error( object, name, value )
-  File &quot;c:\svn\ets3\traits_3.0.3\enthought\traits\trait_handlers.py&quot;, line 175,
-in error value )
-traits.trait_errors.TraitError: The &#39;heads&#39; trait of an Alien instance
- must be &#39;one&#39; or &#39;two&#39; or &#39;three&#39; (or any unique prefix), but a value of &#39;t&#39;
- &lt;type &#39;str&#39;&gt; was specified.
-</pre></div>
-</div>
-</section>
-<section id="traitprefixmap">
-<span id="index-26"></span><span id="id14"></span><h3>TraitPrefixMap<a class="headerlink" href="#traitprefixmap" title="Permalink to this headline">¶</a></h3>
-<div class="deprecated">
-<p><span class="versionmodified deprecated">Deprecated since version 6.1: </span><a class="reference internal" href="../traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitPrefixMap" title="traits.trait_handlers.TraitPrefixMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">TraitPrefixMap</span></code></a> is scheduled for removal
-in Traits 7.0. Use the <a class="reference internal" href="../traits_api_reference/trait_types.html#traits.trait_types.PrefixMap" title="traits.trait_types.PrefixMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">PrefixMap</span></code></a> trait type instead.</p>
-</div>
-<p>The TraitPrefixMap handler combines the TraitPrefixList with mapped traits. Its
-constructor takes a parameter that is a dictionary whose keys are strings. A
-string is a valid value if it is a unique prefix for a key in the dictionary.
-The value assigned is the dictionary value corresponding to the matched key.</p>
-<p id="index-27">The following example uses TraitPrefixMap to define a Boolean trait that accepts
-any prefix of ‘true’, ‘yes’, ‘false’, or ‘no’, and maps them to 1 or 0.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># traitprefixmap.py --- Example of using the TraitPrefixMap handler</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">Trait</span><span class="p">,</span> <span class="n">TraitPrefixMap</span>
-
-<span class="n">boolean_map</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="s1">&#39;true&#39;</span><span class="p">,</span> <span class="n">TraitPrefixMap</span><span class="p">(</span> <span class="p">{</span>
-                              <span class="s1">&#39;true&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-                              <span class="s1">&#39;yes&#39;</span><span class="p">:</span>  <span class="mi">1</span><span class="p">,</span>
-                              <span class="s1">&#39;false&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-                              <span class="s1">&#39;no&#39;</span><span class="p">:</span>   <span class="mi">0</span> <span class="p">}</span> <span class="p">)</span> <span class="p">)</span>
-</pre></div>
-</div>
-</section>
+<p>The Traits package provides a number of predefined TraitHandler subclasses. For
+a complete list and descriptions of predefined TraitHandler subclasses, refer
+to the <em>Traits API Reference</em>, in the section on the traits.trait_handlers
+module.</p>
 </section>
 <section id="custom-trait-handlers">
-<span id="index-28"></span><span id="id15"></span><h2>Custom Trait Handlers<a class="headerlink" href="#custom-trait-handlers" title="Permalink to this headline">¶</a></h2>
+<span id="index-24"></span><span id="id13"></span><h2>Custom Trait Handlers<a class="headerlink" href="#custom-trait-handlers" title="Link to this heading">¶</a></h2>
 <p>If you need a trait that cannot be defined using a predefined trait handler
 class, you can create your own subclass of TraitHandler. The constructor
 (i.e., __init__() method) for your TraitHandler subclass can accept whatever
@@ -532,59 +474,60 @@ constructor does not need to call the TraitHandler base class’s constructor.</
 <p>The only method that a custom trait handler must implement is validate(). Refer
 to the <em>Traits API Reference</em> for details about this function.</p>
 <section id="example-custom-trait-handler">
-<span id="index-29"></span><span id="id16"></span><h3>Example Custom Trait Handler<a class="headerlink" href="#example-custom-trait-handler" title="Permalink to this headline">¶</a></h3>
+<span id="index-25"></span><span id="id14"></span><h3>Example Custom Trait Handler<a class="headerlink" href="#example-custom-trait-handler" title="Link to this heading">¶</a></h3>
 <p>The following example defines the OddInt trait (also implemented as a trait type
 in <a class="reference internal" href="#defining-a-trait-type"><span class="std std-ref">Defining a Trait Type</span></a>) using a TraitHandler subclass.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># custom_traithandler.py --- Example of a custom TraitHandler</span>
-<span class="kn">import</span> <span class="nn">types</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">TraitHandler</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">types</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">TraitHandler</span>
 
-<span class="k">class</span> <span class="nc">TraitOddInteger</span><span class="p">(</span><span class="n">TraitHandler</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TraitOddInteger</span><span class="p">(</span><span class="n">TraitHandler</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="p">((</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">is</span> <span class="n">types</span><span class="o">.</span><span class="n">IntType</span><span class="p">)</span> <span class="ow">and</span>
             <span class="p">(</span><span class="n">value</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">((</span><span class="n">value</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)):</span>
             <span class="k">return</span> <span class="n">value</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s1">&#39;**a positive odd integer**&#39;</span>
 </pre></div>
 </div>
 <p>An application could use this new trait handler to define traits such as the
 following:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># use_custom_th.py --- Example of using a custom TraitHandler</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Range</span><span class="p">,</span> <span class="n">Trait</span>
-<span class="kn">from</span> <span class="nn">custom_traithandler</span> <span class="kn">import</span> <span class="n">TraitOddInteger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Range</span><span class="p">,</span> <span class="n">Trait</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">custom_traithandler</span><span class="w"> </span><span class="kn">import</span> <span class="n">TraitOddInteger</span>
 
-<span class="k">class</span> <span class="nc">AnOddClass</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AnOddClass</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">oddball</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">TraitOddInteger</span><span class="p">())</span>
     <span class="n">very_odd</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">TraitOddInteger</span><span class="p">(),</span> <span class="n">Range</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>The following example demonstrates why the info() method returns a phrase rather
 than a complete sentence:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">use_custom_th</span> <span class="kn">import</span> <span class="n">AnOddClass</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">use_custom_th</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnOddClass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">odd_stuff</span> <span class="o">=</span> <span class="n">AnOddClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">odd_stuff</span><span class="o">.</span><span class="n">very_odd</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="gt">Traceback (most recent call last):</span>
   File <span class="nb">&quot;test.py&quot;</span>, line <span class="m">25</span>, in <span class="n">?</span>
-    <span class="n">odd_stuff</span><span class="o">.</span><span class="n">very_odd</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="w">    </span><span class="n">odd_stuff</span><span class="o">.</span><span class="n">very_odd</span> <span class="o">=</span> <span class="mi">0</span>
   File <span class="nb">&quot;C:\wrk\src\lib\enthought\traits\traits.py&quot;</span>, line <span class="m">1119</span>, in <span class="n">validate</span>
-    <span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span><span class="n">excp</span><span class="p">)</span>
+<span class="w">    </span><span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span><span class="n">excp</span><span class="p">)</span>
 <span class="gr">traits.traits.TraitError</span>: <span class="n">The &#39;very_odd&#39; trait of an AnOddClass instance</span>
-<span class="go">must be **a positive odd integer** or -10 &lt;= an integer &lt;= -1, but a value</span>
-<span class="go">of 0 &lt;type &#39;int&#39;&gt; was specified.</span>
+<span class="x">must be **a positive odd integer** or -10 &lt;= an integer &lt;= -1, but a value</span>
+<span class="x">of 0 &lt;type &#39;int&#39;&gt; was specified.</span>
 </pre></div>
 </div>
 <p>Note the emphasized result returned by the info() method, which is embedded in
 the exception generated by the invalid assignment.</p>
 <p class="rubric">Footnotes</p>
-<dl class="footnote brackets">
-<dt class="label" id="id17"><span class="brackets"><a class="fn-backref" href="#id3">6</a></span></dt>
-<dd><p>All of the basic predefined traits (such as Float and Str) have a
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id15" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">6</a><span class="fn-bracket">]</span></span>
+<p>All of the basic predefined traits (such as Float and Str) have a
 BaseType version that does not have the <strong>fast_validate</strong> attribute.</p>
-</dd>
-</dl>
+</aside>
+</aside>
 </section>
 </section>
 </section>
@@ -598,12 +541,21 @@ BaseType version that does not have the <strong>fast_validate</strong> attribute
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
             </a></p>
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">Custom Traits</a><ul>
 <li><a class="reference internal" href="#trait-subclassing">Trait Subclassing</a><ul>
-<li><a class="reference internal" href="#defining-a-trait-type">Defining a Trait Type</a></li>
-<li><a class="reference internal" href="#defining-a-trait-property">Defining a Trait Property</a></li>
+<li><a class="reference internal" href="#defining-a-trait-type">Defining a Trait Type</a><ul>
+<li><a class="reference internal" href="#validate"><code class="docutils literal notranslate"><span class="pre">validate()</span></code></a></li>
+<li><a class="reference internal" href="#post_setattr"><code class="docutils literal notranslate"><span class="pre">post_setattr()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#defining-a-trait-property">Defining a Trait Property</a><ul>
+<li><a class="reference internal" href="#get"><code class="docutils literal notranslate"><span class="pre">get()</span></code></a></li>
+<li><a class="reference internal" href="#set"><code class="docutils literal notranslate"><span class="pre">set()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#other-traittype-members">Other TraitType Members</a></li>
 </ul>
 </li>
@@ -616,11 +568,7 @@ BaseType version that does not have the <strong>fast_validate</strong> attribute
 <li><a class="reference internal" href="#mapped-traits">Mapped Traits</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#trait-handlers">Trait Handlers</a><ul>
-<li><a class="reference internal" href="#traitprefixlist">TraitPrefixList</a></li>
-<li><a class="reference internal" href="#traitprefixmap">TraitPrefixMap</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#trait-handlers">Trait Handlers</a></li>
 <li><a class="reference internal" href="#custom-trait-handlers">Custom Trait Handlers</a><ul>
 <li><a class="reference internal" href="#example-custom-trait-handler">Example Custom Trait Handler</a></li>
 </ul>
@@ -629,27 +577,32 @@ BaseType version that does not have the <strong>fast_validate</strong> attribute
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="deferring.html"
-                        title="previous chapter">Deferring Trait Definitions</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="advanced.html"
-                        title="next chapter">Advanced Topics</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="deferring.html"
+                          title="previous chapter">Deferring Trait Definitions</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="advanced.html"
+                          title="next chapter">Advanced Topics</a></p>
+  </div>
   <h3>This Page</h3>
   <div>
     <a href="../_sources/traits_user_manual/custom.rst.txt"
        rel="nofollow">Show Source</a>
   </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
         </div>
@@ -666,15 +619,15 @@ BaseType version that does not have the <strong>fast_validate</strong> attribute
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2025 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Aug 11, 2022.
+      Last updated on Jan 27, 2025.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 8.1.3.
       </li>
     </ul>
     </div>

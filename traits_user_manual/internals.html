@@ -3,19 +3,21 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Traits internals &mdash; Traits 6.4 Documentation</title>
+    <title>Traits internals &mdash; Traits 7.0 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
     <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" >
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.4.0',
+        VERSION:     '7.0.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -23,9 +25,9 @@
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/sphinx_highlight.js"></script>
     <script type="text/javascript" src="../_static/clipboard.min.js"></script>
     <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
@@ -33,8 +35,8 @@
     <link rel="shortcut icon" href="../_static/img/favicon.png">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.4 Documentation" href="../index.html" >
-    <link rel="up" title="Traits 6.4 User Manual" href="index.html" >
+    <link rel="top" title="Traits 7.0 Documentation" href="../index.html" >
+    <link rel="up" title="Traits 7.0 User Manual" href="index.html" >
     <link rel="next" title="Appendix" href="appendix.html" >
     <link rel="prev" title="Tips for debugging Traits" href="debugging.html" > 
   </head>
@@ -53,9 +55,9 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.4 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 7.0 Documentation</a></li>
 	
-          <li class="active"><a href="index.html" accesskey="U">Traits 6.4 User Manual</a></li> 
+          <li class="active"><a href="index.html" accesskey="U">Traits 7.0 User Manual</a></li> 
     </ul>
               
               
@@ -90,12 +92,12 @@
           <div class="body" id="spc-section-body" role="main">
             
   <section id="traits-internals">
-<span id="index-0"></span><h1>Traits internals<a class="headerlink" href="#traits-internals" title="Permalink to this headline">¶</a></h1>
+<span id="index-0"></span><h1>Traits internals<a class="headerlink" href="#traits-internals" title="Link to this heading">¶</a></h1>
 <p>This section of the documentation is intended both for those developing Traits
 itself, and for those using Traits who would like a better understanding of
 the Traits internals.</p>
 <section id="fundamentals">
-<h2>Fundamentals<a class="headerlink" href="#fundamentals" title="Permalink to this headline">¶</a></h2>
+<h2>Fundamentals<a class="headerlink" href="#fundamentals" title="Link to this heading">¶</a></h2>
 <p>The runtime behavior of Traits is governed by two key classes: <a class="reference internal" href="../traits_api_reference/ctrait.html#traits.ctrait.CTrait" title="traits.ctrait.CTrait"><code class="xref py py-class docutils literal notranslate"><span class="pre">CTrait</span></code></a> and
 <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><code class="xref py py-class docutils literal notranslate"><span class="pre">HasTraits</span></code></a>. Each of these classes inherits from a superclass implemented in
 the <a class="reference internal" href="../traits_api_reference/ctraits.html#module-traits.ctraits" title="traits.ctraits"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ctraits</span></code></a> C extension module: <a class="reference internal" href="../traits_api_reference/ctrait.html#traits.ctrait.CTrait" title="traits.ctrait.CTrait"><code class="xref py py-class docutils literal notranslate"><span class="pre">CTrait</span></code></a> inherits from <a class="reference internal" href="../traits_api_reference/ctraits.html#traits.ctraits.cTrait" title="traits.ctraits.cTrait"><code class="xref py py-class docutils literal notranslate"><span class="pre">cTrait</span></code></a>, while
@@ -110,7 +112,7 @@ even when the behavior we’re referring to is actually implemented by
 <p>We’ll examine both of these classes, along with some of their hidden state, in
 more detail below.</p>
 <section id="key-class-hastraits">
-<h3>Key class: <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><code class="xref py py-class docutils literal notranslate"><span class="pre">HasTraits</span></code></a><a class="headerlink" href="#key-class-hastraits" title="Permalink to this headline">¶</a></h3>
+<h3>Key class: <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><code class="xref py py-class docutils literal notranslate"><span class="pre">HasTraits</span></code></a><a class="headerlink" href="#key-class-hastraits" title="Link to this heading">¶</a></h3>
 <p>The primary purpose of the <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><code class="xref py py-class docutils literal notranslate"><span class="pre">HasTraits</span></code></a> class is to override Python’s normal
 rules for attribute access. It does this by overriding the
 <code class="docutils literal notranslate"><span class="pre">__getattribute__</span></code>, <code class="docutils literal notranslate"><span class="pre">__setattr__</span></code> and <code class="docutils literal notranslate"><span class="pre">__delattr__</span></code> special methods. At C
@@ -139,10 +141,10 @@ methods. However, it’s not recommended to use either of these methods in
 production code, and you should be especially careful when modifying either
 of these dictionaries.</p>
 <p>For example, consider the following <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><code class="xref py py-class docutils literal notranslate"><span class="pre">HasTraits</span></code></a> subclass:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">Float</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">Float</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span>
 
-<span class="k">class</span> <span class="nc">Ingredient</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; An ingredient in a recipe listing. &quot;&quot;&quot;</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Ingredient</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; An ingredient in a recipe listing. &quot;&quot;&quot;</span>
 
     <span class="c1">#: The name of the ingredient.</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">Str</span><span class="p">()</span>
@@ -180,7 +182,7 @@ instance traits) with the first one:</p>
 </div>
 </section>
 <section id="key-class-ctrait">
-<h3>Key class: <a class="reference internal" href="../traits_api_reference/ctrait.html#traits.ctrait.CTrait" title="traits.ctrait.CTrait"><code class="xref py py-class docutils literal notranslate"><span class="pre">CTrait</span></code></a><a class="headerlink" href="#key-class-ctrait" title="Permalink to this headline">¶</a></h3>
+<h3>Key class: <a class="reference internal" href="../traits_api_reference/ctrait.html#traits.ctrait.CTrait" title="traits.ctrait.CTrait"><code class="xref py py-class docutils literal notranslate"><span class="pre">CTrait</span></code></a><a class="headerlink" href="#key-class-ctrait" title="Link to this heading">¶</a></h3>
 <p>A <a class="reference internal" href="../traits_api_reference/ctrait.html#traits.ctrait.CTrait" title="traits.ctrait.CTrait"><code class="xref py py-class docutils literal notranslate"><span class="pre">CTrait</span></code></a> object has two main purposes:</p>
 <ul class="simple">
 <li><p>It encapsulates the rules for getting and setting a traited attribute on
@@ -196,7 +198,7 @@ access via the given trait. See below for a fuller description of attribute
 access mechanics.</p>
 </section>
 <section id="attribute-retrieval">
-<h3>Attribute retrieval<a class="headerlink" href="#attribute-retrieval" title="Permalink to this headline">¶</a></h3>
+<h3>Attribute retrieval<a class="headerlink" href="#attribute-retrieval" title="Link to this heading">¶</a></h3>
 <p>When evaluating <code class="docutils literal notranslate"><span class="pre">obj.name</span></code> for a <code class="docutils literal notranslate"><span class="pre">HasTraits</span></code> object <code class="docutils literal notranslate"><span class="pre">obj</span></code>, the following
 sequence of steps occurs (see <code class="docutils literal notranslate"><span class="pre">has_traits_getattro</span></code> in the C source):</p>
 <ul class="simple">
@@ -221,7 +223,7 @@ search for <code class="docutils literal notranslate"><span class="pre">CTrait</
 subclass.</p>
 </section>
 <section id="attribute-set-operations">
-<h3>Attribute set operations<a class="headerlink" href="#attribute-set-operations" title="Permalink to this headline">¶</a></h3>
+<h3>Attribute set operations<a class="headerlink" href="#attribute-set-operations" title="Link to this heading">¶</a></h3>
 <p>The rules for setting an attribute (evaluating <code class="docutils literal notranslate"><span class="pre">obj.name</span> <span class="pre">=</span> <span class="pre">value</span></code> for a
 <code class="docutils literal notranslate"><span class="pre">HasTraits</span></code> object <code class="docutils literal notranslate"><span class="pre">obj</span></code>) are analogous to those for attribute retrieval.
 The starting point is <code class="docutils literal notranslate"><span class="pre">has_traits_setattro</span></code> in the source.</p>
@@ -240,19 +242,18 @@ its <code class="docutils literal notranslate"><span class="pre">setattr</span><
 </ul>
 </section>
 <section id="attribute-deletion">
-<h3>Attribute deletion<a class="headerlink" href="#attribute-deletion" title="Permalink to this headline">¶</a></h3>
+<h3>Attribute deletion<a class="headerlink" href="#attribute-deletion" title="Link to this heading">¶</a></h3>
 <p>Attribute deletion (<code class="docutils literal notranslate"><span class="pre">del</span> <span class="pre">obj.name</span></code>) goes through the same code path as
 attribute set operations. Most <code class="docutils literal notranslate"><span class="pre">CTrait</span></code> types do not permit deletion.</p>
 </section>
 </section>
 <section id="traits-containers">
-<h2>Traits Containers<a class="headerlink" href="#traits-containers" title="Permalink to this headline">¶</a></h2>
+<h2>Traits Containers<a class="headerlink" href="#traits-containers" title="Link to this heading">¶</a></h2>
 <p>Traits has the ability to watch for changes in standard Python containers:
 lists, dictionaries and sets.  To achieve this Traits provides special
 subclasses of the standard Python classes that can validate elements and can
 fire trait notifications when the contents change.  These classes are,
-respectively, <a class="reference internal" href="../traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitList" title="traits.trait_list_object.TraitList"><code class="xref py py-class docutils literal notranslate"><span class="pre">TraitList</span></code></a>, <a class="reference internal" href="../traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDict" title="traits.trait_dict_object.TraitDict"><code class="xref py py-class docutils literal notranslate"><span class="pre">TraitDict</span></code></a> and <code class="xref py py-class docutils literal notranslate"><span class="pre">TraitSet</span></code> (not to be confused with
-the deprecated Trait Handlers of the same names).</p>
+respectively, <a class="reference internal" href="../traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitList" title="traits.trait_list_object.TraitList"><code class="xref py py-class docutils literal notranslate"><span class="pre">TraitList</span></code></a>, <a class="reference internal" href="../traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDict" title="traits.trait_dict_object.TraitDict"><code class="xref py py-class docutils literal notranslate"><span class="pre">TraitDict</span></code></a> and <code class="xref py py-class docutils literal notranslate"><span class="pre">TraitSet</span></code>.</p>
 <p>In addition to being able to take an appropriate value to initialize the
 container (such as a sequence or mapping), these container subclasses also
 take keyword-only arguments for validators (either a single item validator for
@@ -261,7 +262,7 @@ notifiers.</p>
 <p>These classes were introduced in Traits 6.1 and the implementation details
 described here are provisional and may change.</p>
 <section id="backwards-compatibility">
-<h3>Backwards Compatibility<a class="headerlink" href="#backwards-compatibility" title="Permalink to this headline">¶</a></h3>
+<h3>Backwards Compatibility<a class="headerlink" href="#backwards-compatibility" title="Link to this heading">¶</a></h3>
 <p>In practice, most traits containers are instances of <a class="reference internal" href="../traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitListObject" title="traits.trait_list_object.TraitListObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">TraitListObject</span></code></a>,
 <a class="reference internal" href="../traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDictObject" title="traits.trait_dict_object.TraitDictObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">TraitDictObject</span></code></a> and <code class="xref py py-class docutils literal notranslate"><span class="pre">TraitSetObject</span></code> which are subclasses that are
 created by the validators of <a class="reference internal" href="../traits_api_reference/trait_types.html#traits.trait_types.List" title="traits.trait_types.List"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>, <a class="reference internal" href="../traits_api_reference/trait_types.html#traits.trait_types.Dict" title="traits.trait_types.Dict"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a> and <a class="reference internal" href="../traits_api_reference/trait_types.html#traits.trait_types.Set" title="traits.trait_types.Set"><code class="xref py py-class docutils literal notranslate"><span class="pre">Set</span></code></a> traits respectively and
@@ -282,7 +283,7 @@ into account when serializing and deserializing.</p>
 classes.</p>
 </section>
 <section id="container-validators">
-<h3>Container Validators<a class="headerlink" href="#container-validators" title="Permalink to this headline">¶</a></h3>
+<h3>Container Validators<a class="headerlink" href="#container-validators" title="Link to this heading">¶</a></h3>
 <p>Container validators are callables that are expected to take a single value
 and either return a validated value or raise a TraitError.  The default
 validators simply pass the input value directly through, but validators can
@@ -291,7 +292,7 @@ potentially do much more.   Validators are expected to be idempotent:
 <code class="docutils literal notranslate"><span class="pre">validate(x)</span></code> does not raise an error.</p>
 <p>For example, the following validator casts the list items to integers,
 raising a TraitError if that fails:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">int_validator</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">int_validator</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
@@ -324,7 +325,7 @@ guidance to users about when validation is performed, and possibly changing the
 behaviour.</p>
 </section>
 <section id="container-notifiers">
-<h3>Container Notifiers<a class="headerlink" href="#container-notifiers" title="Permalink to this headline">¶</a></h3>
+<h3>Container Notifiers<a class="headerlink" href="#container-notifiers" title="Link to this heading">¶</a></h3>
 <p>Container objects also have a list of notifiers that fire when the contents of
 the container change.  Like trait notifiers, container notifiers are low-level
 callbacks that are used by the higher-level, more user-friendly observer and
@@ -357,8 +358,9 @@ just as they do not usually need to interact with trait notifiers.</p>
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
             </a></p>
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">Traits internals</a><ul>
 <li><a class="reference internal" href="#fundamentals">Fundamentals</a><ul>
 <li><a class="reference internal" href="#key-class-hastraits">Key class: <code class="xref py py-class docutils literal notranslate"><span class="pre">HasTraits</span></code></a></li>
@@ -378,27 +380,32 @@ just as they do not usually need to interact with trait notifiers.</p>
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="debugging.html"
-                        title="previous chapter">Tips for debugging Traits</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="appendix.html"
-                        title="next chapter">Appendix</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="debugging.html"
+                          title="previous chapter">Tips for debugging Traits</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="appendix.html"
+                          title="next chapter">Appendix</a></p>
+  </div>
   <h3>This Page</h3>
   <div>
     <a href="../_sources/traits_user_manual/internals.rst.txt"
        rel="nofollow">Show Source</a>
   </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
         </div>
@@ -415,15 +422,15 @@ just as they do not usually need to interact with trait notifiers.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2025 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Aug 11, 2022.
+      Last updated on Jan 27, 2025.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 8.1.3.
       </li>
     </ul>
     </div>

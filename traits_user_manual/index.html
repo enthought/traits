@@ -3,19 +3,21 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Traits 6.4 User Manual &mdash; Traits 6.4 Documentation</title>
+    <title>Traits 7.0 User Manual &mdash; Traits 7.0 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
     <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" >
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.4.0',
+        VERSION:     '7.0.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -23,9 +25,9 @@
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/sphinx_highlight.js"></script>
     <script type="text/javascript" src="../_static/clipboard.min.js"></script>
     <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
@@ -33,7 +35,7 @@
     <link rel="shortcut icon" href="../_static/img/favicon.png">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.4 Documentation" href="../index.html" >
+    <link rel="top" title="Traits 7.0 Documentation" href="../index.html" >
     <link rel="next" title="Introduction" href="intro.html" >
     <link rel="prev" title="Introduction" href="../traits_tutorial/introduction.html" > 
   </head>
@@ -52,7 +54,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.4 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 7.0 Documentation</a></li>
 	 
     </ul>
               
@@ -88,20 +90,20 @@
           <div class="body" id="spc-section-body" role="main">
             
   <section id="traits-version-user-manual">
-<h1>Traits 6.4 User Manual<a class="headerlink" href="#traits-version-user-manual" title="Permalink to this headline">¶</a></h1>
+<h1>Traits 7.0 User Manual<a class="headerlink" href="#traits-version-user-manual" title="Link to this heading">¶</a></h1>
 <dl class="field-list">
-<dt class="field-odd">Authors</dt>
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
 <dd class="field-odd"><p>David C. Morrill, Janet M. Swisher, and Enthought developers</p>
 </dd>
-<dt class="field-even">Copyright</dt>
+<dt class="field-even">Copyright<span class="colon">:</span></dt>
 <dd class="field-even"><div class="line-block">
-<div class="line">(C) Copyright 2005-2022 Enthought, Inc., Austin, TX</div>
+<div class="line">(C) Copyright 2005-2025 Enthought, Inc., Austin, TX</div>
 <div class="line">All rights reserved.</div>
 </div>
 </dd>
 </dl>
 <section id="contents">
-<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
+<h2>Contents<a class="headerlink" href="#contents" title="Link to this heading">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a><ul>
@@ -136,7 +138,10 @@
 <li class="toctree-l3"><a class="reference internal" href="notification.html#expressions-as-objects">Expressions as objects</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="notification.html#notification-handler">Notification Handler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notification.html#notification-handler">Notification Handler</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="notification.html#async-notification-handlers">Async Notification Handlers</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="notification.html#features-and-fixes-provided-by-observe">Features and fixes provided by <code class="xref py py-func docutils literal notranslate"><span class="pre">observe()</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="notification.html#existence-of-observed-items-is-checked-by-default">Existence of observed items is checked by default</a></li>
 <li class="toctree-l3"><a class="reference internal" href="notification.html#arbitrarily-nested-containers-are-supported">Arbitrarily nested containers are supported</a></li>
@@ -157,8 +162,14 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="deferring.html">Deferring Trait Definitions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="deferring.html#delegatesto">DelegatesTo</a></li>
-<li class="toctree-l2"><a class="reference internal" href="deferring.html#prototypedfrom">PrototypedFrom</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deferring.html#delegatesto">DelegatesTo</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="deferring.html#DelegatesTo"><code class="docutils literal notranslate"><span class="pre">DelegatesTo</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="deferring.html#prototypedfrom">PrototypedFrom</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="deferring.html#PrototypedFrom"><code class="docutils literal notranslate"><span class="pre">PrototypedFrom</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="deferring.html#keyword-parameters">Keyword Parameters</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="deferring.html#prefix-keyword">Prefix Keyword</a></li>
 <li class="toctree-l3"><a class="reference internal" href="deferring.html#listenable-keyword">Listenable Keyword</a></li>
@@ -179,11 +190,7 @@
 <li class="toctree-l3"><a class="reference internal" href="custom.html#mapped-traits">Mapped Traits</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="custom.html#trait-handlers">Trait Handlers</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="custom.html#traitprefixlist">TraitPrefixList</a></li>
-<li class="toctree-l3"><a class="reference internal" href="custom.html#traitprefixmap">TraitPrefixMap</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="custom.html#trait-handlers">Trait Handlers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="custom.html#custom-trait-handlers">Custom Trait Handlers</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="custom.html#example-custom-trait-handler">Example Custom Trait Handler</a></li>
 </ul>
@@ -275,14 +282,14 @@
 </div>
 </section>
 <section id="indices-and-tables">
-<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p><a class="reference internal" href="../genindex.html"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="../search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
 </section>
 <section id="license">
-<h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+<h2>License<a class="headerlink" href="#license" title="Link to this heading">¶</a></h2>
 <p>Redistribution and use of this document in source and derived forms, with or
 without modification, are permitted provided that the following conditions are
 met:</p>
@@ -328,9 +335,10 @@ owners.</p>
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
             </a></p>
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Traits 6.4 User Manual</a><ul>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Traits 7.0 User Manual</a><ul>
 <li><a class="reference internal" href="#contents">Contents</a></li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 <li><a class="reference internal" href="#license">License</a></li>
@@ -338,27 +346,32 @@ owners.</p>
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="../traits_tutorial/introduction.html"
-                        title="previous chapter">Introduction</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="intro.html"
-                        title="next chapter">Introduction</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="../traits_tutorial/introduction.html"
+                          title="previous chapter">Introduction</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="intro.html"
+                          title="next chapter">Introduction</a></p>
+  </div>
   <h3>This Page</h3>
   <div>
     <a href="../_sources/traits_user_manual/index.rst.txt"
        rel="nofollow">Show Source</a>
   </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
         </div>
@@ -375,15 +388,15 @@ owners.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2025 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Aug 11, 2022.
+      Last updated on Jan 27, 2025.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 8.1.3.
       </li>
     </ul>
     </div>

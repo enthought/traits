@@ -3,19 +3,21 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Trait Notification with on_trait_change &mdash; Traits 6.4 Documentation</title>
+    <title>Trait Notification with on_trait_change &mdash; Traits 7.0 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
     <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" >
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.4.0',
+        VERSION:     '7.0.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -23,9 +25,9 @@
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/sphinx_highlight.js"></script>
     <script type="text/javascript" src="../_static/clipboard.min.js"></script>
     <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
@@ -33,7 +35,7 @@
     <link rel="shortcut icon" href="../_static/img/favicon.png">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.4 Documentation" href="../index.html" >
+    <link rel="top" title="Traits 7.0 Documentation" href="../index.html" >
     <link rel="up" title="Appendix" href="appendix.html" >
     <link rel="next" title="API Reference" href="../traits_api_reference/index.html" >
     <link rel="prev" title="Appendix" href="appendix.html" > 
@@ -53,9 +55,9 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.4 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 7.0 Documentation</a></li>
 	
-          <li class="active"><a href="index.html" >Traits 6.4 User Manual</a></li>
+          <li class="active"><a href="index.html" >Traits 7.0 User Manual</a></li>
           <li class="active"><a href="appendix.html" accesskey="U">Appendix</a></li> 
     </ul>
               
@@ -91,7 +93,7 @@
           <div class="body" id="spc-section-body" role="main">
             
   <section id="trait-notification-with-on-trait-change">
-<span id="on-trait-change-notification"></span><h1>Trait Notification with <strong>on_trait_change</strong><a class="headerlink" href="#trait-notification-with-on-trait-change" title="Permalink to this headline">¶</a></h1>
+<span id="on-trait-change-notification"></span><h1>Trait Notification with <strong>on_trait_change</strong><a class="headerlink" href="#trait-notification-with-on-trait-change" title="Link to this heading">¶</a></h1>
 <p><strong>on_trait_change</strong> is an older method for setting up change notifications. It
 has several design flaws and limitations. A newer mechanism <strong>observe</strong> is
 introduced for overcoming them. See <a class="reference internal" href="notification.html#observe-notification"><span class="std std-ref">Trait Notification</span></a> for details and
@@ -106,7 +108,7 @@ decorator to indicate that they handle notification for specified attributes.</p
 indicate that they handle notifications for specific trait attributes.</p></li>
 </ul>
 <section id="dynamic-notification">
-<span id="index-1"></span><span id="id1"></span><h2>Dynamic Notification<a class="headerlink" href="#dynamic-notification" title="Permalink to this headline">¶</a></h2>
+<span id="index-1"></span><span id="id1"></span><h2>Dynamic Notification<a class="headerlink" href="#dynamic-notification" title="Link to this heading">¶</a></h2>
 <p>Dynamic notification is useful in cases where a notification handler cannot be
 defined on the class (or a subclass) whose trait attribute changes are to be
 monitored, or if you want to monitor changes on certain instances of a class,
@@ -115,14 +117,14 @@ or function, and then invoke the on_trait_change() or on_trait_event() method
 to register that handler with the object being monitored. Multiple handlers can
 be defined for the same object, or even for the same trait attribute on the
 same object. The handler registration methods have the following signatures:</p>
-<span class="target" id="index-2"></span><dl class="py method">
-<dt id="on_trait_change">
-<code class="sig-name descname"><span class="pre">on_trait_change</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">handler</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">name=None</span></em>, <em class="sig-param"><span class="pre">remove=False</span></em>, <em class="sig-param"><span class="pre">dispatch='same'</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#on_trait_change" title="Permalink to this definition">¶</a></dt>
+<dl class="py method" id="index-2">
+<dt class="sig sig-object py" id="on_trait_change">
+<span class="sig-name descname"><span class="pre">on_trait_change</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handler</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">name=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dispatch='same'</span></span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#on_trait_change" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<span class="target" id="index-3"></span><dl class="py method">
-<dt id="on_trait_event">
-<code class="sig-name descname"><span class="pre">on_trait_event</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">handler</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">name=None</span></em>, <em class="sig-param"><span class="pre">remove=False</span></em>, <em class="sig-param"><span class="pre">dispatch='same'</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#on_trait_event" title="Permalink to this definition">¶</a></dt>
+<dl class="py method" id="index-3">
+<dt class="sig sig-object py" id="on_trait_event">
+<span class="sig-name descname"><span class="pre">on_trait_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handler</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">name=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dispatch='same'</span></span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#on_trait_event" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p>In these signatures:</p>
@@ -141,27 +143,27 @@ In most cases, it can be omitted. See the <em>Traits API Reference</em> for deta
 on non-default values.</p></li>
 </ul>
 <section id="example-of-a-dynamic-notification-handler">
-<span id="index-4"></span><span id="id2"></span><h3>Example of a Dynamic Notification Handler<a class="headerlink" href="#example-of-a-dynamic-notification-handler" title="Permalink to this headline">¶</a></h3>
+<span id="index-4"></span><span id="id2"></span><h3>Example of a Dynamic Notification Handler<a class="headerlink" href="#example-of-a-dynamic-notification-handler" title="Link to this heading">¶</a></h3>
 <p>Setting up a dynamic trait attribute change notification handler is illustrated
 in the following example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># dynamic_notification.py --- Example of dynamic notification</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">Float</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">Float</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span>
 
-<span class="k">class</span> <span class="nc">Part</span> <span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Part</span> <span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
   <span class="n">cost</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
 
-<span class="k">class</span> <span class="nc">Widget</span> <span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Widget</span> <span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
   <span class="n">part1</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">Part</span><span class="p">)</span>
   <span class="n">part2</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">Part</span><span class="p">)</span>
   <span class="n">cost</span>  <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
 
-  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+  <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">part1</span> <span class="o">=</span> <span class="n">Part</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">part2</span> <span class="o">=</span> <span class="n">Part</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">part1</span><span class="o">.</span><span class="n">on_trait_change</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update_cost</span><span class="p">,</span> <span class="s1">&#39;cost&#39;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">part2</span><span class="o">.</span><span class="n">on_trait_change</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update_cost</span><span class="p">,</span> <span class="s1">&#39;cost&#39;</span><span class="p">)</span>
 
-  <span class="k">def</span> <span class="nf">update_cost</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+  <span class="k">def</span><span class="w"> </span><span class="nf">update_cost</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">part1</span><span class="o">.</span><span class="n">cost</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">part2</span><span class="o">.</span><span class="n">cost</span>
 
 <span class="c1"># Example:</span>
@@ -178,7 +180,7 @@ change notification so that its update_cost() method is called whenever the
 This method then updates the cost attribute of the widget object.</p>
 </section>
 <section id="the-name-parameter">
-<span id="index-5"></span><span id="id3"></span><h3>The <em>name</em> Parameter<a class="headerlink" href="#the-name-parameter" title="Permalink to this headline">¶</a></h3>
+<span id="index-5"></span><span id="id3"></span><h3>The <em>name</em> Parameter<a class="headerlink" href="#the-name-parameter" title="Link to this heading">¶</a></h3>
 <p>The <em>name</em> parameter of on_trait_change() and on_trait_event() provides
 significant flexibility in specifying the name or names of one or more trait
 attributes that the handler applies to. It supports syntax for specifying
@@ -194,23 +196,19 @@ object with the specified names.</p></li>
 trait attribute that matches the specified extended names.</p></li>
 </ul>
 <section id="syntax">
-<span id="index-6"></span><span id="id4"></span><h4>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h4>
+<span id="index-6"></span><span id="id4"></span><h4>Syntax<a class="headerlink" href="#syntax" title="Link to this heading">¶</a></h4>
 <p>Extended names use the following syntax:</p>
 <pre>
 <strong id="grammar-token-xname">xname </strong> ::=  xname2['.'xname2]*
-<strong id="grammar-token-xname2">xname2</strong> ::=  ( xname3 | '['xname3[','xname3]*']' ) ['*']
+<strong id="grammar-token-xname2">xname2</strong> ::=  (xname3 | '['xname3[','xname3]*']') ['*']
 <strong id="grammar-token-xname3">xname3</strong> ::=  xname | ['+'|'-'][name] | name['?' | ('+'|'-')[name]]
 </pre>
 <p>A <em>name</em> is any valid Python attribute name.</p>
 </section>
 <section id="semantics">
-<span id="index-7"></span><span id="id5"></span><h4>Semantics<a class="headerlink" href="#semantics" title="Permalink to this headline">¶</a></h4>
+<span id="index-7"></span><span id="id5"></span><h4>Semantics<a class="headerlink" href="#semantics" title="Link to this heading">¶</a></h4>
 <p class="rubric" id="semantics-of-extended-name-notation-table">Semantics of extended name notation</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 39%" />
-<col style="width: 61%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Pattern</p></th>
 <th class="head"><p>Meaning</p></th>
@@ -301,10 +299,6 @@ performance characteristics.</p>
 </div>
 <p class="rubric" id="examples-of-extended-name-notation-table"><span id="index-8"></span>Examples of extended name notation</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 34%" />
-<col style="width: 66%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Example</p></th>
 <th class="head"><p>Meaning</p></th>
@@ -375,7 +369,7 @@ item’s trait being monitored.</p>
 </section>
 </section>
 <section id="notification-handler-signatures">
-<span id="index-9"></span><span id="id6"></span><h3>Notification Handler Signatures<a class="headerlink" href="#notification-handler-signatures" title="Permalink to this headline">¶</a></h3>
+<span id="index-9"></span><span id="id6"></span><h3>Notification Handler Signatures<a class="headerlink" href="#notification-handler-signatures" title="Link to this heading">¶</a></h3>
 <p>The handler passed to on_trait_change() or on_trait_event() can have any one of
 the following signatures:</p>
 <ul class="simple" id="index-10">
@@ -411,7 +405,7 @@ this is Undefined.</p></li>
 argument.</p>
 </section>
 <section id="dynamic-handler-special-cases">
-<span id="index-15"></span><span id="id7"></span><h3>Dynamic Handler Special Cases<a class="headerlink" href="#dynamic-handler-special-cases" title="Permalink to this headline">¶</a></h3>
+<span id="index-15"></span><span id="id7"></span><h3>Dynamic Handler Special Cases<a class="headerlink" href="#dynamic-handler-special-cases" title="Link to this heading">¶</a></h3>
 <p>In the one- and two-parameter signatures, the handler does not receive enough
 information to distinguish between a change to the final trait attribute being
 monitored, and a change to an intermediate object. In this case, the
@@ -442,16 +436,16 @@ use the “new style” behavior of zero-parameter handlers, be sure to include
 some aspect of the extended trait name syntax in the name specifier.</p>
 <div class="highlight-default notranslate" id="index-16"><div class="highlight"><pre><span></span><span class="c1"># list_notifier.py -- Example of zero-parameter handlers for an object</span>
 <span class="c1">#                     containing a list</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">List</span>
 
-<span class="k">class</span> <span class="nc">Employee</span><span class="p">:</span> <span class="k">pass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Employee</span><span class="p">:</span> <span class="k">pass</span>
 
-<span class="k">class</span> <span class="nc">Department</span><span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Department</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">employees</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">Employee</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">a_handler</span><span class="p">():</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;A handler&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">b_handler</span><span class="p">():</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;B handler&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">c_handler</span><span class="p">():</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;C handler&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">a_handler</span><span class="p">():</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;A handler&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">b_handler</span><span class="p">():</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;B handler&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">c_handler</span><span class="p">():</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;C handler&quot;</span><span class="p">)</span>
 
 <span class="n">fred</span> <span class="o">=</span> <span class="n">Employee</span><span class="p">()</span>
 <span class="n">mary</span> <span class="o">=</span> <span class="n">Employee</span><span class="p">()</span>
@@ -461,13 +455,13 @@ some aspect of the extended trait name syntax in the name specifier.</p>
 
 <span class="c1"># &quot;Old style&quot; name syntax</span>
 <span class="c1"># a_handler is called only if the list is replaced:</span>
-<span class="n">dept</span><span class="o">.</span><span class="n">on_trait_change</span><span class="p">(</span> <span class="n">a_handler</span><span class="p">,</span> <span class="s1">&#39;employees&#39;</span> <span class="p">)</span>
+<span class="n">dept</span><span class="o">.</span><span class="n">on_trait_change</span><span class="p">(</span><span class="n">a_handler</span><span class="p">,</span> <span class="s1">&#39;employees&#39;</span><span class="p">)</span>
 <span class="c1"># b_handler is called if the membership of the list changes:</span>
-<span class="n">dept</span><span class="o">.</span><span class="n">on_trait_change</span><span class="p">(</span> <span class="n">b_handler</span><span class="p">,</span> <span class="s1">&#39;employees_items&#39;</span><span class="p">)</span>
+<span class="n">dept</span><span class="o">.</span><span class="n">on_trait_change</span><span class="p">(</span><span class="n">b_handler</span><span class="p">,</span> <span class="s1">&#39;employees_items&#39;</span><span class="p">)</span>
 
 <span class="c1"># &quot;New style&quot; name syntax</span>
 <span class="c1"># c_handler is called if &#39;employees&#39; or its membership change:</span>
-<span class="n">dept</span><span class="o">.</span><span class="n">on_trait_change</span><span class="p">(</span> <span class="n">c_handler</span><span class="p">,</span> <span class="s1">&#39;employees[]&#39;</span> <span class="p">)</span>
+<span class="n">dept</span><span class="o">.</span><span class="n">on_trait_change</span><span class="p">(</span><span class="n">c_handler</span><span class="p">,</span> <span class="s1">&#39;employees[]&#39;</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Changing list items&quot;</span><span class="p">)</span>
 <span class="n">dept</span><span class="o">.</span><span class="n">employees</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">donna</span>     <span class="c1"># Calls B and C</span>
@@ -478,7 +472,7 @@ some aspect of the extended trait name syntax in the name specifier.</p>
 </section>
 </section>
 <section id="static-notification">
-<span id="index-17"></span><span id="id8"></span><h2>Static Notification<a class="headerlink" href="#static-notification" title="Permalink to this headline">¶</a></h2>
+<span id="index-17"></span><span id="id8"></span><h2>Static Notification<a class="headerlink" href="#static-notification" title="Link to this heading">¶</a></h2>
 <p>The static approach is the most convenient option, but it is not always
 possible. Writing a static change notification handler requires that, for a
 class whose trait attribute changes you are interested in, you write a method
@@ -494,7 +488,7 @@ particular trait, you have two options:</p>
 “listens” to.</p></li>
 </ul>
 <section id="handler-decorator">
-<span id="id9"></span><h3>Handler Decorator<a class="headerlink" href="#handler-decorator" title="Permalink to this headline">¶</a></h3>
+<span id="id9"></span><h3>Handler Decorator<a class="headerlink" href="#handler-decorator" title="Link to this heading">¶</a></h3>
 <p>The most flexible method of statically specifying that a method is a
 notification handler for a trait is to use the &#64;on_trait_change() decorator.
 The &#64;on_trait_change() decorator is more flexible than specially-named method
@@ -503,10 +497,10 @@ handlers, because it supports the very powerful extended trait name syntax
 multiple attributes at once, on trait attributes of linked objects, and on
 attributes that are selected based on trait metadata.</p>
 <section id="decorator-syntax">
-<span id="index-19"></span><span id="id10"></span><h4>Decorator Syntax<a class="headerlink" href="#decorator-syntax" title="Permalink to this headline">¶</a></h4>
+<span id="index-19"></span><span id="id10"></span><h4>Decorator Syntax<a class="headerlink" href="#decorator-syntax" title="Link to this heading">¶</a></h4>
 <p>The syntax for the decorator is:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@on_trait_change</span><span class="p">(</span> <span class="s1">&#39;extended_trait_name&#39;</span> <span class="p">)</span>
-<span class="k">def</span> <span class="nf">any_method_name</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="o">...</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@on_trait_change</span><span class="p">(</span><span class="s1">&#39;extended_trait_name&#39;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">any_method_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">...</span><span class="p">):</span>
 <span class="o">...</span>
 </pre></div>
 </div>
@@ -519,7 +513,7 @@ parameter, because they can handle notifications for trait attributes that do
 not belong to the same object.</p>
 </section>
 <section id="decorator-semantics">
-<span id="index-20"></span><span id="id11"></span><h4>Decorator Semantics<a class="headerlink" href="#decorator-semantics" title="Permalink to this headline">¶</a></h4>
+<span id="index-20"></span><span id="id11"></span><h4>Decorator Semantics<a class="headerlink" href="#decorator-semantics" title="Link to this heading">¶</a></h4>
 <p>The functionality provided by the &#64;on_trait_change() decorator is identical to
 that of specially-named handlers, in that both result in a call to
 on_trait_change() to register the method as a notification handler. However,
@@ -531,20 +525,20 @@ state. When an instance is constructed with a trait value that is different
 from the default, that is considered a change and will fire the associated
 change handlers. The <code class="docutils literal notranslate"><span class="pre">post_init</span></code> argument in &#64;on_trait_change can be used
 to delay registering the handler to after the state is set.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">Float</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">on_trait_change</span><span class="p">,</span> <span class="n">Str</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">Float</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">on_trait_change</span><span class="p">,</span> <span class="n">Str</span>
 
 
-<span class="k">class</span> <span class="nc">Part</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Part</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">cost</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
 
     <span class="n">name</span> <span class="o">=</span> <span class="n">Str</span><span class="p">(</span><span class="s2">&quot;Part&quot;</span><span class="p">)</span>
 
     <span class="nd">@on_trait_change</span><span class="p">(</span><span class="s2">&quot;cost&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">cost_updated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cost_updated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> is changed from </span><span class="si">{}</span><span class="s2"> to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">))</span>
 
     <span class="nd">@on_trait_change</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">post_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">name_updated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">name_updated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> is changed from </span><span class="si">{}</span><span class="s2"> to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">))</span>
 
 
@@ -555,7 +549,7 @@ to delay registering the handler to after the state is set.</p>
 </section>
 </section>
 <section id="specially-named-notification-handlers">
-<span id="index-21"></span><span id="id12"></span><h3>Specially-named Notification Handlers<a class="headerlink" href="#specially-named-notification-handlers" title="Permalink to this headline">¶</a></h3>
+<span id="index-21"></span><span id="id12"></span><h3>Specially-named Notification Handlers<a class="headerlink" href="#specially-named-notification-handlers" title="Link to this heading">¶</a></h3>
 <p>There are two kinds of special method names that can be used for static trait
 attribute change notifications. One is attribute-specific, and the other
 applies to all trait attributes on a class.</p>
@@ -570,19 +564,19 @@ named _anytrait_changed().</p>
 illustrated in the following example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># static_notification.py --- Example of static attribute</span>
 <span class="c1">#                            notification</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Float</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Float</span>
 
-<span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">weight_kg</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
     <span class="n">height_m</span> <span class="o">=</span>  <span class="n">Float</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
     <span class="n">bmi</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_weight_kg_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_weight_kg_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
          <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;weight_kg changed from </span><span class="si">%s</span><span class="s1"> to </span><span class="si">%s</span><span class="s1"> &#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">))</span>
          <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_m</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span>
              <span class="bp">self</span><span class="o">.</span><span class="n">bmi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_kg</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_anytrait_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_anytrait_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
          <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The </span><span class="si">%s</span><span class="s1"> trait changed from </span><span class="si">%s</span><span class="s1"> to </span><span class="si">%s</span><span class="s1"> &#39;</span> \
                 <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">))</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -611,7 +605,7 @@ handler it is.</p>
 <p>The <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.on_trait_change" title="traits.has_traits.on_trait_change"><code class="xref py py-func docutils literal notranslate"><span class="pre">on_trait_change()</span></code></a> and <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.observe" title="traits.has_traits.observe"><code class="xref py py-func docutils literal notranslate"><span class="pre">observe()</span></code></a> decorators nullify
 the effect of special naming. A method that looks like:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@observe</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">_foo_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_foo_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
     <span class="n">do_something_with</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -620,27 +614,27 @@ the effect of special naming. A method that looks like:</p>
 </div>
 </section>
 <section id="attribute-specific-handler-signatures">
-<span id="id13"></span><h3>Attribute-specific Handler Signatures<a class="headerlink" href="#attribute-specific-handler-signatures" title="Permalink to this headline">¶</a></h3>
+<span id="id13"></span><h3>Attribute-specific Handler Signatures<a class="headerlink" href="#attribute-specific-handler-signatures" title="Link to this heading">¶</a></h3>
 <p>For an attribute specific notification handler, the method signatures supported
 are:</p>
 <dl class="py method">
-<dt id="name_changed">
-<span id="_name_changed"></span><code class="sig-name descname"><span class="pre">_name_changed</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#name_changed" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="name_changed">
+<span class="sig-name descname"><span class="pre">_name_changed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#name_changed" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt>
-<code class="sig-name descname"><span class="pre">_name_changed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new</span></span></em><span class="sig-paren">)</span></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_name_changed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new</span></span></em><span class="sig-paren">)</span></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt>
-<code class="sig-name descname"><span class="pre">_name_changed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new</span></span></em><span class="sig-paren">)</span></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_name_changed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new</span></span></em><span class="sig-paren">)</span></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt>
-<code class="sig-name descname"><span class="pre">_name_changed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new</span></span></em><span class="sig-paren">)</span></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_name_changed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new</span></span></em><span class="sig-paren">)</span></dt>
 <dd></dd></dl>
 
 <p>The method name can also be _<em>name</em>_fired(), with the same set of
@@ -655,11 +649,11 @@ is not supported.</p></li>
 <p>Note that these signatures follow a different pattern for argument
 interpretation from dynamic handlers and decorated static handlers. Both of
 the following methods define a handler for an object’s <strong>name</strong> trait:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_name_changed</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="n">arg3</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">_name_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="n">arg3</span><span class="p">):</span>
     <span class="k">pass</span>
 
 <span class="nd">@on_trait_change</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">some_method</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="n">arg3</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">some_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="n">arg3</span><span class="p">):</span>
     <span class="k">pass</span>
 </pre></div>
 </div>
@@ -667,11 +661,6 @@ the following methods define a handler for an object’s <strong>name</strong> t
 the following table.</p>
 <p class="rubric" id="handler-argument-interpretation-table">Handler argument interpretation</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 19%" />
-<col style="width: 44%" />
-<col style="width: 37%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Argument</p></th>
 <th class="head"><p>_<em>name</em>_changed</p></th>
@@ -695,27 +684,27 @@ the following table.</p>
 </table>
 </section>
 <section id="general-static-handler-signatures">
-<span id="id14"></span><h3>General Static Handler Signatures<a class="headerlink" href="#general-static-handler-signatures" title="Permalink to this headline">¶</a></h3>
+<span id="id14"></span><h3>General Static Handler Signatures<a class="headerlink" href="#general-static-handler-signatures" title="Link to this heading">¶</a></h3>
 <p>In the case of a non-attribute specific handler, the method signatures
 supported are:</p>
 <dl class="py method">
-<dt id="anytrait_changed">
-<span id="_anytrait_changed"></span><code class="sig-name descname"><span class="pre">_anytrait_changed</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#anytrait_changed" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="anytrait_changed">
+<span class="sig-name descname"><span class="pre">_anytrait_changed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#anytrait_changed" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt>
-<code class="sig-name descname"><span class="pre">_anytrait_changed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_anytrait_changed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt>
-<code class="sig-name descname"><span class="pre">_anytrait_changed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new</span></span></em><span class="sig-paren">)</span></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_anytrait_changed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new</span></span></em><span class="sig-paren">)</span></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt>
-<code class="sig-name descname"><span class="pre">_anytrait_changed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new</span></span></em><span class="sig-paren">)</span></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_anytrait_changed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new</span></span></em><span class="sig-paren">)</span></dt>
 <dd></dd></dl>
 
 <p>The meanings for <em>name</em>, <em>new</em>, and <em>old</em> are the same as for
@@ -723,7 +712,7 @@ attribute-specific notification functions.</p>
 </section>
 </section>
 <section id="trait-events">
-<span id="id15"></span><h2>Trait Events<a class="headerlink" href="#trait-events" title="Permalink to this headline">¶</a></h2>
+<span id="id15"></span><h2>Trait Events<a class="headerlink" href="#trait-events" title="Link to this heading">¶</a></h2>
 <p id="index-24">The Traits package defines a special type of trait called an event. Events are
 instances of (subclasses of) the Event class.</p>
 <p>There are two major differences between a normal trait and an event:</p>
@@ -742,23 +731,23 @@ results in a TraitError exception, because an event has no value.</p></li>
 </ul>
 <p id="index-25">As an example of an event, consider:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># event.py --- Example of trait event</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">Event</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">Event</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="n">point_2d</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">Line2D</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Line2D</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">points</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">point_2d</span><span class="p">)</span>
     <span class="n">line_color</span> <span class="o">=</span> <span class="n">RGBAColor</span><span class="p">(</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
     <span class="n">updated</span> <span class="o">=</span> <span class="n">Event</span>
 
-    <span class="k">def</span> <span class="nf">redraw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">redraw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>  <span class="c1"># Not implemented for this example</span>
 
-    <span class="k">def</span> <span class="nf">_points_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_points_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">updated</span> <span class="o">=</span> <span class="kc">True</span>
 
-    <span class="k">def</span> <span class="nf">_updated_fired</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_updated_fired</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">redraw</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -769,7 +758,7 @@ names are simply synonyms for programmer convenience.</p>
 <p>Similarly, a function named on_trait_event() can be used as a synonym for
 on_trait_change() for dynamic notification.</p>
 <section id="undefined-object">
-<span id="index-26"></span><span id="id16"></span><h3>Undefined Object<a class="headerlink" href="#undefined-object" title="Permalink to this headline">¶</a></h3>
+<span id="index-26"></span><span id="id16"></span><h3>Undefined Object<a class="headerlink" href="#undefined-object" title="Link to this heading">¶</a></h3>
 <p>Python defines a special, singleton object called None. The Traits package
 introduces an additional special, singleton object called Undefined.</p>
 <p>The Undefined object is used to indicate that a trait attribute has not yet
@@ -782,7 +771,7 @@ attribute previously had no value. Similarly, the value of a trait event is
 always Undefined.</p>
 </section>
 <section id="container-items-events">
-<span id="trait-items-handlers"></span><h3>Container Items Events<a class="headerlink" href="#container-items-events" title="Permalink to this headline">¶</a></h3>
+<span id="trait-items-handlers"></span><h3>Container Items Events<a class="headerlink" href="#container-items-events" title="Link to this heading">¶</a></h3>
 <p id="index-27">For the container traits (List, Dict and Set) both static and dynamic handlers
 for the trait are only called when the entire value of the trait is replaced
 with another value; they do not get fired when the item itself is mutated
@@ -815,23 +804,23 @@ objects, including avoiding in-place changes to <strong>added</strong>, <strong>
 </section>
 </section>
 <section id="dos-and-donts">
-<span id="on-trait-change-dos-n-donts"></span><h2>Dos and Don’ts<a class="headerlink" href="#dos-and-donts" title="Permalink to this headline">¶</a></h2>
+<span id="on-trait-change-dos-n-donts"></span><h2>Dos and Don’ts<a class="headerlink" href="#dos-and-donts" title="Link to this heading">¶</a></h2>
 <section id="don-t-assume-handlers-are-called-in-a-specific-order">
-<h3>Don’t assume handlers are called in a specific order<a class="headerlink" href="#don-t-assume-handlers-are-called-in-a-specific-order" title="Permalink to this headline">¶</a></h3>
+<h3>Don’t assume handlers are called in a specific order<a class="headerlink" href="#don-t-assume-handlers-are-called-in-a-specific-order" title="Link to this heading">¶</a></h3>
 <p>Don’t do this:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@on_trait_change</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">update_number</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">update_number</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">+=</span> <span class="mi">1</span>
 
 <span class="nd">@on_trait_change</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">update_orders</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">update_orders</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">orders</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Do this instead:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@on_trait_change</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="n">number</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">+</span> <span class="mi">1</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="n">number</span>
     <span class="k">if</span> <span class="n">number</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
@@ -846,12 +835,12 @@ this would be due to implementation details that may not hold true across
 releases and platforms.</p>
 </section>
 <section id="don-t-raise-exception-from-a-change-handler">
-<h3>Don’t raise exception from a change handler<a class="headerlink" href="#don-t-raise-exception-from-a-change-handler" title="Permalink to this headline">¶</a></h3>
+<h3>Don’t raise exception from a change handler<a class="headerlink" href="#don-t-raise-exception-from-a-change-handler" title="Link to this heading">¶</a></h3>
 <p>Don’t do this:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">name</span> <span class="o">=</span> <span class="n">String</span><span class="p">()</span>
 
 <span class="nd">@on_trait_change</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">update_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">update_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">new</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Name cannot be empty.&quot;</span><span class="p">)</span>
 </pre></div>
@@ -877,10 +866,13 @@ captured and logged, so not to prevent other handlers to be called.</p>
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
             </a></p>
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">Trait Notification with <strong>on_trait_change</strong></a><ul>
 <li><a class="reference internal" href="#dynamic-notification">Dynamic Notification</a><ul>
+<li><a class="reference internal" href="#on_trait_change"><code class="docutils literal notranslate"><span class="pre">on_trait_change()</span></code></a></li>
+<li><a class="reference internal" href="#on_trait_event"><code class="docutils literal notranslate"><span class="pre">on_trait_event()</span></code></a></li>
 <li><a class="reference internal" href="#example-of-a-dynamic-notification-handler">Example of a Dynamic Notification Handler</a></li>
 <li><a class="reference internal" href="#the-name-parameter">The <em>name</em> Parameter</a><ul>
 <li><a class="reference internal" href="#syntax">Syntax</a></li>
@@ -898,8 +890,14 @@ captured and logged, so not to prevent other handlers to be called.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#specially-named-notification-handlers">Specially-named Notification Handlers</a></li>
-<li><a class="reference internal" href="#attribute-specific-handler-signatures">Attribute-specific Handler Signatures</a></li>
-<li><a class="reference internal" href="#general-static-handler-signatures">General Static Handler Signatures</a></li>
+<li><a class="reference internal" href="#attribute-specific-handler-signatures">Attribute-specific Handler Signatures</a><ul>
+<li><a class="reference internal" href="#name_changed"><code class="docutils literal notranslate"><span class="pre">_name_changed()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#general-static-handler-signatures">General Static Handler Signatures</a><ul>
+<li><a class="reference internal" href="#anytrait_changed"><code class="docutils literal notranslate"><span class="pre">_anytrait_changed()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a class="reference internal" href="#trait-events">Trait Events</a><ul>
@@ -916,27 +914,32 @@ captured and logged, so not to prevent other handlers to be called.</p>
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="appendix.html"
-                        title="previous chapter">Appendix</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="../traits_api_reference/index.html"
-                        title="next chapter">API Reference</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="appendix.html"
+                          title="previous chapter">Appendix</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="../traits_api_reference/index.html"
+                          title="next chapter">API Reference</a></p>
+  </div>
   <h3>This Page</h3>
   <div>
     <a href="../_sources/traits_user_manual/listening.rst.txt"
        rel="nofollow">Show Source</a>
   </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
         </div>
@@ -953,15 +956,15 @@ captured and logged, so not to prevent other handlers to be called.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2025 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Aug 11, 2022.
+      Last updated on Jan 27, 2025.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 8.1.3.
       </li>
     </ul>
     </div>

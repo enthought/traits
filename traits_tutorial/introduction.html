@@ -3,19 +3,21 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Introduction &mdash; Traits 6.4 Documentation</title>
+    <title>Introduction &mdash; Traits 7.0 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
     <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" >
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.4.0',
+        VERSION:     '7.0.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -23,9 +25,9 @@
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/sphinx_highlight.js"></script>
     <script type="text/javascript" src="../_static/clipboard.min.js"></script>
     <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
@@ -33,10 +35,10 @@
     <link rel="shortcut icon" href="../_static/img/favicon.png">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.4 Documentation" href="../index.html" >
-    <link rel="up" title="Traits 6.4 Tutorial" href="index.html" >
-    <link rel="next" title="Traits 6.4 User Manual" href="../traits_user_manual/index.html" >
-    <link rel="prev" title="Traits 6.4 Tutorial" href="index.html" > 
+    <link rel="top" title="Traits 7.0 Documentation" href="../index.html" >
+    <link rel="up" title="Traits 7.0 Tutorial" href="index.html" >
+    <link rel="next" title="Traits 7.0 User Manual" href="../traits_user_manual/index.html" >
+    <link rel="prev" title="Traits 7.0 Tutorial" href="index.html" > 
   </head>
   <body>
   <div class="container">
@@ -53,9 +55,9 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.4 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 7.0 Documentation</a></li>
 	
-          <li class="active"><a href="index.html" accesskey="U">Traits 6.4 Tutorial</a></li> 
+          <li class="active"><a href="index.html" accesskey="U">Traits 7.0 Tutorial</a></li> 
     </ul>
               
               
@@ -69,11 +71,11 @@
            >modules</a>
       </li>
       <li class="active">
-        <a href="../traits_user_manual/index.html" title="Traits 6.4 User Manual"
+        <a href="../traits_user_manual/index.html" title="Traits 7.0 User Manual"
            accesskey="N">next</a>
       </li>
       <li class="active">
-        <a href="index.html" title="Traits 6.4 Tutorial"
+        <a href="index.html" title="Traits 7.0 Tutorial"
            accesskey="P">previous</a>
       </li>
     </ul>
@@ -90,7 +92,7 @@
           <div class="body" id="spc-section-body" role="main">
             
   <section id="introduction">
-<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<h1>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h1>
 <p>This tutorial is intended to introduce you to the basics of Traits
 and to give you an idea of what capabilities the Traits library provides.
 This tutorial assumes that you are comfortable with the Python
@@ -101,7 +103,7 @@ explain <em>why</em> you might want to use Traits in your own code.</p>
 <p>An interactive version of this tutorial can be accessed using the
 <a class="reference external" href="https://pypi.org/project/etsdemo/">ETS Demo application</a>.</p>
 <section id="introduction-to-traits">
-<h2>Introduction to Traits<a class="headerlink" href="#introduction-to-traits" title="Permalink to this headline">¶</a></h2>
+<h2>Introduction to Traits<a class="headerlink" href="#introduction-to-traits" title="Link to this heading">¶</a></h2>
 <p>To make the tutorial more practical, let’s imagine that you are
 writing some tools to organize and process image data, perhaps
 to help you develop a machine learning algorithm, or to document
@@ -122,17 +124,17 @@ object-oriented Python with NumPy for analysis and Pillow for image
 loading.  Experiment with the code in the example to see how you can use it.</p>
 <p>In the subsequent steps of the tutorial, we’ll look at how we can use Traits
 to simplify and improve the code here.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span> <span class="k">as</span> <span class="n">PILImage</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span> <span class="k">as</span> <span class="n">PILImage</span>
 
 
-<span class="k">class</span> <span class="nc">Image</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot; An SEM image stored in a file. &quot;&quot;&quot;</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Image</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; An SEM image stored in a file. &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">sample_id</span><span class="p">,</span> <span class="n">date_acquired</span><span class="p">,</span> <span class="n">operator</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">sample_id</span><span class="p">,</span> <span class="n">date_acquired</span><span class="p">,</span> <span class="n">operator</span><span class="p">,</span>
                  <span class="n">scan_size</span><span class="o">=</span><span class="p">(</span><span class="mf">1e-5</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">)):</span>
         <span class="c1"># initialize the primary attributes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span>
@@ -144,8 +146,8 @@ to simplify and improve the code here.</p>
         <span class="c1"># useful secondary attributes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">scan_width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_size</span>
 
-    <span class="k">def</span> <span class="nf">read_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Read the image from disk. &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Read the image from disk. &quot;&quot;&quot;</span>
         <span class="n">pil_image</span> <span class="o">=</span> <span class="n">PILImage</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s2">&quot;L&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pil_image</span><span class="p">)</span>
 
@@ -157,8 +159,8 @@ to simplify and improve the code here.</p>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pixel_area</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="k">def</span> <span class="nf">histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Compute the normalized histogram of the image. &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Compute the normalized histogram of the image. &quot;&quot;&quot;</span>
         <span class="n">hist</span><span class="p">,</span> <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
             <span class="n">bins</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span>
@@ -167,8 +169,8 @@ to simplify and improve the code here.</p>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">hist</span>
 
-    <span class="k">def</span> <span class="nf">threshold</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">255</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Compute a threshold mask for the array. &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">threshold</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">255</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Compute a threshold mask for the array. &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">&gt;=</span> <span class="n">low</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">&lt;=</span> <span class="n">high</span><span class="p">)</span>
 
 
@@ -208,14 +210,14 @@ to simplify and improve the code here.</p>
 </pre></div>
 </div>
 <section id="links">
-<h3>Links<a class="headerlink" href="#links" title="Permalink to this headline">¶</a></h3>
+<h3>Links<a class="headerlink" href="#links" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><a class="reference download internal" download="" href="../_downloads/6db3fa790a1cd696638609b955845280/0_introduction.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a></p></li>
 </ul>
 </section>
 </section>
 <section id="validation">
-<h2>Validation<a class="headerlink" href="#validation" title="Permalink to this headline">¶</a></h2>
+<h2>Validation<a class="headerlink" href="#validation" title="Link to this heading">¶</a></h2>
 <p>A common issue faced by scientists is ensuring that the data that is
 entered matches the sort of data that is expected.  For example, we expect
 that the filename is a string (or perhaps a pathlib <strong>Path</strong>, for advanced
@@ -233,20 +235,20 @@ rather than just any NumPy array.  And so on.</p>
 classes: as part of your class definition you _declare_ what you expect your
 data to be.  To do this, the first thing you want to do is inherit from the
 base <code class="docutils literal notranslate"><span class="pre">HasTraits</span></code> class which enables all of the validation machinery:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">HasTraits</span>
 
-<span class="k">class</span> <span class="nc">Image</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; An SEM image stored in a file. &#39;&#39;&#39;</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Image</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39; An SEM image stored in a file. &#39;&#39;&#39;</span>
 </pre></div>
 </div>
 <p>Having done this, we can declare the types of data that we expect for the
 attributes of an <code class="docutils literal notranslate"><span class="pre">Image</span></code> class.  For example, we expect that the operator
 name should be a string, so we can use the standard Traits <code class="docutils literal notranslate"><span class="pre">Str</span></code> trait
 type:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span>
 
-<span class="k">class</span> <span class="nc">Image</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; An SEM image stored in a file. &#39;&#39;&#39;</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Image</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39; An SEM image stored in a file. &#39;&#39;&#39;</span>
 
     <span class="n">operator</span> <span class="o">=</span> <span class="n">Str</span><span class="p">()</span>
 </pre></div>
@@ -277,7 +279,7 @@ with <code class="docutils literal notranslate"><span class="pre">Array(shape=(N
 <p>Everything else can remain unchanged in the class, and it will still work as
 expected, however just as with regular Python classes, we need to remember
 to call <code class="docutils literal notranslate"><span class="pre">super()</span></code> in the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">sample_id</span><span class="p">,</span> <span class="n">date_acquired</span><span class="p">,</span> <span class="n">operator</span><span class="p">,</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">sample_id</span><span class="p">,</span> <span class="n">date_acquired</span><span class="p">,</span> <span class="n">operator</span><span class="p">,</span>
              <span class="n">scan_size</span><span class="o">=</span><span class="p">(</span><span class="mf">1e-5</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">)):</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
@@ -288,7 +290,7 @@ to call <code class="docutils literal notranslate"><span class="pre">super()</sp
 <p>When we talk about an attribute which is declared by a trait type, it is
 common to call it a _trait_ rather than an attribute.</p>
 <section id="traits-and-static-types">
-<h3>Traits and Static Types<a class="headerlink" href="#traits-and-static-types" title="Permalink to this headline">¶</a></h3>
+<h3>Traits and Static Types<a class="headerlink" href="#traits-and-static-types" title="Link to this heading">¶</a></h3>
 <p>The first version of Traits was written over 15 years ago.  In the last 5
 years or so, Python has started to gain the ability to perform static type
 checking using tools like MyPy and certain integrated development
@@ -296,18 +298,18 @@ environments.  The <code class="docutils literal notranslate"><span class="pre">
 can do similar sorts of type declaration for classes.  Advanced Python users
 may be aware of, and using these classes already.</p>
 <p>As we will see, the capabilities of Traits are much greater than these type
-checking systems, however if you have the traits-stubs package installed,
+checking systems. However, Traits now ships with a selection of stub files, so
 most of your trait type declarations will be recognised and can be used with
 these new Python type systems.</p>
 </section>
 <section id="exercise">
-<h3>Exercise<a class="headerlink" href="#exercise" title="Permalink to this headline">¶</a></h3>
+<h3>Exercise<a class="headerlink" href="#exercise" title="Link to this heading">¶</a></h3>
 <p>The example code hasn’t declared trait types for all the attributes used by
 the class.  Declare trait types for <code class="docutils literal notranslate"><span class="pre">scan_width</span></code>, <code class="docutils literal notranslate"><span class="pre">scan_height</span></code> and
 <code class="docutils literal notranslate"><span class="pre">pixel_area</span></code>.</p>
 </section>
 <section id="id1">
-<h3>Links<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<h3>Links<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><a class="reference internal" href="../traits_user_manual/defining.html#defining-traits-initialization-and-validation"><span class="std std-ref">Defining Traits: Initialization and Validation</span></a></p></li>
 <li><p><a class="reference download internal" download="" href="../_downloads/1b1944b4e95104834a7db7d5e0ede7b0/1_validation.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a></p></li>
@@ -315,13 +317,13 @@ the class.  Declare trait types for <code class="docutils literal notranslate"><
 </section>
 </section>
 <section id="initialization">
-<h2>Initialization<a class="headerlink" href="#initialization" title="Permalink to this headline">¶</a></h2>
+<h2>Initialization<a class="headerlink" href="#initialization" title="Link to this heading">¶</a></h2>
 <p>If you have done any significant amount of object-oriented Python
 programming, you may have noticed that your <code class="docutils literal notranslate"><span class="pre">__init__</span></code> methods often
 have a lot of boilerplate.  In our original example, the code copies all of
 the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> arguments to corresponding attributes before doing any
 real work:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">sample_id</span><span class="p">,</span> <span class="n">date_acquired</span><span class="p">,</span> <span class="n">operator</span><span class="p">,</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">sample_id</span><span class="p">,</span> <span class="n">date_acquired</span><span class="p">,</span> <span class="n">operator</span><span class="p">,</span>
              <span class="n">scan_size</span><span class="o">=</span><span class="p">(</span><span class="mf">1e-5</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">)):</span>
     <span class="c1"># initialize the primary attributes</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span>
@@ -334,7 +336,7 @@ real work:</p>
 method that accepts keyword arguments that correspond to the declared
 traits.  The Traits version of the <code class="docutils literal notranslate"><span class="pre">Image</span></code> class could potentially skip
 the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method entirely:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Image</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Image</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">filename</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">sample_id</span> <span class="o">=</span> <span class="n">Str</span><span class="p">()</span>
     <span class="n">date_acquired</span> <span class="o">=</span> <span class="n">Date</span><span class="p">()</span>
@@ -353,7 +355,7 @@ the <code class="docutils literal notranslate"><span class="pre">__init__</span>
 </pre></div>
 </div>
 <section id="default-values">
-<h3>Default Values<a class="headerlink" href="#default-values" title="Permalink to this headline">¶</a></h3>
+<h3>Default Values<a class="headerlink" href="#default-values" title="Link to this heading">¶</a></h3>
 <p>There are a couple of complications in the example that we need to take into
 account.  The first is what happens if a user forgets to provide an initial
 value:</p>
@@ -386,7 +388,7 @@ specify a default value as part of the declaration.  So we could say:</p>
 </div>
 </section>
 <section id="dynamic-defaults">
-<h3>Dynamic Defaults<a class="headerlink" href="#dynamic-defaults" title="Permalink to this headline">¶</a></h3>
+<h3>Dynamic Defaults<a class="headerlink" href="#dynamic-defaults" title="Link to this heading">¶</a></h3>
 <p>The second complication comes from more complex initial values.  For example,
 we could declare some arbitrary fixed date as the default value for
 <code class="docutils literal notranslate"><span class="pre">date_acquired</span></code>:</p>
@@ -398,7 +400,7 @@ a reasonable default would be today’s date.  You can provide this sort of
 dynamically declared default by using a specially-named method which has
 the pattern <code class="docutils literal notranslate"><span class="pre">_&lt;trait-name&gt;_default</span></code> and which returns the default value.
 So we could write:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_date_acquired_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">_date_acquired_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -409,13 +411,13 @@ better handled by Traits observation and/or properties, which are discussed
 in subsequent sections of the tutorial.</p>
 </section>
 <section id="the-traits-init-method">
-<h3>The <code class="docutils literal notranslate"><span class="pre">traits_init</span></code> Method<a class="headerlink" href="#the-traits-init-method" title="Permalink to this headline">¶</a></h3>
+<h3>The <code class="docutils literal notranslate"><span class="pre">traits_init</span></code> Method<a class="headerlink" href="#the-traits-init-method" title="Link to this heading">¶</a></h3>
 <p>Although you aren’t required to write an <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method in a
 <code class="docutils literal notranslate"><span class="pre">HasTraits</span></code> subclass, you can always choose to do so.  If you do, you
 <strong>must</strong> call <code class="docutils literal notranslate"><span class="pre">super()</span></code> to ensure that Traits has a chance to set up
 its machinery.  In our example the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method is also used to set
 up some auxiliary values. This doesn’t have to change:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span><span class="p">):</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">traits</span><span class="p">)</span>
 
     <span class="c1"># useful secondary attributes</span>
@@ -427,20 +429,20 @@ post-initialization setup of state: you can define a <code class="docutils liter
 which the <code class="docutils literal notranslate"><span class="pre">HasTraits</span></code> class ensures is called as part of the main
 initialization process.  When it has been called, all initial values will
 have been set:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">traits_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">traits_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="c1"># useful secondary attributes</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">scan_width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_size</span>
 </pre></div>
 </div>
 </section>
 <section id="id2">
-<h3>Exercise<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<h3>Exercise<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
 <p>In our original example, the <code class="docutils literal notranslate"><span class="pre">scan_size</span></code> atribute had a default value of
 <code class="docutils literal notranslate"><span class="pre">(1e-5,</span> <span class="pre">1e-5)</span></code>.  Modify the code in the example so that the trait is
 initialized to this default using a dynamic default method.</p>
 </section>
 <section id="id3">
-<h3>Links<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<h3>Links<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><a class="reference internal" href="../traits_user_manual/defining.html#defining-traits-initialization-and-validation"><span class="std std-ref">Defining Traits: Initialization and Validation</span></a></p></li>
 <li><p><a class="reference download internal" download="" href="../_downloads/acd9994bbbe0408f9434c891ce0a132d/2_initialization.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a></p></li>
@@ -448,21 +450,21 @@ initialized to this default using a dynamic default method.</p>
 </section>
 </section>
 <section id="observation">
-<h2>Observation<a class="headerlink" href="#observation" title="Permalink to this headline">¶</a></h2>
+<h2>Observation<a class="headerlink" href="#observation" title="Link to this heading">¶</a></h2>
 <p>In our code so far, there is a problem that it is possible for certain related
 values to get out of sync with one another.  For example, if we change the
 filename after we have read the image into memory, then the data in memory
 still refers to the old image.  It would be nice if we could automatically
 re-load the image if the filename changes.  Traits allows you to do this.</p>
 <section id="the-observe-decorator">
-<h3>The Observe Decorator<a class="headerlink" href="#the-observe-decorator" title="Permalink to this headline">¶</a></h3>
+<h3>The Observe Decorator<a class="headerlink" href="#the-observe-decorator" title="Link to this heading">¶</a></h3>
 <p>We want to have the <cite>read_image</cite> method run whenever the <code class="docutils literal notranslate"><span class="pre">filename</span></code> trait
 changes.  We can do this by adding an <code class="docutils literal notranslate"><span class="pre">observe</span></code> decorator to the method:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Image</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Image</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="o">...</span>
 
     <span class="nd">@observe</span><span class="p">(</span><span class="s1">&#39;filename&#39;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">read_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
         <span class="o">...</span>
 </pre></div>
 </div>
@@ -479,7 +481,7 @@ changes, not just when the value is set.  So if you do:</p>
 <p>then the observer will only be run once.</p>
 </section>
 <section id="observing-multiple-traits">
-<h3>Observing Multiple Traits<a class="headerlink" href="#observing-multiple-traits" title="Permalink to this headline">¶</a></h3>
+<h3>Observing Multiple Traits<a class="headerlink" href="#observing-multiple-traits" title="Link to this heading">¶</a></h3>
 <p>If you look at the computation of <code class="docutils literal notranslate"><span class="pre">pixel_area</span></code> in the original code, it
 looks like this:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">pixel_area</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_height</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_width</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">size</span>
@@ -490,11 +492,11 @@ would like to listen to changes to <em>all</em> of these.  We could write three
 <code class="docutils literal notranslate"><span class="pre">&#64;observe</span></code> functions, one for each trait, but the content would be the
 same for each.  A better way to do this is to have the observer listen to
 all the traits at once:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Image</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Image</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="o">...</span>
 
     <span class="nd">@observe</span><span class="p">(</span><span class="s1">&#39;scan_width, scan_height, image&#39;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">update_pixel_area</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_pixel_area</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pixel_area</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">scan_height</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_width</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">size</span>
@@ -505,7 +507,7 @@ all the traits at once:</p>
 </div>
 </section>
 <section id="dynamic-observers">
-<h3>Dynamic Observers<a class="headerlink" href="#dynamic-observers" title="Permalink to this headline">¶</a></h3>
+<h3>Dynamic Observers<a class="headerlink" href="#dynamic-observers" title="Link to this heading">¶</a></h3>
 <p>Sometimes you want to be able to observe changes to traits from a different
 object or piece of code.  The <code class="docutils literal notranslate"><span class="pre">observe</span></code> method on a <code class="docutils literal notranslate"><span class="pre">HasTraits</span></code> subclass
 allows you to dynamically specify a function to be called if the value of a
@@ -515,7 +517,7 @@ trait changes:</p>
     <span class="n">sample_id</span><span class="o">=</span><span class="s2">&quot;0001&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">print_filename_changed</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">print_filename_changed</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Filename changed&quot;</span><span class="p">)</span>
 
 <span class="n">image</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="n">print_filename_changed</span><span class="p">,</span> <span class="s1">&#39;filename&#39;</span><span class="p">)</span>
@@ -534,14 +536,14 @@ the argument <code class="docutils literal notranslate"><span class="pre">remove
 </div>
 </section>
 <section id="id4">
-<h3>Exercise<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<h3>Exercise<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
 <p>Currently <code class="docutils literal notranslate"><span class="pre">scan_height</span></code> and <code class="docutils literal notranslate"><span class="pre">scan_width</span></code> are set from the parts of the
 <code class="docutils literal notranslate"><span class="pre">scan_size</span></code> trait as part of the <code class="docutils literal notranslate"><span class="pre">traits_init</span></code> method.  Remove the
 <code class="docutils literal notranslate"><span class="pre">traits_init</span></code> method and have <code class="docutils literal notranslate"><span class="pre">scan_height</span></code> and <code class="docutils literal notranslate"><span class="pre">scan_width</span></code> methods
 update whenever <code class="docutils literal notranslate"><span class="pre">scan_size</span></code> changes.</p>
 </section>
 <section id="id5">
-<h3>Links<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<h3>Links<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><a class="reference internal" href="../traits_user_manual/notification.html#observe-notification"><span class="std std-ref">Trait Notification</span></a></p></li>
 <li><p><a class="reference download internal" download="" href="../_downloads/dc8ca8e34a03dfbe4de8792448dcffd6/3_observation.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a></p></li>
@@ -549,7 +551,7 @@ update whenever <code class="docutils literal notranslate"><span class="pre">sca
 </section>
 </section>
 <section id="property-traits">
-<h2>Property Traits<a class="headerlink" href="#property-traits" title="Permalink to this headline">¶</a></h2>
+<h2>Property Traits<a class="headerlink" href="#property-traits" title="Link to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">Image</span></code> class has three traits which are closely related: <code class="docutils literal notranslate"><span class="pre">scan_size</span></code>,
 <code class="docutils literal notranslate"><span class="pre">scan_width</span></code> and <code class="docutils literal notranslate"><span class="pre">scan_height</span></code>.  We would ideally like to keep all of these
 synchronized.  This can be done with trait observation, as shown in the
@@ -566,15 +568,15 @@ but no “setter” then the property is read-only.</p>
 so we need to declare what traits to observe to know when the property might
 change.  What all this means is that we can define <code class="docutils literal notranslate"><span class="pre">scan_width</span></code> as a
 property by:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Image</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Image</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="o">...</span>
 
     <span class="n">scan_width</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span><span class="n">Float</span><span class="p">,</span> <span class="n">depends_on</span><span class="o">=</span><span class="s1">&#39;scan_size&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_get_scan_width</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_scan_width</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_set_scan_width</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_set_scan_width</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">scan_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_height</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -584,15 +586,15 @@ desired.</p>
 <p>Simple <cite>Property</cite> traits like this are computed “lazily”: the value is only
 calculated when you ask for it.</p>
 <section id="cached-properties">
-<h3>Cached Properties<a class="headerlink" href="#cached-properties" title="Permalink to this headline">¶</a></h3>
+<h3>Cached Properties<a class="headerlink" href="#cached-properties" title="Link to this heading">¶</a></h3>
 <p>It would be quite easy to turn the histogram function into a read-only
 property.  This might look something like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Image</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Image</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="o">...</span>
 
     <span class="n">histogram</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span><span class="n">Array</span><span class="p">,</span> <span class="n">depends_on</span><span class="o">=</span><span class="s1">&#39;image&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_get_histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">hist</span><span class="p">,</span> <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
             <span class="n">bins</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span>
@@ -608,13 +610,13 @@ for larger images, or if you are working with many images at once, this may
 impact performance.  In these cases, you can specify that the property
 should <strong>cache</strong> the returned value and use that value until the trait(s)
 the property depend on changes:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Image</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Image</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="o">...</span>
 
     <span class="n">histogram</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span><span class="n">Array</span><span class="p">,</span> <span class="n">depends_on</span><span class="o">=</span><span class="s1">&#39;image&#39;</span><span class="p">)</span>
 
     <span class="nd">@cached_property</span>
-    <span class="k">def</span> <span class="nf">_get_histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">hist</span><span class="p">,</span> <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
             <span class="n">bins</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span>
@@ -630,11 +632,11 @@ is unlikely to cause problems; but you probably wouldn’t want to do this
 with a multi-gigabyte array.</p>
 </section>
 <section id="id6">
-<h3>Exercise<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<h3>Exercise<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h3>
 <p>Make <code class="docutils literal notranslate"><span class="pre">pixel_area</span></code> a read-only property.</p>
 </section>
 <section id="id7">
-<h3>Links<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<h3>Links<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><a class="reference internal" href="../traits_user_manual/advanced.html#property-traits"><span class="std std-ref">Property Traits</span></a></p></li>
 <li><p><a class="reference download internal" download="" href="../_downloads/c0255fa37d8175105dbfc767423ed818/4_properties.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a></p></li>
@@ -642,16 +644,16 @@ with a multi-gigabyte array.</p>
 </section>
 </section>
 <section id="documentation">
-<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">¶</a></h2>
 <p>Another advantage of using Traits is that you code becomes clearer and easier
 for yourself and other people to work with.  If you look at the original
 version of the image class, it isn’t clear what attributes are available on
 the class and, worse yet, it isn’t clear <em>when</em> those attributes are available.</p>
 <section id="self-documenting-code">
-<h3>Self-Documenting Code<a class="headerlink" href="#self-documenting-code" title="Permalink to this headline">¶</a></h3>
+<h3>Self-Documenting Code<a class="headerlink" href="#self-documenting-code" title="Link to this heading">¶</a></h3>
 <p>By using Traits, all your attributes are declared up-front, so anyone reading
 your class knows exactly what your class is providing:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Image</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Image</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">filename</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">sample_id</span> <span class="o">=</span> <span class="n">Str</span><span class="p">()</span>
     <span class="n">operator</span> <span class="o">=</span> <span class="n">Str</span><span class="p">(</span><span class="s2">&quot;N/A&quot;</span><span class="p">)</span>
@@ -668,7 +670,7 @@ your class knows exactly what your class is providing:</p>
 common in production-quality Traits code to also document each trait with a
 special <code class="docutils literal notranslate"><span class="pre">#:</span></code> comment so that auto-documentation tools like Sphinx can
 generate API documentation for you:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Image</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Image</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
 
     <span class="c1">#: The filename of the image.</span>
     <span class="n">filename</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -684,7 +686,7 @@ generate API documentation for you:</p>
 </div>
 </section>
 <section id="hasstricttraits">
-<h3>HasStrictTraits<a class="headerlink" href="#hasstricttraits" title="Permalink to this headline">¶</a></h3>
+<h3>HasStrictTraits<a class="headerlink" href="#hasstricttraits" title="Link to this heading">¶</a></h3>
 <p>One common class of errors in Python are typos when accessing an attribute
 of a class.  For example, if we typed:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">image</span><span class="o">.</span><span class="n">fileanme</span> <span class="o">=</span> <span class="s2">&quot;sample_0002.png&quot;</span>
@@ -697,7 +699,7 @@ interactively, such as in a Jupyter notebook.</p>
 <p>Traits provides a special subclass of <code class="docutils literal notranslate"><span class="pre">HasTraits</span></code> called <code class="docutils literal notranslate"><span class="pre">HasStrictTraits</span></code>
 which restricts the allowed attributes to <strong>only</strong> the traits on the class.
 If we use:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Image</span><span class="p">(</span><span class="n">HasStrictTraits</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Image</span><span class="p">(</span><span class="n">HasStrictTraits</span><span class="p">):</span>
     <span class="o">...</span>
 </pre></div>
 </div>
@@ -710,7 +712,7 @@ If we use:</p>
 <p>We get an immediate error which flags the problem.</p>
 </section>
 <section id="id8">
-<h3>Links<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<h3>Links<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><a class="reference internal" href="../traits_user_manual/advanced.html#hasstricttraits"><span class="std std-ref">HasStrictTraits</span></a></p></li>
 <li><p><a class="reference download internal" download="" href="../_downloads/154e1281a2b547aa81d354bc31130a4b/5_documentation.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a></p></li>
@@ -718,7 +720,7 @@ If we use:</p>
 </section>
 </section>
 <section id="visualization">
-<h2>Visualization<a class="headerlink" href="#visualization" title="Permalink to this headline">¶</a></h2>
+<h2>Visualization<a class="headerlink" href="#visualization" title="Link to this heading">¶</a></h2>
 <p>Traits allows you to instantly create a graphical user interface
 for your <code class="docutils literal notranslate"><span class="pre">HasTraits</span></code> classes.  If you have TraitsUI and a suitable
 GUI toolkit (such as PyQt5 or PySide2) installed in your Python
@@ -731,9 +733,9 @@ your class by simply doing:</p>
 but it usually is not what you would want to provide for your users.</p>
 <p>With a little more effort using the features of TraitsUI, you can
 design a dialog which is more pleasing:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="kn">import</span> <span class="n">Item</span><span class="p">,</span> <span class="n">View</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">traitsui.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">Item</span><span class="p">,</span> <span class="n">View</span>
 
-<span class="k">class</span> <span class="nc">Image</span><span class="p">(</span><span class="n">HasStrictTraits</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Image</span><span class="p">(</span><span class="n">HasStrictTraits</span><span class="p">):</span>
     <span class="o">...</span>
 
     <span class="n">view</span> <span class="o">=</span> <span class="n">View</span><span class="p">(</span>
@@ -749,7 +751,7 @@ design a dialog which is more pleasing:</p>
 <p>TraitsUI can be used as the building block for complete scientific
 applications, including 2D and 3D plotting.</p>
 <section id="id9">
-<h3>Links<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<h3>Links<a class="headerlink" href="#id9" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><a class="reference external" href="https://docs.enthought.com/traitsui/">TraitsUI Documentation</a></p></li>
 <li><p><a class="reference download internal" download="" href="../_downloads/61769cfac20855186edf9751000db4e1/6_visualization.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a></p></li>
@@ -767,8 +769,9 @@ applications, including 2D and 3D plotting.</p>
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
             </a></p>
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">Introduction</a><ul>
 <li><a class="reference internal" href="#introduction-to-traits">Introduction to Traits</a><ul>
 <li><a class="reference internal" href="#links">Links</a></li>
@@ -816,27 +819,32 @@ applications, including 2D and 3D plotting.</p>
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="index.html"
-                        title="previous chapter">Traits 6.4 Tutorial</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="../traits_user_manual/index.html"
-                        title="next chapter">Traits 6.4 User Manual</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="index.html"
+                          title="previous chapter">Traits 7.0 Tutorial</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="../traits_user_manual/index.html"
+                          title="next chapter">Traits 7.0 User Manual</a></p>
+  </div>
   <h3>This Page</h3>
   <div>
     <a href="../_sources/traits_tutorial/introduction.rst.txt"
        rel="nofollow">Show Source</a>
   </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
         </div>
@@ -853,15 +861,15 @@ applications, including 2D and 3D plotting.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2025 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Aug 11, 2022.
+      Last updated on Jan 27, 2025.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 8.1.3.
       </li>
     </ul>
     </div>

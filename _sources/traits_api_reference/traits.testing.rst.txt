@@ -14,14 +14,6 @@
     :undoc-members:
     :show-inheritance:
 
-:mod:`traits.testing.nose_tools` Module
----------------------------------------
-
-.. automodule:: traits.testing.nose_tools
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 :mod:`traits.testing.optional_dependencies` Module
 --------------------------------------------------
 

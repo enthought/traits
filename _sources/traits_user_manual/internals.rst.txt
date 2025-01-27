@@ -184,8 +184,7 @@ Traits has the ability to watch for changes in standard Python containers:
 lists, dictionaries and sets.  To achieve this Traits provides special
 subclasses of the standard Python classes that can validate elements and can
 fire trait notifications when the contents change.  These classes are,
-respectively, |TraitList|, |TraitDict| and |TraitSet| (not to be confused with
-the deprecated Trait Handlers of the same names).
+respectively, |TraitList|, |TraitDict| and |TraitSet|.
 
 In addition to being able to take an appropriate value to initialize the
 container (such as a sequence or mapping), these container subclasses also

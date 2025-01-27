@@ -4,17 +4,19 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.etsconfig.etsconfig &mdash; Traits 6.4 Documentation</title>
+    <title>traits.etsconfig.etsconfig &mdash; Traits 7.0 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
     <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" >
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '6.4.0',
+        VERSION:     '7.0.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -22,9 +24,9 @@
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/sphinx_highlight.js"></script>
     <script type="text/javascript" src="../../../_static/clipboard.min.js"></script>
     <script type="text/javascript" src="../../../_static/copybutton.js"></script>
     <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
@@ -32,7 +34,7 @@
     <link rel="shortcut icon" href="../../../_static/img/favicon.png">
     <link rel="index" title="Index" href="../../../genindex.html" >
     <link rel="search" title="Search" href="../../../search.html" >
-    <link rel="top" title="Traits 6.4 Documentation" href="../../../index.html" >
+    <link rel="top" title="Traits 7.0 Documentation" href="../../../index.html" >
     <link rel="up" title="Module code" href="../../index.html" > 
   </head>
   <body>
@@ -50,7 +52,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../../index.html">Traits 6.4 Documentation</a></li>
+        <li class="active"><a href="../../../index.html">Traits 7.0 Documentation</a></li>
 	
           <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -79,7 +81,7 @@
           <div class="body" id="spc-section-body" role="main">
             
   <h1>Source code for traits.etsconfig.etsconfig</h1><div class="highlight"><pre>
-<span></span><span class="c1"># (C) Copyright 2005-2022 Enthought, Inc., Austin, TX</span>
+<span></span><span class="c1"># (C) Copyright 2005-2025 Enthought, Inc., Austin, TX</span>
 <span class="c1"># All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># This software is provided without warranty under the terms of the BSD</span>
@@ -93,13 +95,13 @@
 
 
 <span class="c1"># Standard library imports.</span>
-<span class="kn">import</span> <span class="nn">contextlib</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">contextlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
 
-<span class="k">class</span> <span class="nc">ETSToolkitError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Error raised by issues importing ETS toolkits</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ETSToolkitError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Error raised by issues importing ETS toolkits</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -110,7 +112,7 @@
 <span class="sd">        The toolkit associated with the error.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">toolkit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">toolkit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">toolkit</span><span class="p">:</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;could not import toolkit &#39;</span><span class="si">{0}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">toolkit</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">toolkit</span> <span class="o">=</span> <span class="n">toolkit</span>
@@ -122,8 +124,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
 
 
-<div class="viewcode-block" id="ETSConfigType"><a class="viewcode-back" href="../../../traits_api_reference/traits.etsconfig.html#traits.etsconfig.etsconfig.ETSConfigType">[docs]</a><span class="k">class</span> <span class="nc">ETSConfigType</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ETSConfigType">
+<a class="viewcode-back" href="../../../traits_api_reference/traits.etsconfig.html#traits.etsconfig.etsconfig.ETSConfigType">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ETSConfigType</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Enthought Tool Suite configuration information.</span>
 
 <span class="sd">    Instances of this class record state useful for ETS-using applications,</span>
@@ -143,7 +147,7 @@
 
     <span class="c1">#### operator methods #####################################################</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Note that this constructor can only ever be called from within this</span>
         <span class="c1"># module, since we don&#39;t expose the class.</span>
 
@@ -161,8 +165,10 @@
 
     <span class="c1">#### properties ###########################################################</span>
 
-<div class="viewcode-block" id="ETSConfigType.get_application_data"><a class="viewcode-back" href="../../../traits_api_reference/traits.etsconfig.html#traits.etsconfig.etsconfig.ETSConfigType.get_application_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_application_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">create</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Return the application data directory path.</span>
+<div class="viewcode-block" id="ETSConfigType.get_application_data">
+<a class="viewcode-back" href="../../../traits_api_reference/traits.etsconfig.html#traits.etsconfig.etsconfig.ETSConfigType.get_application_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_application_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">create</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Return the application data directory path.</span>
 
 <span class="sd">            Parameters</span>
 <span class="sd">            ----------</span>
@@ -188,15 +194,16 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_application_data</span></div>
 
+
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">application_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Property getter, see get_application_data&#39;s docstring.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">application_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Property getter, see get_application_data&#39;s docstring.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_application_data</span><span class="p">(</span><span class="n">create</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="nd">@application_data</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">application_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">application_data</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">application_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">application_data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Property setter.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -204,11 +211,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_application_data</span> <span class="o">=</span> <span class="n">application_data</span>
 
     <span class="nd">@application_data</span><span class="o">.</span><span class="n">deleter</span>
-    <span class="k">def</span> <span class="nf">application_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">application_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_application_data</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="ETSConfigType.get_application_home"><a class="viewcode-back" href="../../../traits_api_reference/traits.etsconfig.html#traits.etsconfig.etsconfig.ETSConfigType.get_application_home">[docs]</a>    <span class="k">def</span> <span class="nf">get_application_home</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">create</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Return the application home directory path.</span>
+<div class="viewcode-block" id="ETSConfigType.get_application_home">
+<a class="viewcode-back" href="../../../traits_api_reference/traits.etsconfig.html#traits.etsconfig.etsconfig.ETSConfigType.get_application_home">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_application_home</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">create</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Return the application home directory path.</span>
 
 <span class="sd">            Parameters</span>
 <span class="sd">            ----------</span>
@@ -250,15 +259,16 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_application_home</span></div>
 
+
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">application_home</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Property getter, see get_application_home&#39;s docstring.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">application_home</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Property getter, see get_application_home&#39;s docstring.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_application_home</span><span class="p">(</span><span class="n">create</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="nd">@application_home</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">application_home</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">application_home</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">application_home</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">application_home</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Property setter.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -266,12 +276,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_application_home</span> <span class="o">=</span> <span class="n">application_home</span>
 
     <span class="nd">@application_home</span><span class="o">.</span><span class="n">deleter</span>
-    <span class="k">def</span> <span class="nf">application_home</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">application_home</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_application_home</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">company</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">company</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Property getter.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -282,8 +292,8 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_company</span>
 
     <span class="nd">@company</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">company</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">company</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">company</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">company</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Property setter for the company name.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -291,12 +301,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_company</span> <span class="o">=</span> <span class="n">company</span>
 
     <span class="nd">@company</span><span class="o">.</span><span class="n">deleter</span>
-    <span class="k">def</span> <span class="nf">company</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">company</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_company</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="ETSConfigType.provisional_toolkit"><a class="viewcode-back" href="../../../traits_api_reference/traits.etsconfig.html#traits.etsconfig.etsconfig.ETSConfigType.provisional_toolkit">[docs]</a>    <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
-    <span class="k">def</span> <span class="nf">provisional_toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">toolkit</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Perform an operation with toolkit provisionally set</span>
+<div class="viewcode-block" id="ETSConfigType.provisional_toolkit">
+<a class="viewcode-back" href="../../../traits_api_reference/traits.etsconfig.html#traits.etsconfig.etsconfig.ETSConfigType.provisional_toolkit">[docs]</a>
+    <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">provisional_toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">toolkit</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Perform an operation with toolkit provisionally set</span>
 
 <span class="sd">        This sets the toolkit attribute of the ETSConfig object to the</span>
 <span class="sd">        provided value. If the operation fails with an exception, the toolkit</span>
@@ -326,9 +338,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
             <span class="k">raise</span></div>
 
+
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Property getter for the GUI toolkit.  The value returned is, in order</span>
 <span class="sd">        of preference: the value set by the application; the value specified by</span>
 <span class="sd">        the &#39;ETS_TOOLKIT&#39; environment variable; otherwise the empty string.</span>
@@ -341,8 +354,8 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
     <span class="nd">@toolkit</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">toolkit</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">toolkit</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Property setter for the GUI toolkit.  The toolkit can be set more than</span>
 <span class="sd">        once, but only if it is the same one each time.  An application that is</span>
 <span class="sd">        written for a particular toolkit can explicitly set it before any other</span>
@@ -359,12 +372,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span> <span class="o">=</span> <span class="n">toolkit</span>
 
     <span class="nd">@toolkit</span><span class="o">.</span><span class="n">deleter</span>
-    <span class="k">def</span> <span class="nf">toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">enable_toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">enable_toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Deprecated: This property is no longer used.</span>
 
 <span class="sd">        Property getter for the Enable backend.  The value returned is, in</span>
@@ -372,15 +385,15 @@
 <span class="sd">        specified by the &#39;ENABLE_TOOLKIT&#39; environment variable; otherwise the</span>
 <span class="sd">        empty string.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">warnings</span><span class="w"> </span><span class="kn">import</span> <span class="n">warn</span>
 
         <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Use of the enable_toolkit attribute is deprecated.&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolkit</span>
 
     <span class="nd">@enable_toolkit</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">enable_toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">toolkit</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">enable_toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">toolkit</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Deprecated.</span>
 
 <span class="sd">        Property setter for the Enable toolkit.  The toolkit can be set more</span>
@@ -388,13 +401,13 @@
 <span class="sd">        that is written for a particular toolkit can explicitly set it before</span>
 <span class="sd">        any other module that gets the value is imported.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">warnings</span><span class="w"> </span><span class="kn">import</span> <span class="n">warn</span>
 
         <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Use of the enable_toolkit attribute is deprecated.&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">kiva_backend</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">kiva_backend</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Property getter for the Kiva backend. The value returned is dependent</span>
 <span class="sd">        on the value of the toolkit property. If toolkit specifies a kiva</span>
 <span class="sd">        backend using the extended syntax: &lt;enable toolkit&gt;[.&lt;kiva backend&gt;]</span>
@@ -416,8 +429,8 @@
             <span class="k">return</span> <span class="s2">&quot;image&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">user_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">user_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Property getter.</span>
 
 <span class="sd">        This is a directory that users can safely write user accessible data</span>
@@ -433,8 +446,8 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_user_data</span>
 
     <span class="nd">@user_data</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">user_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_data</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">user_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Property setter.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -442,7 +455,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_user_data</span> <span class="o">=</span> <span class="n">user_data</span>
 
     <span class="nd">@user_data</span><span class="o">.</span><span class="n">deleter</span>
-    <span class="k">def</span> <span class="nf">user_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">user_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_user_data</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="c1">#### private methods #####################################################</span>
@@ -455,8 +468,8 @@
     <span class="c1"># - environment variables</span>
     <span class="c1"># - the command line</span>
 
-    <span class="k">def</span> <span class="nf">_get_application_dirname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_application_dirname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the name of the directory (not a path) that the &quot;main&quot;</span>
 <span class="sd">        Python script which started this process resides in, or &quot;&quot; if it could</span>
 <span class="sd">        not be determined or is not appropriate.</span>
@@ -479,8 +492,8 @@
 
         <span class="k">return</span> <span class="n">dirname</span>
 
-    <span class="k">def</span> <span class="nf">_initialize_application_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">create</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize_application_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">create</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the (default) application data directory.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -496,8 +509,8 @@
         <span class="c1"># Lookup the environment variable.</span>
         <span class="n">parent_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">environment_variable</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">parent_directory</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">parent_directory</span> <span class="o">==</span> <span class="s2">&quot;/root&quot;</span><span class="p">:</span>
-            <span class="kn">import</span> <span class="nn">tempfile</span>
-            <span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">warnings</span><span class="w"> </span><span class="kn">import</span> <span class="n">warn</span>
 
             <span class="n">parent_directory</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">()</span>
             <span class="n">user</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;USER&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -526,16 +539,16 @@
 
         <span class="k">return</span> <span class="n">application_data</span>
 
-    <span class="k">def</span> <span class="nf">_initialize_company</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize_company</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the (default) company.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="s2">&quot;Enthought&quot;</span>
 
-    <span class="k">def</span> <span class="nf">_initialize_toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize_toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the toolkit.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -546,8 +559,8 @@
 
         <span class="k">return</span> <span class="n">toolkit</span>
 
-    <span class="k">def</span> <span class="nf">_initialize_user_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize_user_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the (default) user data directory.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -558,7 +571,7 @@
 
         <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;win32&quot;</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="kn">from</span> <span class="nn">win32com.shell</span> <span class="kn">import</span> <span class="n">shell</span><span class="p">,</span> <span class="n">shellcon</span>
+                <span class="kn">from</span><span class="w"> </span><span class="nn">win32com.shell</span><span class="w"> </span><span class="kn">import</span> <span class="n">shell</span><span class="p">,</span> <span class="n">shellcon</span>
 
                 <span class="c1"># Due to the fact that the user&#39;s My Documents directory can</span>
                 <span class="c1"># be in some pretty strange places, it&#39;s safest to just ask</span>
@@ -598,6 +611,7 @@
         <span class="k">return</span> <span class="n">usr_dir</span></div>
 
 
+
 <span class="c1">#: This single instance of :class:`~.ETSConfigType` is shared between the</span>
 <span class="c1">#: various ETS packages, and used to store global state relevant to</span>
 <span class="c1">#: ETS-using applications.</span>
@@ -615,16 +629,16 @@
             <p class="logo"><a href="../../../index.html">
               <img class="logo" src="../../../_static/img/e-logo.png" alt="Logo">
             </a></p>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
         </div>
@@ -641,15 +655,15 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2025 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Aug 11, 2022.
+      Last updated on Jan 27, 2025.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 8.1.3.
       </li>
     </ul>
     </div>

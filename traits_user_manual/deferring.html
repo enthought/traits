@@ -3,19 +3,21 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Deferring Trait Definitions &mdash; Traits 6.4 Documentation</title>
+    <title>Deferring Trait Definitions &mdash; Traits 7.0 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
     <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
     <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" >
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.4.0',
+        VERSION:     '7.0.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -23,9 +25,9 @@
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/sphinx_highlight.js"></script>
     <script type="text/javascript" src="../_static/clipboard.min.js"></script>
     <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
@@ -33,8 +35,8 @@
     <link rel="shortcut icon" href="../_static/img/favicon.png">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.4 Documentation" href="../index.html" >
-    <link rel="up" title="Traits 6.4 User Manual" href="index.html" >
+    <link rel="top" title="Traits 7.0 Documentation" href="../index.html" >
+    <link rel="up" title="Traits 7.0 User Manual" href="index.html" >
     <link rel="next" title="Custom Traits" href="custom.html" >
     <link rel="prev" title="Trait Notification" href="notification.html" > 
   </head>
@@ -53,9 +55,9 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.4 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 7.0 Documentation</a></li>
 	
-          <li class="active"><a href="index.html" accesskey="U">Traits 6.4 User Manual</a></li> 
+          <li class="active"><a href="index.html" accesskey="U">Traits 7.0 User Manual</a></li> 
     </ul>
               
               
@@ -90,7 +92,7 @@
           <div class="body" id="spc-section-body" role="main">
             
   <section id="deferring-trait-definitions">
-<span id="deferring-traits"></span><span id="index-0"></span><h1>Deferring Trait Definitions<a class="headerlink" href="#deferring-trait-definitions" title="Permalink to this headline">¶</a></h1>
+<span id="deferring-traits"></span><span id="index-0"></span><h1>Deferring Trait Definitions<a class="headerlink" href="#deferring-trait-definitions" title="Link to this heading">¶</a></h1>
 <p>One of the advanced capabilities of the Traits package is its support for trait
 attributes to defer their definition and value to another object than the one
 the attribute is defined on. This has many applications, especially in cases
@@ -109,12 +111,12 @@ attribute still uses the prototype’s validation, the link between the values i
 broken, and the two attributes can change independently. This is essentially a
 “copy on write” scheme.</p>
 <p>The concepts of delegation and prototyping are implemented in the Traits package
-by two classes derived from TraitType: DelegatesTo and PrototypedFrom. <a class="footnote-reference brackets" href="#id8" id="id1">5</a></p>
+by two classes derived from TraitType: DelegatesTo and PrototypedFrom. <a class="footnote-reference brackets" href="#id8" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a></p>
 <section id="delegatesto">
-<span id="id2"></span><h2>DelegatesTo<a class="headerlink" href="#delegatesto" title="Permalink to this headline">¶</a></h2>
+<span id="id2"></span><h2>DelegatesTo<a class="headerlink" href="#delegatesto" title="Link to this heading">¶</a></h2>
 <dl class="py class">
-<dt id="DelegatesTo">
-<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">DelegatesTo</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">delegate</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">prefix=''</span></em>, <em class="sig-param"><span class="pre">listenable=True</span></em>, <em class="sig-param"><span class="pre">**metadata</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#DelegatesTo" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="DelegatesTo">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DelegatesTo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delegate</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">prefix=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">listenable=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**metadata</span></span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#DelegatesTo" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p id="index-2">The <em>delegate</em> parameter is a string that specifies the name of an attribute
@@ -134,14 +136,14 @@ additional information about how to do the delegation.</p>
 of the delegate object with the same name as the trait defined by the
 DelegatesTo object. Consider the following example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># delegate.py --- Example of trait delegation</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> \
-    <span class="kn">import</span> <span class="nn">DelegatesTo</span><span class="o">,</span> <span class="nn">HasTraits</span><span class="o">,</span> <span class="nn">Instance</span><span class="o">,</span> <span class="nn">Str</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">traits.api</span> \
+    <span class="kn">import</span><span class="w"> </span><span class="nn">DelegatesTo</span><span class="o">,</span><span class="w"> </span><span class="nn">HasTraits</span><span class="o">,</span><span class="w"> </span><span class="nn">Instance</span><span class="o">,</span><span class="w"> </span><span class="nn">Str</span>
 
-<span class="k">class</span> <span class="nc">Parent</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Parent</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">first_name</span> <span class="o">=</span> <span class="n">Str</span>
     <span class="n">last_name</span>  <span class="o">=</span> <span class="n">Str</span>
 
-<span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Child</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">first_name</span> <span class="o">=</span> <span class="n">Str</span>
     <span class="n">last_name</span>  <span class="o">=</span> <span class="n">DelegatesTo</span><span class="p">(</span><span class="s1">&#39;father&#39;</span><span class="p">)</span>
     <span class="n">father</span>     <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">Parent</span><span class="p">)</span>
@@ -150,7 +152,7 @@ DelegatesTo object. Consider the following example:</p>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">&gt;&gt;&gt; tony  = Parent(first_name=&#39;Anthony&#39;, last_name=&#39;Jones&#39;)</span>
 <span class="sd">&gt;&gt;&gt; alice = Parent(first_name=&#39;Alice&#39;, last_name=&#39;Smith&#39;)</span>
-<span class="sd">&gt;&gt;&gt; sally = Child( first_name=&#39;Sally&#39;, father=tony, mother=alice)</span>
+<span class="sd">&gt;&gt;&gt; sally = Child(first_name=&#39;Sally&#39;, father=tony, mother=alice)</span>
 <span class="sd">&gt;&gt;&gt; print(sally.last_name)</span>
 <span class="sd">Jones</span>
 <span class="sd">&gt;&gt;&gt; sally.last_name = &#39;Cooper&#39; # Updates delegatee</span>
@@ -161,7 +163,7 @@ DelegatesTo object. Consider the following example:</p>
 <span class="sd">  File &quot;&lt;stdin&gt;&quot;, line 1, in ?</span>
 <span class="sd">  File &quot;c:\src\trunk\enthought\traits\trait_handlers.py&quot;, line</span>
 <span class="sd">163, in error</span>
-<span class="sd">    raise TraitError( object, name, self.info(), value )</span>
+<span class="sd">    raise TraitError(object, name, self.info(), value)</span>
 <span class="sd">traits.trait_errors.TraitError:  The &#39;last_name&#39; trait of a</span>
 <span class="sd">Parent instance must be a string, but a value of &lt;__main__.Parent object at</span>
 <span class="sd">0x014D6D80&gt; &lt;class &#39;__main__.Parent&#39;&gt; was specified.</span>
@@ -177,10 +179,10 @@ of the Child or the <strong>last_name</strong> of the father is changed, both at
 reflect the new value.</p>
 </section>
 <section id="prototypedfrom">
-<span id="id3"></span><h2>PrototypedFrom<a class="headerlink" href="#prototypedfrom" title="Permalink to this headline">¶</a></h2>
+<span id="id3"></span><h2>PrototypedFrom<a class="headerlink" href="#prototypedfrom" title="Link to this heading">¶</a></h2>
 <dl class="py class">
-<dt id="PrototypedFrom">
-<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">PrototypedFrom</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">prototype</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">prefix=''</span></em>, <em class="sig-param"><span class="pre">listenable=True</span></em>, <em class="sig-param"><span class="pre">**metadata</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#PrototypedFrom" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="PrototypedFrom">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PrototypedFrom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prototype</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">prefix=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">listenable=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**metadata</span></span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#PrototypedFrom" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p id="index-4">The <em>prototype</em> parameter is a string that specifies the name of an attribute on
@@ -192,11 +194,11 @@ the prototyped attribute changes independently from its prototype.</p>
 additional information about how to do the prototyping.</p>
 </section>
 <section id="keyword-parameters">
-<span id="id4"></span><h2>Keyword Parameters<a class="headerlink" href="#keyword-parameters" title="Permalink to this headline">¶</a></h2>
+<span id="id4"></span><h2>Keyword Parameters<a class="headerlink" href="#keyword-parameters" title="Link to this heading">¶</a></h2>
 <p>The <em>prefix</em> and <em>listenable</em> parameters of the DelegatesTo and PrototypedFrom
 initializer functions behave similarly for both classes.</p>
 <section id="prefix-keyword">
-<span id="index-5"></span><span id="id5"></span><h3>Prefix Keyword<a class="headerlink" href="#prefix-keyword" title="Permalink to this headline">¶</a></h3>
+<span id="index-5"></span><span id="id5"></span><h3>Prefix Keyword<a class="headerlink" href="#prefix-keyword" title="Link to this heading">¶</a></h3>
 <p>When the <em>prefix</em> parameter is a non-empty string, the rule for performing trait
 attribute look-up in the deferred-to object is modified, with the modification
 depending on the format of the prefix string:</p>
@@ -214,15 +216,15 @@ attribute name when looking up the object attribute.</p></li>
 PrototypedFrom:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># prototype_prefix.py --- Examples of PrototypedFrom()</span>
 <span class="c1">#                         prefix parameter</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="kn">import</span> \
     <span class="n">PrototypedFrom</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">Str</span>
 
-<span class="k">class</span> <span class="nc">Parent</span> <span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Parent</span> <span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">first_name</span> <span class="o">=</span> <span class="n">Str</span>
     <span class="n">family_name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
     <span class="n">favorite_first_name</span> <span class="o">=</span> <span class="n">Str</span>
     <span class="n">child_allowance</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="mf">1.00</span><span class="p">)</span>
-<span class="k">class</span> <span class="nc">Child</span> <span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Child</span> <span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">__prefix__</span> <span class="o">=</span> <span class="s1">&#39;child_&#39;</span>
     <span class="n">first_name</span> <span class="o">=</span> <span class="n">PrototypedFrom</span><span class="p">(</span><span class="s1">&#39;mother&#39;</span><span class="p">,</span> <span class="s1">&#39;favorite_*&#39;</span><span class="p">)</span>
     <span class="n">last_name</span>  <span class="o">=</span> <span class="n">PrototypedFrom</span><span class="p">(</span><span class="s1">&#39;father&#39;</span><span class="p">,</span> <span class="s1">&#39;family_name&#39;</span><span class="p">)</span>
@@ -231,11 +233,11 @@ PrototypedFrom:</p>
     <span class="n">mother</span>     <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">Parent</span><span class="p">)</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">&gt;&gt;&gt; fred = Parent( first_name = &#39;Fred&#39;, family_name = &#39;Lopez&#39;, \</span>
-<span class="sd">... favorite_first_name = &#39;Diego&#39;, child_allowance = 5.0 )</span>
+<span class="sd">&gt;&gt;&gt; fred = Parent(first_name = &#39;Fred&#39;, family_name = &#39;Lopez&#39;, \</span>
+<span class="sd">... favorite_first_name = &#39;Diego&#39;, child_allowance = 5.0)</span>
 <span class="sd">&gt;&gt;&gt; maria = Parent(first_name = &#39;Maria&#39;, family_name = &#39;Gonzalez&#39;,\</span>
-<span class="sd">... favorite_first_name = &#39;Tomas&#39;, child_allowance = 10.0 )</span>
-<span class="sd">&gt;&gt;&gt; nino = Child( father=fred, mother=maria )</span>
+<span class="sd">... favorite_first_name = &#39;Tomas&#39;, child_allowance = 10.0)</span>
+<span class="sd">&gt;&gt;&gt; nino = Child(father=fred, mother=maria)</span>
 <span class="sd">&gt;&gt;&gt; print(&#39;%s %s gets $%.2f for allowance&#39; % (nino.first_name, \ ... nino.last_name, nino.allowance))</span>
 <span class="sd">Tomas Lopez gets $5.00 for allowance</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -253,7 +255,7 @@ of its <strong>mother</strong> object.</p></li>
 </ul>
 </section>
 <section id="listenable-keyword">
-<span id="index-7"></span><span id="id6"></span><h3>Listenable Keyword<a class="headerlink" href="#listenable-keyword" title="Permalink to this headline">¶</a></h3>
+<span id="index-7"></span><span id="id6"></span><h3>Listenable Keyword<a class="headerlink" href="#listenable-keyword" title="Link to this heading">¶</a></h3>
 <p>By default, you can attach listeners to deferred trait attributes, just as you
 can attach listeners to most other trait attributes, as described in the
 following section. However, implementing the notifications correctly requires
@@ -265,7 +267,7 @@ object hierarchies, this feature can be turned off by setting
 </section>
 </section>
 <section id="notification-with-deferring">
-<span id="index-8"></span><span id="id7"></span><h2>Notification with Deferring<a class="headerlink" href="#notification-with-deferring" title="Permalink to this headline">¶</a></h2>
+<span id="index-8"></span><span id="id7"></span><h2>Notification with Deferring<a class="headerlink" href="#notification-with-deferring" title="Link to this heading">¶</a></h2>
 <p>While two trait attributes are linked by a deferring relationship (either
 delegation, or prototyping before the link is broken), notifications for changes
 to those attributes are linked as well. When the value of a deferred-to
@@ -275,30 +277,30 @@ as well as on the deferred-to object. This behavior is new in Traits version
 directly changed) were notified. This behavior is shown in the following
 example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># deferring_notification.py -- Example of notification with deferring</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> \
-    <span class="kn">import</span> <span class="nn">HasTraits</span><span class="o">,</span> <span class="nn">Instance</span><span class="o">,</span> <span class="nn">PrototypedFrom</span><span class="o">,</span> <span class="nn">Str</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">traits.api</span> \
+    <span class="kn">import</span><span class="w"> </span><span class="nn">HasTraits</span><span class="o">,</span><span class="w"> </span><span class="nn">Instance</span><span class="o">,</span><span class="w"> </span><span class="nn">PrototypedFrom</span><span class="o">,</span><span class="w"> </span><span class="nn">Str</span>
 
-<span class="k">class</span> <span class="nc">Parent</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Parent</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
 
     <span class="n">first_name</span> <span class="o">=</span> <span class="n">Str</span>
     <span class="n">last_name</span>  <span class="o">=</span> <span class="n">Str</span>
 
-    <span class="k">def</span> <span class="nf">_last_name_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_last_name_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Parent&#39;s last name changed to </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="n">new</span><span class="p">)</span>
 
-<span class="k">class</span> <span class="nc">Child</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Child</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
 
-    <span class="n">father</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span> <span class="n">Parent</span> <span class="p">)</span>
+    <span class="n">father</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">Parent</span><span class="p">)</span>
     <span class="n">first_name</span> <span class="o">=</span> <span class="n">Str</span>
-    <span class="n">last_name</span>  <span class="o">=</span> <span class="n">PrototypedFrom</span><span class="p">(</span> <span class="s1">&#39;father&#39;</span> <span class="p">)</span>
+    <span class="n">last_name</span>  <span class="o">=</span> <span class="n">PrototypedFrom</span><span class="p">(</span><span class="s1">&#39;father&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_last_name_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_last_name_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Child&#39;s last name changed to </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="n">new</span><span class="p">)</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">&gt;&gt;&gt; dad = Parent( first_name=&#39;William&#39;, last_name=&#39;Chase&#39; )</span>
+<span class="sd">&gt;&gt;&gt; dad = Parent(first_name=&#39;William&#39;, last_name=&#39;Chase&#39;)</span>
 <span class="sd">Parent&#39;s last name changed to Chase.</span>
-<span class="sd">&gt;&gt;&gt; son = Child( first_name=&#39;John&#39;, father=dad )</span>
+<span class="sd">&gt;&gt;&gt; son = Child(first_name=&#39;John&#39;, father=dad)</span>
 <span class="sd">Child&#39;s last name changed to Chase.</span>
 <span class="sd">&gt;&gt;&gt; dad.last_name=&#39;Jones&#39;</span>
 <span class="sd">Parent&#39;s last name changed to Jones.</span>
@@ -322,13 +324,14 @@ notify the son. When the son reverts to using the father’s last name (by
 deleting the explicit value), changes to the father’s last name again affect and
 notif</p>
 <p class="rubric">Footnotes</p>
-<dl class="footnote brackets">
-<dt class="label" id="id8"><span class="brackets"><a class="fn-backref" href="#id1">5</a></span></dt>
-<dd><p>Both of these class es inherit from the Delegate class. Explicit use of
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id8" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">5</a><span class="fn-bracket">]</span></span>
+<p>Both of these class es inherit from the Delegate class. Explicit use of
 Delegate is deprecated, as its name and default behavior (prototyping) are
 incongruous.</p>
-</dd>
-</dl>
+</aside>
+</aside>
 </section>
 </section>
 
@@ -341,11 +344,18 @@ incongruous.</p>
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
             </a></p>
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">Deferring Trait Definitions</a><ul>
-<li><a class="reference internal" href="#delegatesto">DelegatesTo</a></li>
-<li><a class="reference internal" href="#prototypedfrom">PrototypedFrom</a></li>
+<li><a class="reference internal" href="#delegatesto">DelegatesTo</a><ul>
+<li><a class="reference internal" href="#DelegatesTo"><code class="docutils literal notranslate"><span class="pre">DelegatesTo</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#prototypedfrom">PrototypedFrom</a><ul>
+<li><a class="reference internal" href="#PrototypedFrom"><code class="docutils literal notranslate"><span class="pre">PrototypedFrom</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#keyword-parameters">Keyword Parameters</a><ul>
 <li><a class="reference internal" href="#prefix-keyword">Prefix Keyword</a></li>
 <li><a class="reference internal" href="#listenable-keyword">Listenable Keyword</a></li>
@@ -356,27 +366,32 @@ incongruous.</p>
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="notification.html"
-                        title="previous chapter">Trait Notification</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="custom.html"
-                        title="next chapter">Custom Traits</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="notification.html"
+                          title="previous chapter">Trait Notification</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="custom.html"
+                          title="next chapter">Custom Traits</a></p>
+  </div>
   <h3>This Page</h3>
   <div>
     <a href="../_sources/traits_user_manual/deferring.rst.txt"
        rel="nofollow">Show Source</a>
   </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
         </div>
@@ -393,15 +408,15 @@ incongruous.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2025 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Aug 11, 2022.
+      Last updated on Jan 27, 2025.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 8.1.3.
       </li>
     </ul>
     </div>

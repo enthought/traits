@@ -230,7 +230,7 @@ The following example illustrates the difference between coercing traits and
 casting traits::
 
     >>> from traits.api import HasTraits, Float, CFloat
-    >>> class Person ( HasTraits ):
+    >>> class Person(HasTraits):
     ...    weight  = Float
     ...    cweight = CFloat
     ...
@@ -264,7 +264,7 @@ the table.
 .. index:: CSet(), Constant(), Date(), Datetime(), Dict()
 .. index:: Directory(), Disallow, Either(), Enum()
 .. index:: Event(), Expression(), false, File()
-.. index:: Instance(), List(), Method(), Module()
+.. index:: Instance(), List(), Module()
 .. index:: Password(), Property(), Python()
 .. index:: PythonValue(), Range(), ReadOnly(), Regex()
 .. index:: Set() String(), This, Time()
@@ -278,142 +278,138 @@ the table.
 +------------------+----------------------------------------------------------+
 | Name             | Callable Signature                                       |
 +==================+==========================================================+
-| Any              | Any( [*default_value* = None, \*,                        |
+| Any              | Any([*default_value* = None, \*,                         |
 |                  | *factory* = None, *args* = (), *kw* = {},                |
-|                  | \*\*\ *metadata*] )                                      |
+|                  | \*\*\ *metadata*])                                       |
 +------------------+----------------------------------------------------------+
-| Array            | Array( [*dtype* = None, *shape* = None, *value* = None,  |
-|                  | *typecode* = None, \*\*\ *metadata*] )                   |
+| Array            | Array([*dtype* = None, *shape* = None, *value* = None,   |
+|                  | \*\*\ *metadata*])                                       |
 +------------------+----------------------------------------------------------+
-| ArrayOrNone      | ArrayOrNone( [*dtype* = None, *shape* = None,            |
-|                  | *value* = None, *typecode* = None, \*\*\ *metadata*] )   |
+| ArrayOrNone      | ArrayOrNone([*dtype* = None, *shape* = None,             |
+|                  | *value* = None, \*\*\ *metadata*])                       |
 +------------------+----------------------------------------------------------+
-| Button           | Button( [*label* = '', *image* = None, *style* =         |
+| Button           | Button([*label* = '', *image* = None, *style* =          |
 |                  | 'button', *orientation* = 'vertical', *width_padding* =  |
-|                  | 7, *height_padding* = 5, \*\*\ *metadata*] )             |
+|                  | 7, *height_padding* = 5, \*\*\ *metadata*])              |
 +------------------+----------------------------------------------------------+
-| Callable         | Callable( [*value* = None, \*\*\ *metadata*] )           |
+| Callable         | Callable([*value* = None, \*\*\ *metadata*])             |
 +------------------+----------------------------------------------------------+
-| CArray           | CArray( [*dtype* = None, *shape* = None, *value* = None, |
-|                  | *typecode* = None, \*\*\ *metadata*] )                   |
+| CArray           | CArray([*dtype* = None, *shape* = None, *value* = None,  |
+|                  | \*\*\ *metadata*])                                       |
 +------------------+----------------------------------------------------------+
-| Code             | Code( [*value* = '', *minlen* = 0,                       |
+| Code             | Code([*value* = '', *minlen* = 0,                        |
 |                  | *maxlen* = sys.maxsize, *regex* = '',                    |
-|                  | \*\*\ *metadata*] )                                      |
+|                  | \*\*\ *metadata*])                                       |
 +------------------+----------------------------------------------------------+
-| CSet             | CSet( [*trait* = None, *value* = None, *items* = True,   |
-|                  | \*\*\ *metadata*] )                                      |
+| CSet             | CSet([*trait* = None, *value* = None, *items* = True,    |
+|                  | \*\*\ *metadata*])                                       |
 +------------------+----------------------------------------------------------+
-| Constant         | Constant( *value*\ [, \*\*\ *metadata*] )                |
+| Constant         | Constant(*value*\ [, \*\*\ *metadata*])                  |
 +------------------+----------------------------------------------------------+
-| Date             | Date( *value*\ [, *default_value* = None,                |
-|                  | *allow_datetime* = None, *allow_none* = None,            |
-|                  | \*\*\ *metadata*] )                                      |
+| Date             | Date(*value*\ [, *default_value* = None,                 |
+|                  | *allow_datetime* = False, *allow_none* = False,          |
+|                  | \*\*\ *metadata*])                                       |
 +------------------+----------------------------------------------------------+
-| Datetime         | Datetime( *value*\ [, *default_value* = None,            |
-|                  | *allow_none* = None, \*\*\ *metadata*])                  |
+| Datetime         | Datetime(*value*\ [, *default_value* = None,             |
+|                  | *allow_none* = False, \*\*\ *metadata*])                 |
 +------------------+----------------------------------------------------------+
-| Dict             | Dict( [*key_trait* = None, *value_trait* = None,         |
-|                  | *value* = None, *items* = True, \*\*\ *metadata*] )      |
+| Dict             | Dict([*key_trait* = None, *value_trait* = None,          |
+|                  | *value* = None, *items* = True, \*\*\ *metadata*])       |
 +------------------+----------------------------------------------------------+
-| Directory        | Directory( [*value* = '', *auto_set* = False, *entries* =|
-|                  | 10, *exists* = False, \*\*\ *metadata*] )                |
+| Directory        | Directory([*value* = '', *auto_set* = False, *entries* = |
+|                  | 10, *exists* = False, \*\*\ *metadata*])                 |
 +------------------+----------------------------------------------------------+
 | Disallow         | n/a                                                      |
 +------------------+----------------------------------------------------------+
-| Either [2]_      | Either( *val1*\ [, *val2*, ..., *valN*,                  |
-|                  | \*\*\ *metadata*] )                                      |
+| Either [2]_      | Either(*val1*\ [, *val2*, ..., *valN*,                   |
+|                  | \*\*\ *metadata*])                                       |
 +------------------+----------------------------------------------------------+
-| Enum             | Enum( *values*\ [, \*\*\ *metadata*] )                   |
+| Enum             | Enum(*values*\ [, \*\*\ *metadata*])                     |
 +------------------+----------------------------------------------------------+
-| Event            | Event( [*trait* = None, \*\*\ *metadata*] )              |
+| Event            | Event([*trait* = None, \*\*\ *metadata*])                |
 +------------------+----------------------------------------------------------+
-| Expression       | Expression( [*value* = '0', \*\*\ *metadata*] )          |
+| Expression       | Expression([*value* = '0', \*\*\ *metadata*])            |
 +------------------+----------------------------------------------------------+
-| File             | File( [*value* = '', *filter* = None, *auto_set* = False,|
-|                  | *entries* = 10, *exists* = False,  \*\*\ *metadata* ] )  |
-+------------------+----------------------------------------------------------+
-| Function [3]_    | Function( [*value* = None, \*\*\ *metadata*] )           |
+| File             | File([*value* = '', *filter* = None, *auto_set* = False, |
+|                  | *entries* = 10, *exists* = False,  \*\*\ *metadata*])    |
 +------------------+----------------------------------------------------------+
 | generic_trait    | n/a                                                      |
 +------------------+----------------------------------------------------------+
-| HTML             | HTML( [*value* = '', *minlen* = 0,                       |
+| HTML             | HTML([*value* = '', *minlen* = 0,                        |
 |                  | *maxlen* = sys.maxsize, *regex* = '',                    |
-|                  | \*\*\ *metadata* ] )                                     |
+|                  | \*\*\ *metadata*])                                       |
 +------------------+----------------------------------------------------------+
-| Instance         | Instance( [*klass* = None, *factory* = None, *args* =    |
+| Instance         | Instance([*klass* = None, *factory* = None, *args* =     |
 |                  | None, *kw* = None, *allow_none* = True, *adapt* = None,  |
-|                  | *module* = None, \*\*\ *metadata*] )                     |
+|                  | *module* = None, \*\*\ *metadata*])                      |
 +------------------+----------------------------------------------------------+
-| List             | List( [*trait* = None, *value* = None, *minlen* = 0,     |
+| List             | List([*trait* = None, *value* = None, *minlen* = 0,      |
 |                  | *maxlen* = sys.maxsize, *items* = True,                  |
-|                  | \*\*\ *metadata*] )                                      |
+|                  | \*\*\ *metadata*])                                       |
 +------------------+----------------------------------------------------------+
-| Map              | Map( *map*\ [, \*\*\ *metadata*] )                       |
+| Map              | Map(*map*\ [, \*\*\ *metadata*])                         |
 +------------------+----------------------------------------------------------+
-| Method [3]_      | Method ([\*\*\ *metadata*] )                             |
+| Module           | Module([\*\*\ *metadata*])                               |
 +------------------+----------------------------------------------------------+
-| Module           | Module ( [\*\*\ *metadata*] )                            |
+| Password         | Password([*value* = '', *minlen* = 0, *maxlen* =         |
+|                  | sys.maxsize, *regex* = '', \*\*\ *metadata*])            |
 +------------------+----------------------------------------------------------+
-| Password         | Password( [*value* = '', *minlen* = 0, *maxlen* =        |
-|                  | sys.maxsize, *regex* = '', \*\*\ *metadata*] )           |
+| PrefixList       | PrefixList(*values*\ [, \*\*\ *metadata*])               |
 +------------------+----------------------------------------------------------+
-| PrefixList       | PrefixList( *values*\ [, \*\*\ *metadata*] )             |
+| PrefixMap        | PrefixMap(*map*\ [, \*\*\ *metadata*])                   |
 +------------------+----------------------------------------------------------+
-| PrefixMap        | PrefixMap( *map*\ [, \*\*\ *metadata*] )                 |
-+------------------+----------------------------------------------------------+
-| Property         | Property( [*fget* = None, *fset* = None, *fvalidate* =   |
+| Property         | Property([*fget* = None, *fset* = None, *fvalidate* =    |
 |                  | None, *force* = False, *handler* = None, *trait* = None, |
-|                  | \*\*\ *metadata*] )                                      |
+|                  | \*\*\ *metadata*])                                       |
 |                  |                                                          |
 |                  | See :ref:`property-traits`, for details.                 |
 +------------------+----------------------------------------------------------+
-| Python           | Python ( [*value* = None, \*\*\ *metadata*] )            |
+| Python           | Python([*value* = None, \*\*\ *metadata*])               |
 +------------------+----------------------------------------------------------+
-| PythonValue      | PythonValue( [*value* = None, \*\*\ *metadata*] )        |
+| PythonValue      | PythonValue([*value* = None, \*\*\ *metadata*])          |
 +------------------+----------------------------------------------------------+
-| Range            | Range( [*low* = None, *high* = None, *value* = None,     |
+| Range            | Range([*low* = None, *high* = None, *value* = None,      |
 |                  | *exclude_low* = False, *exclude_high* = False,           |
-|                  | \*\ *metadata*] )                                        |
+|                  | \*\ *metadata*])                                         |
 +------------------+----------------------------------------------------------+
-| ReadOnly         | ReadOnly( [*value* = Undefined, \*\*\ *metadata*] )      |
+| ReadOnly         | ReadOnly([*value* = Undefined, \*\*\ *metadata*])        |
 +------------------+----------------------------------------------------------+
-| Regex            | Regex( [*value* = '', *regex* = '.\*', \*\*\ *metadata*])|
+| Regex            | Regex([*value* = '', *regex* = '.\*', \*\*\ *metadata*]) |
 +------------------+----------------------------------------------------------+
 | self             | n/a                                                      |
 +------------------+----------------------------------------------------------+
-| Set              | Set( [*trait* = None, *value* = None, *items* = True,    |
-|                  | \*\*\ *metadata*] )                                      |
+| Set              | Set([*trait* = None, *value* = None, *items* = True,     |
+|                  | \*\*\ *metadata*])                                       |
 +------------------+----------------------------------------------------------+
-| String           | String( [*value* = '', *minlen* = 0, *maxlen* =          |
-|                  | sys.maxsize, *regex* = '', \*\*\ *metadata*] )           |
+| String           | String([*value* = '', *minlen* = 0, *maxlen* =           |
+|                  | sys.maxsize, *regex* = '', \*\*\ *metadata*])            |
 +------------------+----------------------------------------------------------+
-| Subclass         | Subclass( [*value* = None, *klass* = None, *allow_none* =|
-|                  | True, \*\*\ *metadata*] )                                |
+| Subclass         | Subclass([*value* = None, *klass* = None, *allow_none* = |
+|                  | True, \*\*\ *metadata*])                                 |
 +------------------+----------------------------------------------------------+
 | This             | n/a                                                      |
 +------------------+----------------------------------------------------------+
-| Time             | Time( *value*\ [, *default_value* = None,                |
-|                  | *allow_none* = None, \*\*\ *metadata*])                  |
+| Time             | Time(*value*\ [, *default_value* = None,                 |
+|                  | *allow_none* = False, \*\*\ *metadata*])                 |
 +------------------+----------------------------------------------------------+
-| ToolbarButton    | ToolbarButton( [*label* = '', *image* = None, *style* =  |
+| ToolbarButton    | ToolbarButton([*label* = '', *image* = None, *style* =   |
 |                  | 'toolbar', *orientation* = 'vertical', *width_padding* = |
-|                  | 2, *height_padding* = 2, \*\*\ *metadata*] )             |
+|                  | 2, *height_padding* = 2, \*\*\ *metadata*])              |
 +------------------+----------------------------------------------------------+
-| Tuple            | Tuple( [\*\ *traits*, \*\*\ *metadata*] )                |
+| Tuple            | Tuple([\*\ *traits*, \*\*\ *metadata*])                  |
 +------------------+----------------------------------------------------------+
-| Type             | Type( [*value* = None, *klass* = None, *allow_none* =    |
-|                  | True, \*\*\ *metadata*] )                                |
+| Type             | Type([*value* = None, *klass* = None, *allow_none* =     |
+|                  | True, \*\*\ *metadata*])                                 |
 +------------------+----------------------------------------------------------+
-| Union            | Union( *val1*\ [, *val2*, ..., *valN*,                   |
-|                  | \*\*\ *metadata*] )                                      |
+| Union            | Union(*val1*\ [, *val2*, ..., *valN*,                    |
+|                  | \*\*\ *metadata*])                                       |
 +------------------+----------------------------------------------------------+
-| UUID             | UUID( [\*\*\ *metadata*] )                               |
+| UUID             | UUID([\*\*\ *metadata*])                                 |
 +------------------+----------------------------------------------------------+
-| ValidatedTuple   | ValidatedTuple( [\*\ *traits*, *fvalidate* = None,       |
-|                  | *fvalidate_info* = '' , \*\*\ *metadata*] )              |
+| ValidatedTuple   | ValidatedTuple([\*\ *traits*, *fvalidate* = None,        |
+|                  | *fvalidate_info* = '' , \*\*\ *metadata*])               |
 +------------------+----------------------------------------------------------+
-| WeakRef          | WeakRef( [*klass* = 'traits.HasTraits',                  |
+| WeakRef          | WeakRef([*klass* = 'traits.HasTraits',                   |
 |                  | *allow_none* = False, *adapt* = 'yes', \*\*\ *metadata*])|
 +------------------+----------------------------------------------------------+
 
@@ -545,7 +541,7 @@ The following is an example of using Map::
     from traits.api import HasTraits, Map
 
     class Person(HasTraits):
-        married = Map({'yes': 1, 'no': 0 }, default_value="yes")
+        married = Map({'yes': 1, 'no': 0}, default_value="yes")
 
 This example defines a Person class which has a **married** trait
 attribute which accepts values "yes" and "no". The default value
@@ -582,7 +578,7 @@ The following is an example of using PrefixMap::
     from traits.api import HasTraits, PrefixMap
 
     class Person(HasTraits):
-        married = PrefixMap({'yes': 1, 'no': 0 }, default_value="yes")
+        married = PrefixMap({'yes': 1, 'no': 0}, default_value="yes")
 
 This example defines a Person class which has a **married** trait
 attribute which accepts values "yes" and "no" or any unique
@@ -1009,42 +1005,42 @@ the metadata attribute::
     from traits.api import HasTraits, Int, List, Float, Str, \
                                      Instance, Any, TraitType
 
-    class Foo( HasTraits ): pass
+    class Foo(HasTraits): pass
 
-    class Test( HasTraits ):
+    class Test(HasTraits):
         i = Int(99)
         lf = List(Float)
-        foo = Instance( Foo, () )
-        any = Any( "123" )
+        foo = Instance(Foo, ())
+        any = Any("123")
 
     t = Test()
 
-    print(t.trait( 'i' ).default)                      # 99
-    print(t.trait( 'i' ).default_kind)                 # value
-    print(t.trait( 'i' ).inner_traits)                 # ()
-    print(t.trait( 'i' ).is_trait_type( Int ))         # True
-    print(t.trait( 'i' ).is_trait_type( Float ))       # False
+    print(t.trait('i').default)                        # 99
+    print(t.trait('i').default_kind)                   # value
+    print(t.trait('i').inner_traits)                   # ()
+    print(t.trait('i').is_trait_type(Int))             # True
+    print(t.trait('i').is_trait_type(Float))           # False
 
-    print(t.trait( 'lf' ).default)                     # []
-    print(t.trait( 'lf' ).default_kind)                # list
-    print(t.trait( 'lf' ).inner_traits)
+    print(t.trait('lf').default)                       # []
+    print(t.trait('lf').default_kind)                  # list
+    print(t.trait('lf').inner_traits)
              # (<traits.traits.CTrait object at 0x01B24138>,)
-    print(t.trait( 'lf' ).is_trait_type( List ))       # True
-    print(t.trait( 'lf' ).is_trait_type( TraitType ))  # True
-    print(t.trait( 'lf' ).is_trait_type( Float ))      # False
-    print(t.trait( 'lf' ).inner_traits[0].is_trait_type( Float )) # True
+    print(t.trait('lf').is_trait_type(List))           # True
+    print(t.trait('lf').is_trait_type(TraitType))      # True
+    print(t.trait('lf').is_trait_type(Float))          # False
+    print(t.trait('lf').inner_traits[0].is_trait_type(Float)) # True
 
-    print(t.trait( 'foo' ).default)                    # <undefined>
-    print(t.trait( 'foo' ).default_kind)               # factory
-    print(t.trait( 'foo' ).inner_traits)               # ()
-    print(t.trait( 'foo' ).is_trait_type( Instance ))  # True
-    print(t.trait( 'foo' ).is_trait_type( List  ))     # False
+    print(t.trait('foo').default)                      # <undefined>
+    print(t.trait('foo').default_kind)                 # factory
+    print(t.trait('foo').inner_traits)                 # ()
+    print(t.trait('foo').is_trait_type(Instance))      # True
+    print(t.trait('foo').is_trait_type(List))          # False
 
-    print(t.trait( 'any' ).default)                    # 123
-    print(t.trait( 'any' ).default_kind)               # value
-    print(t.trait( 'any' ).inner_traits)               # ()
-    print(t.trait( 'any' ).is_trait_type( Any ))       # True
-    print(t.trait( 'any' ).is_trait_type( Str ))       # False
+    print(t.trait('any').default)                      # 123
+    print(t.trait('any').default_kind)                 # value
+    print(t.trait('any').inner_traits)                 # ()
+    print(t.trait('any').is_trait_type(Any))           # True
+    print(t.trait('any').is_trait_type(Str))           # False
 
 .. rubric:: Footnotes
 .. [1] Most callable predefined traits are classes, but a few are functions.
@@ -1055,16 +1051,8 @@ the metadata attribute::
 .. [2] The :class:`~.Either` trait type is likely to be deprecated at some
        point in the future. The :class:`~.Union` trait type should be preferred
        to :class:`~.Either` in new code.
-.. [3] The Function and Method trait types are now deprecated. See |Function|,
-       |Method|
 
 ..
    external urls
 
 .. _Traits bug tracker: https://github.com/enthought/traits/issues
-
-..
-   # substitutions
-
-.. |Function| replace:: :class:`~traits.trait_types.Function`
-.. |Method| replace:: :class:`~traits.trait_types.Method`
