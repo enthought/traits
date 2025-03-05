@@ -169,7 +169,14 @@ class MypyAssertions:
 
         for line, error_codes in parsed_mypy_output.items():
             if line not in line_error_map or sorted(
-                    line_error_map[line]) != sorted(list(error_codes)):
+                    line_error_map.pop(line)) != sorted(list(error_codes)):
                 s = "Unexpected error on line {}\n{}\n{}".format(
                     line, str(filepath), normal_report)
                 raise AssertionError(s)
+
+        if line_error_map:
+            raise AssertionError(
+                f"expected errors on lines "
+                f"{', '.join(map(str, line_error_map))}, "
+                f"but no mypy errors were reported for those lines"
+            )
