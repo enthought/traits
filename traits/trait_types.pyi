@@ -8,8 +8,6 @@
 #
 # Thanks for using Enthought open source!
 
-from __future__ import annotations
-
 import datetime
 from pathlib import PurePath as _PurePath
 from typing import (
