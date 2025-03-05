@@ -160,6 +160,11 @@ class MypyAssertions:
         """
         line_error_map = parse_py_file(filepath)
         normal_report, error_report, exit_status = run_mypy(filepath)
+        if error_report:
+            raise AssertionError(
+                f"Unexpected output on stderr: {error_report}"
+            )
+
         parsed_mypy_output = parse_mypy_output(normal_report)
 
         for line, error_codes in parsed_mypy_output.items():
