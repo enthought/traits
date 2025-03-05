@@ -108,7 +108,7 @@ def run_mypy(filepath):
         dest_filename = os.path.basename(filepath)
         dest = shutil.copyfile(filepath, os.path.join(tempdir, dest_filename))
         normal_report, error_report, exit_status = mypy_api.run(
-            [dest, '--show-error-code', '--follow-imports=skip'])
+            [dest, '--show-error-codes', '--follow-imports=skip'])
     return normal_report, error_report, exit_status
 
 
