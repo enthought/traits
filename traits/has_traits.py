@@ -1675,7 +1675,9 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         memo[id(self)] = new
         new._init_trait_listeners()
         new._init_trait_observers()
-        new.copy_traits(self, traits, memo, copy, **metadata)
+        unmatched = new.copy_traits(self, traits, memo, copy, **metadata)
+        for name in unmatched:
+            new.add_trait(name, self.trait(name))
         new._post_init_trait_listeners()
         new._post_init_trait_observers()
         new.traits_init()
