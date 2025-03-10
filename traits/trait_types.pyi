@@ -15,6 +15,7 @@ from typing import (
     Callable as _CallableType,
     Dict as _DictType,
     List as _ListType,
+    Literal,
     Optional,
     Sequence as _Sequence,
     Set as _SetType,
@@ -24,6 +25,7 @@ from typing import (
     Type as _Type,
     TypeVar,
     Union as _Union,
+    overload,
 )
 from uuid import UUID as _UUID
 
@@ -494,24 +496,70 @@ class BaseClass(_BaseClass[_Type[_Any]]):
     ...
 
 
-class _BaseInstance(_BaseClass[_T]):
+class BaseInstance(_TraitType[_S, _S]):
 
-    # simplified signature
+    # simplified signatures
+
+    @overload
     def __init__(
-        self,
-        klass: _T,
+        self: BaseInstance[Optional[_T]],
+        klass: _Type[_T],
+        *args: _Any,
+        allow_none: Literal[True] = ...,
+        **metadata: _Any,
+    ) -> None:
+        ...
+
+    @overload
+    def __init__(
+        self: BaseInstance[_T],
+        klass: _Type[_T],
+        *args: _Any,
+        allow_none: Literal[False] = ...,
+        **metadata: _Any,
+    ) -> None:
+        ...
+
+    @overload
+    def __init__(
+        self: BaseInstance[_Any],
+        klass: str,
         *args: _Any,
         **metadata: _Any,
     ) -> None:
         ...
 
 
-class BaseInstance(_BaseInstance[_Any]):
-    ...
+class Instance(BaseInstance[_S]):
 
+    @overload
+    def __init__(
+        self: Instance[Optional[_T]],
+        klass: _Type[_T],
+        *args: _Any,
+        allow_none: Literal[True] = ...,
+        **metadata: _Any,
+    ) -> None:
+        ...
 
-class Instance(_BaseInstance[_Any]):
-    ...
+    @overload
+    def __init__(
+        self: Instance[_T],
+        klass: _Type[_T],
+        *args: _Any,
+        allow_none: Literal[False] = ...,
+        **metadata: _Any,
+    ) -> None:
+        ...
+
+    @overload
+    def __init__(
+        self: Instance[_Any],
+        klass: str,
+        *args: _Any,
+        **metadata: _Any,
+    ) -> None:
+        ...
 
 
 class Supports(Instance):
