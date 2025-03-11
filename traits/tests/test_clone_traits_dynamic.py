@@ -33,7 +33,6 @@ class TestCloneTraitsDynamic(unittest.TestCase):
         self.foo_clone = self.foo.clone_traits()
 
     def test_setup(self):
-        self.assertIs(False, True)  # temporary check for test running
         self.assertIsNot(self.foo_clone.baz, None)
         self.assertIs(self.foo_clone.baz, 10)
         self.assertIn("baz", self.foo_clone.trait_names())
