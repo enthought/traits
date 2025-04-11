@@ -282,7 +282,7 @@ class CloneTestCase(unittest.TestCase):
         self.assertIs(bar_copy.shared, baz_copy.shared)
 
     def test_clone_traits_copies_dynamic_traits(self):
-        # Regression test for https://github.com/enthought/traitsui/issues/2064
+        # Regression test for https://github.com/enthought/traits/issues/1845
 
         # Given
         ref = Foo(s="ref")
