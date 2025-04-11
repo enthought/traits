@@ -397,7 +397,6 @@ def reset_global_adaptation_manager():
 
 def get_global_adaptation_manager():
     """ Set a reference to the global adaptation manager. """
-    global adaptation_manager
     return adaptation_manager
 
 
