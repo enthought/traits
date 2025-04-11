@@ -10,7 +10,7 @@
 
 import unittest
 
-from traits.api import HasTraits, Instance, Str, Any, Property
+from traits.api import HasTraits, Instance, Int, Str, Any, Property
 
 
 class Foo(HasTraits):
@@ -280,3 +280,18 @@ class CloneTestCase(unittest.TestCase):
         # should reference the new clone.
         self.assertIsNot(bar_copy.shared, baz.shared)
         self.assertIs(bar_copy.shared, baz_copy.shared)
+
+    def test_clone_traits_copies_dynamic_traits(self):
+        # Regression test for https://github.com/enthought/traitsui/issues/2064
+
+        # Given
+        ref = Foo(s="ref")
+        ref.add_trait("dynamic", Int(42))
+        ref.some_other_value = 35
+
+        # When
+        clone = ref.clone_traits()
+
+        # Then
+        self.assertEqual(clone.some_other_value, 35)
+        self.assertEqual(clone.dynamic, 42)

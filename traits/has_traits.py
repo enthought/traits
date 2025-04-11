@@ -1572,9 +1572,9 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         """
 
         if traits is None:
-            traits = self.copyable_trait_names(**metadata)
+            traits = other.copyable_trait_names(**metadata)
         elif (traits == "all") or (len(traits) == 0):
-            traits = self.all_trait_names()
+            traits = other.all_trait_names()
             if memo is not None:
                 memo["traits_to_copy"] = "all"
 
@@ -1585,7 +1585,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
 
         for name in traits:
             try:
-                trait = self.trait(name)
+                trait = other.trait(name)
                 if trait.type in DeferredCopy:
                     deferred.append(name)
                     continue
