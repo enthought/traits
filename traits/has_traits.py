@@ -1554,9 +1554,9 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             The object whose trait attribute values should be copied.
         traits : list of strings
             A list of names of trait attributes to copy. If None or
-            unspecified, the set of names returned by trait_names() is used.
-            If 'all' or an empty list, the set of names returned by
-            all_trait_names() is used.
+            unspecified, the set of names returned by
+            other.copyable_trait_names() is used. If 'all' or an empty list,
+            the set of names returned by other.all_trait_names() is used.
         memo : dict
             A dictionary of objects that have already been copied.
         copy : None | 'deep' | 'shallow'
