@@ -418,27 +418,26 @@ class TraitChangeNotifyWrapper(object):
         if isinstance(handler, MethodType):
             func = handler.__func__
             object = handler.__self__
-            if object is not None:
-                self.object = weakref.ref(object, self.listener_deleted)
-                self.name = handler.__name__
-                self.owner = owner
-                arg_count = func.__code__.co_argcount - 1
-                if arg_count > 4:
-                    raise TraitNotificationError(
-                        (
-                            "Invalid number of arguments for the dynamic "
-                            "trait change notification handler: %s. A maximum "
-                            "of 4 arguments is allowed, but %s were specified."
-                        )
-                        % (func.__name__, arg_count)
+            self.object = weakref.ref(object, self.listener_deleted)
+            self.name = handler.__name__
+            self.owner = owner
+            arg_count = func.__code__.co_argcount - 1
+            if arg_count > 4:
+                raise TraitNotificationError(
+                    (
+                        "Invalid number of arguments for the dynamic "
+                        "trait change notification handler: %s. A maximum "
+                        "of 4 arguments is allowed, but %s were specified."
                     )
+                    % (func.__name__, arg_count)
+                )
 
-                # We use the unbound method here to prevent cyclic garbage
-                # (issue #100).
-                self.notify_listener = type(self)._notify_method_listener
-                self.argument_transform = self.argument_transforms[arg_count]
+            # We use the unbound method here to prevent cyclic garbage
+            # (issue #100).
+            self.notify_listener = type(self)._notify_method_listener
+            self.argument_transform = self.argument_transforms[arg_count]
 
-                return arg_count
+            return arg_count
 
         elif target is not None:
             # Set up so the handler will be removed when the target is deleted.
