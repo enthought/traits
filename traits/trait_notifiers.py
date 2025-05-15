@@ -415,7 +415,7 @@ class TraitChangeNotifyWrapper(object):
     def init(self, handler, owner, target=None):
         # If target is not None and handler is a function then the handler
         # will be removed when target is deleted.
-        if type(handler) is MethodType:
+        if isinstance(handler, MethodType):
             func = handler.__func__
             object = handler.__self__
             if object is not None:
@@ -490,7 +490,7 @@ class TraitChangeNotifyWrapper(object):
         if handler is self:
             return True
 
-        if (type(handler) is MethodType) and (handler.__self__ is not None):
+        if isinstance(handler, MethodType):
             return (handler.__name__ == self.name) and (
                 handler.__self__ is self.object()
             )
