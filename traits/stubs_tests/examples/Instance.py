@@ -8,14 +8,16 @@
 #
 # Thanks for using Enthought open source!
 
-from traits.api import HasTraits, Instance, Str
+import typing
+
+from traits.api import HasTraits, Instance
 
 
 class Fruit:
-    info = Str("good for you")
+    info: str
 
-    def __init__(self, info="good for you", **traits):
-        super().__init__(info=info, **traits)
+    def __init__(self, info="good for you"):
+        self.info = info
 
 
 class Orange(Fruit):
@@ -32,7 +34,9 @@ def fruit_factory(info, other_stuff):
 
 class TestClass(HasTraits):
     itm = Instance(Fruit)
-
+    itm_not_none = Instance(Fruit, allow_none=False)
+    itm_allow_none = Instance(Fruit, allow_none=True)
+    itm_forward_ref = Instance("Fruit")
     itm_args_kw = Instance(Fruit, ('different info',), {'another_trait': 3})
     itm_args = Instance(Fruit, ('different info',))
     itm_kw = Instance(Fruit, {'info': 'different info'})
@@ -51,6 +55,34 @@ class TestClass(HasTraits):
     )
 
 
+def accepts_fruit(arg: Fruit) -> None:
+    pass
+
+
+def accepts_fruit_or_none(arg: typing.Optional[Fruit]) -> None:
+    pass
+
+
 obj = TestClass()
 obj.itm = Orange()
-obj.itm = Pizza()
+obj.itm = None
+obj.itm = Pizza()  # E: assignment
+obj.itm_allow_none = Orange()
+obj.itm_allow_none = None
+obj.itm_allow_none = Pizza()  # E: assignment
+obj.itm_not_none = Orange()
+obj.itm_not_none = None  # E: assignment
+obj.itm_not_none = Pizza()  # E: assignment
+obj.itm_forward_ref = Orange()
+obj.itm_forward_ref = None
+
+
+obj = TestClass()
+accepts_fruit(obj.itm)  # E: arg-type
+accepts_fruit_or_none(obj.itm)
+accepts_fruit(obj.itm_allow_none)  # E: arg-type
+accepts_fruit_or_none(obj.itm_allow_none)
+accepts_fruit(obj.itm_not_none)
+accepts_fruit_or_none(obj.itm_not_none)
+accepts_fruit(obj.itm_forward_ref)
+accepts_fruit_or_none(obj.itm_forward_ref)
