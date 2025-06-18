@@ -120,7 +120,6 @@ class global_value(new_style_value):
             gvalue = i
 
     def do_get(self):
-        global gvalue
         for i in range(n):
             gvalue
 
