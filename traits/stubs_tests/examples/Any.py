@@ -54,6 +54,9 @@ class Superclass(HasTraits):
     x = Any()
 
 
-class Subclass(Superclass):
-    x = Instance(Foo)  # E: assignment
-    y = Int()
+# Note: mypy < 1.16 complains if we override `x = Any()` with `x = Instance(Foo)`, but
+# mypy >= 1.16 thinks it's fine. For now, we skip the test.
+
+# class Subclass(Superclass):
+#     x = Instance(Foo)  # E: assignment
+#     y = Int()
