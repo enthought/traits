@@ -8,7 +8,7 @@
 #
 # Thanks for using Enthought open source!
 
-from traits.api import HasTraits, Any, Instance, Int
+from traits.api import HasTraits, Any
 
 
 class Test(HasTraits):
@@ -54,8 +54,8 @@ class Superclass(HasTraits):
     x = Any()
 
 
-# Note: mypy < 1.16 complains if we override `x = Any()` with `x = Instance(Foo)`, but
-# mypy >= 1.16 thinks it's fine. For now, we skip the test.
+# Note: mypy < 1.16 complains if we override `x = Any()` with `x =
+# Instance(Foo)`, but mypy >= 1.16 thinks it's fine. For now, we skip the test.
 
 # class Subclass(Superclass):
 #     x = Instance(Foo)  # E: assignment
