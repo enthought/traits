@@ -59,5 +59,5 @@ class Test3(HasTraits):
 #
 #
 # class Subclass(Superclass):
-#     x = Instance(Foo)  # E: assignment
+#     x = Instance(Foo)
 #     y = Int()
