@@ -42,6 +42,7 @@ if sphinx is not None:
         from pathlib import Path
 
     no_index_entry = sphinx.version_info >= (8, 2)
+    no_index = 'noindex' if sphinx.version_info < (7, 2) else 'no-index'
 
 
 # Configuration file content for testing.
@@ -233,7 +234,7 @@ class TestTraitDocumenter(unittest.TestCase):
         self.assertEqual(documenter.directive.warn.call_args_list, [])
         expected = [
             ('.. py:attribute:: MyTestClass.bar', '<autodoc>'),
-            ('   :no-index:', '<autodoc>'),
+            (f'   :{no_index}:', '<autodoc>'),
             ('   :module: traits.util.tests.test_trait_documenter', '<autodoc>'),  # noqa
             ('   :annotation: = Int(42, desc=""" First line …', '<autodoc>')]  # noqa
         if no_index_entry:
@@ -259,10 +260,10 @@ class TestTraitDocumenter(unittest.TestCase):
         self.assertEqual(documenter.directive.warn.call_args_list, [])
         expected = [
             ('.. py:attribute:: MySubClass.bar', '<autodoc>'),
-            ('   :no-index:', '<autodoc>'),
+            (f'   :{no_index}:', '<autodoc>'),
             ('   :module: traits.util.tests.test_trait_documenter', '<autodoc>'),  # noqa
             ('   :annotation: = Int(42, desc=""" First line …', '<autodoc>')]  # noqa
-        if no_index_entry:
+        if no_index:
             expected.insert(2, ('   :no-index-entry:', '<autodoc>'))
         calls = documenter.add_line.call_args_list
         for index, line in enumerate(expected):
@@ -280,7 +281,7 @@ class TestTraitDocumenter(unittest.TestCase):
         self.assertEqual(documenter.directive.warn.call_args_list, [])
         expected = [
             ('.. py:attribute:: MySubClass.foo', '<autodoc>'),
-            ('   :no-index:', '<autodoc>'),
+            (f'   :{no_index}:', '<autodoc>'),
             ('   :module: traits.util.tests.test_trait_documenter', '<autodoc>'),  # noqa
             ('   :annotation: = Bool(True)', '<autodoc>')]  # noqa
         if no_index_entry:
