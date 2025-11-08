@@ -96,6 +96,7 @@ class FindTheTraits(HasTraits):
         I'm a regular property, not a trait.
         """
 
+
 class MySubClass(MyTestClass):
 
     #: A new attribute.
@@ -232,7 +233,7 @@ class TestTraitDocumenter(unittest.TestCase):
             ('.. py:attribute:: MyTestClass.bar', '<autodoc>'),
             ('   :no-index:', '<autodoc>'),
             ('   :no-index-entry:', '<autodoc>'),
-            ('   :module: traits.util.tests.test_trait_documenter', '<autodoc>'),
+            ('   :module: traits.util.tests.test_trait_documenter', '<autodoc>'),  # noqa
             ('   :annotation: = Int(42, desc=""" First line …', '<autodoc>')]  # noqa
         calls = documenter.add_line.call_args_list
         for index, line in enumerate(expected):
@@ -257,7 +258,7 @@ class TestTraitDocumenter(unittest.TestCase):
             ('.. py:attribute:: MySubClass.bar', '<autodoc>'),
             ('   :no-index:', '<autodoc>'),
             ('   :no-index-entry:', '<autodoc>'),
-            ('   :module: traits.util.tests.test_trait_documenter', '<autodoc>'),
+            ('   :module: traits.util.tests.test_trait_documenter', '<autodoc>'),  # noqa
             ('   :annotation: = Int(42, desc=""" First line …', '<autodoc>')]  # noqa
         calls = documenter.add_line.call_args_list
         for index, line in enumerate(expected):
@@ -277,7 +278,7 @@ class TestTraitDocumenter(unittest.TestCase):
             ('.. py:attribute:: MySubClass.foo', '<autodoc>'),
             ('   :no-index:', '<autodoc>'),
             ('   :no-index-entry:', '<autodoc>'),
-            ('   :module: traits.util.tests.test_trait_documenter', '<autodoc>'),
+            ('   :module: traits.util.tests.test_trait_documenter', '<autodoc>'),  # noqa
             ('   :annotation: = Bool(True)', '<autodoc>')]  # noqa
         calls = documenter.add_line.call_args_list
         for index, line in enumerate(expected):

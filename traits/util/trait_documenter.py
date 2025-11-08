@@ -116,7 +116,9 @@ class TraitDocumenter(ClassLevelDocumenter):
         """
         ClassLevelDocumenter.add_directive_header(self, sig)
         # Look into the class and parent classes:
-        classes = [self.parent] + list(types.resolve_bases(self.parent.__bases__))
+        parent = self.parent
+        classes = list(types.resolve_bases(parent.__bases__))
+        classes.insert(0, parent)
         for cls in classes:
             try:
                 definition = trait_definition(
@@ -128,7 +130,7 @@ class TraitDocumenter(ClassLevelDocumenter):
         else:
             logger.warning(
                 "No definition for the trait {!r} could be found in "
-                "class {!r}.".format(self.object_name, self.parent),
+                "class {!r}.".format(self.object_name, parent),
                 exc_info=True)
             return
 
