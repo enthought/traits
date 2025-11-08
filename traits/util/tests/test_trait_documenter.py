@@ -41,6 +41,9 @@ if sphinx is not None:
     else:
         from pathlib import Path
 
+    no_index_entry = sphinx.version_info >= (8, 2)
+
+
 
 # Configuration file content for testing.
 CONF_PY = """\
@@ -232,9 +235,10 @@ class TestTraitDocumenter(unittest.TestCase):
         expected = [
             ('.. py:attribute:: MyTestClass.bar', '<autodoc>'),
             ('   :no-index:', '<autodoc>'),
-            ('   :no-index-entry:', '<autodoc>'),
             ('   :module: traits.util.tests.test_trait_documenter', '<autodoc>'),  # noqa
             ('   :annotation: = Int(42, desc=""" First line …', '<autodoc>')]  # noqa
+        if no_index_entry:
+            expected.insert(2, ('   :no-index-entry:', '<autodoc>'))
         calls = documenter.add_line.call_args_list
         for index, line in enumerate(expected):
             self.assertEqual(calls[index][0], line)
@@ -257,9 +261,10 @@ class TestTraitDocumenter(unittest.TestCase):
         expected = [
             ('.. py:attribute:: MySubClass.bar', '<autodoc>'),
             ('   :no-index:', '<autodoc>'),
-            ('   :no-index-entry:', '<autodoc>'),
             ('   :module: traits.util.tests.test_trait_documenter', '<autodoc>'),  # noqa
             ('   :annotation: = Int(42, desc=""" First line …', '<autodoc>')]  # noqa
+        if no_index_entry:
+            expected.insert(2, ('   :no-index-entry:', '<autodoc>'))
         calls = documenter.add_line.call_args_list
         for index, line in enumerate(expected):
             self.assertEqual(calls[index][0], line)
@@ -277,9 +282,10 @@ class TestTraitDocumenter(unittest.TestCase):
         expected = [
             ('.. py:attribute:: MySubClass.foo', '<autodoc>'),
             ('   :no-index:', '<autodoc>'),
-            ('   :no-index-entry:', '<autodoc>'),
             ('   :module: traits.util.tests.test_trait_documenter', '<autodoc>'),  # noqa
             ('   :annotation: = Bool(True)', '<autodoc>')]  # noqa
+        if no_index_entry:
+            expected.insert(2, ('   :no-index-entry:', '<autodoc>'))
         calls = documenter.add_line.call_args_list
         for index, line in enumerate(expected):
             self.assertEqual(calls[index][0], line)
