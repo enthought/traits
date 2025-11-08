@@ -263,7 +263,7 @@ class TestTraitDocumenter(unittest.TestCase):
             (f'   :{no_index}:', '<autodoc>'),
             ('   :module: traits.util.tests.test_trait_documenter', '<autodoc>'),  # noqa
             ('   :annotation: = Int(42, desc=""" First line …', '<autodoc>')]  # noqa
-        if no_index:
+        if no_index_entry:
             expected.insert(2, ('   :no-index-entry:', '<autodoc>'))
         calls = documenter.add_line.call_args_list
         for index, line in enumerate(expected):
