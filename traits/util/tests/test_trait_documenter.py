@@ -44,7 +44,6 @@ if sphinx is not None:
     no_index_entry = sphinx.version_info >= (8, 2)
 
 
-
 # Configuration file content for testing.
 CONF_PY = """\
 extensions = ['sphinx.ext.autodoc']
