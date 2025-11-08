@@ -96,6 +96,11 @@ class FindTheTraits(HasTraits):
         I'm a regular property, not a trait.
         """
 
+class MySubClass(MyTestClass):
+
+    #: A new attribute.
+    foo = Bool(True)
+
 
 @requires_sphinx
 class TestTraitDocumenter(unittest.TestCase):
@@ -128,7 +133,6 @@ class TestTraitDocumenter(unittest.TestCase):
         self.assertEqual(src.rstrip(), string)
 
     def test_add_line(self):
-
         mocked_directive = mock.MagicMock()
 
         documenter = TraitDocumenter(mocked_directive, "test", "   ")
@@ -208,6 +212,76 @@ class TestTraitDocumenter(unittest.TestCase):
                     INSTANCEATTR, "not_a_trait", True, class_documenter,
                 )
             )
+
+    def test_class(self):
+        # given
+        documenter = TraitDocumenter(mock.Mock(), 'test')
+        documenter.parent = MyTestClass
+        documenter.object_name = 'bar'
+        documenter.modname = 'traits.util.tests.test_trait_documenter'
+        documenter.get_sourcename = mock.Mock(return_value='<autodoc>')
+        documenter.objpath = ['MyTestClass', 'bar']
+        documenter.add_line = mock.Mock()
+
+        # when
+        documenter.add_directive_header('')
+
+        # then
+        self.assertEqual(documenter.directive.warn.call_args_list, [])
+        expected = [
+            ('.. py:attribute:: MyTestClass.bar', '<autodoc>'),
+            ('   :no-index:', '<autodoc>'),
+            ('   :no-index-entry:', '<autodoc>'),
+            ('   :module: traits.util.tests.test_trait_documenter', '<autodoc>'),
+            ('   :annotation: = Int(42, desc=""" First line …', '<autodoc>')]  # noqa
+        calls = documenter.add_line.call_args_list
+        for index, line in enumerate(expected):
+            self.assertEqual(calls[index][0], line)
+
+    def test_subclass(self):
+        # given
+        documenter = TraitDocumenter(mock.Mock(), 'test')
+        documenter.object_name = 'bar'
+        documenter.objpath = ['MySubClass', 'bar']
+        documenter.parent = MySubClass
+        documenter.modname = 'traits.util.tests.test_trait_documenter'
+        documenter.get_sourcename = mock.Mock(return_value='<autodoc>')
+        documenter.add_line = mock.Mock()
+
+        # when
+        documenter.add_directive_header('')
+
+        # then
+        self.assertEqual(documenter.directive.warn.call_args_list, [])
+        expected = [
+            ('.. py:attribute:: MySubClass.bar', '<autodoc>'),
+            ('   :no-index:', '<autodoc>'),
+            ('   :no-index-entry:', '<autodoc>'),
+            ('   :module: traits.util.tests.test_trait_documenter', '<autodoc>'),
+            ('   :annotation: = Int(42, desc=""" First line …', '<autodoc>')]  # noqa
+        calls = documenter.add_line.call_args_list
+        for index, line in enumerate(expected):
+            self.assertEqual(calls[index][0], line)
+
+        # given
+        documenter.object_name = 'foo'
+        documenter.objpath = ['MySubClass', 'foo']
+        documenter.add_line = mock.Mock()
+
+        # when
+        documenter.add_directive_header('')
+
+        # then
+        self.assertEqual(documenter.directive.warn.call_args_list, [])
+        expected = [
+            ('.. py:attribute:: MySubClass.foo', '<autodoc>'),
+            ('   :no-index:', '<autodoc>'),
+            ('   :no-index-entry:', '<autodoc>'),
+            ('   :module: traits.util.tests.test_trait_documenter', '<autodoc>'),
+            ('   :annotation: = Bool(True)', '<autodoc>')]  # noqa
+        calls = documenter.add_line.call_args_list
+        for index, line in enumerate(expected):
+            self.assertEqual(calls[index][0], line)
 
     @contextlib.contextmanager
     def create_directive(self):
