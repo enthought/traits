@@ -41,6 +41,9 @@ if sphinx is not None:
     else:
         from pathlib import Path
 
+    no_index_entry = sphinx.version_info >= (8, 2)
+    no_index = 'noindex' if sphinx.version_info < (7, 2) else 'no-index'
+
 
 # Configuration file content for testing.
 CONF_PY = """\
@@ -97,6 +100,12 @@ class FindTheTraits(HasTraits):
         """
 
 
+class MySubClass(MyTestClass):
+
+    #: A new attribute.
+    foo = Bool(True)
+
+
 @requires_sphinx
 class TestTraitDocumenter(unittest.TestCase):
     """ Tests for the trait documenter. """
@@ -128,7 +137,6 @@ class TestTraitDocumenter(unittest.TestCase):
         self.assertEqual(src.rstrip(), string)
 
     def test_add_line(self):
-
         mocked_directive = mock.MagicMock()
 
         documenter = TraitDocumenter(mocked_directive, "test", "   ")
@@ -208,6 +216,79 @@ class TestTraitDocumenter(unittest.TestCase):
                     INSTANCEATTR, "not_a_trait", True, class_documenter,
                 )
             )
+
+    def test_class(self):
+        # given
+        documenter = TraitDocumenter(mock.Mock(), 'test')
+        documenter.parent = MyTestClass
+        documenter.object_name = 'bar'
+        documenter.modname = 'traits.util.tests.test_trait_documenter'
+        documenter.get_sourcename = mock.Mock(return_value='<autodoc>')
+        documenter.objpath = ['MyTestClass', 'bar']
+        documenter.add_line = mock.Mock()
+
+        # when
+        documenter.add_directive_header('')
+
+        # then
+        self.assertEqual(documenter.directive.warn.call_args_list, [])
+        expected = [
+            ('.. py:attribute:: MyTestClass.bar', '<autodoc>'),
+            (f'   :{no_index}:', '<autodoc>'),
+            ('   :module: traits.util.tests.test_trait_documenter', '<autodoc>'),  # noqa
+            ('   :annotation: = Int(42, desc=""" First line …', '<autodoc>')]  # noqa
+        if no_index_entry:
+            expected.insert(2, ('   :no-index-entry:', '<autodoc>'))
+        calls = documenter.add_line.call_args_list
+        for index, line in enumerate(expected):
+            self.assertEqual(calls[index][0], line)
+
+    def test_subclass(self):
+        # given
+        documenter = TraitDocumenter(mock.Mock(), 'test')
+        documenter.object_name = 'bar'
+        documenter.objpath = ['MySubClass', 'bar']
+        documenter.parent = MySubClass
+        documenter.modname = 'traits.util.tests.test_trait_documenter'
+        documenter.get_sourcename = mock.Mock(return_value='<autodoc>')
+        documenter.add_line = mock.Mock()
+
+        # when
+        documenter.add_directive_header('')
+
+        # then
+        self.assertEqual(documenter.directive.warn.call_args_list, [])
+        expected = [
+            ('.. py:attribute:: MySubClass.bar', '<autodoc>'),
+            (f'   :{no_index}:', '<autodoc>'),
+            ('   :module: traits.util.tests.test_trait_documenter', '<autodoc>'),  # noqa
+            ('   :annotation: = Int(42, desc=""" First line …', '<autodoc>')]  # noqa
+        if no_index_entry:
+            expected.insert(2, ('   :no-index-entry:', '<autodoc>'))
+        calls = documenter.add_line.call_args_list
+        for index, line in enumerate(expected):
+            self.assertEqual(calls[index][0], line)
+
+        # given
+        documenter.object_name = 'foo'
+        documenter.objpath = ['MySubClass', 'foo']
+        documenter.add_line = mock.Mock()
+
+        # when
+        documenter.add_directive_header('')
+
+        # then
+        self.assertEqual(documenter.directive.warn.call_args_list, [])
+        expected = [
+            ('.. py:attribute:: MySubClass.foo', '<autodoc>'),
+            (f'   :{no_index}:', '<autodoc>'),
+            ('   :module: traits.util.tests.test_trait_documenter', '<autodoc>'),  # noqa
+            ('   :annotation: = Bool(True)', '<autodoc>')]  # noqa
+        if no_index_entry:
+            expected.insert(2, ('   :no-index-entry:', '<autodoc>'))
+        calls = documenter.add_line.call_args_list
+        for index, line in enumerate(expected):
+            self.assertEqual(calls[index][0], line)
 
     @contextlib.contextmanager
     def create_directive(self):

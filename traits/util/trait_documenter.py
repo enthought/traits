@@ -16,6 +16,7 @@
 from importlib import import_module
 import inspect
 import io
+import types
 import token
 import tokenize
 import traceback
@@ -114,17 +115,22 @@ class TraitDocumenter(ClassLevelDocumenter):
 
         """
         ClassLevelDocumenter.add_directive_header(self, sig)
-        try:
-            definition = trait_definition(
-                cls=self.parent,
-                trait_name=self.object_name,
-            )
-        except ValueError:
-            # Without this, a failure to find the trait definition aborts
-            # the whole documentation build.
+        # Look into the class and parent classes:
+        parent = self.parent
+        classes = list(types.resolve_bases(parent.__bases__))
+        classes.insert(0, parent)
+        for cls in classes:
+            try:
+                definition = trait_definition(
+                    cls=cls, trait_name=self.object_name)
+            except ValueError:
+                continue
+            else:
+                break
+        else:
             logger.warning(
                 "No definition for the trait {!r} could be found in "
-                "class {!r}.".format(self.object_name, self.parent),
+                "class {!r}.".format(self.object_name, parent),
                 exc_info=True)
             return
 
