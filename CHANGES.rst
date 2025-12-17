@@ -1,6 +1,39 @@
 Traits CHANGELOG
 ================
 
+Release 7.1.0
+-------------
+
+Released: 2025-12-17
+
+This is a minor release of the Traits package. The most significant change is to the type
+stubs, which should now be better behaved for common uses of the ``Instance`` trait type.
+
+The following people contributed code changes and reviews for this release:
+
+* Mark Dickinson
+* Guillaume Garcia
+* Ioannis Tziakos
+
+Fixes
+~~~~~
+* Make Instance type hints more useful. (#1840)
+* Remove type hints on ``IntEnum`` members. (#1856)
+* Fixed subclassing support in trait-documenter. (#1866)
+* Fix ``TraitChangeNotifyWrapper`` handling of compiled methods; the previous strict type
+  check was causing issues with Nuitka. (#1850)
+* Fix failure of ``clone_traits`` in the presence of dynamic traits. (#1846)
+
+Tests
+~~~~~
+* Fix that we weren't actually running ``mypy`` in some of the stubs tests. (#1838)
+
+Build
+~~~~~
+* Fix failure of ``python etstool.py install`` due to an invalid EDS dependency. (#1831)
+* Fix flake8 errors resulting from redundant ``global`` statements. (#1847)
+
+
 Release 7.0.2
 -------------
 
