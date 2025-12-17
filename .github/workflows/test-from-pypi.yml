@@ -10,7 +10,7 @@ jobs:
   test-pypi-sdist:
     strategy:
       matrix:
-        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13']
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13', '3.14']
         platform:
           - os: ubuntu-latest
             architecture: x64
@@ -20,7 +20,7 @@ jobs:
             architecture: x86
           - os: macos-latest
             architecture: arm64
-          - os: macos-13
+          - os: macos-15-intel
             architecture: x64
 
     runs-on: ${{ matrix.platform.os }}
@@ -44,7 +44,7 @@ jobs:
   test-pypi-wheel:
     strategy:
       matrix:
-        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13']
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13', '3.14']
         platform:
           - os: ubuntu-latest
             architecture: x64
@@ -54,7 +54,7 @@ jobs:
             architecture: x86
           - os: macos-latest
             architecture: arm64
-          - os: macos-13
+          - os: macos-15-intel
             architecture: x64
 
     runs-on: ${{ matrix.platform.os }}
