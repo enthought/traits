@@ -32,7 +32,7 @@ Build
 ~~~~~
 * Fix failure of ``python etstool.py install`` due to an invalid EDS dependency. (#1831)
 * Fix flake8 errors resulting from redundant ``global`` statements. (#1847)
-
+* Support Python 3.14 in CI workflows and wheel builds. (#1871)
 
 Release 7.0.2
 -------------
