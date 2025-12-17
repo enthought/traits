@@ -9,7 +9,7 @@ jobs:
   build-wheels:
     strategy:
       matrix:
-        os: [windows-latest, macos-13, macos-14, ubuntu-latest]
+        os: [windows-latest, macos-15-intel, macos-latest, ubuntu-latest]
 
     runs-on: ${{ matrix.os }}
 
