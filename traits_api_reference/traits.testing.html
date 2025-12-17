@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>traits.testing Package &mdash; Traits 7.0 Documentation</title>
+    <title>traits.testing Package &mdash; Traits 7.1 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -17,7 +17,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '7.0.2',
+        VERSION:     '7.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -35,7 +35,7 @@
     <link rel="shortcut icon" href="../_static/img/favicon.png">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 7.0 Documentation" href="../index.html" >
+    <link rel="top" title="Traits 7.1 Documentation" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
     <link rel="next" title="traits.util Package" href="traits.util.html" >
     <link rel="prev" title="traits.observation Package" href="traits.observation.html" > 
@@ -55,7 +55,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 7.0 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 7.1 Documentation</a></li>
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
     </ul>
@@ -169,7 +169,7 @@ Classes.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="traits.testing.unittest_tools.UnittestTools">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">traits.testing.unittest_tools.</span></span><span class="sig-name descname"><span class="pre">UnittestTools</span></span><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Mixin class to augment the unittest.TestCase class with useful trait
 related assert methods.</p>
 <dl class="py method">
@@ -207,8 +207,8 @@ not well-defined, and may depend on dictionary ordering.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>obj</strong> (<a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><em>HasTraits</em></a>) – The HasTraits class instance whose class trait will change.</p></li>
-<li><p><strong>trait</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The extended trait name of trait changes to listen to.</p></li>
-<li><p><strong>count</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> or </em><em>None</em><em>, </em><em>optional</em>) – The expected number of times the event should be fired. When None
+<li><p><strong>trait</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The extended trait name of trait changes to listen to.</p></li>
+<li><p><strong>count</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> or </em><em>None</em><em>, </em><em>optional</em>) – The expected number of times the event should be fired. When None
 (default value) there is no check for the number of times the
 change event was fired.</p></li>
 <li><p><strong>callableObj</strong> (<em>callable</em><em>, </em><em>optional</em>) – A callable object that will trigger the expected trait change.
@@ -247,7 +247,7 @@ execution of the provided function.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>obj</strong> (<a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><em>HasTraits</em></a>) – The HasTraits class instance whose class trait will change.</p></li>
-<li><p><strong>trait</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The extended trait name of trait changes to listen to.</p></li>
+<li><p><strong>trait</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The extended trait name of trait changes to listen to.</p></li>
 <li><p><strong>callableObj</strong> (<em>callable</em><em>, </em><em>optional</em>) – A callable object that should not trigger a change in the
 passed trait.  When None (default value) a trigger is expected
 to be called under the context manger returned by this method.</p></li>
@@ -276,9 +276,9 @@ the trigger, in which case None is returned.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><em>HasTraits</em></a>) – The HasTraits class instances whose traits will change.</p></li>
-<li><p><strong>traits_modified</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The extended trait names of trait expected to change.</p></li>
-<li><p><strong>traits_not_modified</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The extended trait names of traits not expected to change.</p></li>
+<li><p><strong>objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em> of </em><a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><em>HasTraits</em></a>) – The HasTraits class instances whose traits will change.</p></li>
+<li><p><strong>traits_modified</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The extended trait names of trait expected to change.</p></li>
+<li><p><strong>traits_not_modified</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The extended trait names of traits not expected to change.</p></li>
 </ul>
 </dd>
 </dl>
@@ -302,9 +302,9 @@ execution of the body of the corresponding with block.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>obj</strong> (<a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><em>HasTraits</em></a>) – The HasTraits class instance whose class trait will change.</p></li>
-<li><p><strong>trait</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The extended trait name of trait changes to listen to.</p></li>
-<li><p><strong>count</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – The expected number of times the event should be fired.</p></li>
-<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> or </em><em>None</em><em>, </em><em>optional</em>) – The amount of time in seconds to wait for the specified number
+<li><p><strong>trait</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The extended trait name of trait changes to listen to.</p></li>
+<li><p><strong>count</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – The expected number of times the event should be fired.</p></li>
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> or </em><em>None</em><em>, </em><em>optional</em>) – The amount of time in seconds to wait for the specified number
 of changes. None can be used to indicate no timeout.</p></li>
 </ul>
 </dd>
@@ -319,11 +319,11 @@ of changes. None can be used to indicate no timeout.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>obj</strong> (<a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><em>HasTraits</em></a>) – The HasTraits class instance whose traits will change.</p></li>
-<li><p><strong>trait</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The extended trait name of trait changes to listen to.</p></li>
+<li><p><strong>trait</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The extended trait name of trait changes to listen to.</p></li>
 <li><p><strong>condition</strong> (<em>callable</em>) – A function that will be called when the specified trait
 changes.  This should accept <code class="docutils literal notranslate"><span class="pre">obj</span></code> and should return a
 Boolean indicating whether the condition is satisfied or not.</p></li>
-<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> or </em><em>None</em><em>, </em><em>optional</em>) – The amount of time in seconds to wait for the condition to
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> or </em><em>None</em><em>, </em><em>optional</em>) – The amount of time in seconds to wait for the condition to
 become true.  None can be used to indicate no timeout.</p></li>
 </ul>
 </dd>
@@ -435,7 +435,7 @@ All rights reserved.
 
       </li>
       <li>
-      Last updated on Jan 27, 2025.
+      Last updated on Dec 17, 2025.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 8.1.3.

@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.has_traits &mdash; Traits 7.0 Documentation</title>
+    <title>traits.has_traits &mdash; Traits 7.1 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-extend.css">
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '7.0.2',
+        VERSION:     '7.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -34,7 +34,7 @@
     <link rel="shortcut icon" href="../../_static/img/favicon.png">
     <link rel="index" title="Index" href="../../genindex.html" >
     <link rel="search" title="Search" href="../../search.html" >
-    <link rel="top" title="Traits 7.0 Documentation" href="../../index.html" >
+    <link rel="top" title="Traits 7.1 Documentation" href="../../index.html" >
     <link rel="up" title="Module code" href="../index.html" > 
   </head>
   <body>
@@ -52,7 +52,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../index.html">Traits 7.0 Documentation</a></li>
+        <li class="active"><a href="../../index.html">Traits 7.1 Documentation</a></li>
 	
           <li class="active"><a href="../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -1692,9 +1692,9 @@
 <span class="sd">            The object whose trait attribute values should be copied.</span>
 <span class="sd">        traits : list of strings</span>
 <span class="sd">            A list of names of trait attributes to copy. If None or</span>
-<span class="sd">            unspecified, the set of names returned by trait_names() is used.</span>
-<span class="sd">            If &#39;all&#39; or an empty list, the set of names returned by</span>
-<span class="sd">            all_trait_names() is used.</span>
+<span class="sd">            unspecified, the set of names returned by</span>
+<span class="sd">            other.copyable_trait_names() is used. If &#39;all&#39; or an empty list,</span>
+<span class="sd">            the set of names returned by other.all_trait_names() is used.</span>
 <span class="sd">        memo : dict</span>
 <span class="sd">            A dictionary of objects that have already been copied.</span>
 <span class="sd">        copy : None | &#39;deep&#39; | &#39;shallow&#39;</span>
@@ -1710,9 +1710,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">traits</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">traits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copyable_trait_names</span><span class="p">(</span><span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
+            <span class="n">traits</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">copyable_trait_names</span><span class="p">(</span><span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
         <span class="k">elif</span> <span class="p">(</span><span class="n">traits</span> <span class="o">==</span> <span class="s2">&quot;all&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">traits</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
-            <span class="n">traits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_trait_names</span><span class="p">()</span>
+            <span class="n">traits</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">all_trait_names</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">memo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">memo</span><span class="p">[</span><span class="s2">&quot;traits_to_copy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;all&quot;</span>
 
@@ -1723,7 +1723,7 @@
 
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">traits</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">trait</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">trait</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">trait</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="n">DeferredCopy</span><span class="p">:</span>
                     <span class="n">deferred</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
                     <span class="k">continue</span>
@@ -3946,7 +3946,7 @@ All rights reserved.
 
       </li>
       <li>
-      Last updated on Jan 27, 2025.
+      Last updated on Dec 17, 2025.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 8.1.3.

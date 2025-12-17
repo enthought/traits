@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>traits.trait_types Module &mdash; Traits 7.0 Documentation</title>
+    <title>traits.trait_types Module &mdash; Traits 7.1 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -17,7 +17,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '7.0.2',
+        VERSION:     '7.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -35,7 +35,7 @@
     <link rel="shortcut icon" href="../_static/img/favicon.png">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 7.0 Documentation" href="../index.html" >
+    <link rel="top" title="Traits 7.1 Documentation" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
     <link rel="next" title="traits.trait_notifiers Module" href="trait_notifiers.html" >
     <link rel="prev" title="traits.trait_type Module" href="trait_type.html" > 
@@ -55,7 +55,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 7.0 Documentation</a></li>
+        <li class="active"><a href="../index.html">Traits 7.1 Documentation</a></li>
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
     </ul>
@@ -104,8 +104,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>default_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><em>object</em></a><em>, </em><em>optional</em>) – <p>The default value for the trait. If this is an instance of either
-<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a> then a copy of the default value
+<li><p><strong>default_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><em>object</em></a><em>, </em><em>optional</em>) – <p>The default value for the trait. If this is an instance of either
+<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a> then a copy of the default value
 is made for each instance. Otherwise, the default is shared between
 all instances.</p>
 <div class="deprecated">
@@ -116,7 +116,7 @@ will no longer be copied. If you need a per-instance default, use a
 </p></li>
 <li><p><strong>factory</strong> (<em>callable</em><em>, </em><em>optional</em>) – A callable, that when called with <em>args</em> and
 <em>kw</em>, returns the default value for the trait.</p></li>
-<li><p><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>, </em><em>optional</em>) – Positional arguments (if any) for generating the default value.</p></li>
+<li><p><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>, </em><em>optional</em>) – Positional arguments (if any) for generating the default value.</p></li>
 <li><p><strong>kw</strong> (<em>dictionary</em><em>, </em><em>optional</em>) – Keyword arguments (if any) for generating the default value.</p></li>
 <li><p><strong>**metadata</strong> – Metadata for the trait.</p></li>
 </ul>
@@ -153,7 +153,7 @@ converted to the corresponding int value.</p>
 <dt class="sig sig-object py" id="traits.trait_types.BaseInt.evaluate">
 <span class="sig-name descname"><span class="pre">evaluate</span></span><a class="headerlink" href="#traits.trait_types.BaseInt.evaluate" title="Link to this definition">¶</a></dt>
 <dd><p>The function to use for evaluating strings to this type:</p>
-<p>alias of <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></p>
+<p>alias of <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -215,7 +215,7 @@ float value.</p>
 <dt class="sig sig-object py" id="traits.trait_types.BaseFloat.evaluate">
 <span class="sig-name descname"><span class="pre">evaluate</span></span><a class="headerlink" href="#traits.trait_types.BaseFloat.evaluate" title="Link to this definition">¶</a></dt>
 <dd><p>The function to use for evaluating strings to this type:</p>
-<p>alias of <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></p>
+<p>alias of <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -278,7 +278,7 @@ corresponding complex value.</p>
 <dt class="sig sig-object py" id="traits.trait_types.BaseComplex.evaluate">
 <span class="sig-name descname"><span class="pre">evaluate</span></span><a class="headerlink" href="#traits.trait_types.BaseComplex.evaluate" title="Link to this definition">¶</a></dt>
 <dd><p>The function to use for evaluating strings to this type:</p>
-<p>alias of <a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">complex</span></code></a></p>
+<p>alias of <a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">complex</span></code></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -459,7 +459,7 @@ corresponding complex value.</p>
 <dt class="sig sig-object py" id="traits.trait_types.BaseBool.evaluate">
 <span class="sig-name descname"><span class="pre">evaluate</span></span><a class="headerlink" href="#traits.trait_types.BaseBool.evaluate" title="Link to this definition">¶</a></dt>
 <dd><p>The function to use for evaluating strings to this type:</p>
-<p>alias of <a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
+<p>alias of <a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -517,7 +517,7 @@ corresponding complex value.</p>
 <dt class="sig sig-object py" id="traits.trait_types.BaseCInt.evaluate">
 <span class="sig-name descname"><span class="pre">evaluate</span></span><a class="headerlink" href="#traits.trait_types.BaseCInt.evaluate" title="Link to this definition">¶</a></dt>
 <dd><p>The function to use for evaluating strings to this type:</p>
-<p>alias of <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></p>
+<p>alias of <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -551,7 +551,7 @@ corresponding complex value.</p>
 <dt class="sig sig-object py" id="traits.trait_types.BaseCFloat.evaluate">
 <span class="sig-name descname"><span class="pre">evaluate</span></span><a class="headerlink" href="#traits.trait_types.BaseCFloat.evaluate" title="Link to this definition">¶</a></dt>
 <dd><p>The function to use for evaluating strings to this type:</p>
-<p>alias of <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></p>
+<p>alias of <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -585,7 +585,7 @@ corresponding complex value.</p>
 <dt class="sig sig-object py" id="traits.trait_types.BaseCComplex.evaluate">
 <span class="sig-name descname"><span class="pre">evaluate</span></span><a class="headerlink" href="#traits.trait_types.BaseCComplex.evaluate" title="Link to this definition">¶</a></dt>
 <dd><p>The function to use for evaluating strings to this type:</p>
-<p>alias of <a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">complex</span></code></a></p>
+<p>alias of <a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">complex</span></code></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -673,7 +673,7 @@ corresponding complex value.</p>
 <dt class="sig sig-object py" id="traits.trait_types.BaseCBool.evaluate">
 <span class="sig-name descname"><span class="pre">evaluate</span></span><a class="headerlink" href="#traits.trait_types.BaseCBool.evaluate" title="Link to this definition">¶</a></dt>
 <dd><p>The function to use for evaluating strings to this type:</p>
-<p>alias of <a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
+<p>alias of <a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -708,10 +708,10 @@ optionally matches a specified regular expression.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The default value for the string.</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The default value for the string.</p></li>
 <li><p><strong>minlen</strong> (<em>integer</em>) – The minimum length allowed for the string.</p></li>
 <li><p><strong>maxlen</strong> (<em>integer</em>) – The maximum length allowed for the string.</p></li>
-<li><p><strong>regex</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – A Python regular expression that the string must match.</p></li>
+<li><p><strong>regex</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – A Python regular expression that the string must match.</p></li>
 <li><p><strong>**metadata</strong> – The trait metadata for the trait.</p></li>
 </ul>
 </dd>
@@ -744,7 +744,7 @@ optionally matches a specified regular expression.</p>
 <dd><p>A Python regular expression that the string must match.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -810,8 +810,8 @@ specified regular expression.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The default value of the trait.</p></li>
-<li><p><strong>regex</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The regular expression that the trait value must match.</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The default value of the trait.</p></li>
+<li><p><strong>regex</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The regular expression that the trait value must match.</p></li>
 <li><p><strong>**metadata</strong> – Trait metadata.</p></li>
 </ul>
 </dd>
@@ -1130,14 +1130,14 @@ __prefix__ attribute prepended to delegator attribute name.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>delegate</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The name of the trait that holds the HasTraits instance that the
+<li><p><strong>delegate</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The name of the trait that holds the HasTraits instance that the
 value is delegated to.</p></li>
-<li><p><strong>prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The name of the trait on the delegate that holds the delegated
+<li><p><strong>prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The name of the trait on the delegate that holds the delegated
 value.  If empty, then the name of this trait will be used.</p></li>
-<li><p><strong>modify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Whether modifications of this trait are applied to the delegated
+<li><p><strong>modify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether modifications of this trait are applied to the delegated
 object.  This differentiates the behaviour of DelegatesTo and
 PrototypedFrom.</p></li>
-<li><p><strong>listenable</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Whether changes to the delegated trait will fire listeners to
+<li><p><strong>listenable</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether changes to the delegated trait will fire listeners to
 this trait.</p></li>
 </ul>
 </dd>
@@ -1149,7 +1149,7 @@ this trait.</p></li>
 value is delegated to.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1161,7 +1161,7 @@ value is delegated to.</p>
 value.  If empty, then the name of this trait will be used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1172,7 +1172,7 @@ value.  If empty, then the name of this trait will be used.</p>
 <dd><p>An integer giving the type of prefix being used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1185,7 +1185,7 @@ object.  This differentiates the behaviour of DelegatesTo and
 PrototypedFrom.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1248,11 +1248,11 @@ original object containing the delegator trait is not modified.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>delegate</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Name of the attribute on the current object which references
+<li><p><strong>delegate</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the attribute on the current object which references
 the object that is the trait’s delegate.</p></li>
-<li><p><strong>prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – A prefix or substitution applied to the original attribute when
+<li><p><strong>prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – A prefix or substitution applied to the original attribute when
 looking up the delegated attribute.</p></li>
-<li><p><strong>listenable</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Indicates whether a listener can be attached to this attribute
+<li><p><strong>listenable</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Indicates whether a listener can be attached to this attribute
 such that changes to the delegated attribute will trigger it.</p></li>
 <li><p><strong>**metadata</strong> – Trait metadata for the trait.</p></li>
 </ul>
@@ -1293,11 +1293,11 @@ only used to define to trait type and default value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>prototype</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Name of the attribute on the current object which references the
+<li><p><strong>prototype</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the attribute on the current object which references the
 object that is the trait’s prototype.</p></li>
-<li><p><strong>prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – A prefix or substitution applied to the original attribute when
+<li><p><strong>prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – A prefix or substitution applied to the original attribute when
 looking up the prototyped attribute.</p></li>
-<li><p><strong>listenable</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Indicates whether a listener can be attached to this attribute
+<li><p><strong>listenable</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Indicates whether a listener can be attached to this attribute
 such that changes to the corresponding attribute on the
 prototype object will trigger it.</p></li>
 <li><p><strong>**metadata</strong> – Trait metadata for the trait.</p></li>
@@ -1387,14 +1387,14 @@ converting the latter to the corresponding string value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The default value for the trait.</p></li>
-<li><p><strong>filter</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – A wildcard string to filter filenames in the file dialog box used by
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The default value for the trait.</p></li>
+<li><p><strong>filter</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – A wildcard string to filter filenames in the file dialog box used by
 the attribute trait editor.</p></li>
-<li><p><strong>auto_set</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Indicates whether the file editor updates the trait value after
+<li><p><strong>auto_set</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Indicates whether the file editor updates the trait value after
 every key stroke.</p></li>
-<li><p><strong>entries</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – A hint to the TraitsUI editor about how many values to display in
+<li><p><strong>entries</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – A hint to the TraitsUI editor about how many values to display in
 the editor.</p></li>
-<li><p><strong>exists</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Indicates whether the trait value must be an existing file or
+<li><p><strong>exists</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Indicates whether the trait value must be an existing file or
 not.</p></li>
 </ul>
 </dd>
@@ -1406,7 +1406,7 @@ not.</p></li>
 the attribute trait editor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1418,7 +1418,7 @@ the attribute trait editor.</p>
 every key stroke.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1430,7 +1430,7 @@ every key stroke.</p>
 the editor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1442,7 +1442,7 @@ the editor.</p>
 not.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1478,14 +1478,14 @@ converting the latter to the corresponding string value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The default value for the trait.</p></li>
-<li><p><strong>filter</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – A wildcard string to filter filenames in the file dialog box used by
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The default value for the trait.</p></li>
+<li><p><strong>filter</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – A wildcard string to filter filenames in the file dialog box used by
 the attribute trait editor.</p></li>
-<li><p><strong>auto_set</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Indicates whether the file editor updates the trait value after
+<li><p><strong>auto_set</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Indicates whether the file editor updates the trait value after
 every key stroke.</p></li>
-<li><p><strong>entries</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – A hint to the TraitsUI editor about how many values to display in
+<li><p><strong>entries</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – A hint to the TraitsUI editor about how many values to display in
 the editor.</p></li>
-<li><p><strong>exists</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Indicates whether the trait value must be an existing file or
+<li><p><strong>exists</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Indicates whether the trait value must be an existing file or
 not.</p></li>
 </ul>
 </dd>
@@ -1497,7 +1497,7 @@ not.</p></li>
 the attribute trait editor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1509,7 +1509,7 @@ the attribute trait editor.</p>
 every key stroke.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1521,7 +1521,7 @@ every key stroke.</p>
 the editor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1533,7 +1533,7 @@ the editor.</p>
 not.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1545,17 +1545,17 @@ not.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">traits.trait_types.</span></span><span class="sig-name descname"><span class="pre">BaseDirectory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_set</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exists</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">metadata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseDirectory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_types.BaseDirectory" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#traits.trait_types.BaseStr" title="traits.trait_types.BaseStr"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseStr</span></code></a></p>
 <p>A trait type whose value must be a directory path string.</p>
-<p>This also accepts objects implementing the <a class="reference external" href="https://docs.python.org/3/library/os.html#os.PathLike" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">os.PathLike</span></code></a> interface,
+<p>This also accepts objects implementing the <a class="reference external" href="https://docs.python.org/3/library/os.html#os.PathLike" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">os.PathLike</span></code></a> interface,
 converting them to the corresponding string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The default value for the trait.</p></li>
-<li><p><strong>auto_set</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Indicates whether the directory editor updates the trait value
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The default value for the trait.</p></li>
+<li><p><strong>auto_set</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Indicates whether the directory editor updates the trait value
 after every key stroke.</p></li>
-<li><p><strong>entries</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – A hint to the TraitsUI editor about how many values to display in
+<li><p><strong>entries</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – A hint to the TraitsUI editor about how many values to display in
 the editor.</p></li>
-<li><p><strong>exists</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Indicates whether the trait value must be an existing directory or
+<li><p><strong>exists</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Indicates whether the trait value must be an existing directory or
 not.</p></li>
 </ul>
 </dd>
@@ -1567,7 +1567,7 @@ not.</p></li>
 after every key stroke.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1579,7 +1579,7 @@ after every key stroke.</p>
 the editor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1591,7 +1591,7 @@ the editor.</p>
 not.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1622,17 +1622,17 @@ not.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">traits.trait_types.</span></span><span class="sig-name descname"><span class="pre">Directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_set</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exists</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">metadata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Directory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_types.Directory" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#traits.trait_types.BaseDirectory" title="traits.trait_types.BaseDirectory"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseDirectory</span></code></a></p>
 <p>A fast-validating trait type whose value is a directory path string.</p>
-<p>This also accepts objects implementing the <a class="reference external" href="https://docs.python.org/3/library/os.html#os.PathLike" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">os.PathLike</span></code></a> interface,
+<p>This also accepts objects implementing the <a class="reference external" href="https://docs.python.org/3/library/os.html#os.PathLike" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">os.PathLike</span></code></a> interface,
 converting them to the corresponding string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The default value for the trait.</p></li>
-<li><p><strong>auto_set</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Indicates whether the directory editor updates the trait value
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The default value for the trait.</p></li>
+<li><p><strong>auto_set</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Indicates whether the directory editor updates the trait value
 after every key stroke.</p></li>
-<li><p><strong>entries</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – A hint to the TraitsUI editor about how many values to display in
+<li><p><strong>entries</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – A hint to the TraitsUI editor about how many values to display in
 the editor.</p></li>
-<li><p><strong>exists</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Indicates whether the trait value must be an existing directory or
+<li><p><strong>exists</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Indicates whether the trait value must be an existing directory or
 not.</p></li>
 </ul>
 </dd>
@@ -1644,7 +1644,7 @@ not.</p></li>
 after every key stroke.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1656,7 +1656,7 @@ after every key stroke.</p>
 the editor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1668,7 +1668,7 @@ the editor.</p>
 not.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1691,11 +1691,11 @@ is None or omitted, in which case the default value is <em>high</em>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>low</strong> (<em>integer</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> or </em><em>string</em><em> (</em><em>i.e. extended trait name</em><em>)</em>) – The low end of the range.</p></li>
-<li><p><strong>high</strong> (<em>integer</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> or </em><em>string</em><em> (</em><em>i.e. extended trait name</em><em>)</em>) – The high end of the range.</p></li>
-<li><p><strong>value</strong> (<em>integer</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> or </em><em>string</em><em> (</em><em>i.e. extended trait name</em><em>)</em>) – The default value of the trait.</p></li>
-<li><p><strong>exclude_low</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Indicates whether the low end of the range is exclusive.</p></li>
-<li><p><strong>exclude_high</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Indicates whether the high end of the range is exclusive.</p></li>
+<li><p><strong>low</strong> (<em>integer</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> or </em><em>string</em><em> (</em><em>i.e. extended trait name</em><em>)</em>) – The low end of the range.</p></li>
+<li><p><strong>high</strong> (<em>integer</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> or </em><em>string</em><em> (</em><em>i.e. extended trait name</em><em>)</em>) – The high end of the range.</p></li>
+<li><p><strong>value</strong> (<em>integer</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> or </em><em>string</em><em> (</em><em>i.e. extended trait name</em><em>)</em>) – The default value of the trait.</p></li>
+<li><p><strong>exclude_low</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Indicates whether the low end of the range is exclusive.</p></li>
+<li><p><strong>exclude_high</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Indicates whether the high end of the range is exclusive.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1819,7 +1819,7 @@ to be items in the collection. Thus the first two signatures are safe
 from ambiguity, and it’s recommended to use one of these two signatures
 in preference to the third form.</p>
 </p></li>
-<li><p><strong>values</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – The name of a trait holding the valid values. If given, this is
+<li><p><strong>values</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – The name of a trait holding the valid values. If given, this is
 a dynamic enumeration, otherwise it’s a static numeration.</p></li>
 <li><p><strong>**metadata</strong> – Metadata for the trait.</p></li>
 </ul>
@@ -1832,7 +1832,7 @@ a dynamic enumeration, otherwise it’s a static numeration.</p></li>
 For a dynamic enumeration, this is None.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)">tuple</a> or None</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a> or None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1845,7 +1845,7 @@ the collection of valid values. For a static enumeration, this is
 None.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a> or None</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a> or None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1947,7 +1947,7 @@ to be items in the collection. Thus the first two signatures are safe
 from ambiguity, and it’s recommended to use one of these two signatures
 in preference to the third form.</p>
 </p></li>
-<li><p><strong>values</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – The name of a trait holding the valid values. If given, this is
+<li><p><strong>values</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – The name of a trait holding the valid values. If given, this is
 a dynamic enumeration, otherwise it’s a static numeration.</p></li>
 <li><p><strong>**metadata</strong> – Metadata for the trait.</p></li>
 </ul>
@@ -1960,7 +1960,7 @@ a dynamic enumeration, otherwise it’s a static numeration.</p></li>
 For a dynamic enumeration, this is None.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)">tuple</a> or None</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a> or None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1973,7 +1973,7 @@ the collection of valid values. For a static enumeration, this is
 None.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a> or None</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a> or None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2035,7 +2035,7 @@ of the remaining argument list.</p></li>
 <dd><p>The tuple of traits specifying the type of each element in order.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)">tuple</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2047,7 +2047,7 @@ of the remaining argument list.</p></li>
 element.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2172,10 +2172,10 @@ than assigning the exact instance. For example, consider:</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>trait</strong> (<em>a trait</em><em> or </em><em>value that can be converted using trait_from</em><em>(</em><em>)</em>) – The type of item that the list contains. If not specified, the list
 can contain items of any type.</p></li>
-<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) – Default value for the list.</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Default value for the list.</p></li>
 <li><p><strong>minlen</strong> (<em>integer</em>) – The minimum length of a list that can be assigned to the trait.</p></li>
 <li><p><strong>maxlen</strong> (<em>integer</em>) – The maximum length of a list that can be assigned to the trait.</p></li>
-<li><p><strong>items</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Whether there is a corresponding <cite>&lt;name&gt;_items</cite> trait.</p></li>
+<li><p><strong>items</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether there is a corresponding <cite>&lt;name&gt;_items</cite> trait.</p></li>
 <li><p><strong>**metadata</strong> – Trait metadata for the trait.</p></li>
 </ul>
 </dd>
@@ -2219,7 +2219,7 @@ can contain items of any type.</p></li>
 <dd><p>Whether there is a corresponding <cite>&lt;name&gt;_items</cite> trait.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2316,7 +2316,7 @@ to either ‘yes’ or ‘no’. That is, if the value ‘y’ is assigned to th
 <dd><p>The list of legal values for this trait.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2371,8 +2371,8 @@ than assigning the exact instance. For example, consider:</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>trait</strong> (<em>a trait</em><em> or </em><em>value that can be converted using trait_from</em><em>(</em><em>)</em>) – The type of item that the set contains. If not specified, the set
 can contain items of any type.</p></li>
-<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.13)"><em>set</em></a>) – Default value for the set.</p></li>
-<li><p><strong>items</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Whether there is a corresponding <cite>&lt;name&gt;_items</cite> trait.</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.14)"><em>set</em></a>) – Default value for the set.</p></li>
+<li><p><strong>items</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether there is a corresponding <cite>&lt;name&gt;_items</cite> trait.</p></li>
 <li><p><strong>**metadata</strong> – Trait metadata for the trait.</p></li>
 </ul>
 </dd>
@@ -2395,7 +2395,7 @@ can contain items of any type.</p>
 <dd><p>Whether there is a corresponding <cite>&lt;name&gt;_items</cite> trait.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2476,8 +2476,8 @@ than assigning the exact instance. For example, consider:</p>
 values can be used as keys.</p></li>
 <li><p><strong>value_trait</strong> (<em>a trait</em><em> or </em><em>value that can be converted using trait_from</em><em>(</em><em>)</em>) – The trait type for values in the dictionary; if not specified, any
 values can be used as dictionary values.</p></li>
-<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – The default value for the returned trait.</p></li>
-<li><p><strong>items</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Indicates whether the value contains items.</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – The default value for the returned trait.</p></li>
+<li><p><strong>items</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Indicates whether the value contains items.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2522,7 +2522,7 @@ values can be used as dictionary values.</p>
 <dd><p>Indicates whether the value contains items.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2593,10 +2593,10 @@ corresponding to the key ‘yes’.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>map</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – A dictionary whose keys are valid values for the trait attribute,
+<li><p><strong>map</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – A dictionary whose keys are valid values for the trait attribute,
 and whose corresponding values are the values for the shadow
 trait attribute.</p></li>
-<li><p><strong>default_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><em>object</em></a><em>, </em><em>optional</em>) – The default value for the trait. If given, this should be a key
+<li><p><strong>default_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><em>object</em></a><em>, </em><em>optional</em>) – The default value for the trait. If given, this should be a key
 from the mapping. If not given, the first key from the mapping (in
 normal dictionary iteration order) will be used as the default.</p></li>
 </ul>
@@ -2610,7 +2610,7 @@ and whose corresponding values are the values for the shadow
 trait attribute.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2686,10 +2686,10 @@ the trait attribute is <em>k</em>, and its corresponding mapped attribute is
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>map</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – A dictionary whose keys are strings that are valid values for the
+<li><p><strong>map</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – A dictionary whose keys are strings that are valid values for the
 trait attribute, and whose corresponding values are the values for
 the shadow trait attribute.</p></li>
-<li><p><strong>default_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><em>object</em></a><em>, </em><em>optional</em>) – The default value for the trait. If given, this should be either a key
+<li><p><strong>default_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><em>object</em></a><em>, </em><em>optional</em>) – The default value for the trait. If given, this should be either a key
 from the mapping or a unique prefix of a key from the mapping. If not
 given, the first key from the mapping (in normal dictionary iteration
 order) will be used as the default.</p></li>
@@ -2704,7 +2704,7 @@ trait attribute, and whose corresponding values are the values for
 the shadow trait attribute.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2782,7 +2782,7 @@ resolve the class name into an actual class object.</p>
 <dd><p>The class object or a string that refers to it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.13)">type</a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.14)">type</a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2793,7 +2793,7 @@ resolve the class name into an actual class object.</p>
 <dd><p>The name of the module that contains the class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2846,7 +2846,7 @@ each default value assigned is a unique instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>klass</strong> (<em>class</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em> or </em><em>instance</em>) – The object that forms the basis for the trait; if it is an
+<li><p><strong>klass</strong> (<em>class</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>instance</em>) – The object that forms the basis for the trait; if it is an
 instance, then trait values must be instances of the same class or
 a subclass. This object is not the default value, even if it is an
 instance.  If the provided value is a string, it is expected to be
@@ -2854,10 +2854,10 @@ a reference to a class that will be resolved at run-time.</p></li>
 <li><p><strong>factory</strong> (<em>callable</em>) – A callable, typically a class, that when called with <em>args</em> and
 <em>kw</em>, returns the default value for the trait. If not specified,
 or <em>None</em>, <em>klass</em> is used as the factory.</p></li>
-<li><p><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a>) – Positional arguments for generating the default value.</p></li>
+<li><p><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a>) – Positional arguments for generating the default value.</p></li>
 <li><p><strong>kw</strong> (<em>dictionary</em>) – Keyword arguments for generating the default value.</p></li>
-<li><p><strong>allow_none</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Indicates whether None is allowed as a value.</p></li>
-<li><p><strong>adapt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – <p>A string specifying how adaptation should be applied. The possible
+<li><p><strong>allow_none</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Indicates whether None is allowed as a value.</p></li>
+<li><p><strong>adapt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – <p>A string specifying how adaptation should be applied. The possible
 values are:</p>
 <ul>
 <li><p>’no’: Adaptation is not allowed.</p></li>
@@ -2889,7 +2889,7 @@ or <em>None</em>, <em>klass</em> is used as the factory.</p>
 <dd><p>Positional arguments for generating the default value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)">tuple</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2911,7 +2911,7 @@ or <em>None</em>, <em>klass</em> is used as the factory.</p>
 <dd><p>Indicates whether None is allowed as a value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2930,7 +2930,7 @@ default value for the trait should be used.</p></li>
 </ul>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -3050,12 +3050,12 @@ the same name followed by an underscore (e.g., <code class="docutils literal not
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>value</strong> (<em>class</em><em> or </em><em>None</em>) – The default value of the trait.</p></li>
-<li><p><strong>klass</strong> (<em>class</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em> or </em><em>None</em>) – The class that trait values must be subclasses of.  If None, then
+<li><p><strong>klass</strong> (<em>class</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>None</em>) – The class that trait values must be subclasses of.  If None, then
 the default value is used instead.  If both are None, then the
 <code class="docutils literal notranslate"><span class="pre">object</span></code> type is used.  If it is a string, the first time that
 the validate method is called, the class will be imported and
 the value replaced with the class object.</p></li>
-<li><p><strong>allow_none</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Indicates whether None is allowed as an assignable value. Even if
+<li><p><strong>allow_none</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Indicates whether None is allowed as an assignable value. Even if
 <strong>False</strong>, the default <em>value</em> may be <strong>None</strong>.</p></li>
 <li><p><strong>**metadata</strong> – Trait metadata for the trait.</p></li>
 </ul>
@@ -3069,7 +3069,7 @@ string, the first time that the validate method is called, the
 class will be imported and the value replaced with the class object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>class or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+<dd class="field-odd"><p>class or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -3083,7 +3083,7 @@ This is the caller’s caller’s module, as determined by the
 <code class="docutils literal notranslate"><span class="pre">get_module_method</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -3170,10 +3170,10 @@ then a TraitError will occur.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The label for the button.</p></li>
+<li><p><strong>label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The label for the button.</p></li>
 <li><p><strong>image</strong> (<em>pyface.ImageResource</em>) – An image to display on the button.</p></li>
 <li><p><strong>style</strong> (<em>'button'</em><em>, </em><em>'radio'</em><em>, </em><em>'toolbar'</em><em> or </em><em>'checkbox'</em>) – The style of button to display.</p></li>
-<li><p><strong>values_trait</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – For a “button” or “toolbar” style, the name of an enum
+<li><p><strong>values_trait</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – For a “button” or “toolbar” style, the name of an enum
 trait whose values will populate a drop-down menu on the button.
 The selected value will replace the label on the button.</p></li>
 <li><p><strong>orientation</strong> (<em>'horizontal'</em><em> or </em><em>'vertical'</em>) – The orientation of the label relative to the image.</p></li>
@@ -3192,7 +3192,7 @@ button.</p></li>
 <dd><p>The label for the button.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -3227,7 +3227,7 @@ trait whose values will populate a drop-down menu on the button.
 The selected value will replace the label on the button.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -3296,7 +3296,7 @@ a toolbar button.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The label for the button.</p></li>
+<li><p><strong>label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The label for the button.</p></li>
 <li><p><strong>image</strong> (<em>pyface.ImageResource</em>) – An image to display on the button.</p></li>
 <li><p><strong>style</strong> (<em>'button'</em><em>, </em><em>'radio'</em><em>, </em><em>'toolbar'</em><em> or </em><em>'checkbox'</em>) – The style of button to display.</p></li>
 <li><p><strong>orientation</strong> (<em>'horizontal'</em><em> or </em><em>'vertical'</em>) – The orientation of the label relative to the image.</p></li>
@@ -3314,7 +3314,7 @@ button.</p></li>
 <dd><p>The label for the button.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -3349,7 +3349,7 @@ trait whose values will populate a drop-down menu on the button.
 The selected value will replace the label on the button.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -3518,7 +3518,7 @@ instead.</p>
 <p>A read-only trait type whose value is a globally unique UUID (type 4).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>can_init</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Whether the value can be set during object instantiation.  Otherwise
+<dd class="field-odd"><p><strong>can_init</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether the value can be set during object instantiation.  Otherwise
 the UUID is generated automatically.</p>
 </dd>
 </dl>
@@ -3575,13 +3575,13 @@ original object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>klass</strong> (<em>class</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em> or </em><em>instance</em>) – The object that forms the basis for the trait. If <em>klass</em> is
+<li><p><strong>klass</strong> (<em>class</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>instance</em>) – The object that forms the basis for the trait. If <em>klass</em> is
 omitted, then values must be an instance of HasTraits.  If a string,
 the value will be resolved to a class object at runtime.</p></li>
 <li><p><strong>allow_none</strong> (<em>boolean</em>) – Indicates whether None can be _assigned_.  The trait attribute may
 give a None value if the object referred to has been garbage collected
 even if allow_none is False.</p></li>
-<li><p><strong>adapt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – How to use the adaptation infrastructure when setting the value.</p></li>
+<li><p><strong>adapt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – How to use the adaptation infrastructure when setting the value.</p></li>
 </ul>
 </dd>
 </dl>
@@ -3601,13 +3601,13 @@ the class cannot be resolved, it will call validate_failed().</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">traits.trait_types.</span></span><span class="sig-name descname"><span class="pre">Date</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_datetime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_none</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">metadata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Date"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_types.Date" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="trait_type.html#traits.trait_type.TraitType" title="traits.trait_type.TraitType"><code class="xref py py-class docutils literal notranslate"><span class="pre">TraitType</span></code></a></p>
 <p>A trait type whose value must be a date.</p>
-<p>The value must be an instance of <a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.date" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.date</span></code></a>. Note that
-<a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></a> is a subclass of <a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.date" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.date</span></code></a>, but by
-default instances of <a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></a> are not permitted. Use
-<code class="docutils literal notranslate"><span class="pre">Date(allow_datetime=True)</span></code> to allow <a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></a> instances
+<p>The value must be an instance of <a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.date" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.date</span></code></a>. Note that
+<a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></a> is a subclass of <a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.date" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.date</span></code></a>, but by
+default instances of <a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></a> are not permitted. Use
+<code class="docutils literal notranslate"><span class="pre">Date(allow_datetime=True)</span></code> to allow <a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></a> instances
 to be assigned to a <code class="docutils literal notranslate"><span class="pre">Date</span></code> trait.</p>
 <div class="versionchanged">
-<p><span class="versionmodified changed">Changed in version 7.0.0: </span><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></a> instances are no longer valid values for
+<p><span class="versionmodified changed">Changed in version 7.0.0: </span><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></a> instances are no longer valid values for
 this trait type unless “allow_datetime=True” is explicitly given.</p>
 </div>
 <div class="versionchanged">
@@ -3617,15 +3617,15 @@ this trait type unless “allow_datetime=True” is explicitly given.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>default_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.date" title="(in Python v3.13)"><em>datetime.date</em></a><em>, </em><em>optional</em>) – The default value for this trait. If no default is provided, the
+<li><p><strong>default_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.date" title="(in Python v3.14)"><em>datetime.date</em></a><em>, </em><em>optional</em>) – The default value for this trait. If no default is provided, the
 default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
-<li><p><strong>allow_datetime</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">False</span></code>, instances of <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code> are not considered
+<li><p><strong>allow_datetime</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">False</span></code>, instances of <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code> are not considered
 valid values for this Trait. If <code class="docutils literal notranslate"><span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code>
 instances are permitted. The default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
-<li><p><strong>allow_none</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">False</span></code>, it’s not permitted to assign <code class="docutils literal notranslate"><span class="pre">None</span></code> to this trait.
+<li><p><strong>allow_none</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">False</span></code>, it’s not permitted to assign <code class="docutils literal notranslate"><span class="pre">None</span></code> to this trait.
 If <code class="docutils literal notranslate"><span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">None</span></code> instances are permitted. The default is
 <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
-<li><p><strong>**metadata</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – Additional metadata.</p></li>
+<li><p><strong>**metadata</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – Additional metadata.</p></li>
 </ul>
 </dd>
 </dl>
@@ -3660,7 +3660,7 @@ If <code class="docutils literal notranslate"><span class="pre">True</span></cod
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">traits.trait_types.</span></span><span class="sig-name descname"><span class="pre">Datetime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_none</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">metadata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Datetime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_types.Datetime" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="trait_type.html#traits.trait_type.TraitType" title="traits.trait_type.TraitType"><code class="xref py py-class docutils literal notranslate"><span class="pre">TraitType</span></code></a></p>
 <p>A trait type whose value must be a datetime.</p>
-<p>The value must be an instance of <a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></a>.</p>
+<p>The value must be an instance of <a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></a>.</p>
 <div class="versionchanged">
 <p><span class="versionmodified changed">Changed in version 7.0.0: </span><code class="docutils literal notranslate"><span class="pre">None</span></code> is no longer a valid value for this trait type unless
 “allow_none=True” is explicitly given.</p>
@@ -3668,12 +3668,12 @@ If <code class="docutils literal notranslate"><span class="pre">True</span></cod
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>default_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.13)"><em>datetime.datetime</em></a><em>, </em><em>optional</em>) – The default value for this trait. If no default is provided, the
+<li><p><strong>default_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><em>datetime.datetime</em></a><em>, </em><em>optional</em>) – The default value for this trait. If no default is provided, the
 default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
-<li><p><strong>allow_none</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">False</span></code>, it’s not permitted to assign <code class="docutils literal notranslate"><span class="pre">None</span></code> to this trait.
+<li><p><strong>allow_none</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">False</span></code>, it’s not permitted to assign <code class="docutils literal notranslate"><span class="pre">None</span></code> to this trait.
 If <code class="docutils literal notranslate"><span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">None</span></code> instances are permitted. The default is
 <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
-<li><p><strong>**metadata</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – Additional metadata.</p></li>
+<li><p><strong>**metadata</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – Additional metadata.</p></li>
 </ul>
 </dd>
 </dl>
@@ -3708,7 +3708,7 @@ If <code class="docutils literal notranslate"><span class="pre">True</span></cod
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">traits.trait_types.</span></span><span class="sig-name descname"><span class="pre">Time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_none</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">metadata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traits.trait_types.Time" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="trait_type.html#traits.trait_type.TraitType" title="traits.trait_type.TraitType"><code class="xref py py-class docutils literal notranslate"><span class="pre">TraitType</span></code></a></p>
 <p>A trait type whose value must be a time.</p>
-<p>The value must be an instance of <a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.time" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.time</span></code></a>.</p>
+<p>The value must be an instance of <a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.time" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.time</span></code></a>.</p>
 <div class="versionchanged">
 <p><span class="versionmodified changed">Changed in version 7.0.0: </span><code class="docutils literal notranslate"><span class="pre">None</span></code> is no longer a valid value for this trait type unless
 “allow_none=True” is explicitly given.</p>
@@ -3716,12 +3716,12 @@ If <code class="docutils literal notranslate"><span class="pre">True</span></cod
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>default_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.time" title="(in Python v3.13)"><em>datetime.time</em></a><em>, </em><em>optional</em>) – The default value for this trait. If no default is provided, the
+<li><p><strong>default_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.time" title="(in Python v3.14)"><em>datetime.time</em></a><em>, </em><em>optional</em>) – The default value for this trait. If no default is provided, the
 default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
-<li><p><strong>allow_none</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">False</span></code>, it’s not permitted to assign <code class="docutils literal notranslate"><span class="pre">None</span></code> to this trait.
+<li><p><strong>allow_none</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">False</span></code>, it’s not permitted to assign <code class="docutils literal notranslate"><span class="pre">None</span></code> to this trait.
 If <code class="docutils literal notranslate"><span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">None</span></code> instances are permitted. The default is
 <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
-<li><p><strong>**metadata</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – Additional metadata.</p></li>
+<li><p><strong>**metadata</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – Additional metadata.</p></li>
 </ul>
 </dd>
 </dl>
@@ -4444,7 +4444,7 @@ All rights reserved.
 
       </li>
       <li>
-      Last updated on Jan 27, 2025.
+      Last updated on Dec 17, 2025.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 8.1.3.
