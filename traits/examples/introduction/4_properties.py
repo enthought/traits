@@ -91,6 +91,9 @@ the property depend on changes::
             )
             return hist
 
+(Note that this is the `cached_property` importable from `traits.api`, and is
+distinct from the standard library's `functools.cached_property`.)
+
 This has the trade-off that the result of the computation is being stored
 in memory, but in this case the memory is only a few hundred bytes, and so
 is unlikely to cause problems; but you probably wouldn't want to do this

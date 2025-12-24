@@ -39,7 +39,7 @@ to simplify and improve the code here.
 """
 
 import datetime
-import os
+from pathlib import Path
 
 import numpy as np
 from PIL import Image as PILImage
@@ -92,9 +92,7 @@ class Image:
 # Demo code
 # ---------------------------------------------------------------------------
 
-this_dir = os.path.dirname(__file__)
-image_dir = os.path.join(this_dir, "images")
-filename = os.path.join(image_dir, "sample_0001.png")
+filename = Path(__file__).parent / "/images/images"
 
 # load the image
 image = Image(
@@ -109,15 +107,8 @@ image = Image(
 image.read_image()
 
 # perform some sample computations
-print(
-    "The maximum intensity of {} is {}".format(
-        image.sample_id,
-        image.histogram().argmax(),
-    )
-)
+print(f"The maximum intensity of {image.sample_id} is {image.histogram().argmax()}")
+
 pixel_count = image.threshold(low=200).sum()
-print(
-    "The area with intensity greater than 200 is {:0.3f} µm²".format(
-        pixel_count * image.pixel_area * 1e12
-    )
-)
+area = pixel_count * image.pixel_area * 1e12
+print(f"The area with intensity greater than 200 is {area:0.3f} µm²")
