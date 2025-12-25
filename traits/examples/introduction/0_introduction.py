@@ -92,7 +92,7 @@ class Image:
 # Demo code
 # ---------------------------------------------------------------------------
 
-filename = Path(__file__).parent / "/images/images"
+filename = Path(__file__).parent / "/images/sample_0001.png"
 
 # load the image
 image = Image(
