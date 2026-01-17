@@ -107,7 +107,10 @@ image = Image(
 image.read_image()
 
 # perform some sample computations
-print(f"The maximum intensity of {image.sample_id} is {image.histogram().argmax()}")
+print(
+    f"The maximum intensity of {image.sample_id} is "
+    f"{image.histogram().argmax()}"
+)
 
 pixel_count = image.threshold(low=200).sum()
 area = pixel_count * image.pixel_area * 1e12

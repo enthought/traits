@@ -15,7 +15,7 @@ Validation
 A common issue faced by scientists is ensuring that the data that is
 entered matches the sort of data that is expected.  For example, we expect
 that the filename is either a string or a pathlib **Path**, the operator
-name is a string, the acquisition date is a datetime.date object, and so on. 
+name is a string, the acquisition date is a datetime.date object, and so on.
 Many languages allow (or even require) you to specify these data types as part
 of your program, but even then these data types tend to reflect what the
 computer stores in memory, and not what the data actually *represents*.
