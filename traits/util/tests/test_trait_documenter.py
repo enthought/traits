@@ -100,10 +100,16 @@ class FindTheTraits(HasTraits):
         """
 
 
-class MySubClass(MyTestClass):
+class MySubClassAppend(MyTestClass):
 
     #: A new attribute.
     foo = Bool(True)
+
+
+class MySubClassReplace(MyTestClass):
+
+    #: Replace attribute.
+    bar = Int(1)
 
 
 @requires_sphinx
@@ -243,12 +249,12 @@ class TestTraitDocumenter(unittest.TestCase):
         for index, line in enumerate(expected):
             self.assertEqual(calls[index][0], line)
 
-    def test_subclass(self):
+    def test_subclass_append(self):
         # given
         documenter = TraitDocumenter(mock.Mock(), 'test')
         documenter.object_name = 'bar'
-        documenter.objpath = ['MySubClass', 'bar']
-        documenter.parent = MySubClass
+        documenter.objpath = ['MySubClassAppend', 'bar']
+        documenter.parent = MySubClassAppend
         documenter.modname = 'traits.util.tests.test_trait_documenter'
         documenter.get_sourcename = mock.Mock(return_value='<autodoc>')
         documenter.add_line = mock.Mock()
@@ -259,7 +265,7 @@ class TestTraitDocumenter(unittest.TestCase):
         # then
         self.assertEqual(documenter.directive.warn.call_args_list, [])
         expected = [
-            ('.. py:attribute:: MySubClass.bar', '<autodoc>'),
+            ('.. py:attribute:: MySubClassAppend.bar', '<autodoc>'),
             (f'   :{no_index}:', '<autodoc>'),
             ('   :module: traits.util.tests.test_trait_documenter', '<autodoc>'),  # noqa
             ('   :annotation: = Int(42, desc=""" First line …', '<autodoc>')]  # noqa
@@ -271,7 +277,7 @@ class TestTraitDocumenter(unittest.TestCase):
 
         # given
         documenter.object_name = 'foo'
-        documenter.objpath = ['MySubClass', 'foo']
+        documenter.objpath = ['MySubClassAppend', 'foo']
         documenter.add_line = mock.Mock()
 
         # when
@@ -280,10 +286,36 @@ class TestTraitDocumenter(unittest.TestCase):
         # then
         self.assertEqual(documenter.directive.warn.call_args_list, [])
         expected = [
-            ('.. py:attribute:: MySubClass.foo', '<autodoc>'),
+            ('.. py:attribute:: MySubClassAppend.foo', '<autodoc>'),
             (f'   :{no_index}:', '<autodoc>'),
             ('   :module: traits.util.tests.test_trait_documenter', '<autodoc>'),  # noqa
             ('   :annotation: = Bool(True)', '<autodoc>')]  # noqa
+        if no_index_entry:
+            expected.insert(2, ('   :no-index-entry:', '<autodoc>'))
+        calls = documenter.add_line.call_args_list
+        for index, line in enumerate(expected):
+            self.assertEqual(calls[index][0], line)
+
+    def test_subclass_replace(self):
+        # given
+        documenter = TraitDocumenter(mock.Mock(), 'test')
+        documenter.object_name = 'bar'
+        documenter.objpath = ['MySubClassReplace', 'bar']
+        documenter.parent = MySubClassReplace
+        documenter.modname = 'traits.util.tests.test_trait_documenter'
+        documenter.get_sourcename = mock.Mock(return_value='<autodoc>')
+        documenter.add_line = mock.Mock()
+
+        # when
+        documenter.add_directive_header('')
+
+        # then
+        self.assertEqual(documenter.directive.warn.call_args_list, [])
+        expected = [
+            ('.. py:attribute:: MySubClassReplace.bar', '<autodoc>'),
+            (f'   :{no_index}:', '<autodoc>'),
+            ('   :module: traits.util.tests.test_trait_documenter', '<autodoc>'),  # noqa
+            ('   :annotation: = Int(1)', '<autodoc>')]  # noqa
         if no_index_entry:
             expected.insert(2, ('   :no-index-entry:', '<autodoc>'))
         calls = documenter.add_line.call_args_list
