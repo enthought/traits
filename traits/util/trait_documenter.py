@@ -10,7 +10,7 @@
 
 """
     A Trait Documenter
-    (Subclassed from the autodoc ClassLevelDocumenter)
+    (Subclassed from the autodoc AttributeDocumenter)
 
 """
 import inspect
@@ -20,7 +20,7 @@ import token
 import tokenize
 import traceback
 
-from sphinx.ext.autodoc import ClassLevelDocumenter, import_module
+from sphinx.ext.autodoc import AttributeDocumenter, import_module
 from sphinx.util import logging
 
 from traits.has_traits import MetaHasTraits
@@ -41,7 +41,7 @@ def _is_class_trait(name, cls):
     )
 
 
-class TraitDocumenter(ClassLevelDocumenter):
+class TraitDocumenter(AttributeDocumenter):
     """ Specialized Documenter subclass for trait attributes.
 
     The class defines a new documenter that recovers the trait definition
