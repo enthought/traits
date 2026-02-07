@@ -113,7 +113,7 @@ class TraitDocumenter(ClassLevelDocumenter):
         option set to the trait definition.
 
         """
-        ClassLevelDocumenter.add_directive_header(self, sig)
+        super().add_directive_header(sig)
         # Look into the class and parent classes:
         parent = self.parent
         classes = list(types.resolve_bases(parent.__bases__))
