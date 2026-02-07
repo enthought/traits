@@ -234,10 +234,10 @@ def _get_definition_tokens(tokens):
         )
 
         definition_tokens.append(item)
-
     return definition_tokens
 
 
 def setup(app):
     """ Add the TraitDocumenter in the current sphinx autodoc instance. """
+    app.setup_extension('sphinx.ext.autodoc')  # Require autodoc extension
     app.add_autodocumenter(TraitDocumenter)
