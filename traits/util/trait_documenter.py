@@ -13,7 +13,6 @@
     (Subclassed from the autodoc ClassLevelDocumenter)
 
 """
-from importlib import import_module
 import inspect
 import io
 import types
@@ -21,7 +20,7 @@ import token
 import tokenize
 import traceback
 
-from sphinx.ext.autodoc import ClassLevelDocumenter
+from sphinx.ext.autodoc import ClassLevelDocumenter, import_module
 from sphinx.util import logging
 
 from traits.has_traits import MetaHasTraits
