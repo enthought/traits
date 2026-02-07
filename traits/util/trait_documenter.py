@@ -180,21 +180,14 @@ def trait_definition(*, cls, trait_name):
     # find the trait definition start
     trait_found = False
     name_found = False
-    while not trait_found:
-        item = next(tokens, None)
-        if item is None:
-            break
+    for item in tokens:
         if name_found and item[:2] == (token.OP, "="):
-            trait_found = True
-            continue
+            break
         if item[:2] == (token.NAME, trait_name):
             name_found = True
-
-    if not trait_found:
-        raise ValueError(
-            "No trait definition for {!r} found in {!r}".format(
-                trait_name, cls)
-        )
+    else:
+        message = "No trait definition for {!r} found in {!r}"
+        raise ValueError(message.format(trait_name, cls))
 
     # Retrieve the trait definition.
     definition_tokens = _get_definition_tokens(tokens)
