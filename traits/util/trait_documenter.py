@@ -177,7 +177,6 @@ def trait_definition(*, cls, trait_name):
     tokens = tokenize.generate_tokens(string_io.readline)
 
     # find the trait definition start
-    trait_found = False
     name_found = False
     for item in tokens:
         if name_found and item[:2] == (token.OP, "="):
