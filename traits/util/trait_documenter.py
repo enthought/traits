@@ -137,7 +137,6 @@ class TraitDocumenter(ClassLevelDocumenter):
         # throw away all lines after the first.
         if "\n" in definition:
             definition = definition.partition("\n")[0] + " …"
-
         self.add_line("   :annotation: = {0}".format(definition), "<autodoc>")
 
 
@@ -200,8 +199,8 @@ def _get_definition_tokens(tokens):
 
     Parameters
     ----------
-    tokens : iterator
-        An iterator producing tokens.
+    tokens : iteratable
+        An iteratable producing tokens.
 
     Returns
     -------
