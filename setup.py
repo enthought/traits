@@ -296,7 +296,7 @@ setuptools.setup(
     },
     extras_require={
         "docs": [
-            "enthought-sphinx-theme @ git+https://github.com/enthought/enthought-sphinx-theme.git@d86b5039c61d2a8e104bc2f351a9db17fc32396b",
+            "enthought-sphinx-theme",
             "Sphinx>=2.1.0",
             "sphinx-copybutton",
         ],
