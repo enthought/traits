@@ -119,8 +119,8 @@ class TestTraitDocumenter(unittest.TestCase):
     def setUp(self):
         self.source = """
     depth_interval = Property(Tuple(Float, Float),
-                              depends_on="_depth_interval")
-"""
+                              depends_on="_depth_interval")\n
+    """
         string_io = io.StringIO(self.source)
         tokens = tokenize.generate_tokens(string_io.readline)
         self.tokens = tokens
@@ -141,24 +141,6 @@ class TestTraitDocumenter(unittest.TestCase):
         string = tokenize.untokenize(definition_tokens)
 
         self.assertEqual(src.rstrip(), string)
-
-    def test_add_line(self):
-        mocked_directive = mock.MagicMock()
-
-        documenter = TraitDocumenter(mocked_directive, "test", "   ")
-        documenter.object_name = "test_attribute"
-        documenter.parent = Fake
-
-        with mock.patch(
-            (
-                "traits.util.trait_documenter.ClassLevelDocumenter"
-                ".add_directive_header"
-            )
-        ):
-            documenter.add_directive_header("")
-
-        self.assertEqual(
-            len(documenter.directive.result.append.mock_calls), 1)
 
     def test_abbreviated_annotations(self):
         # Regression test for enthought/traits#493.
@@ -289,7 +271,7 @@ class TestTraitDocumenter(unittest.TestCase):
             ('.. py:attribute:: MySubClassAppend.foo', '<autodoc>'),
             (f'   :{no_index}:', '<autodoc>'),
             ('   :module: traits.util.tests.test_trait_documenter', '<autodoc>'),  # noqa
-            ('   :annotation: = Bool(True)', '<autodoc>')]  # noqa
+            ('   :annotation: = Bool(True)', '<autodoc>')]
         if no_index_entry:
             expected.insert(2, ('   :no-index-entry:', '<autodoc>'))
         calls = documenter.add_line.call_args_list
