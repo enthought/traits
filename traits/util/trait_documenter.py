@@ -113,7 +113,6 @@ class TraitDocumenter(AttributeDocumenter):
         option set to the trait definition.
 
         """
-        super().add_directive_header(sig)
         # Look into the class and parent classes:
         parent = self.parent
         classes = list(types.resolve_bases(parent.__bases__))
@@ -137,7 +136,8 @@ class TraitDocumenter(AttributeDocumenter):
         # throw away all lines after the first.
         if "\n" in definition:
             definition = definition.partition("\n")[0] + " …"
-        self.add_line("   :annotation: = {0}".format(definition), "<autodoc>")
+        self.options.annotation = f'= {definition}'
+        super().add_directive_header(sig)
 
 
 def trait_definition(*, cls, trait_name):
