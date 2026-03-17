@@ -198,8 +198,8 @@ def _get_definition_tokens(tokens):
 
     Parameters
     ----------
-    tokens : iteratable
-        An iteratable producing tokens.
+    tokens : iterable
+        An iterable producing tokens.
 
     Returns
     -------
