@@ -10,10 +10,9 @@
 
 """
     A Trait Documenter
-    (Subclassed from the autodoc ClassLevelDocumenter)
+    (Subclassed from the autodoc AttributeDocumenter)
 
 """
-from importlib import import_module
 import inspect
 import io
 import types
@@ -21,7 +20,7 @@ import token
 import tokenize
 import traceback
 
-from sphinx.ext.autodoc import ClassLevelDocumenter
+from sphinx.ext.autodoc import AttributeDocumenter, import_module
 from sphinx.util import logging
 
 from traits.has_traits import MetaHasTraits
@@ -42,7 +41,7 @@ def _is_class_trait(name, cls):
     )
 
 
-class TraitDocumenter(ClassLevelDocumenter):
+class TraitDocumenter(AttributeDocumenter):
     """ Specialized Documenter subclass for trait attributes.
 
     The class defines a new documenter that recovers the trait definition
@@ -114,7 +113,6 @@ class TraitDocumenter(ClassLevelDocumenter):
         option set to the trait definition.
 
         """
-        ClassLevelDocumenter.add_directive_header(self, sig)
         # Look into the class and parent classes:
         parent = self.parent
         classes = list(types.resolve_bases(parent.__bases__))
@@ -138,8 +136,8 @@ class TraitDocumenter(ClassLevelDocumenter):
         # throw away all lines after the first.
         if "\n" in definition:
             definition = definition.partition("\n")[0] + " …"
-
-        self.add_line("   :annotation: = {0}".format(definition), "<autodoc>")
+        self.options.annotation = f'= {definition}'
+        super().add_directive_header(sig)
 
 
 def trait_definition(*, cls, trait_name):
@@ -179,23 +177,15 @@ def trait_definition(*, cls, trait_name):
     tokens = tokenize.generate_tokens(string_io.readline)
 
     # find the trait definition start
-    trait_found = False
     name_found = False
-    while not trait_found:
-        item = next(tokens, None)
-        if item is None:
-            break
+    for item in tokens:
         if name_found and item[:2] == (token.OP, "="):
-            trait_found = True
-            continue
+            break
         if item[:2] == (token.NAME, trait_name):
             name_found = True
-
-    if not trait_found:
-        raise ValueError(
-            "No trait definition for {!r} found in {!r}".format(
-                trait_name, cls)
-        )
+    else:
+        message = "No trait definition for {!r} found in {!r}"
+        raise ValueError(message.format(trait_name, cls))
 
     # Retrieve the trait definition.
     definition_tokens = _get_definition_tokens(tokens)
@@ -208,8 +198,8 @@ def _get_definition_tokens(tokens):
 
     Parameters
     ----------
-    tokens : iterator
-        An iterator producing tokens.
+    tokens : iterable
+        An iterable producing tokens.
 
     Returns
     -------
@@ -235,10 +225,10 @@ def _get_definition_tokens(tokens):
         )
 
         definition_tokens.append(item)
-
     return definition_tokens
 
 
 def setup(app):
     """ Add the TraitDocumenter in the current sphinx autodoc instance. """
+    app.setup_extension('sphinx.ext.autodoc')  # Require autodoc extension
     app.add_autodocumenter(TraitDocumenter)
