@@ -4142,9 +4142,10 @@ class Union(TraitType):
                 trait = _NoneTrait
             ctrait_instance = trait_cast(trait)
             if ctrait_instance is None:
-                raise ValueError("Union trait declaration expects a trait "
-                                 "type or an instance of trait type or None,"
-                                 " but got {!r} instead".format(trait))
+                raise ValueError("{} trait declaration expects a trait type "
+                                 "or an instance of trait type or None, but "
+                                 "got {!r} instead"
+                                 .format(type(self).__name__, trait))
 
             self.list_ctrait_instances.append(ctrait_instance)
 
@@ -4152,8 +4153,8 @@ class Union(TraitType):
         # Raise if 'default' is found in order to help code migrate to Union
         if "default" in metadata:
             raise ValueError(
-                "Union default value should be set via 'default_value', not "
-                "'default'."
+                f"{type(self).__name__} default value should be set via "
+                "'default_value', not 'default'."
             )
 
         if 'default_value' in metadata:
@@ -4208,6 +4209,38 @@ class Union(TraitType):
             editors.append(editor)
 
         return CompoundEditor(editors=editors)
+
+
+class Optional(Union):
+    """ A trait whose value can be either the specified trait type or None.
+    ``Optional(<something>)`` is a shorthand for ``Union(None, <something>)``.
+
+        >>> class MyClass(HasTraits):
+        ...     x = Optional(Int)
+        ...
+        >>> a = MyClass(x=5)
+        >>> a.x
+        5
+        >>> b = MyClass(x=None)
+        >>> b.x
+        None
+
+    Note that the default value of the trait will be ``None`` unless specified
+    in ``default_value``, i.e. the default value of:
+    * ``Optional(Int)`` is ``None``
+    * ``Optional(Int(5))`` is ``None``
+    * ``Optional(Int, default_value=5)`` is ``5``.
+
+    Parameters
+    ----------
+    trait : a trait or value that can be converted using trait_from()
+        The type of item that the set contains. Must not be ``None``.
+    """
+    def __init__(self, trait, **metadata):
+        if trait is None:
+            raise TraitError("Optional type must not be None.")
+
+        super().__init__(_NoneTrait, trait, **metadata)
 
 
 class UUID(TraitType):
