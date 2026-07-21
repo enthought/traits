@@ -104,7 +104,7 @@ class TraitCoerceType(TraitHandler):
 
     Parameters
     ----------
-    aType : type or object
+    aType : type or any object
         Either a Python type or a Python value.  If this is an object, it is
         mapped to its corresponding type. For example, the string 'cat' is
         automatically mapped to ``str``.
@@ -256,7 +256,7 @@ class TraitInstance(TraitHandler):
 
     Parameters
     ----------
-    aClass : type, object or str
+    aClass : type, instance or str
         A Python type or a string that identifies the type, or an object.
         If this is an object, it is mapped to the class it is an instance of.
         If this is a str, it is either the name  of a class in the module

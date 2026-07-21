@@ -39,7 +39,7 @@ class ObserverExceptionHandler:
 
         Parameters
         ----------
-        event : object
+        event : any object
             An event object emitted by the notification.
         """
         _logger.exception(
@@ -95,7 +95,7 @@ class ObserverExceptionHandlerStack:
 
         Parameters
         ----------
-        event : object
+        event : any object
             An event object emitted by the notification.
         """
         _, excp, _ = sys.exc_info()

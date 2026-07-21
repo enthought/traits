@@ -1470,7 +1470,7 @@ PyDoc_STRVAR(
     "name : str\n"
     "    Name of the item trait for which an event is being fired. (The name\n"
     "    will usually end in '_items'.)\n"
-    "event_object : object\n"
+    "event_object : any object\n"
     "    Object of type ``TraitListEvent``, ``TraitDictEvent`` or ``TraitSetEvent``\n"
     "    describing the changes to the underlying collection trait value.\n"
     "event_trait : CTrait\n"
@@ -5152,7 +5152,7 @@ PyDoc_STRVAR(
     "-------\n"
     "default_value_type : int\n"
     "    An integer representing the kind of the default value\n"
-    "default_value : value\n"
+    "default_value : any object\n"
     "    A value or callable providing the default\n");
 
 PyDoc_STRVAR(
@@ -5165,7 +5165,7 @@ PyDoc_STRVAR(
     "----------\n"
     "default_value_type : int\n"
     "    An integer representing the kind of the default value\n"
-    "default_value : value\n"
+    "default_value : any object\n"
     "    A value or callable providing the default\n");
 
 PyDoc_STRVAR(
@@ -5184,7 +5184,7 @@ PyDoc_STRVAR(
     "\n"
     "Returns\n"
     "-------\n"
-    "default_value : value\n"
+    "default_value : any object\n"
     "    The default value for the given object and name.\n");
 
 PyDoc_STRVAR(
@@ -5241,7 +5241,7 @@ PyDoc_STRVAR(
     "    The HasTraits object that validation is being performed for.\n"
     "name : str\n"
     "    The name of the trait.\n"
-    "value : object\n"
+    "value : any object\n"
     "    The value to be validated.\n"
     "\n"
     "Returns\n"

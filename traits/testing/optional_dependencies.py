@@ -23,7 +23,7 @@ def optional_import(name):
 
     Returns
     -------
-    None or module
+    None or types.ModuleType
         None if the module is not available, and the module otherwise.
 
     """
