@@ -1550,7 +1550,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
 
         Parameters
         ----------
-        other : object
+        other : HasTraits
             The object whose trait attribute values should be copied.
         traits : list of strings
             A list of names of trait attributes to copy. If None or
@@ -1658,7 +1658,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
 
         Returns
         -------
-        new :
+        new : HasTraits
             The newly cloned object.
         """
         if memo is None:
@@ -1723,7 +1723,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             **traitsui.view.kind_trait** trait for values and
             their meanings. If *kind* is unspecified or None, the **kind**
             attribute of the View object is used.
-        context : object or dictionary
+        context : any object or dictionary
             A single object or a dictionary of string/object pairs, whose trait
             attributes are to be edited. If not specified, the current object
             is used.
@@ -2054,7 +2054,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
 
             .. deprecated:: 6.2.0
 
-        context : object or dictionary
+        context : any object or dictionary
             A single object or a dictionary of string/object pairs, whose trait
             attributes are to be edited. If not specified, the current object
             is used
@@ -2665,7 +2665,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         ----------
         name : str
             Name of the trait attribute on this object.
-        object : object
+        object : HasTraits
             The object with which to synchronize.
         alias : str
             Name of the trait attribute on *other*; if None or omitted, same
