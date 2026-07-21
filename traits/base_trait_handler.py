@@ -64,11 +64,11 @@ class BaseTraitHandler(object):
 
         Parameters
         ----------
-        object : object
+        object : HasTraits
             The object whose attribute is being assigned.
         name : str
             The name of the attribute being assigned.
-        value : object
+        value : any object
             The proposed new value for the attribute.
         """
         raise TraitError(
@@ -94,11 +94,11 @@ class BaseTraitHandler(object):
 
         Parameters
         ----------
-        object : object
+        object : HasTraits
             The object whose attribute is being assigned.
         name : str
             The name of the attribute being assigned.
-        value :
+        value : any object
             The proposed new value for the attribute.
         """
         return self.info()
