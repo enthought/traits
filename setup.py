@@ -296,7 +296,9 @@ setuptools.setup(
     },
     extras_require={
         "docs": [
-            "enthought-sphinx-theme",
+            # enthought-sphinx-theme 0.7.4 is the first release compatible
+            # with Sphinx 9 (xref: enthought/traits#1872).
+            "enthought-sphinx-theme>=0.7.4",
             "Sphinx>=2.1.0",
             "sphinx-copybutton",
         ],
