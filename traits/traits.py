@@ -550,7 +550,7 @@ def Property(
         **fget** and **fset**, and not look elsewhere on the class.
     handler : function
         A trait handler function for the trait.
-    trait : Trait or value
+    trait : Trait or any object
         A trait definition or a value that can be converted to a trait that
         constrains the values of the property trait.
     """

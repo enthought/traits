@@ -152,7 +152,7 @@ class Any(TraitType):
 
     Parameters
     ----------
-    default_value : object, optional
+    default_value : any object, optional
         The default value for the trait. If this is an instance of either
         :class:`list` or :class:`dict` then a copy of the default value
         is made for each instance. Otherwise, the default is shared between
@@ -2575,7 +2575,7 @@ class List(TraitType):
 
     Attributes
     ----------
-    item_trait : trait
+    item_trait : CTrait
         The type of item that the list contains.
     minlen : integer
         The minimum length of a list that can be assigned to the trait.
@@ -2850,7 +2850,7 @@ class Set(TraitType):
 
     Attributes
     ----------
-    item_trait : a trait or value that can be converted to a trait
+    item_trait : CTrait
         The type of item that the set contains. If not specified, the set
         can contain items of any type.
     has_items : bool
@@ -2978,10 +2978,10 @@ class Dict(TraitType):
 
     Attributes
     ----------
-    key_trait : a trait
+    key_trait : CTrait
         The trait type for keys in the dictionary; if not specified, any
         values can be used as keys.
-    value_trait : a trait
+    value_trait : CTrait
         The trait type for values in the dictionary; if not specified, any
         values can be used as dictionary values.
     value_trait_handler : TraitHandler
@@ -3120,7 +3120,7 @@ class Map(TraitType):
             A dictionary whose keys are valid values for the trait attribute,
             and whose corresponding values are the values for the shadow
             trait attribute.
-        default_value : object, optional
+        default_value : any object, optional
             The default value for the trait. If given, this should be a key
             from the mapping. If not given, the first key from the mapping (in
             normal dictionary iteration order) will be used as the default.
@@ -3207,7 +3207,7 @@ class PrefixMap(TraitType):
         A dictionary whose keys are strings that are valid values for the
         trait attribute, and whose corresponding values are the values for
         the shadow trait attribute.
-    default_value : object, optional
+    default_value : any object, optional
         The default value for the trait. If given, this should be either a key
         from the mapping or a unique prefix of a key from the mapping. If not
         given, the first key from the mapping (in normal dictionary iteration
