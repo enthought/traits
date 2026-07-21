@@ -58,6 +58,10 @@ autodoc_mock_imports = [
 """
 
 
+#: A module-level trait, for the regression test for enthought/traits#1883.
+module_level_trait = Int(42)
+
+
 class MyTestClass(HasTraits):
     """
     Class-level docstring.
@@ -225,6 +229,37 @@ class TestTraitDocumenter(unittest.TestCase):
             (f'   :{no_index}:', '<autodoc>'),
             ('   :module: traits.util.tests.test_trait_documenter', '<autodoc>'),  # noqa
             ('   :annotation: = Int(42, desc=""" First line …', '<autodoc>')]  # noqa
+        if no_index_entry:
+            expected.insert(2, ('   :no-index-entry:', '<autodoc>'))
+        calls = documenter.add_line.call_args_list
+        for index, line in enumerate(expected):
+            self.assertEqual(calls[index][0], line)
+
+    def test_module_level_trait(self):
+        # Regression test for enthought/traits#1883: documenting a
+        # module-level trait used to crash because the parent (the module)
+        # has no __bases__.
+        import traits.util.tests.test_trait_documenter as this_module
+
+        # given
+        documenter = TraitDocumenter(mock.Mock(), 'test')
+        documenter.parent = this_module
+        documenter.object_name = 'module_level_trait'
+        documenter.modname = 'traits.util.tests.test_trait_documenter'
+        documenter.get_sourcename = mock.Mock(return_value='<autodoc>')
+        documenter.objpath = ['module_level_trait']
+        documenter.add_line = mock.Mock()
+
+        # when
+        documenter.add_directive_header('')
+
+        # then
+        self.assertEqual(documenter.directive.warn.call_args_list, [])
+        expected = [
+            ('.. py:attribute:: module_level_trait', '<autodoc>'),
+            (f'   :{no_index}:', '<autodoc>'),
+            ('   :module: traits.util.tests.test_trait_documenter', '<autodoc>'),  # noqa
+            ('   :annotation: = Int(42)', '<autodoc>')]
         if no_index_entry:
             expected.insert(2, ('   :no-index-entry:', '<autodoc>'))
         calls = documenter.add_line.call_args_list
