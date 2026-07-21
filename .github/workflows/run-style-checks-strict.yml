@@ -1,9 +1,9 @@
-name: Style check
+name: Strict style check
 
 on: [pull_request, workflow_dispatch]
 
 jobs:
-  style:
+  strict-style:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,6 +16,6 @@ jobs:
       run: |
         python -m pip install flake8
         python -m pip install "flake8-ets >= 1.1.0"
-    - name: Run style checks
+    - name: Report on out-of-date copyright end years
       run: |
-        python -m flake8
+        python -m flake8 --select H102 --copyright-end-year current
