@@ -113,10 +113,13 @@ class TraitDocumenter(AttributeDocumenter):
         option set to the trait definition.
 
         """
-        # Look into the class and parent classes:
         parent = self.parent
-        classes = list(types.resolve_bases(parent.__bases__))
-        classes.insert(0, parent)
+        if inspect.isclass(parent):
+            classes = list(types.resolve_bases(parent.__bases__))
+            classes.insert(0, parent)
+        else:
+            # Module-level trait: the parent is the containing module.
+            classes = [parent]
         for cls in classes:
             try:
                 definition = trait_definition(
