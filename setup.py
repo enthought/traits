@@ -310,6 +310,9 @@ setuptools.setup(
             "flake8-ets",
             "mypy",
             "numpy",
+            # packaging provides the PEP 440 version parsing used in
+            # traits.tests.test_version
+            "packaging",
             "pyface",
             "setuptools",
             "Sphinx>=2.1.0",
@@ -348,6 +351,6 @@ setuptools.setup(
     },
     license="BSD",
     packages=setuptools.find_packages(include=["traits", "traits.*"]),
-    python_requires=">=3.8",
+    python_requires=">=3.10",
     zip_safe=False,
 )

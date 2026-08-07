@@ -16,31 +16,31 @@ module contents.
 import unittest
 
 from traits.testing.optional_dependencies import (
-    pkg_resources,
-    requires_pkg_resources,
+    packaging_version,
+    requires_packaging,
 )
 
 import traits
 
 
 class TestVersion(unittest.TestCase):
-    @requires_pkg_resources
+    @requires_packaging
     def test_dunder_version(self):
         self.assertIsInstance(traits.__version__, str)
-        # Round-trip through parse_version; this verifies not only
+        # Round-trip through parse; this verifies not only
         # that the version is valid, but also that it's properly normalised
         # according to the PEP 440 rules.
-        parsed_version = pkg_resources.parse_version(traits.__version__)
+        parsed_version = packaging_version.parse(traits.__version__)
         self.assertEqual(str(parsed_version), traits.__version__)
 
-    @requires_pkg_resources
+    @requires_packaging
     def test_version_version(self):
         # Importing inside the test to ensure that we get a test error
         # in the case where the version module does not exist.
         from traits.version import version
 
         self.assertIsInstance(version, str)
-        parsed_version = pkg_resources.parse_version(version)
+        parsed_version = packaging_version.parse(version)
         self.assertEqual(str(parsed_version), version)
 
     def test_version_git_revision(self):

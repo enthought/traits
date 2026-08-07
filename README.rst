@@ -40,7 +40,7 @@ inherited by any subclass derived from the class.
 Dependencies
 ------------
 
-Traits requires Python >= 3.8.
+Traits requires Python >= 3.10.
 
 Traits has the following optional dependencies:
 
