@@ -9,19 +9,16 @@
 # Thanks for using Enthought open source!
 
 
-from pathlib import Path
+import importlib.resources
 from unittest import TestCase
 
 from traits.testing.optional_dependencies import (
-    pkg_resources,
     requires_mypy,
     requires_numpy_typing,
-    requires_pkg_resources,
 )
 from traits.stubs_tests.util import MypyAssertions
 
 
-@requires_pkg_resources
 @requires_mypy
 class TestAnnotations(TestCase, MypyAssertions):
     def test_all(self, filename_suffix=""):
@@ -36,12 +33,13 @@ class TestAnnotations(TestCase, MypyAssertions):
         filename_suffix: str
             Optional filename suffix filter.
         """
-        examples_dir = Path(pkg_resources.resource_filename(
-            'traits.stubs_tests', 'examples'))
+        examples = importlib.resources.files('traits.stubs_tests') / 'examples'
 
-        for file_path in examples_dir.glob("*{}.py".format(filename_suffix)):
-            with self.subTest(file_path=file_path):
-                self.assertRaisesMypyError(file_path)
+        with importlib.resources.as_file(examples) as examples_dir:
+            for file_path in examples_dir.glob(
+                    "*{}.py".format(filename_suffix)):
+                with self.subTest(file_path=file_path):
+                    self.assertRaisesMypyError(file_path)
 
     @requires_numpy_typing
     def test_numpy_examples(self):
@@ -50,15 +48,12 @@ class TestAnnotations(TestCase, MypyAssertions):
 
         Lines with expected errors are marked inside these files.
         Any mismatch will raise an assertion error.
-
-        Parameters
-        ----------
-        filename_suffix: str
-            Optional filename suffix filter.
         """
-        examples_dir = Path(pkg_resources.resource_filename(
-            'traits.stubs_tests', 'numpy_examples'))
+        examples = (
+            importlib.resources.files('traits.stubs_tests') / 'numpy_examples'
+        )
 
-        for file_path in examples_dir.glob("*.py"):
-            with self.subTest(file_path=file_path):
-                self.assertRaisesMypyError(file_path)
+        with importlib.resources.as_file(examples) as examples_dir:
+            for file_path in examples_dir.glob("*.py"):
+                with self.subTest(file_path=file_path):
+                    self.assertRaisesMypyError(file_path)

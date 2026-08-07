@@ -12,6 +12,8 @@
 entry points.
 """
 
+import importlib.resources
+
 
 def introduction(request):
     """ Return a configuration for contributing examples to the
@@ -27,12 +29,10 @@ def introduction(request):
     -------
     response : dict
     """
-    import pkg_resources
-
     return dict(
         version=1,
         name="Traits Introduction",
-        root=(
-            pkg_resources.resource_filename("traits", "examples/introduction")
+        root=str(
+            importlib.resources.files("traits.examples") / "introduction"
         ),
     )

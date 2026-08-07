@@ -310,8 +310,8 @@ setuptools.setup(
             "flake8-ets",
             "mypy",
             "numpy",
+            "packaging",
             "pyface",
-            "setuptools",
             "Sphinx>=2.1.0",
             "traitsui",
         ],
@@ -348,6 +348,6 @@ setuptools.setup(
     },
     license="BSD",
     packages=setuptools.find_packages(include=["traits", "traits.*"]),
-    python_requires=">=3.8",
+    python_requires=">=3.10",
     zip_safe=False,
 )

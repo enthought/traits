@@ -46,9 +46,9 @@ numpy_typing = optional_import("numpy.typing")
 requires_numpy_typing = unittest.skipIf(
     numpy_typing is None, "numpy.typing not available")
 
-pkg_resources = optional_import("pkg_resources")
-requires_pkg_resources = unittest.skipIf(
-    pkg_resources is None, "pkg_resources not available"
+packaging_version = optional_import("packaging.version")
+requires_packaging = unittest.skipIf(
+    packaging_version is None, "packaging not available"
 )
 
 pyface = optional_import("pyface")
