@@ -4,6 +4,8 @@ Traits CHANGELOG
 Release 7.2.0
 -------------
 
+Released: YYYY-MM-DD
+
 This is a minor release of the Traits package. The most significant changes are
 the removal of support for Python 3.8 and Python 3.9, and the addition of
 wheels for Python 3.15.
