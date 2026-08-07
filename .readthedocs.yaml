@@ -8,6 +8,9 @@ build:
   tools:
     python: "3.14"
 
+sphinx:
+  configuration: docs/source/conf.py
+
 python:
   install:
     - method: pip
