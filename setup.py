@@ -310,8 +310,6 @@ setuptools.setup(
             "flake8-ets",
             "mypy",
             "numpy",
-            # packaging provides the PEP 440 version parsing used in
-            # traits.tests.test_version
             "packaging",
             "pyface",
             "setuptools",
