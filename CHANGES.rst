@@ -1,6 +1,54 @@
 Traits CHANGELOG
 ================
 
+Release 7.2.0
+-------------
+
+Released: YYYY-MM-DD
+
+This is a minor release of the Traits package. The most significant changes are
+the removal of support for Python 3.8 and Python 3.9, and the addition of
+wheels for Python 3.15.
+
+The following people contributed code changes and reviews for this release:
+
+* Mark Dickinson
+* Ioannis Tziakos
+* Charles Whittington
+
+Removals
+~~~~~~~~
+* Python versions earlier than 3.10 are no longer supported. (#1895)
+* Removed ``pkg_resources`` and ``requires_pkg_resources`` from
+  ``traits.testing.optional_dependencies``. Traits no longer makes any use of
+  ``pkg_resources``, which is absent from recent versions of setuptools.
+  (#1895)
+
+Fixes
+~~~~~
+* Fix the ``etsdemo_data`` entry point, which failed with recent versions of
+  setuptools that no longer provide ``pkg_resources``. (#1895)
+* Fix a ``TraitDocumenter`` crash on module-level traits. (#1885)
+* Fix ``trait_documenter`` to properly document traits of base classes. (#1878)
+
+Documentation
+~~~~~~~~~~~~~
+* Fix the documentation build with Sphinx 9. (#1886)
+* Modernize some bits of the introduction. (#1875)
+
+Build
+~~~~~
+* Build wheels for Python 3.15, and test against Python 3.15 in CI. (#1894)
+* Switch PyPI publishing to trusted publishing. (#1891)
+* Pin GitHub Actions to commit hashes, and add a dependabot cooldown so that
+  freshly-published action releases aren't proposed immediately. (#1887)
+* Build the documentation on Python 3.14, and update the Read the Docs
+  configuration to the current schema. (#1895)
+* Move the ``etstool.py`` EDM runtime from Python 3.8 to Python 3.11. (#1895)
+* Pin the copyright end year, and add a strict, non-blocking style check.
+  (#1884)
+* Update the copyright end year. (#1877)
+
 Release 7.1.0
 -------------
 
