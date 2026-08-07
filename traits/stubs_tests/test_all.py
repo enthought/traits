@@ -48,11 +48,6 @@ class TestAnnotations(TestCase, MypyAssertions):
 
         Lines with expected errors are marked inside these files.
         Any mismatch will raise an assertion error.
-
-        Parameters
-        ----------
-        filename_suffix: str
-            Optional filename suffix filter.
         """
         examples = (
             importlib.resources.files('traits.stubs_tests') / 'numpy_examples'

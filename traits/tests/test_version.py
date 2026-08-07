@@ -27,9 +27,9 @@ class TestVersion(unittest.TestCase):
     @requires_packaging
     def test_dunder_version(self):
         self.assertIsInstance(traits.__version__, str)
-        # Round-trip through parse; this verifies not only
-        # that the version is valid, but also that it's properly normalised
-        # according to the PEP 440 rules.
+        # Round-trip through packaging's version parser; this verifies not
+        # only that the version is valid, but also that it's properly
+        # normalised according to the PEP 440 rules.
         parsed_version = packaging_version.parse(traits.__version__)
         self.assertEqual(str(parsed_version), traits.__version__)
 

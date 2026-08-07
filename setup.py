@@ -312,7 +312,6 @@ setuptools.setup(
             "numpy",
             "packaging",
             "pyface",
-            "setuptools",
             "Sphinx>=2.1.0",
             "traitsui",
         ],

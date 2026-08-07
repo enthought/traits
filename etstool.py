@@ -95,6 +95,7 @@ common_dependencies = {
     "lark_parser",
     "mypy",
     "numpy",
+    "packaging",
     "Sphinx",
     "sphinx_copybutton",
     "traitsui",
