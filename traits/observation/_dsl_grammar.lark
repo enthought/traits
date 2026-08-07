@@ -1,6 +1,8 @@
 // Grammar for Traits Mini Language used in observe
-// After updating the grammar, rebuild the standalone parser with:
-//     $ python etstool.py generate-parser
+// After updating the grammar, rebuild the standalone parser: from this
+// directory, in an environment with lark installed, run
+//     $ python -m lark.tools.standalone \
+//         _dsl_grammar.lark > _generated_parser.py
 //
 
 // Simple name as trait name, e.g. "a"

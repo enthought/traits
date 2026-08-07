@@ -38,13 +38,14 @@ Documentation
 
 Build
 ~~~~~
+* Remove the EDM-based developer tooling: ``etstool.py`` and ``edm.yaml``.
+  (#1897)
 * Build wheels for Python 3.15, and test against Python 3.15 in CI. (#1894)
 * Switch PyPI publishing to trusted publishing. (#1891)
 * Pin GitHub Actions to commit hashes, and add a dependabot cooldown so that
   freshly-published action releases aren't proposed immediately. (#1887)
 * Build the documentation on Python 3.14, and update the Read the Docs
   configuration to the current schema. (#1895)
-* Move the ``etstool.py`` EDM runtime from Python 3.8 to Python 3.11. (#1895)
 * Pin the copyright end year, and add a strict, non-blocking style check.
   (#1884)
 * Update the copyright end year. (#1877)
