@@ -256,6 +256,15 @@ def Trait(*value_type, **metadata):
     return _TraitMaker(*value_type, **metadata).as_ctrait()
 
 
+#: Default value types to use in place of the ones that need a List, Dict or
+#: Set handler, for a Trait() whose handler is not one of those.
+_PLAIN_CONTAINER_DEFAULT = {
+    DefaultValue.trait_list_object: DefaultValue.list_copy,
+    DefaultValue.trait_dict_object: DefaultValue.dict_copy,
+    DefaultValue.trait_set_object: DefaultValue.constant,
+}
+
+
 class _TraitMaker(object):
 
     # Ctrait type map for special trait types:
@@ -416,6 +425,11 @@ class _TraitMaker(object):
                 if default_value_type < 0:
                     default_value_type = _infer_default_value_type(
                         default_value
+                    )
+                    # The handler here is never a List, Dict or Set, which the
+                    # trait_*_object default value types need (#1591).
+                    default_value_type = _PLAIN_CONTAINER_DEFAULT.get(
+                        default_value_type, default_value_type
                     )
 
         self.default_value_type = default_value_type
