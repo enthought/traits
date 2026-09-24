@@ -23,6 +23,7 @@ from traits.has_traits import (
 from traits.testing.optional_dependencies import numpy, requires_numpy
 from traits.trait_errors import TraitError
 from traits.trait_list_object import TraitListObject
+from traits.traits import Trait
 from traits.trait_type import NoDefaultSpecified, TraitType
 from traits.trait_types import (
     Bool,
@@ -738,3 +739,59 @@ class TestRegressionNestedContainerEvent(unittest.TestCase):
         instance.list_of_set[0].add(1)
 
         self.assertEqual(len(self.events), 0, "Expected no events.")
+
+
+class TestTraitWithTraitContainerDefault(unittest.TestCase):
+    # Regression tests for enthought/traits#1591: a TraitListObject,
+    # TraitDictObject or TraitSetObject used as the default of a trait
+    # that isn't a List, Dict or Set raised when the attribute was read.
+
+    def test_add_trait_with_trait_list_object(self):
+        class Sub(HasTraits):
+            b = List()
+
+        settings = HasTraits()
+        settings.add_trait("b", Sub().b)
+
+        self.assertEqual(settings.b, [])
+
+    def test_trait_list_object_default(self):
+        source = NestedContainerClass(list_of_list=[[1], [2]])
+
+        class A(HasTraits):
+            value = Trait(source.list_of_list)
+
+        first, second = A(), A()
+        self.assertEqual(first.value, [[1], [2]])
+        self.assertIsNot(first.value, second.value)
+        self.assertIsNot(first.value, source.list_of_list)
+
+    def test_trait_dict_object_default(self):
+        source = NestedContainerClass(dict_of_list={"a": ["x"]})
+
+        class A(HasTraits):
+            value = Trait(source.dict_of_list)
+
+        first, second = A(), A()
+        self.assertEqual(first.value, {"a": ["x"]})
+        self.assertIsNot(first.value, second.value)
+
+    def test_trait_set_object_default(self):
+        source = NestedContainerClass(list_of_set=[{1}])
+
+        class A(HasTraits):
+            value = Trait(source.list_of_set[0])
+
+        self.assertEqual(A().value, {1})
+
+    def test_trait_type_with_trait_list_object_default(self):
+        class Source(HasTraits):
+            values = List([1, 2])
+
+        class MyType(TraitType):
+            pass
+
+        class A(HasTraits):
+            value = MyType(Source().values)
+
+        self.assertEqual(A().value, [1, 2])
