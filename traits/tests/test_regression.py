@@ -743,8 +743,8 @@ class TestRegressionNestedContainerEvent(unittest.TestCase):
 
 class TestTraitWithTraitContainerDefault(unittest.TestCase):
     # Regression tests for enthought/traits#1591: a TraitListObject,
-    # TraitDictObject or TraitSetObject passed to Trait() or add_trait()
-    # raised AttributeError when the attribute was read.
+    # TraitDictObject or TraitSetObject used as the default of a trait
+    # that isn't a List, Dict or Set raised when the attribute was read.
 
     def test_add_trait_with_trait_list_object(self):
         class Sub(HasTraits):
@@ -783,3 +783,15 @@ class TestTraitWithTraitContainerDefault(unittest.TestCase):
             value = Trait(source.list_of_set[0])
 
         self.assertEqual(A().value, {1})
+
+    def test_trait_type_with_trait_list_object_default(self):
+        class Source(HasTraits):
+            values = List([1, 2])
+
+        class MyType(TraitType):
+            pass
+
+        class A(HasTraits):
+            value = MyType(Source().values)
+
+        self.assertEqual(A().value, [1, 2])
