@@ -75,6 +75,7 @@ from .trait_types import (
     Module,
     Python,
     ReadOnly,
+    TypedReadOnly,
     Disallow,
     Constant,
     Delegate,
