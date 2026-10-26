@@ -12,4 +12,4 @@ line_length = 79
 order_by_type = 'False'
 
 [tool.cibuildwheel]
-skip = 'pp*'
+skip = 'pp* cp310-win_arm64 cp311-win_arm64'
