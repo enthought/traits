@@ -14,14 +14,24 @@ jobs:
         platform:
           - os: ubuntu-latest
             architecture: x64
+          - os: ubuntu-24.04-arm
+            architecture: arm64
           - os: windows-latest
             architecture: x64
+          - os: windows-11-arm
+            architecture: arm64
           - os: windows-latest
             architecture: x86
           - os: macos-latest
             architecture: arm64
           - os: macos-15-intel
             architecture: x64
+        exclude:
+          # setup-python has no Python 3.10 build for Windows on Arm
+          - python-version: '3.10'
+            platform:
+              os: windows-11-arm
+              architecture: arm64
 
     runs-on: ${{ matrix.platform.os }}
 
@@ -48,14 +58,24 @@ jobs:
         platform:
           - os: ubuntu-latest
             architecture: x64
+          - os: ubuntu-24.04-arm
+            architecture: arm64
           - os: windows-latest
             architecture: x64
+          - os: windows-11-arm
+            architecture: arm64
           - os: windows-latest
             architecture: x86
           - os: macos-latest
             architecture: arm64
           - os: macos-15-intel
             architecture: x64
+        exclude:
+          # setup-python has no Python 3.10 build for Windows on Arm
+          - python-version: '3.10'
+            platform:
+              os: windows-11-arm
+              architecture: arm64
 
     runs-on: ${{ matrix.platform.os }}
 
