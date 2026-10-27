@@ -6,8 +6,12 @@ jobs:
   tests:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, ubuntu-24.04-arm, windows-latest, windows-11-arm, macos-latest]
         python-version: ['3.10', '3.11', '3.12', '3.13', '3.14', '3.15']
+        exclude:
+          # setup-python has no Python 3.10 build for Windows on Arm
+          - os: windows-11-arm
+            python-version: '3.10'
 
     runs-on: ${{ matrix.os }}
 
