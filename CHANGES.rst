@@ -1,6 +1,34 @@
 Traits CHANGELOG
 ================
 
+Release 7.3.0
+-------------
+
+Released: 2026-10-27
+
+This is a minor release of the Traits package. The most significant change is
+the addition of wheels for Windows on Arm, and the return of wheels for Linux
+on Arm (aarch64).
+
+The following people contributed code changes and reviews for this release:
+
+* Mark Dickinson
+* Kayvan Zahiri
+
+Fixes
+~~~~~
+* Fix an ``AttributeError`` on access to a trait whose default is a
+  ``TraitListObject``, ``TraitDictObject`` or ``TraitSetObject`` (for
+  example, the value of another object's ``List`` trait) when the trait
+  itself isn't a ``List``, ``Dict`` or ``Set``. Such defaults are now handled
+  like plain lists, dicts and sets: lists and dicts are copied for each
+  instance, while sets are shared. (#1902)
+
+Build
+~~~~~
+* Restore Linux aarch64 wheels (last shipped in 6.4.3) and add Windows ARM64
+  wheels, built on native ARM runners and tested in CI. (#1908)
+
 Release 7.2.0
 -------------
 
