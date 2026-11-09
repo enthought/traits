@@ -27,7 +27,7 @@ jobs:
       run: python -m pip install twine
 
     - name: Build wheels
-      uses: pypa/cibuildwheel@f11181315571b24e4a3c67f1a828532793f2df55 # v4.3.2
+      uses: pypa/cibuildwheel@f9b966cfadf4109556cadc5bb39ddb72d0ce664e # v4.3.5
 
     - name: Check wheels
       run: python -m twine check --strict wheelhouse/*.whl
